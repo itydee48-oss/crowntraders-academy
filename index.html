@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crown Trade Academy - Elite Trading & Marketing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --nude-light: #F9F6F2;
+            --nude-medium: #E8DFD6;
+            --nude-dark: #D4C8BC;
+            --nude-accent: #C4B5A3;
+            --gold: #C8A97E;
+            --gold-dark: #B89463;
+            --charcoal: #3A3A3A;
+            --text-light: #7A7A7A;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nude-light);
+            color: var(--charcoal);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        /* Header */
+        .premium-header {
+            background-color: rgba(249, 246, 242, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 200, 188, 0.3);
+            transition: var(--transition);
+        }
+
+        .premium-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            text-decoration: none;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background-color: var(--gold);
+            transition: var(--transition);
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--charcoal);
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--gold);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(249, 246, 242, 0.9) 0%, rgba(232, 223, 214, 0.8) 100%), 
+                        url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--charcoal);
+            padding: 12rem 2rem 8rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(249, 246, 242, 0.6), rgba(232, 223, 214, 0.4));
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            color: var(--text-light);
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.3s forwards;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--nude-light);
+            padding: 1rem 2.5rem;
+            border-radius: 0;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.6s forwards;
+            border: 1px solid var(--gold);
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--gold);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        /* Program Cards */
+        .premium-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .programs-section {
+            padding: 6rem 0;
+            background-color: var(--nude-light);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--charcoal);
+            display: inline-block;
+            position: relative;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background-color: var(--gold);
+        }
+
+        .programs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .program-card {
+            background: var(--nude-light);
+            border-radius: 0;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            border: 1px solid var(--nude-medium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .program-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+        }
+
+        .program-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .program-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .program-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            height: 80px;
+            width: 80px;
+            line-height: 80px;
+            border: 1px solid var(--nude-medium);
+            transition: var(--transition);
+        }
+
+        .program-card:hover .program-icon {
+            background-color: var(--gold);
+            color: var(--nude-light);
+            border-color: var(--gold);
+        }
+
+        .program-card h3 {
+            margin-bottom: 1.2rem;
+            color: var(--charcoal);
+            font-size: 1.5rem;
+        }
+
+        .program-card p {
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .program-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .program-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .program-features li {
+            padding: 0.5rem 0;
+            color: var(--text-light);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .program-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: var(--nude-medium);
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            padding: 2rem 1rem;
+        }
+
+        .stat-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--charcoal);
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Payment Info Section */
+        .payment-info {
+            background: var(--nude-light);
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .payment-card {
+            background: var(--nude-medium);
+            padding: 3rem;
+            border-left: 4px solid var(--gold);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .payment-card h3 {
+            color: var(--charcoal);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .payment-card p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .contact-email {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .contact-email:hover {
+            color: var(--charcoal);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--nude-medium) 0%, var(--nude-dark) 100%);
+            color: var(--charcoal);
+            text-align: center;
+            padding: 6rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            opacity: 0.85;
+            margin-bottom: 2.5rem;
+            color: var(--text-light);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            background: transparent;
+            color: var(--charcoal);
+            padding: 1rem 2.5rem;
+            border-radius: 0;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            border: 1px solid var(--charcoal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary:hover {
+            background: var(--charcoal);
+            color: var(--nude-light);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--nude-medium);
+            border-top: 1px solid rgba(212, 200, 188, 0.2);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--nude-light);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: var(--nude-medium);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: var(--nude-dark);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .premium-nav {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                margin-top: 1rem;
+                gap: 1.5rem;
+            }
+            
+            .hero {
+                padding: 10rem 1.5rem 6rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .programs {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-number {
+                font-size: 2.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="premium-header">
+        <nav class="premium-nav">
+            <a href="index.html" class="logo">Crown Trade Academy</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="referral-register.html">Apply Now</a></li>
+                <li><a href="login.html">Client Login</a></li>
+                <li><a href="admin-login.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Unlock Your Financial Freedom</h1>
+            <p>Join Kenya's Premier Trading Academy & Referral Program. Earn through education and strategic partnerships.</p>
+            <a href="referral-register.html" class="btn-primary">Start Your Journey Today</a>
+        </div>
+    </section>
+
+    <!-- Programs Section -->
+    <section class="programs-section">
+        <div class="premium-container">
+            <div class="section-title">
+                <h2>Choose Your Path to Success</h2>
+            </div>
+            <div class="programs">
+                <div class="program-card">
+                    <div class="program-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Mentorship Program</h3>
+                    <p>Master the art of trading with our comprehensive mentorship program. Learn from industry experts.</p>
+                    <div class="program-price">KES 50,000</div>
+                    <ul class="program-features">
+                        <li>Personal 1-on-1 mentorship</li>
+                        <li>Advanced trading strategies</li>
+                        <li>Market analysis sessions</li>
+                        <li>Lifetime community access</li>
+                        <li>Risk management training</li>
+                    </ul>
+                    <a href="referral-register.html?program=mentorship" class="btn-primary">Apply for Mentorship</a>
+                </div>
+                
+                <div class="program-card">
+                    <div class="program-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Referral Marketing Program</h3>
+                    <p>Build your network and earn substantial commissions through our powerful referral system.</p>
+                    <div class="program-price">KES 500</div>
+                    <ul class="program-features">
+                        <li>Instant referral dashboard</li>
+                        <li>Multiple commission tiers</li>
+                        <li>Real-time earnings tracking</li>
+                        <li>Marketing materials provided</li>
+                        <li>Weekly payout system</li>
+                    </ul>
+                    <a href="referral-register.html?program=referral" class="btn-primary">Join Referral Program</a>
+                </div>
+                
+                <div class="program-card">
+                    <div class="program-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3>Combined Program</h3>
+                    <p>Get the best of both worlds - elite trading education and unlimited earning potential.</p>
+                    <div class="program-price">KES 50,500</div>
+                    <ul class="program-features">
+                        <li>Full mentorship access</li>
+                        <li>Premium referral benefits</li>
+                        <li>Priority support</li>
+                        <li>Advanced tools access</li>
+                        <li>VIP community group</li>
+                    </ul>
+                    <a href="referral-register.html?program=combined" class="btn-primary">Get Complete Access</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="premium-container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="1500">0</div>
+                    <div class="stat-label">Successful Traders</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="4.8">0</div>
+                    <div class="stat-label">Star Rating</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="2.5">0</div>
+                    <div class="stat-label">Million Earned</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="24">0</div>
+                    <div class="stat-label">/7 Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Information -->
+    <section class="payment-info">
+        <div class="premium-container">
+            <div class="payment-card">
+                <h3>📧 Get Payment Details & Assurance</h3>
+                <p>For payment instructions, verification, and additional assurance about our programs, kindly contact us through our official email:</p>
+                <a href="mailto:crowntradeacademy@gmail.com" class="contact-email">crowntradeacademy@gmail.com</a>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-light);">
+                    Our team will provide you with secure payment methods and answer any questions you may have.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Ready to Transform Your Financial Future?</h2>
+            <p>Join thousands of successful members who have changed their lives through our proven systems.</p>
+            <a href="referral-register.html" class="btn-secondary">Begin Your Application Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">Crown Trade Academy</div>
+            <ul class="footer-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="referral-register.html">Apply Now</a></li>
+                <li><a href="login.html">Client Login</a></li>
+                <li><a href="admin-login.html">Admin</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+            </ul>
+            <p class="copyright">&copy; 2024 Crown Trade Academy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.premium-header');
+            if (window.scrollY > 50) {
+                header.style.backgroundColor = 'rgba(249, 246, 242, 0.98)';
+                header.style.boxShadow = '0 5px 20px rgba(0,0,0,0.05)';
+            } else {
+                header.style.backgroundColor = 'rgba(249, 246, 242, 0.95)';
+                header.style.boxShadow = 'none';
+            }
+        });
+
+        // Stats counter animation
+        const statNumbers = document.querySelectorAll('.stat-number');
+        const statsSection = document.querySelector('.stats-section');
+
+        const startCounter = (element) => {
+            const target = parseFloat(element.getAttribute('data-count'));
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target + (element.getAttribute('data-count') === '4.8' ? '' : (target === 2.5 ? 'M+' : '+'));
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current) + (element.getAttribute('data-count') === '4.8' ? '' : (current < 1 ? '' : '+'));
+                }
+            }, 16);
+        };
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    statNumbers.forEach(startCounter);
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        statsObserver.observe(statsSection);
+
+        // Program cards animation
+        const programCards = document.querySelectorAll('.program-card');
+        
+        const programObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        programCards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            programObserver.observe(card);
+        });
+    </script>
+</body>
+</html>
