@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Crown Trade Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --nude-light: #F9F6F2;
+            --nude-medium: #E8DFD6;
+            --nude-dark: #D4C8BC;
+            --nude-accent: #C4B5A3;
+            --gold: #C8A97E;
+            --gold-dark: #B89463;
+            --charcoal: #3A3A3A;
+            --text-light: #7A7A7A;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --success: #27AE60;
+            --warning: #E67E22;
+            --danger: #E74C3C;
+            --info: #3498DB;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nude-light);
+            color: var(--charcoal);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        /* Header */
+        .premium-header {
+            background-color: rgba(249, 246, 242, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 200, 188, 0.3);
+            transition: var(--transition);
+        }
+
+        .premium-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            text-decoration: none;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background-color: var(--gold);
+            transition: var(--transition);
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--charcoal);
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--gold);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .admin-welcome {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--charcoal);
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: var(--gold);
+            color: var(--nude-light);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: var(--gold-dark);
+        }
+
+        /* Main Content */
+        .admin-dashboard {
+            padding: 12rem 2rem 6rem;
+            min-height: 100vh;
+        }
+
+        .premium-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--nude-medium) 0%, var(--nude-dark) 100%);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border-left: 4px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(200, 169, 126, 0.1);
+            border-radius: 50%;
+            transform: translate(50%, -50%);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--nude-light);
+            border: 1px solid var(--nude-medium);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gold);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Dashboard Sections */
+        .dashboard-section-card {
+            background: var(--nude-light);
+            border: 1px solid var(--nude-medium);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .dashboard-section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gold);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--charcoal);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--nude-medium);
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .tab.active {
+            color: var(--charcoal);
+            border-bottom-color: var(--gold);
+        }
+
+        .tab:hover {
+            color: var(--charcoal);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Tables */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--nude-medium);
+        }
+
+        .admin-table th {
+            background: var(--nude-medium);
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .admin-table tr:hover {
+            background: rgba(200, 169, 126, 0.05);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 0;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: rgba(230, 126, 34, 0.1);
+            color: var(--warning);
+        }
+
+        .status-approved {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: var(--transition);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-approve {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #219653;
+        }
+
+        .btn-reject {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #C0392B;
+        }
+
+        .btn-view {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #2980B9;
+        }
+
+        /* Pricing Controls */
+        .pricing-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .price-card {
+            background: var(--nude-medium);
+            padding: 2rem;
+            border-left: 4px solid var(--gold);
+        }
+
+        .price-input-group {
+            margin-bottom: 1rem;
+        }
+
+        .price-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--charcoal);
+        }
+
+        .price-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--nude-accent);
+            background: var(--nude-light);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .price-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(200, 169, 126, 0.1);
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--nude-light);
+            padding: 1rem 2rem;
+            border-radius: 0;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--gold);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--gold);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        /* Revenue Chart */
+        .chart-container {
+            background: var(--nude-light);
+            padding: 2rem;
+            border: 1px solid var(--nude-medium);
+            margin-top: 2rem;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-placeholder {
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .chart-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--nude-accent);
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .quick-stat {
+            background: var(--nude-medium);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .quick-stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-stat-label {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--nude-medium);
+            border-top: 1px solid rgba(212, 200, 188, 0.2);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--nude-light);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: var(--nude-medium);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: var(--nude-dark);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .premium-nav {
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                margin-top: 1rem;
+                gap: 1.5rem;
+                flex-direction: column;
+            }
+            
+            .admin-dashboard {
+                padding: 10rem 1.5rem 4rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .admin-table {
+                font-size: 0.8rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .pricing-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="premium-header">
+        <nav class="premium-nav">
+            <a href="index.html" class="logo">Crown Trade Academy</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="admin-dashboard.html" class="active">Admin Dashboard</a></li>
+                <div class="admin-welcome">
+                    <span id="adminGreeting">Welcome, Admin</span>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Admin Dashboard Section -->
+    <section class="admin-dashboard">
+        <div class="premium-container">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--charcoal);">Admin Dashboard</h1>
+                <p style="font-size: 1.2rem; color: var(--text-light);">Manage applications, users, and system settings</p>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <div style="background: rgba(255,255,255,0.3); padding: 0.5rem 1rem; border-left: 3px solid var(--gold);">
+                        <strong>Last Login:</strong> <span id="lastLogin">Today</span>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.3); padding: 0.5rem 1rem; border-left: 3px solid var(--gold);">
+                        <strong>System Status:</strong> <span style="color: var(--success);">✓ Operational</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-number" id="pendingApplications">0</div>
+                    <div class="stat-label">Pending Applications</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number" id="totalUsers">0</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="stat-number" id="totalRevenue">KES 0</div>
+                    <div class="stat-label">Total Revenue</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-number" id="approvalRate">0%</div>
+                    <div class="stat-label">Approval Rate</div>
+                </div>
+            </div>
+
+            <!-- Main Dashboard Tabs -->
+            <div class="dashboard-section-card">
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('pending')">
+                        <i class="fas fa-clock"></i> Pending Approvals
+                    </button>
+                    <button class="tab" onclick="switchTab('users')">
+                        <i class="fas fa-users"></i> User Management
+                    </button>
+                    <button class="tab" onclick="switchTab('pricing')">
+                        <i class="fas fa-tags"></i> Program Pricing
+                    </button>
+                    <button class="tab" onclick="switchTab('revenue')">
+                        <i class="fas fa-chart-bar"></i> Revenue Analytics
+                    </button>
+                </div>
+
+                <!-- Pending Approvals Tab -->
+                <div id="pending-tab" class="tab-content active">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-user-check" style="color: var(--gold);"></i>
+                            Pending Applications
+                        </h2>
+                        <button class="btn-primary" onclick="refreshApplications()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Program</th>
+                                    <th>Amount</th>
+                                    <th>Date Applied</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingApplicationsList">
+                                <!-- Dynamic content will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- User Management Tab -->
+                <div id="users-tab" class="tab-content">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-user-cog" style="color: var(--gold);"></i>
+                            User Management
+                        </h2>
+                        <button class="btn-primary" onclick="exportUsers()">
+                            <i class="fas fa-download"></i> Export Users
+                        </button>
+                    </div>
+
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Program</th>
+                                    <th>Join Date</th>
+                                    <th>Status</th>
+                                    <th>Referrals</th>
+                                    <th>Earnings</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersList">
+                                <!-- Dynamic content will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Program Pricing Tab -->
+                <div id="pricing-tab" class="tab-content">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-money-bill-wave" style="color: var(--gold);"></i>
+                            Program Pricing
+                        </h2>
+                        <button class="btn-primary" onclick="savePricing()">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+
+                    <div class="pricing-controls">
+                        <div class="price-card">
+                            <h3 style="margin-bottom: 1.5rem; color: var(--charcoal);">Referral Program</h3>
+                            <div class="price-input-group">
+                                <label class="price-label">Program Price (KES)</label>
+                                <input type="number" class="price-input" id="referralPrice" value="500" min="0">
+                            </div>
+                            <div class="price-input-group">
+                                <label class="price-label">Referral Commission (KES)</label>
+                                <input type="number" class="price-input" id="referralCommission" value="200" min="0">
+                            </div>
+                        </div>
+
+                        <div class="price-card">
+                            <h3 style="margin-bottom: 1.5rem; color: var(--charcoal);">Mentorship Program</h3>
+                            <div class="price-input-group">
+                                <label class="price-label">Program Price (KES)</label>
+                                <input type="number" class="price-input" id="mentorshipPrice" value="50000" min="0">
+                            </div>
+                        </div>
+
+                        <div class="price-card">
+                            <h3 style="margin-bottom: 1.5rem; color: var(--charcoal);">Combined Program</h3>
+                            <div class="price-input-group">
+                                <label class="price-label">Program Price (KES)</label>
+                                <input type="number" class="price-input" id="combinedPrice" value="50500" min="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quick-stats">
+                        <div class="quick-stat">
+                            <div class="quick-stat-number" id="currentReferralPrice">KES 500</div>
+                            <div class="quick-stat-label">Current Referral Price</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-stat-number" id="currentMentorshipPrice">KES 50,000</div>
+                            <div class="quick-stat-label">Current Mentorship Price</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-stat-number" id="totalProgramsSold">0</div>
+                            <div class="quick-stat-label">Total Programs Sold</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Revenue Analytics Tab -->
+                <div id="revenue-tab" class="tab-content">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-chart-line" style="color: var(--gold);"></i>
+                            Revenue Analytics
+                        </h2>
+                        <button class="btn-primary" onclick="generateReport()">
+                            <i class="fas fa-file-export"></i> Generate Report
+                        </button>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-bar"></i>
+                            <h3>Revenue Overview</h3>
+                            <p>Revenue analytics and graphs will be displayed here</p>
+                            <div style="margin-top: 2rem;">
+                                <div class="quick-stat">
+                                    <div class="quick-stat-number" id="monthlyRevenue">KES 0</div>
+                                    <div class="quick-stat-label">This Month's Revenue</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quick-stats">
+                        <div class="quick-stat">
+                            <div class="quick-stat-number" id="referralProgramRevenue">KES 0</div>
+                            <div class="quick-stat-label">Referral Program Revenue</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-stat-number" id="mentorshipProgramRevenue">KES 0</div>
+                            <div class="quick-stat-label">Mentorship Program Revenue</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-stat-number" id="combinedProgramRevenue">KES 0</div>
+                            <div class="quick-stat-label">Combined Program Revenue</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-stat-number" id="averageRevenue">KES 0</div>
+                            <div class="quick-stat-label">Average per User</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Tools -->
+            <div class="dashboard-section-card">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-tools" style="color: var(--gold);"></i>
+                        System Tools
+                    </h2>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <button class="btn-primary" onclick="backupData()">
+                        <i class="fas fa-database"></i> Backup Data
+                    </button>
+                    <button class="btn-primary" onclick="clearPending()">
+                        <i class="fas fa-trash"></i> Clear Old Pending
+                    </button>
+                    <button class="btn-primary" onclick="sendBulkEmail()">
+                        <i class="fas fa-envelope"></i> Bulk Email
+                    </button>
+                    <button class="btn-primary" onclick="systemSettings()">
+                        <i class="fas fa-cog"></i> System Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">Crown Trade Academy</div>
+            <ul class="footer-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="admin-dashboard.html">Admin Dashboard</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+            </ul>
+            <p class="copyright">&copy; 2024 Crown Trade Academy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Admin Dashboard Management
+        let adminData = {};
+        let pendingApplications = [];
+        let approvedUsers = [];
+
+        // Initialize admin dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminLogin();
+            loadAdminData();
+            loadPendingApplications();
+            loadApprovedUsers();
+            loadPricingData();
+            loadRevenueData();
+            updateStats();
+        });
+
+        // Check if admin is logged in
+        function checkAdminLogin() {
+            const isAdminLoggedIn = localStorage.getItem('adminLoggedIn');
+            
+            if (!isAdminLoggedIn) {
+                alert('Admin access required. Please log in.');
+                window.location.href = 'admin-login.html';
+                return;
+            }
+        }
+
+        // Load admin data
+        function loadAdminData() {
+            adminData = {
+                name: 'Administrator',
+                lastLogin: new Date().toLocaleString()
+            };
+
+            document.getElementById('adminGreeting').textContent = `Welcome, ${adminData.name}`;
+            document.getElementById('lastLogin').textContent = adminData.lastLogin;
+        }
+
+        // Load pending applications from localStorage
+        function loadPendingApplications() {
+            pendingApplications = JSON.parse(localStorage.getItem('pendingApprovals') || '[]');
+            updatePendingApplicationsList();
+        }
+
+        // Load approved users from localStorage
+        function loadApprovedUsers() {
+            approvedUsers = JSON.parse(localStorage.getItem('approvedUsers') || '[]');
+            updateUsersList();
+        }
+
+        // Load pricing data
+        function loadPricingData() {
+            const pricing = JSON.parse(localStorage.getItem('programPricing') || '{}');
+            
+            // Set default prices if not exists
+            if (!pricing.referral) {
+                pricing.referral = 500;
+                pricing.mentorship = 50000;
+                pricing.combined = 50500;
+                pricing.referralCommission = 200;
+                localStorage.setItem('programPricing', JSON.stringify(pricing));
+            }
+
+            // Update form inputs
+            document.getElementById('referralPrice').value = pricing.referral;
+            document.getElementById('mentorshipPrice').value = pricing.mentorship;
+            document.getElementById('combinedPrice').value = pricing.combined;
+            document.getElementById('referralCommission').value = pricing.referralCommission;
+
+            // Update quick stats
+            document.getElementById('currentReferralPrice').textContent = `KES ${pricing.referral.toLocaleString()}`;
+            document.getElementById('currentMentorshipPrice').textContent = `KES ${pricing.mentorship.toLocaleString()}`;
+        }
+
+        // Load revenue data
+        function loadRevenueData() {
+            const revenueData = JSON.parse(localStorage.getItem('revenueData') || '{}');
+            
+            // Calculate totals
+            let totalRevenue = 0;
+            let referralRevenue = 0;
+            let mentorshipRevenue = 0;
+            let combinedRevenue = 0;
+
+            approvedUsers.forEach(user => {
+                const amount = getPackageAmount(user.package);
+                totalRevenue += amount;
+
+                switch(user.package) {
+                    case 'referral-only':
+                        referralRevenue += amount;
+                        break;
+                    case 'mentorship-only':
+                        mentorshipRevenue += amount;
+                        break;
+                    case 'combined':
+                        combinedRevenue += amount;
+                        break;
+                }
+            });
+
+            // Update UI
+            document.getElementById('monthlyRevenue').textContent = `KES ${totalRevenue.toLocaleString()}`;
+            document.getElementById('referralProgramRevenue').textContent = `KES ${referralRevenue.toLocaleString()}`;
+            document.getElementById('mentorshipProgramRevenue').textContent = `KES ${mentorshipRevenue.toLocaleString()}`;
+            document.getElementById('combinedProgramRevenue').textContent = `KES ${combinedRevenue.toLocaleString()}`;
+            document.getElementById('averageRevenue').textContent = `KES ${approvedUsers.length > 0 ? Math.round(totalRevenue / approvedUsers.length) : 0}`;
+        }
+
+        // Update dashboard statistics
+        function updateStats() {
+            document.getElementById('pendingApplications').textContent = pendingApplications.length;
+            document.getElementById('totalUsers').textContent = approvedUsers.length;
+            
+            const totalRevenue = approvedUsers.reduce((sum, user) => sum + getPackageAmount(user.package), 0);
+            document.getElementById('totalRevenue').textContent = `KES ${totalRevenue.toLocaleString()}`;
+            
+            const totalApplications = pendingApplications.length + approvedUsers.length;
+            const approvalRate = totalApplications > 0 ? Math.round((approvedUsers.length / totalApplications) * 100) : 0;
+            document.getElementById('approvalRate').textContent = `${approvalRate}%`;
+
+            document.getElementById('totalProgramsSold').textContent = approvedUsers.length;
+        }
+
+        // Update pending applications list
+        function updatePendingApplicationsList() {
+            const list = document.getElementById('pendingApplicationsList');
+            list.innerHTML = '';
+
+            if (pendingApplications.length === 0) {
+                list.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-light);">
+                            <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 1rem; display: block; color: var(--success);"></i>
+                            No pending applications. All caught up!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            pendingApplications.forEach((application, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${application.fullName}</td>
+                    <td>${application.email}</td>
+                    <td>${application.packageName}</td>
+                    <td>KES ${application.amount.toLocaleString()}</td>
+                    <td>${new Date(application.timestamp).toLocaleDateString()}</td>
+                    <td><span class="status-badge status-pending">Pending</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-sm btn-approve" onclick="approveApplication(${index})">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                            <button class="btn-sm btn-reject" onclick="rejectApplication(${index})">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                            <button class="btn-sm btn-view" onclick="viewApplication(${index})">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </div>
+                    </td>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        // Update users list
+        function updateUsersList() {
+            const list = document.getElementById('usersList');
+            list.innerHTML = '';
+
+            if (approvedUsers.length === 0) {
+                list.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-light);">
+                            <i class="fas fa-users" style="font-size: 2rem; margin-bottom: 1rem; display: block; color: var(--nude-accent);"></i>
+                            No approved users yet.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            approvedUsers.forEach((user, index) => {
+                const userStats = getUserStats(user.email);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.fullName}</td>
+                    <td>${user.email}</td>
+                    <td>${user.packageName}</td>
+                    <td>${user.registrationDate}</td>
+                    <td><span class="status-badge status-approved">Active</span></td>
+                    <td>${userStats.totalReferrals}</td>
+                    <td>KES ${userStats.totalEarnings.toLocaleString()}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-sm btn-view" onclick="viewUser(${index})">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="btn-sm btn-reject" onclick="deactivateUser(${index})">
+                                <i class="fas fa-user-slash"></i> Deactivate
+                            </button>
+                        </div>
+                    </td>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        // Get user stats from dashboard data
+        function getUserStats(email) {
+            const dashboardStats = JSON.parse(localStorage.getItem('dashboardStats') || '{}');
+            return dashboardStats[email] || {
+                totalReferrals: 0,
+                totalEarnings: 0,
+                availableBalance: 0,
+                conversionRate: 0,
+                referrals: []
+            };
+        }
+
+        // Get package amount
+        function getPackageAmount(packageType) {
+            const amounts = {
+                'mentorship-only': 50000,
+                'referral-only': 500,
+                'combined': 50500
+            };
+            return amounts[packageType] || 0;
+        }
+
+        // Tab switching function
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Approve application
+        function approveApplication(index) {
+            const application = pendingApplications[index];
+            
+            // Move to approved users
+            approvedUsers.push({
+                ...application,
+                status: 'approved',
+                approvedDate: new Date().toISOString()
+            });
+            
+            // Remove from pending
+            pendingApplications.splice(index, 1);
+            
+            // Update localStorage
+            localStorage.setItem('approvedUsers', JSON.stringify(approvedUsers));
+            localStorage.setItem('pendingApprovals', JSON.stringify(pendingApplications));
+            
+            // Update UI
+            updatePendingApplicationsList();
+            updateUsersList();
+            updateStats();
+            loadRevenueData();
+            
+            alert(`Application for ${application.fullName} approved successfully!`);
+        }
+
+        // Reject application
+        function rejectApplication(index) {
+            const application = pendingApplications[index];
+            
+            if (confirm(`Are you sure you want to reject ${application.fullName}'s application?`)) {
+                pendingApplications.splice(index, 1);
+                localStorage.setItem('pendingApprovals', JSON.stringify(pendingApplications));
+                
+                updatePendingApplicationsList();
+                updateStats();
+                
+                alert(`Application for ${application.fullName} rejected.`);
+            }
+        }
+
+        // View application details
+        function viewApplication(index) {
+            const application = pendingApplications[index];
+            alert(`Application Details:\n\nName: ${application.fullName}\nEmail: ${application.email}\nPhone: ${application.phone}\nProgram: ${application.packageName}\nAmount: KES ${application.amount.toLocaleString()}\nApplied: ${new Date(application.timestamp).toLocaleString()}`);
+        }
+
+        // View user details
+        function viewUser(index) {
+            const user = approvedUsers[index];
+            const userStats = getUserStats(user.email);
+            
+            alert(`User Details:\n\nName: ${user.fullName}\nEmail: ${user.email}\nPhone: ${user.phone}\nProgram: ${user.packageName}\nJoined: ${user.registrationDate}\nReferrals: ${userStats.totalReferrals}\nTotal Earnings: KES ${userStats.totalEarnings.toLocaleString()}\nBalance: KES ${userStats.availableBalance.toLocaleString()}`);
+        }
+
+        // Deactivate user
+        function deactivateUser(index) {
+            const user = approvedUsers[index];
+            
+            if (confirm(`Are you sure you want to deactivate ${user.fullName}?`)) {
+                approvedUsers.splice(index, 1);
+                localStorage.setItem('approvedUsers', JSON.stringify(approvedUsers));
+                
+                updateUsersList();
+                updateStats();
+                loadRevenueData();
+                
+                alert(`User ${user.fullName} has been deactivated.`);
+            }
+        }
+
+        // Save pricing changes
+        function savePricing() {
+            const pricing = {
+                referral: parseInt(document.getElementById('referralPrice').value),
+                mentorship: parseInt(document.getElementById('mentorshipPrice').value),
+                combined: parseInt(document.getElementById('combinedPrice').value),
+                referralCommission: parseInt(document.getElementById('referralCommission').value)
+            };
+            
+            localStorage.setItem('programPricing', JSON.stringify(pricing));
+            
+            // Update quick stats
+            document.getElementById('currentReferralPrice').textContent = `KES ${pricing.referral.toLocaleString()}`;
+            document.getElementById('currentMentorshipPrice').textContent = `KES ${pricing.mentorship.toLocaleString()}`;
+            
+            alert('Pricing updated successfully!');
+        }
+
+        // Refresh applications
+        function refreshApplications() {
+            loadPendingApplications();
+            alert('Applications list refreshed!');
+        }
+
+        // Export users
+        function exportUsers() {
+            alert('User export feature would download a CSV file with all user data.');
+        }
+
+        // Generate report
+        function generateReport() {
+            alert('Revenue report generation started. This would create a detailed PDF report.');
+        }
+
+        // System tools functions
+        function backupData() {
+            alert('System backup initiated. All data would be downloaded as a backup file.');
+        }
+
+        function clearPending() {
+            if (confirm('Clear all pending applications older than 30 days?')) {
+                alert('Old pending applications cleared (simulated).');
+            }
+        }
+
+        function sendBulkEmail() {
+            alert('Bulk email composer would open here.');
+        }
+
+        function systemSettings() {
+            alert('System settings panel would open here.');
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'admin-login.html';
+        }
+
+        // Auto-refresh data every 30 seconds
+        setInterval(() => {
+            loadPendingApplications();
+            loadApprovedUsers();
+            updateStats();
+        }, 30000);
+    </script>
+</body>
+</html>
