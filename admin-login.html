@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Crown Trade Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --nude-light: #F9F6F2;
+            --nude-medium: #E8DFD6;
+            --nude-dark: #D4C8BC;
+            --nude-accent: #C4B5A3;
+            --gold: #C8A97E;
+            --gold-dark: #B89463;
+            --charcoal: #3A3A3A;
+            --text-light: #7A7A7A;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --success: #27AE60;
+            --warning: #E67E22;
+            --danger: #E74C3C;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nude-light);
+            color: var(--charcoal);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        /* Header */
+        .premium-header {
+            background-color: rgba(249, 246, 242, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 200, 188, 0.3);
+            transition: var(--transition);
+        }
+
+        .premium-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            text-decoration: none;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background-color: var(--gold);
+            transition: var(--transition);
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--charcoal);
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--gold);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        .login-section {
+            flex: 1;
+            padding: 12rem 2rem 6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .premium-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
+        /* Luxury Card */
+        .luxury-card {
+            background: var(--nude-light);
+            border: 1px solid var(--nude-medium);
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .luxury-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gold);
+        }
+
+        .luxury-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Login Header */
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .admin-icon {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .login-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--charcoal);
+        }
+
+        .login-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--charcoal);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--nude-medium);
+            background: var(--nude-light);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(200, 169, 126, 0.1);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--nude-light);
+            padding: 1rem 2.5rem;
+            border-radius: 0;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--gold);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--gold);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:disabled {
+            background: var(--text-light);
+            border-color: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .btn-primary:disabled:hover {
+            background: var(--text-light);
+            color: var(--nude-light);
+        }
+
+        /* Security Notice */
+        .security-notice {
+            background: rgba(200, 169, 126, 0.1);
+            padding: 1.5rem;
+            border-left: 3px solid var(--gold);
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .security-notice h4 {
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .security-notice p {
+            color: var(--text-light);
+            font-size: 0.8rem;
+            margin-bottom: 0;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.1);
+            border-left: 3px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.1);
+            border-left: 3px solid var(--success);
+            color: var(--success);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            border: 2px solid var(--nude-medium);
+            border-top: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--nude-medium);
+            border-top: 1px solid rgba(212, 200, 188, 0.2);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--nude-light);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: var(--nude-medium);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: var(--nude-dark);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .premium-nav {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                margin-top: 1rem;
+                gap: 1.5rem;
+            }
+            
+            .login-section {
+                padding: 10rem 1.5rem 4rem;
+            }
+            
+            .luxury-card {
+                padding: 2rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .admin-icon {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="premium-header">
+        <nav class="premium-nav">
+            <a href="index.html" class="logo">Crown Trade Academy</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="referral-register.html">Apply Now</a></li>
+                <li><a href="login.html">Client Login</a></li>
+                <li><a href="admin-login.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Login Section -->
+    <section class="login-section">
+        <div class="premium-container">
+            <!-- Login Card -->
+            <div class="luxury-card">
+                <!-- Login Header -->
+                <div class="login-header">
+                    <i class="fas fa-shield-alt admin-icon"></i>
+                    <h1>Admin Portal</h1>
+                    <p>Secure access to management dashboard</p>
+                </div>
+
+                <!-- Alert Messages -->
+                <div id="errorAlert" class="alert alert-error" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i> Invalid credentials. Please try again.
+                </div>
+
+                <div id="successAlert" class="alert alert-success" style="display: none;">
+                    <i class="fas fa-check-circle"></i> Login successful! Redirecting...
+                </div>
+
+                <!-- Login Form -->
+                <form id="adminLoginForm">
+                    <div class="form-group">
+                        <label class="form-label">Admin Username</label>
+                        <div class="input-with-icon">
+                            <input type="text" class="form-control" id="username" required placeholder="Enter admin username">
+                            <i class="fas fa-user input-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <div class="input-with-icon">
+                            <input type="password" class="form-control" id="password" required placeholder="Enter admin password">
+                            <i class="fas fa-lock input-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.9rem; color: var(--text-light);">
+                            <input type="checkbox" required style="margin-top: 0.2rem;">
+                            <span>I understand that this is a secure admin area and unauthorized access is prohibited.</span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> Access Dashboard
+                    </button>
+                </form>
+
+                <!-- Security Notice -->
+                <div class="security-notice">
+                    <h4>🔒 Secure Access Only</h4>
+                    <p>This area is restricted to authorized administrators only. All access attempts are logged and monitored.</p>
+                </div>
+            </div>
+
+            <!-- Demo Credentials (Remove in production) -->
+            <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--nude-medium); border-left: 3px solid var(--warning);">
+                <h4 style="color: var(--charcoal); margin-bottom: 0.5rem; font-size: 1rem;">
+                    <i class="fas fa-info-circle" style="color: var(--warning);"></i>
+                    Demo Credentials
+                </h4>
+                <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                    <strong>Username:</strong> admin<br>
+                    <strong>Password:</strong> admin123
+                </p>
+                <p style="color: var(--text-light); font-size: 0.8rem; margin-bottom: 0;">
+                    💡 These are demo credentials. Change them in production.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">Crown Trade Academy</div>
+            <ul class="footer-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="referral-register.html">Apply Now</a></li>
+                <li><a href="login.html">Client Login</a></li>
+                <li><a href="admin-login.html">Admin</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+            </ul>
+            <p class="copyright">&copy; 2024 Crown Trade Academy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Admin Login System
+        let loginAttempts = 0;
+        const maxLoginAttempts = 3;
+        const lockoutTime = 30000; // 30 seconds
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔐 Admin login page loaded');
+            setupLoginForm();
+            checkExistingSession();
+            initializeDemoData();
+        });
+
+        // Setup login form
+        function setupLoginForm() {
+            const form = document.getElementById('adminLoginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            form.addEventListener('submit', handleLogin);
+            
+            // Real-time form validation
+            const inputs = form.querySelectorAll('input[required]');
+            inputs.forEach(input => {
+                input.addEventListener('input', validateForm);
+            });
+        }
+
+        // Check if admin is already logged in
+        function checkExistingSession() {
+            const isAdminLoggedIn = localStorage.getItem('adminLoggedIn');
+            
+            if (isAdminLoggedIn) {
+                showMessage('success', 'Session detected. Redirecting...');
+                setTimeout(() => {
+                    window.location.href = 'admin-dashboard.html';
+                }, 1000);
+            }
+        }
+
+        // Initialize demo data if not exists
+        function initializeDemoData() {
+            // Set default admin credentials if not exists
+            if (!localStorage.getItem('adminCredentials')) {
+                const defaultCredentials = {
+                    username: 'admin',
+                    password: 'admin123',
+                    lastPasswordChange: new Date().toISOString()
+                };
+                localStorage.setItem('adminCredentials', JSON.stringify(defaultCredentials));
+            }
+
+            // Initialize demo pending applications if empty
+            if (!localStorage.getItem('pendingApprovals')) {
+                const demoApplications = [
+                    {
+                        id: 'demo_1',
+                        fullName: 'John Doe',
+                        email: 'john.doe@example.com',
+                        phone: '+254 712 345 678',
+                        package: 'referral-only',
+                        packageName: 'Referral Program',
+                        amount: 500,
+                        status: 'pending',
+                        timestamp: new Date().toISOString(),
+                        registrationDate: new Date().toLocaleDateString(),
+                        referralCode: 'N/A'
+                    },
+                    {
+                        id: 'demo_2', 
+                        fullName: 'Jane Smith',
+                        email: 'jane.smith@example.com',
+                        phone: '+254 723 456 789',
+                        package: 'mentorship-only',
+                        packageName: 'Mentorship Program',
+                        amount: 50000,
+                        status: 'pending',
+                        timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+                        registrationDate: new Date(Date.now() - 86400000).toLocaleDateString(),
+                        referralCode: 'REF123'
+                    }
+                ];
+                localStorage.setItem('pendingApprovals', JSON.stringify(demoApplications));
+            }
+
+            // Initialize demo approved users if empty
+            if (!localStorage.getItem('approvedUsers')) {
+                const demoUsers = [
+                    {
+                        id: 'approved_1',
+                        fullName: 'Mike Johnson',
+                        email: 'mike.johnson@example.com',
+                        phone: '+254 734 567 890',
+                        package: 'combined',
+                        packageName: 'Combined Program',
+                        amount: 50500,
+                        status: 'approved',
+                        timestamp: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+                        registrationDate: new Date(Date.now() - 172800000).toLocaleDateString(),
+                        referralCode: 'REF456',
+                        approvedDate: new Date(Date.now() - 172800000).toISOString()
+                    }
+                ];
+                localStorage.setItem('approvedUsers', JSON.stringify(demoUsers));
+            }
+
+            // Initialize dashboard stats if empty
+            if (!localStorage.getItem('dashboardStats')) {
+                const demoStats = {
+                    'mike.johnson@example.com': {
+                        totalReferrals: 3,
+                        totalEarnings: 600,
+                        availableBalance: 600,
+                        conversionRate: 60,
+                        referrals: [
+                            { name: 'Referral 1', email: 'ref1@example.com', joinDate: '2024-01-15', status: 'approved', commission: 200 },
+                            { name: 'Referral 2', email: 'ref2@example.com', joinDate: '2024-01-16', status: 'approved', commission: 200 },
+                            { name: 'Referral 3', email: 'ref3@example.com', joinDate: '2024-01-17', status: 'pending', commission: 200 }
+                        ]
+                    }
+                };
+                localStorage.setItem('dashboardStats', JSON.stringify(demoStats));
+            }
+        }
+
+        // Validate form in real-time
+        function validateForm() {
+            const form = document.getElementById('adminLoginForm');
+            const inputs = form.querySelectorAll('input[required]');
+            const termsChecked = form.querySelector('input[type="checkbox"]').checked;
+            
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                }
+            });
+            
+            if (!termsChecked) {
+                isValid = false;
+            }
+            
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.disabled = !isValid;
+            
+            return isValid;
+        }
+
+        // Handle login submission
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                showMessage('error', 'Please fill all required fields and accept the terms.');
+                return;
+            }
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+
+            // Check if account is locked
+            const lockoutUntil = localStorage.getItem('adminLockoutUntil');
+            if (lockoutUntil && Date.now() < parseInt(lockoutUntil)) {
+                const remainingTime = Math.ceil((parseInt(lockoutUntil) - Date.now()) / 1000);
+                showMessage('error', `Account temporarily locked. Try again in ${remainingTime} seconds.`);
+                return;
+            }
+
+            // Show loading state
+            loginBtn.innerHTML = '<div class="loading-spinner"></div> Authenticating...';
+            loginBtn.disabled = true;
+
+            // Simulate API call delay
+            setTimeout(() => {
+                authenticateAdmin(username, password);
+            }, 1500);
+        }
+
+        // Authenticate admin credentials
+        function authenticateAdmin(username, password) {
+            const storedCredentials = JSON.parse(localStorage.getItem('adminCredentials') || '{}');
+            const loginBtn = document.getElementById('loginBtn');
+
+            // Check credentials
+            if (username === storedCredentials.username && password === storedCredentials.password) {
+                // Successful login
+                loginAttempts = 0;
+                localStorage.setItem('adminLoginAttempts', '0');
+                localStorage.removeItem('adminLockoutUntil');
+                
+                // Set admin session
+                localStorage.setItem('adminLoggedIn', 'true');
+                localStorage.setItem('adminLastLogin', new Date().toISOString());
+                
+                showMessage('success', 'Authentication successful! Redirecting to dashboard...');
+                
+                // Redirect to admin dashboard
+                setTimeout(() => {
+                    window.location.href = 'admin-dashboard.html';
+                }, 2000);
+                
+            } else {
+                // Failed login
+                loginAttempts = parseInt(localStorage.getItem('adminLoginAttempts') || '0') + 1;
+                localStorage.setItem('adminLoginAttempts', loginAttempts.toString());
+                
+                // Check if account should be locked
+                if (loginAttempts >= maxLoginAttempts) {
+                    const lockoutUntil = Date.now() + lockoutTime;
+                    localStorage.setItem('adminLockoutUntil', lockoutUntil.toString());
+                    showMessage('error', `Too many failed attempts. Account locked for 30 seconds.`);
+                } else {
+                    const remainingAttempts = maxLoginAttempts - loginAttempts;
+                    showMessage('error', `Invalid credentials. ${remainingAttempts} attempt(s) remaining.`);
+                }
+                
+                // Reset button
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Access Dashboard';
+                loginBtn.disabled = false;
+            }
+        }
+
+        // Show message alert
+        function showMessage(type, message) {
+            // Hide all alerts first
+            document.getElementById('errorAlert').style.display = 'none';
+            document.getElementById('successAlert').style.display = 'none';
+            
+            // Show specific alert
+            const alertElement = document.getElementById(type + 'Alert');
+            if (alertElement) {
+                alertElement.querySelector('span').textContent = message;
+                alertElement.style.display = 'block';
+                
+                // Auto-hide success messages after 3 seconds
+                if (type === 'success') {
+                    setTimeout(() => {
+                        alertElement.style.display = 'none';
+                    }, 3000);
+                }
+            }
+        }
+
+        // Demo function to reset login attempts (for testing)
+        function resetLoginAttempts() {
+            loginAttempts = 0;
+            localStorage.setItem('adminLoginAttempts', '0');
+            localStorage.removeItem('adminLockoutUntil');
+            showMessage('success', 'Login attempts reset for demo purposes.');
+        }
+
+        // Add right-click menu for demo purposes (remove in production)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            if (confirm('Reset login attempts for demo?')) {
+                resetLoginAttempts();
+            }
+        });
+
+        // Keyboard shortcut for demo reset (Ctrl+Shift+R)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'R') {
+                e.preventDefault();
+                resetLoginAttempts();
+            }
+        });
+    </script>
+</body>
+</html>
