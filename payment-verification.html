@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Verification - Crown Trade Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --nude-light: #F9F6F2;
+            --nude-medium: #E8DFD6;
+            --nude-dark: #D4C8BC;
+            --nude-accent: #C4B5A3;
+            --gold: #C8A97E;
+            --gold-dark: #B89463;
+            --charcoal: #3A3A3A;
+            --text-light: #7A7A7A;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --success: #27AE60;
+            --warning: #E67E22;
+            --danger: #E74C3C;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nude-light);
+            color: var(--charcoal);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        /* Header */
+        .premium-header {
+            background-color: rgba(249, 246, 242, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 200, 188, 0.3);
+            transition: var(--transition);
+        }
+
+        .premium-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            text-decoration: none;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background-color: var(--gold);
+            transition: var(--transition);
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--charcoal);
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--gold);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        .payment-verification {
+            padding: 12rem 2rem 6rem;
+            min-height: 100vh;
+        }
+
+        .premium-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Luxury Card */
+        .luxury-card {
+            background: var(--nude-light);
+            border: 1px solid var(--nude-medium);
+            padding: 3rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .luxury-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gold);
+        }
+
+        .luxury-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Status Tracker */
+        .status-tracker {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .status-tracker::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--nude-medium);
+            z-index: 1;
+        }
+
+        .status-step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .status-step.active .step-icon {
+            background: var(--gold);
+            color: var(--nude-light);
+            border: 2px solid var(--gold);
+        }
+
+        .status-step.completed .step-icon {
+            background: var(--success);
+            color: var(--nude-light);
+            border: 2px solid var(--success);
+        }
+
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--nude-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 600;
+            border: 2px solid transparent;
+            transition: var(--transition);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .step-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .status-step.active .step-label {
+            color: var(--charcoal);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--nude-light);
+            padding: 1rem 2.5rem;
+            border-radius: 0;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--gold);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--gold);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            background: transparent;
+            color: var(--charcoal);
+            padding: 1rem 2.5rem;
+            border-radius: 0;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            border: 1px solid var(--charcoal);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-secondary:hover {
+            background: var(--charcoal);
+            color: var(--nude-light);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--charcoal);
+            font-size: 0.9rem;
+        }
+
+        /* File Upload */
+        .file-upload-area {
+            border: 2px dashed var(--nude-accent);
+            border-radius: 0;
+            padding: 2.5rem;
+            text-align: center;
+            background: var(--nude-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--gold);
+            background: var(--nude-medium);
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--gold);
+            background: rgba(200, 169, 126, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .upload-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: 0;
+            overflow: hidden;
+            border: 1px solid var(--nude-medium);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 0;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-method {
+            border: 1px solid var(--nude-medium);
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--nude-light);
+        }
+
+        .payment-method:hover {
+            border-color: var(--gold);
+        }
+
+        .payment-method.selected {
+            border-color: var(--gold);
+            background: rgba(200, 169, 126, 0.05);
+        }
+
+        .payment-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--gold);
+        }
+
+        .payment-name {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Approval Status */
+        .approval-status {
+            padding: 2.5rem;
+            border-radius: 0;
+            margin: 2rem 0;
+            text-align: center;
+            border: 1px solid var(--nude-medium);
+            background: var(--nude-light);
+        }
+
+        .status-pending {
+            border-left: 4px solid var(--warning);
+        }
+
+        .status-approved {
+            border-left: 4px solid var(--success);
+        }
+
+        .loading-spinner {
+            border: 3px solid var(--nude-medium);
+            border-top: 3px solid var(--gold);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .countdown {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--success);
+            margin: 1rem 0;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            background: var(--nude-light);
+            padding: 1rem 1.5rem;
+            border-radius: 0;
+            font-weight: 500;
+            border: 1px solid var(--nude-medium);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--nude-medium);
+            border-top: 1px solid rgba(212, 200, 188, 0.2);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--nude-light);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: var(--nude-medium);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: var(--nude-dark);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .premium-nav {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                margin-top: 1rem;
+                gap: 1.5rem;
+            }
+            
+            .payment-verification {
+                padding: 10rem 1.5rem 4rem;
+            }
+            
+            .luxury-card {
+                padding: 2rem;
+            }
+            
+            .status-tracker {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .status-tracker::before {
+                display: none;
+            }
+            
+            .payment-methods {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .trust-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="premium-header">
+        <nav class="premium-nav">
+            <a href="index.html" class="logo">Crown Trade Academy</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="referral-register.html">Apply Now</a></li>
+                <li><a href="login.html">Client Login</a></li>
+                <li><a href="admin-login.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Payment Verification Section -->
+    <section class="payment-verification">
+        <div class="premium-container">
+            <!-- Status Tracker -->
+            <div class="status-tracker">
+                <div class="status-step completed">
+                    <div class="step-icon">1</div>
+                    <div class="step-label">Register</div>
+                </div>
+                <div class="status-step active">
+                    <div class="step-icon">2</div>
+                    <div class="step-label">Payment</div>
+                </div>
+                <div class="status-step">
+                    <div class="step-icon">3</div>
+                    <div class="step-label">Approval</div>
+                </div>
+                <div class="status-step">
+                    <div class="step-icon">4</div>
+                    <div class="step-label">Dashboard</div>
+                </div>
+            </div>
+
+            <!-- Payment Header -->
+            <div class="luxury-card" style="text-align: center; background: linear-gradient(135deg, var(--nude-medium) 0%, var(--nude-dark) 100%);">
+                <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--charcoal);">Complete Your Payment</h1>
+                <p style="font-size: 1.2rem; font-weight: 500; color: var(--text-light);">Upload payment proof for verification</p>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="luxury-card">
+                <h2 style="margin-bottom: 1.5rem; color: var(--charcoal); position: relative;">
+                    <i class="fas fa-receipt" style="color: var(--gold); margin-right: 0.5rem;"></i>
+                    Order Summary
+                </h2>
+                <div id="orderSummary">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Payment Instructions -->
+            <div class="luxury-card">
+                <h2 style="margin-bottom: 1.5rem; color: var(--charcoal); position: relative;">
+                    <i class="fas fa-credit-card" style="color: var(--gold); margin-right: 0.5rem;"></i>
+                    Payment Instructions
+                </h2>
+                
+                <div style="background: var(--nude-medium); padding: 2rem; margin-bottom: 1.5rem; border-left: 3px solid var(--gold);">
+                    <h3 style="color: var(--charcoal); margin-bottom: 1.5rem; font-size: 1.3rem;">Send Payment via M-Pesa</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div>
+                            <strong style="color: var(--charcoal);">Paybill Number:</strong>
+                            <div style="font-size: 1.8rem; font-weight: 700; color: var(--gold); font-family: 'Cormorant Garamond', serif;">247247</div>
+                        </div>
+                        <div>
+                            <strong style="color: var(--charcoal);">Account Number:</strong>
+                            <div style="font-size: 1.8rem; font-weight: 700; color: var(--gold); font-family: 'Cormorant Garamond', serif;" id="accountNumber">CTA2024</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(200, 169, 126, 0.1); border: 1px solid var(--nude-accent);">
+                        <strong style="color: var(--charcoal); display: block; margin-bottom: 1rem;">
+                            <i class="fas fa-info-circle" style="color: var(--gold); margin-right: 0.5rem;"></i>
+                            Important Instructions:
+                        </strong>
+                        <ul style="margin-top: 0.5rem; padding-left: 1.5rem; color: var(--text-light);">
+                            <li>Use your full name as payment reference</li>
+                            <li>Take a clear screenshot of the confirmation message</li>
+                            <li>Upload the screenshot below for verification</li>
+                            <li>Approval typically takes 2-24 hours</li>
+                            <li>You'll receive email notification once approved</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div style="text-align: center; padding: 1.5rem; background: var(--nude-light); border: 1px solid var(--nude-medium);">
+                    <h4 style="color: var(--charcoal); margin-bottom: 1rem;">
+                        <i class="fas fa-envelope" style="color: var(--gold); margin-right: 0.5rem;"></i>
+                        Need Help with Payment?
+                    </h4>
+                    <p style="color: var(--text-light); margin-bottom: 1rem;">
+                        Contact us for payment assistance or alternative payment methods:
+                    </p>
+                    <a href="mailto:crowntradeacademy@gmail.com" style="color: var(--gold); font-weight: 600; text-decoration: none; font-size: 1.1rem;">
+                        crowntradeacademy@gmail.com
+                    </a>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="luxury-card">
+                <h2 style="margin-bottom: 1.5rem; color: var(--charcoal); position: relative;">
+                    <i class="fas fa-cloud-upload-alt" style="color: var(--gold); margin-right: 0.5rem;"></i>
+                    Upload Payment Proof
+                </h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Payment Screenshot (M-Pesa Confirmation)</label>
+                    <div class="file-upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3 style="color: var(--charcoal); margin-bottom: 0.5rem;">Click to upload screenshot</h3>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">
+                            JPG, PNG, PDF (Max: 5MB)
+                        </p>
+                        <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.pdf" style="display: none;">
+                    </div>
+                    
+                    <div class="upload-preview" id="uploadPreview"></div>
+                </div>
+                
+                <button type="button" class="btn-primary" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Submit for Approval
+                </button>
+            </div>
+
+            <!-- Approval Status -->
+            <div class="approval-status status-pending" id="pendingStatus" style="display: none;">
+                <i class="fas fa-clock" style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--warning);"></i>
+                <h3 style="margin-bottom: 1rem; color: var(--charcoal);">Application Submitted Successfully!</h3>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">
+                    Thank you for your payment! Your application has been received and is now pending admin approval. 
+                    You will receive access to your dashboard within 2-24 hours after verification.
+                </p>
+                <div class="loading-spinner"></div>
+                <p style="color: var(--text-light);"><strong>Status:</strong> <span id="statusMessage">Awaiting admin approval...</span></p>
+                
+                <div style="margin-top: 2rem;">
+                    <button class="btn-secondary" onclick="forceCheckApproval()" id="checkStatusBtn">
+                        <i class="fas fa-sync-alt"></i> Check Approval Status
+                    </button>
+                </div>
+                
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <a href="index.html" class="btn-secondary">
+                        <i class="fas fa-home"></i> Return to Homepage
+                    </a>
+                </div>
+            </div>
+            
+            <div class="approval-status status-approved" id="approvedStatus" style="display: none;">
+                <i class="fas fa-check-circle" style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--success);"></i>
+                <h3 style="margin-bottom: 1rem; color: var(--charcoal);">Approved! 🎉 Welcome to Crown Trade Academy</h3>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">
+                    Congratulations! Your application has been approved. You now have full access to your dashboard and can start using our services immediately.
+                </p>
+                <div class="countdown" id="countdown">5</div>
+                <div class="loading-spinner" style="border-top-color: var(--success);"></div>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-light);">
+                    <i class="fas fa-info-circle" style="color: var(--success);"></i> 
+                    Redirecting to your dashboard... 
+                    <a href="client-dashboard.html" style="color: var(--success); text-decoration: underline;">Click here if not redirected</a>
+                </p>
+            </div>
+
+            <!-- Trust Badges -->
+            <div class="trust-badges">
+                <div class="trust-badge">
+                    <div style="font-size: 1.5rem; margin-right: 0.8rem; color: var(--gold);">🔒</div>
+                    Secure & Encrypted
+                </div>
+                <div class="trust-badge">
+                    <div style="font-size: 1.5rem; margin-right: 0.8rem; color: var(--gold);">⚡</div>
+                    Fast Approval
+                </div>
+                <div class="trust-badge">
+                    <div style="font-size: 1.5rem; margin-right: 0.8rem; color: var(--gold);">📞</div>
+                    24/7 Support
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">Crown Trade Academy</div>
+            <ul class="footer-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="referral-register.html">Apply Now</a></li>
+                <li><a href="login.html">Client Login</a></li>
+                <li><a href="admin-login.html">Admin</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+            </ul>
+            <p class="copyright">&copy; 2024 Crown Trade Academy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 🚀 PAYMENT VERIFICATION SYSTEM
+        let checkInterval;
+        let userEmail = '';
+        let hasSubmitted = false;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Payment verification page loaded');
+            loadOrderSummary();
+            setupFileUpload();
+            setupSubmitButton();
+            checkIfAlreadyApproved();
+        });
+
+        // Load order summary from registration data
+        function loadOrderSummary() {
+            const userData = JSON.parse(localStorage.getItem('pendingUserData') || '{}');
+            userEmail = userData.email;
+            
+            if (!userData.email) {
+                alert('No registration data found. Please complete the registration first.');
+                window.location.href = 'referral-register.html';
+                return;
+            }
+
+            console.log('📦 Loading order for:', userEmail);
+            
+            const packages = {
+                'mentorship-only': { name: 'Mentorship Program', amount: 50000 },
+                'referral-only': { name: 'Referral Program', amount: 500 },
+                'combined': { name: 'Combined Program', amount: 50500 }
+            };
+            
+            const packageType = userData.program || 'referral-only';
+            const packageInfo = packages[packageType];
+            
+            document.getElementById('orderSummary').innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <strong style="color: var(--charcoal);">Program:</strong>
+                        <div style="font-size: 1.3rem; font-weight: 700; color: var(--gold); font-family: 'Cormorant Garamond', serif;">${packageInfo.name}</div>
+                    </div>
+                    <div>
+                        <strong style="color: var(--charcoal);">Amount Paid:</strong>
+                        <div style="font-size: 1.3rem; font-weight: 700; color: var(--gold); font-family: 'Cormorant Garamond', serif;">KES ${packageInfo.amount.toLocaleString()}</div>
+                    </div>
+                </div>
+                <div style="background: var(--nude-medium); padding: 1.5rem; border-left: 3px solid var(--gold);">
+                    <strong style="color: var(--charcoal);">Customer Details:</strong><br>
+                    <strong>Name:</strong> ${userData.fullName || 'N/A'}<br>
+                    <strong>Email:</strong> ${userData.email || 'N/A'}<br>
+                    <strong>Phone:</strong> ${userData.phone || 'N/A'}
+                </div>
+            `;
+            
+            // Generate unique account number
+            const accountNumber = 'CTA' + Date.now().toString().slice(-6);
+            document.getElementById('accountNumber').textContent = accountNumber;
+        }
+
+        // Setup file upload functionality
+        function setupFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            
+            uploadArea.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // Drag and drop functionality
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect({ target: fileInput });
+            });
+        }
+
+        // Setup submit button
+        function setupSubmitButton() {
+            document.getElementById('submitBtn').addEventListener('click', submitPayment);
+        }
+
+        // Handle file selection
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Check file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size too large. Please select a file smaller than 5MB.');
+                return;
+            }
+            
+            const preview = document.getElementById('uploadPreview');
+            preview.innerHTML = '';
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewItem = document.createElement('div');
+                previewItem.className = 'preview-item';
+                previewItem.innerHTML = `
+                    <img src="${e.target.result}" alt="Payment Screenshot Preview">
+                    <button type="button" class="remove-btn" onclick="clearFile()">×</button>
+                `;
+                preview.appendChild(previewItem);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Clear file
+        function clearFile() {
+            document.getElementById('fileInput').value = '';
+            document.getElementById('uploadPreview').innerHTML = '';
+        }
+
+        // Submit payment for approval
+        function submitPayment() {
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput.files[0]) {
+                alert('Please upload your M-Pesa payment screenshot for verification.');
+                return;
+            }
+
+            const userData = JSON.parse(localStorage.getItem('pendingUserData') || '{}');
+            
+            if (!userData.email) {
+                alert('Error: Registration data not found. Please complete registration first.');
+                window.location.href = 'referral-register.html';
+                return;
+            }
+
+            console.log('✅ Submitting payment for:', userData.email);
+
+            // 🚀 CRITICAL: Save to pending approvals for admin dashboard
+            const pendingEntry = {
+                id: 'pending_' + Date.now(),
+                email: userData.email,
+                fullName: userData.fullName,
+                package: userData.program || 'referral-only',
+                phone: userData.phone,
+                status: 'pending',
+                timestamp: new Date().toISOString(),
+                amount: getPackageAmount(userData.program),
+                packageName: getPackageName(userData.program),
+                paymentVerified: false,
+                registrationDate: new Date().toLocaleDateString(),
+                referralCode: userData.referralCode || 'N/A'
+            };
+            
+            // Save to pending approvals (admin dashboard checks this)
+            let pendingApprovals = JSON.parse(localStorage.getItem('pendingApprovals') || '[]');
+            
+            // Remove any existing entry for this user
+            pendingApprovals = pendingApprovals.filter(item => item.email !== userData.email);
+            
+            // Add new entry
+            pendingApprovals.push(pendingEntry);
+            localStorage.setItem('pendingApprovals', JSON.stringify(pendingApprovals));
+            
+            console.log('📝 Added to pending approvals:', pendingApprovals);
+            console.log('🔍 Admin should see:', pendingApprovals.length, 'pending approvals');
+
+            // Show pending status
+            document.getElementById('pendingStatus').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-check"></i> Submitted for Approval';
+            document.getElementById('submitBtn').style.background = 'var(--success)';
+            document.getElementById('submitBtn').style.borderColor = 'var(--success)';
+            
+            hasSubmitted = true;
+            
+            // Start automatic approval checking
+            startAutoApprovalCheck();
+
+            // Show success message
+            alert('✅ Payment submitted successfully! Our team will review your application within 2-24 hours.');
+        }
+
+        // Get package amount
+        function getPackageAmount(packageType) {
+            const amounts = {
+                'mentorship-only': 50000,
+                'referral-only': 500,
+                'combined': 50500
+            };
+            return amounts[packageType] || 0;
+        }
+
+        // Get package name
+        function getPackageName(packageType) {
+            const names = {
+                'mentorship-only': 'Mentorship Program',
+                'referral-only': 'Referral Program', 
+                'combined': 'Combined Program'
+            };
+            return names[packageType] || 'Referral Program';
+        }
+
+        // Start automatic approval checking
+        function startAutoApprovalCheck() {
+            // Check every 5 seconds for approval
+            checkInterval = setInterval(() => {
+                checkApprovalStatus();
+            }, 5000);
+        }
+
+        // Check if already approved
+        function checkIfAlreadyApproved() {
+            const userData = JSON.parse(localStorage.getItem('pendingUserData') || '{}');
+            if (!userData.email) return;
+            
+            console.log('🔍 Checking if already approved for:', userData.email);
+            
+            // Check approved users (admin dashboard uses this)
+            const approvedUsers = JSON.parse(localStorage.getItem('approvedUsers') || '[]');
+            const isApproved = approvedUsers.find(user => user.email === userData.email);
+            
+            if (isApproved) {
+                console.log('🎉 User is already approved!');
+                completeApproval(isApproved);
+                return;
+            }
+            
+            // Check if user already submitted payment
+            const pendingApprovals = JSON.parse(localStorage.getItem('pendingApprovals') || '[]');
+            const isPending = pendingApprovals.find(user => user.email === userData.email);
+            
+            if (isPending) {
+                console.log('⏳ User has pending submission');
+                document.getElementById('pendingStatus').style.display = 'block';
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('submitBtn').innerHTML = '<i class="fas fa-check"></i> Submitted for Approval';
+                document.getElementById('submitBtn').style.background = 'var(--success)';
+                document.getElementById('submitBtn').style.borderColor = 'var(--success)';
+                hasSubmitted = true;
+                startAutoApprovalCheck();
+            }
+        }
+
+        // Check approval status
+        function checkApprovalStatus() {
+            if (!hasSubmitted) return;
+            
+            const userData = JSON.parse(localStorage.getItem('pendingUserData') || '{}');
+            if (!userData.email) {
+                console.log('❌ No user data found');
+                return;
+            }
+
+            console.log('🔍 Checking approval for:', userData.email);
+            
+            // Check approved users (admin dashboard uses this)
+            const approvedUsers = JSON.parse(localStorage.getItem('approvedUsers') || '[]');
+            const isApproved = approvedUsers.find(user => user.email === userData.email);
+            
+            if (isApproved) {
+                console.log('🎉 APPROVAL DETECTED! Starting redirect...');
+                clearInterval(checkInterval);
+                completeApproval(isApproved);
+                return true;
+            }
+            
+            console.log('⏳ Still waiting for approval...');
+            document.getElementById('statusMessage').textContent = `Last checked: ${new Date().toLocaleTimeString()}`;
+            return false;
+        }
+
+        // Force check approval (manual button)
+        function forceCheckApproval() {
+            document.getElementById('checkStatusBtn').innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Checking...';
+            document.getElementById('checkStatusBtn').disabled = true;
+            
+            setTimeout(() => {
+                if (checkApprovalStatus()) {
+                    document.getElementById('checkStatusBtn').innerHTML = '<i class="fas fa-check"></i> Approved!';
+                } else {
+                    document.getElementById('checkStatusBtn').innerHTML = '<i class="fas fa-sync-alt"></i> Check Again';
+                    document.getElementById('checkStatusBtn').disabled = false;
+                    alert('Your application is still under review. Our team will approve it within 2-24 hours.');
+                }
+            }, 1000);
+        }
+
+        // Complete approval and redirect
+        function completeApproval(userData) {
+            console.log('🚀 Starting approval completion for:', userData.email);
+            
+            // Hide pending, show approved
+            document.getElementById('pendingStatus').style.display = 'none';
+            document.getElementById('approvedStatus').style.display = 'block';
+            
+            // Update status tracker
+            document.querySelectorAll('.status-step').forEach(step => {
+                step.classList.remove('active');
+                step.classList.add('completed');
+            });
+            
+            // Set user session
+            localStorage.setItem('clientLoggedIn', 'true');
+            localStorage.setItem('clientEmail', userData.email);
+            localStorage.setItem('clientName', userData.fullName || userData.name);
+            localStorage.setItem('clientPackage', userData.package || 'referral-only');
+            localStorage.setItem('clientJoinDate', new Date().toLocaleDateString());
+            
+            console.log('✅ User session established');
+            
+            // Remove from pending approvals
+            let pendingApprovals = JSON.parse(localStorage.getItem('pendingApprovals') || '[]');
+            pendingApprovals = pendingApprovals.filter(user => user.email !== userData.email);
+            localStorage.setItem('pendingApprovals', JSON.stringify(pendingApprovals));
+            
+            console.log('🧹 Cleaned up pending approvals');
+            
+            // Countdown and redirect
+            let countdown = 5;
+            const countdownElement = document.getElementById('countdown');
+            
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    console.log('🔄 Redirecting to dashboard...');
+                    window.location.href = 'client-dashboard.html';
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
