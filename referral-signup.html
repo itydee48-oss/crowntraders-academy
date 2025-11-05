@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Referral Program - Crown Trade Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --nude-light: #F9F6F2;
+            --nude-medium: #E8DFD6;
+            --nude-dark: #D4C8BC;
+            --nude-accent: #C4B5A3;
+            --gold: #C8A97E;
+            --gold-dark: #B89463;
+            --charcoal: #3A3A3A;
+            --text-light: #7A7A7A;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nude-light);
+            color: var(--charcoal);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+        }
+
+        .premium-header {
+            background-color: rgba(249, 246, 242, 0.95);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 200, 188, 0.3);
+        }
+
+        .premium-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--charcoal);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .referral-hero {
+            background: linear-gradient(135deg, rgba(249, 246, 242, 0.9) 0%, rgba(232, 223, 214, 0.8) 100%);
+            padding: 12rem 2rem 4rem;
+            text-align: center;
+        }
+
+        .referral-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .referral-hero p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .premium-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .auth-section {
+            padding: 4rem 0;
+            display: flex;
+            gap: 4rem;
+            align-items: flex-start;
+        }
+
+        .auth-forms {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .benefits {
+            flex: 1;
+            background: var(--nude-medium);
+            padding: 3rem;
+        }
+
+        .form-container {
+            background: white;
+            padding: 2.5rem;
+            border: 1px solid var(--nude-medium);
+            margin-bottom: 2rem;
+        }
+
+        .form-toggle {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--nude-medium);
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-btn.active {
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--nude-medium);
+            background: var(--nude-light);
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--nude-light);
+            padding: 1rem 2.5rem;
+            border: none;
+            font-weight: 500;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-dark);
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .benefit-icon {
+            background: var(--gold);
+            color: var(--nude-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .benefit-content h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-content p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .referral-stats {
+            background: var(--charcoal);
+            color: var(--nude-light);
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .premium-footer {
+            background: var(--charcoal);
+            color: var(--nude-light);
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="premium-header">
+        <nav class="premium-nav">
+            <a href="index.html" class="logo">Crown Trade Academy</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#programs">Programs</a></li>
+                <li><a href="index.html#mentors">Mentors</a></li>
+                <li><a href="referral-signup.html" style="color: var(--gold);">Referral Program</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="referral-hero">
+        <div class="premium-container">
+            <h1>Join Our Referral Program</h1>
+            <p>Start earning commissions by referring traders to our platform. Join thousands of members already earning with our referral network.</p>
+        </div>
+    </section>
+
+    <!-- Auth Section -->
+    <section class="auth-section">
+        <div class="premium-container" style="display: flex; gap: 4rem;">
+            <!-- Login/Signup Forms -->
+            <div class="auth-forms">
+                <div class="form-container">
+                    <div class="form-toggle">
+                        <button class="toggle-btn active" onclick="showForm('login')">Login</button>
+                        <button class="toggle-btn" onclick="showForm('signup')">Sign Up</button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="loginForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Login to Referral Program</button>
+                    </form>
+
+                    <!-- Signup Form -->
+                    <form id="signupForm" class="auth-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="signupName">Full Name</label>
+                            <input type="text" id="signupName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupEmail">Email</label>
+                            <input type="email" id="signupEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPhone">Phone Number</label>
+                            <input type="tel" id="signupPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPassword">Password</label>
+                            <input type="password" id="signupPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupConfirmPassword">Confirm Password</label>
+                            <input type="password" id="signupConfirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Join Referral Program</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Benefits Section -->
+            <div class="benefits">
+                <h2 style="margin-bottom: 2rem;">Why Join Our Referral Program?</h2>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="benefit-content">
+                        <h4>Earn Generous Commissions</h4>
+                        <p>Get up to 30% commission on every referral that joins our premium programs</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="benefit-content">
+                        <h4>Real-time Tracking</h4>
+                        <p>Monitor your referrals and earnings with our advanced dashboard</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div class="benefit-content">
+                        <h4>Bonus Rewards</h4>
+                        <p>Unlock exclusive bonuses and rewards as you reach referral milestones</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="benefit-content">
+                        <h4>Build Your Network</h4>
+                        <p>Grow your professional network while earning passive income</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="referral-stats">
+        <div class="premium-container">
+            <h2>Our Referral Community</h2>
+            <p>Join thousands of successful referrers already earning with us</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>$2.5M+</h3>
+                    <p>Total Commissions Paid</p>
+                </div>
+                <div class="stat-item">
+                    <h3>15K+</h3>
+                    <p>Active Referrers</p>
+                </div>
+                <div class="stat-item">
+                    <h3>45%</h3>
+                    <p>Average Success Rate</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24/7</h3>
+                    <p>Support Available</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="premium-footer">
+        <div class="premium-container">
+            <a href="index.html" class="logo" style="color: var(--nude-light);">Crown Trade Academy</a>
+            <p style="margin-top: 2rem; color: var(--nude-medium);">&copy; 2024 Crown Trade Academy. All rights reserved. Trading involves risk.</p>
+        </div>
+    </footer>
+
+    <script>
+        function showForm(formType) {
+            // Update toggle buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Show/hide forms
+            if (formType === 'login') {
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('signupForm').style.display = 'none';
+            } else {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('signupForm').style.display = 'block';
+            }
+        }
+
+        // Form submissions
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Login successful! Redirecting to your referral dashboard...');
+            // Here you would redirect to the actual referral dashboard
+            window.location.href = 'referral-dashboard.html';
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Account created successfully! Welcome to our referral program.');
+            // Here you would redirect to the actual referral dashboard
+            window.location.href = 'referral-dashboard.html';
+        });
+    </script>
+</body>
+</html>
