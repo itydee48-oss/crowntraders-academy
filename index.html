@@ -155,6 +155,21 @@
             margin: 0 auto;
         }
 
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .btn-primary {
             display: inline-block;
             background: var(--gold);
@@ -241,4 +256,236 @@
             border-radius: 0;
             padding: 3rem 2rem;
             text-align: center;
-            box
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--nude-medium);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .program-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .program-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .program-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .program-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .program-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--charcoal);
+        }
+
+        .program-card p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        /* Referral Section */
+        .referral-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--nude-medium) 0%, var(--nude-light) 100%);
+            text-align: center;
+        }
+
+        .referral-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .referral-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0;
+            gap: 2rem;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--gold);
+            color: var(--nude-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        .premium-footer {
+            background: var(--charcoal);
+            color: var(--nude-light);
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .footer-links a {
+            color: var(--nude-medium);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--nude-medium);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="premium-header">
+        <nav class="premium-nav">
+            <a href="#" class="logo">Crown Trade Academy</a>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Programs</a></li>
+                <li><a href="#">Mentors</a></li>
+                <li><a href="#">Success Stories</a></li>
+                <li><a href="#">Referral</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Elite Trading & Marketing Education</h1>
+            <p>Master the markets with our premium mentorship programs and unlock exclusive earning opportunities through our referral network.</p>
+            <a href="#" class="btn-primary">Start Your Journey</a>
+        </div>
+    </section>
+
+    <!-- Programs Section -->
+    <section class="programs-section">
+        <div class="premium-container">
+            <div class="section-title">
+                <h2>Our Premium Programs</h2>
+            </div>
+            <div class="programs">
+                <div class="program-card">
+                    <div class="program-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Pro Trader Mentorship</h3>
+                    <p>One-on-one guidance from experienced traders to accelerate your learning curve and maximize profits.</p>
+                    <a href="#" class="btn-primary">Learn More</a>
+                </div>
+                <div class="program-card">
+                    <div class="program-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Referral Network</h3>
+                    <p>Earn substantial commissions by referring traders to our platform and building your network.</p>
+                    <a href="#" class="btn-primary">Join Network</a>
+                </div>
+                <div class="program-card">
+                    <div class="program-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>VIP Masterclass</h3>
+                    <p>Advanced strategies and techniques for serious traders looking to achieve financial freedom.</p>
+                    <a href="#" class="btn-primary">Enroll Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Referral Section -->
+    <section class="referral-section">
+        <div class="premium-container">
+            <div class="referral-content">
+                <div class="section-title">
+                    <h2>Earn With Our Referral Program</h2>
+                </div>
+                <p>Refer aspiring traders and earn significant commissions while helping others achieve financial success.</p>
+                
+                <div class="referral-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Share Your Link</h3>
+                        <p>Share your unique referral link with your network</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>They Join</h3>
+                        <p>Your referrals sign up for our programs</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>You Earn</h3>
+                        <p>Receive commissions on their enrollment fees</p>
+                    </div>
+                </div>
+                
+                <a href="#" class="btn-primary">Get Your Referral Link</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="premium-footer">
+        <div class="footer-content">
+            <a href="#" class="logo" style="color: var(--nude-light);">Crown Trade Academy</a>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Disclaimer</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 Crown Trade Academy. All rights reserved. Trading involves risk.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
