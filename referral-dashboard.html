@@ -19,6 +19,9 @@
             --charcoal: #3A3A3A;
             --text-light: #7A7A7A;
             --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --success: #27AE60;
+            --warning: #E67E22;
+            --danger: #E74C3C;
         }
         
         * {
@@ -77,6 +80,10 @@
             font-size: 0.9rem;
         }
 
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
         .dashboard-hero {
             background: linear-gradient(135deg, rgba(249, 246, 242, 0.9) 0%, rgba(232, 223, 214, 0.8) 100%);
             padding: 12rem 2rem 4rem;
@@ -93,19 +100,21 @@
             padding: 4rem 0;
         }
 
+        /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             margin-bottom: 3rem;
         }
 
         .stat-card {
             background: white;
-            padding: 2rem;
+            padding: 2.5rem 2rem;
             border: 1px solid var(--nude-medium);
             text-align: center;
             transition: var(--transition);
+            border-radius: 5px;
         }
 
         .stat-card:hover {
@@ -120,29 +129,42 @@
         }
 
         .stat-card h3 {
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: var(--gold);
             margin-bottom: 0.5rem;
         }
 
-        .dashboard-cards {
+        .stat-card p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-layout {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
         }
 
-        .card {
+        .dashboard-card {
             background: white;
-            padding: 2rem;
+            padding: 2.5rem;
             border: 1px solid var(--nude-medium);
-            margin-bottom: 2rem;
+            border-radius: 5px;
         }
 
+        .dashboard-card h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: var(--charcoal);
+        }
+
+        /* Referral Link Section */
         .referral-link-container {
             background: var(--nude-medium);
             padding: 1.5rem;
-            margin: 1rem 0;
             border-radius: 5px;
+            margin: 1.5rem 0;
         }
 
         .referral-link {
@@ -152,8 +174,42 @@
             padding: 1rem;
             background: white;
             border: 1px solid var(--nude-dark);
+            border-radius: 3px;
+            margin-bottom: 1rem;
         }
 
+        /* Withdrawal Form */
+        .withdrawal-form {
+            margin-top: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--charcoal);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--nude-medium);
+            background: var(--nude-light);
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        /* Buttons */
         .btn-primary {
             display: inline-block;
             background: var(--gold);
@@ -166,7 +222,7 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 0.5rem;
+            border-radius: 3px;
         }
 
         .btn-primary:hover {
@@ -185,36 +241,19 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 0.5rem;
+            border-radius: 3px;
         }
 
         .btn-secondary:hover {
             background: var(--nude-medium);
         }
 
-        .withdrawal-form {
-            margin-top: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-group input, .form-group select {
+        .btn-full {
             width: 100%;
-            padding: 0.8rem;
-            border: 1px solid var(--nude-medium);
-            background: var(--nude-light);
-            font-family: 'Montserrat', sans-serif;
         }
 
-        .recent-referrals {
+        /* Referral List */
+        .referral-list {
             margin-top: 1.5rem;
         }
 
@@ -230,19 +269,67 @@
             border-bottom: none;
         }
 
+        .referral-info h4 {
+            margin-bottom: 0.3rem;
+        }
+
+        .referral-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .referral-status {
+            text-align: right;
+        }
+
         .status-pending {
             color: var(--warning);
+            font-weight: 500;
         }
 
         .status-approved {
             color: var(--success);
+            font-weight: 500;
         }
 
+        .referral-amount {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
         .premium-footer {
             background: var(--charcoal);
             color: var(--nude-light);
             padding: 4rem 0 2rem;
             text-align: center;
+        }
+
+        /* Success Messages */
+        .success-message {
+            background: var(--success);
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                gap: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -275,8 +362,293 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <i class="fas fa-wallet"></i>
-                    <h3>$1,250.00</h3>
-                    <p>Total Earnings</p>
+                    <h3 id="totalEarnings">$1,250.00</h3>
+                    <p>Total Amount Accumulated</p>
                 </div>
                 <div class="stat-card">
-                    <
+                    <i class="fas fa-users"></i>
+                    <h3 id="totalReferrals">24</h3>
+                    <p>People Referred</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3 id="availableBalance">$520.00</h3>
+                    <p>Available for Withdrawal</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3 id="conversionRate">35%</h3>
+                    <p>Conversion Rate</p>
+                </div>
+            </div>
+
+            <!-- Main Dashboard Content -->
+            <div class="dashboard-layout">
+                <!-- Left Column -->
+                <div>
+                    <!-- Unique Referral Link Section -->
+                    <div class="dashboard-card">
+                        <h2><i class="fas fa-link"></i> Your Unique Referral Link</h2>
+                        <p style="margin-bottom: 1rem; color: var(--text-light);">Share this link to start earning commissions</p>
+                        
+                        <div class="referral-link-container">
+                            <div class="referral-link" id="referralLink">
+                                https://crowntrade.academy/ref/CTA-USER-789123
+                            </div>
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <button class="btn-primary" onclick="copyReferralLink()">
+                                    <i class="fas fa-copy"></i> Copy Link
+                                </button>
+                                <button class="btn-secondary" onclick="shareReferralLink()">
+                                    <i class="fas fa-share"></i> Share Link
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="success-message" id="copySuccess">
+                            <i class="fas fa-check-circle"></i> Referral link copied to clipboard!
+                        </div>
+                    </div>
+
+                    <!-- Recent Referrals Section -->
+                    <div class="dashboard-card">
+                        <h2><i class="fas fa-user-friends"></i> Recent Referrals</h2>
+                        <div class="referral-list" id="referralList">
+                            <!-- Referral items will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                    <!-- Withdrawal Section -->
+                    <div class="dashboard-card">
+                        <h2><i class="fas fa-credit-card"></i> Withdrawal Section</h2>
+                        <p style="margin-bottom: 1rem; color: var(--text-light;">
+                            Available Balance: <strong id="withdrawalBalance">$520.00</strong>
+                        </p>
+                        
+                        <div class="withdrawal-form">
+                            <div class="form-group">
+                                <label for="withdrawAmount">Amount to Withdraw ($)</label>
+                                <input type="number" id="withdrawAmount" placeholder="Enter amount" min="10" max="520" step="0.01">
+                                <small style="color: var(--text-light);">Minimum withdrawal: $10</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="withdrawMethod">Payment Method</label>
+                                <select id="withdrawMethod">
+                                    <option value="">Select payment method</option>
+                                    <option value="bank">Bank Transfer</option>
+                                    <option value="mpesa">M-Pesa</option>
+                                    <option value="paypal">PayPal</option>
+                                    <option value="crypto">Cryptocurrency</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="accountDetails">Account Details</label>
+                                <input type="text" id="accountDetails" placeholder="Enter your account number, phone number, or wallet address">
+                            </div>
+                            
+                            <button class="btn-primary btn-full" onclick="requestWithdrawal()">
+                                <i class="fas fa-paper-plane"></i> Request Withdrawal
+                            </button>
+                        </div>
+                        
+                        <div class="success-message" id="withdrawalSuccess">
+                            <i class="fas fa-check-circle"></i> Withdrawal request submitted successfully!
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="dashboard-card">
+                        <h2><i class="fas fa-rocket"></i> Quick Actions</h2>
+                        <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+                            <button class="btn-secondary" onclick="generateNewReferralLink()">
+                                <i class="fas fa-sync"></i> Generate New Referral Link
+                            </button>
+                            <button class="btn-secondary" onclick="viewWithdrawalHistory()">
+                                <i class="fas fa-history"></i> View Withdrawal History
+                            </button>
+                            <button class="btn-secondary" onclick="downloadReport()">
+                                <i class="fas fa-download"></i> Download Earnings Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="premium-footer">
+        <div class="premium-container">
+            <a href="index.html" class="logo" style="color: var(--nude-light);">Crown Trade Academy</a>
+            <p style="margin-top: 2rem; color: var(--nude-medium);">&copy; 2024 Crown Trade Academy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample referral data
+        const referralData = [
+            { name: "John Doe", email: "john@email.com", status: "approved", amount: 50, date: "2024-01-15" },
+            { name: "Jane Smith", email: "jane@email.com", status: "pending", amount: 50, date: "2024-01-14" },
+            { name: "Mike Johnson", email: "mike@email.com", status: "approved", amount: 50, date: "2024-01-13" },
+            { name: "Sarah Wilson", email: "sarah@email.com", status: "approved", amount: 50, date: "2024-01-12" },
+            { name: "David Brown", email: "david@email.com", status: "pending", amount: 50, date: "2024-01-11" }
+        ];
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            populateReferralList();
+            updateDashboardStats();
+        });
+
+        // Populate referral list
+        function populateReferralList() {
+            const referralList = document.getElementById('referralList');
+            referralList.innerHTML = '';
+
+            referralData.forEach(referral => {
+                const referralItem = document.createElement('div');
+                referralItem.className = 'referral-item';
+                
+                referralItem.innerHTML = `
+                    <div class="referral-info">
+                        <h4>${referral.name}</h4>
+                        <p>${referral.email}</p>
+                        <small>${new Date(referral.date).toLocaleDateString()}</small>
+                    </div>
+                    <div class="referral-status">
+                        <span class="status-${referral.status}">${referral.status.charAt(0).toUpperCase() + referral.status.slice(1)}</span>
+                        <div class="referral-amount">$${referral.amount}</div>
+                    </div>
+                `;
+                
+                referralList.appendChild(referralItem);
+            });
+        }
+
+        // Update dashboard statistics
+        function updateDashboardStats() {
+            const totalEarnings = referralData.reduce((sum, ref) => ref.status === 'approved' ? sum + ref.amount : sum, 0);
+            const totalReferrals = referralData.length;
+            const approvedReferrals = referralData.filter(ref => ref.status === 'approved').length;
+            const conversionRate = totalReferrals > 0 ? Math.round((approvedReferrals / totalReferrals) * 100) : 0;
+
+            document.getElementById('totalEarnings').textContent = `$${totalEarnings.toLocaleString()}`;
+            document.getElementById('totalReferrals').textContent = totalReferrals;
+            document.getElementById('availableBalance').textContent = `$${totalEarnings}`;
+            document.getElementById('withdrawalBalance').textContent = `$${totalEarnings}`;
+            document.getElementById('conversionRate').textContent = `${conversionRate}%`;
+        }
+
+        // Copy referral link
+        function copyReferralLink() {
+            const link = document.getElementById('referralLink').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                const successMsg = document.getElementById('copySuccess');
+                successMsg.style.display = 'block';
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 3000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy link. Please copy it manually.');
+            });
+        }
+
+        // Share referral link
+        function shareReferralLink() {
+            const link = document.getElementById('referralLink').textContent;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Join Crown Trade Academy',
+                    text: 'Check out this amazing trading academy and start earning with me!',
+                    url: link
+                }).catch(err => {
+                    console.error('Error sharing:', err);
+                    copyReferralLink();
+                });
+            } else {
+                copyReferralLink();
+            }
+        }
+
+        // Request withdrawal
+        function requestWithdrawal() {
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const method = document.getElementById('withdrawMethod').value;
+            const account = document.getElementById('accountDetails').value.trim();
+            const availableBalance = parseFloat(document.getElementById('availableBalance').textContent.replace('$', ''));
+
+            // Validation
+            if (!amount || !method || !account) {
+                alert('Please fill in all withdrawal details.');
+                return;
+            }
+
+            if (amount < 10) {
+                alert('Minimum withdrawal amount is $10.');
+                return;
+            }
+
+            if (amount > availableBalance) {
+                alert('Withdrawal amount cannot exceed available balance.');
+                return;
+            }
+
+            // Show success message
+            const successMsg = document.getElementById('withdrawalSuccess');
+            successMsg.style.display = 'block';
+
+            // Reset form
+            document.getElementById('withdrawAmount').value = '';
+            document.getElementById('withdrawMethod').value = '';
+            document.getElementById('accountDetails').value = '';
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 5000);
+
+            console.log(`Withdrawal requested: $${amount} via ${method} to ${account}`);
+        }
+
+        // Generate new referral link
+        function generateNewReferralLink() {
+            const newCode = 'CTA-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            const newLink = `https://crowntrade.academy/ref/${newCode}`;
+            
+            document.getElementById('referralLink').textContent = newLink;
+            alert('New referral link generated successfully!');
+        }
+
+        // View withdrawal history
+        function viewWithdrawalHistory() {
+            alert('Withdrawal history feature coming soon!');
+        }
+
+        // Download report
+        function downloadReport() {
+            alert('Earnings report download feature coming soon!');
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'referral-signup.html';
+            }
+        }
+
+        // Form validation
+        document.getElementById('withdrawAmount').addEventListener('input', function(e) {
+            const maxAmount = parseFloat(document.getElementById('availableBalance').textContent.replace('$', ''));
+            if (parseFloat(e.target.value) > maxAmount) {
+                e.target.value = maxAmount;
+            }
+        });
+    </script>
+</body>
+</html>
