@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* COMPLETE CSS - NO EXTERNAL FILE NEEDED */
+        /* Your existing CSS remains the same */
         :root {
             --nude-light: #F9F6F2;
             --nude-medium: #E8DFD6;
@@ -45,7 +45,6 @@
             line-height: 1.3;
         }
 
-        /* Header */
         .premium-header {
             background-color: rgba(249, 246, 242, 0.95);
             backdrop-filter: blur(10px);
@@ -125,49 +124,33 @@
             width: 100%;
         }
 
-        /* Hero Section */
         .hero {
             background: linear-gradient(135deg, rgba(249, 246, 242, 0.9) 0%, rgba(232, 223, 214, 0.8) 100%);
-            background-size: cover;
-            background-position: center;
-            color: var(--charcoal);
-            padding: 12rem 2rem 8rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
+            padding: 0 2rem;
             position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(249, 246, 242, 0.6), rgba(232, 223, 214, 0.4));
-            z-index: 1;
         }
 
         .hero-content {
             position: relative;
             z-index: 2;
             max-width: 800px;
-            margin: 0 auto;
         }
 
         .hero h1 {
             font-size: 3.5rem;
             margin-bottom: 1.5rem;
-            font-weight: 600;
+            color: var(--charcoal);
         }
 
         .hero p {
             font-size: 1.2rem;
             margin-bottom: 2.5rem;
             color: var(--text-light);
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .btn-primary {
@@ -193,29 +176,12 @@
             color: var(--gold);
         }
 
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: 0.5s;
-        }
-
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-
-        /* Premium Container */
         .premium-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
         }
 
-        /* Programs Section */
         .programs-section {
             padding: 6rem 0;
             background-color: var(--nude-light);
@@ -301,7 +267,6 @@
             margin-bottom: 2rem;
         }
 
-        /* Referral Section */
         .referral-section {
             padding: 6rem 0;
             background: linear-gradient(135deg, var(--nude-medium) 0%, var(--nude-light) 100%);
@@ -340,7 +305,6 @@
             font-size: 1.2rem;
         }
 
-        /* Footer */
         .premium-footer {
             background: var(--charcoal);
             color: var(--nude-light);
@@ -378,6 +342,73 @@
             color: var(--nude-medium);
             font-size: 0.9rem;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--nude-light);
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid var(--nude-medium);
+        }
+
+        .modal h3 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--nude-medium);
+            background: var(--nude-light);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .referral-link {
+            background: var(--nude-medium);
+            padding: 1rem;
+            margin: 1rem 0;
+            word-break: break-all;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
@@ -386,27 +417,26 @@
         <nav class="premium-nav">
             <a href="#" class="logo">Crown Trade Academy</a>
             <ul class="nav-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Programs</a></li>
-                <li><a href="#">Mentors</a></li>
-                <li><a href="#">Success Stories</a></li>
-                <li><a href="#">Referral</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="#" onclick="showSection('home')">Home</a></li>
+                <li><a href="#" onclick="showSection('programs')">Programs</a></li>
+                <li><a href="#" onclick="showModal('mentorModal')">Become a Mentor</a></li>
+                <li><a href="#" onclick="showModal('referralModal')">Referral Program</a></li>
+                <li><a href="#" onclick="showModal('contactModal')">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="home">
         <div class="hero-content">
             <h1>Elite Trading & Marketing Education</h1>
             <p>Master the markets with our premium mentorship programs and unlock exclusive earning opportunities through our referral network.</p>
-            <a href="#" class="btn-primary">Start Your Journey</a>
+            <button class="btn-primary" onclick="showModal('enrollModal')">Start Your Journey</button>
         </div>
     </section>
 
     <!-- Programs Section -->
-    <section class="programs-section">
+    <section class="programs-section" id="programs">
         <div class="premium-container">
             <div class="section-title">
                 <h2>Our Premium Programs</h2>
@@ -418,7 +448,7 @@
                     </div>
                     <h3>Pro Trader Mentorship</h3>
                     <p>One-on-one guidance from experienced traders to accelerate your learning curve and maximize profits.</p>
-                    <a href="#" class="btn-primary">Learn More</a>
+                    <button class="btn-primary" onclick="showModal('program1Modal')">Learn More</button>
                 </div>
                 <div class="program-card">
                     <div class="program-icon">
@@ -426,7 +456,7 @@
                     </div>
                     <h3>Referral Network</h3>
                     <p>Earn substantial commissions by referring traders to our platform and building your network.</p>
-                    <a href="#" class="btn-primary">Join Network</a>
+                    <button class="btn-primary" onclick="showModal('referralModal')">Join Network</button>
                 </div>
                 <div class="program-card">
                     <div class="program-icon">
@@ -434,7 +464,7 @@
                     </div>
                     <h3>VIP Masterclass</h3>
                     <p>Advanced strategies and techniques for serious traders looking to achieve financial freedom.</p>
-                    <a href="#" class="btn-primary">Enroll Now</a>
+                    <button class="btn-primary" onclick="showModal('program3Modal')">Enroll Now</button>
                 </div>
             </div>
         </div>
@@ -467,7 +497,7 @@
                     </div>
                 </div>
                 
-                <a href="#" class="btn-primary">Get Your Referral Link</a>
+                <button class="btn-primary" onclick="showModal('referralModal')">Get Your Referral Link</button>
             </div>
         </div>
     </section>
@@ -480,12 +510,111 @@
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Service</a>
                 <a href="#">Disclaimer</a>
-                <a href="#">Contact Us</a>
+                <a href="#" onclick="showModal('contactModal')">Contact Us</a>
             </div>
             <div class="copyright">
                 <p>&copy; 2024 Crown Trade Academy. All rights reserved. Trading involves risk.</p>
             </div>
         </div>
     </footer>
+
+    <!-- Modals -->
+    <div id="enrollModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('enrollModal')">&times;</button>
+            <h3>Start Your Trading Journey</h3>
+            <form id="enrollForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="referralModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('referralModal')">&times;</button>
+            <h3>Join Our Referral Program</h3>
+            <p>Start earning commissions by referring new traders to our platform.</p>
+            <div class="referral-link">
+                https://crowntrade.academy/ref/your-unique-code
+            </div>
+            <button class="btn-primary" onclick="copyReferralLink()">Copy Referral Link</button>
+        </div>
+    </div>
+
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('contactModal')">&times;</button>
+            <h3>Contact Us</h3>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="contactName">Name</label>
+                    <input type="text" id="contactName" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactEmail">Email</label>
+                    <input type="email" id="contactEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" style="width: 100%; height: 100px; padding: 0.8rem; border: 1px solid var(--nude-medium);" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyReferralLink() {
+            const link = document.querySelector('.referral-link').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Referral link copied to clipboard!');
+            });
+        }
+
+        // Form submissions
+        document.getElementById('enrollForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Application submitted successfully! We will contact you shortly.');
+            closeModal('enrollModal');
+        });
+
+        document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Message sent successfully! We will get back to you soon.');
+            closeModal('contactModal');
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
