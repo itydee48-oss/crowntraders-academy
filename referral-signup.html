@@ -428,16 +428,14 @@
         // Form submissions
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Login successful! Redirecting to your referral dashboard...');
-            // Here you would redirect to the actual referral dashboard
+            // Redirect to referral dashboard directly for existing users
             window.location.href = 'referral-dashboard.html';
         });
 
         document.getElementById('signupForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Account created successfully! Welcome to our referral program.');
-            // Here you would redirect to the actual referral dashboard
-            window.location.href = 'referral-dashboard.html';
+            // Redirect to payment page for new users
+            window.location.href = 'payment-verification.html';
         });
     </script>
 </body>
