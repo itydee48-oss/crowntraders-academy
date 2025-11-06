@@ -264,24 +264,27 @@
             <p style="margin-top: 2rem; color: var(--nude-medium);">&copy; 2024 Crown Trade Academy. All rights reserved. Trading involves risk.</p>
         </div>
     </footer>
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
-    <!-- Supabase JS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-      const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
-      const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      async function testConnection() {
-        const { data, error } = await supabaseClient.from('users').select('*');
-        if (error) {
-          console.error('❌ Connection failed:', error);
-        } else {
-          console.log('✅ Supabase connected successfully:', data);
-        }
-      }
+  // Optional: test connection
+  async function testConnection() {
+    try {
+      const { data, error } = await supabase.from('users').select('*').limit(1);
+      if (error) throw error;
+      console.log('✅ Supabase connected successfully', data);
+    } catch (err) {
+      console.error('❌ Connection error:', err.message);
+    }
+  }
 
-      testConnection();
-    </script>
+  testConnection();
+</script>
+
 </body>
 </html>
