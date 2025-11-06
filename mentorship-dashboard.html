@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mentorship Dashboard - Crown Trade Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --nude-light: #F9F6F2;
+      --nude-medium: #E8DFD6;
+      --nude-dark: #D4C8BC;
+      --gold: #C8A97E;
+      --gold-dark: #B89463;
+      --charcoal: #3A3A3A;
+      --text-light: #7A7A7A;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--nude-light);
+      color: var(--charcoal);
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: var(--nude-light);
+      border-bottom: 1px solid var(--nude-dark);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      color: var(--charcoal);
+    }
+
+    .filter-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin: 1.5rem 2rem;
+    }
+
+    select {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--nude-dark);
+      border-radius: 6px;
+      font-size: 1rem;
+      background-color: var(--nude-light);
+    }
+
+    table {
+      width: 90%;
+      margin: 2rem auto;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      text-align: left;
+      padding: 1rem;
+      border-bottom: 1px solid var(--nude-dark);
+    }
+
+    th {
+      background-color: var(--nude-medium);
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: var(--nude-medium);
+    }
+
+    .status {
+      font-weight: 500;
+      text-transform: capitalize;
+      border-radius: 5px;
+      padding: 0.3rem 0.6rem;
+    }
+
+    .status.pending { color: #d4a017; }
+    .status.approved { color: #4CAF50; }
+    .status.rejected { color: #F44336; }
+
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Mentorship Dashboard</h1>
+    <a href="index.html" style="text-decoration:none;color:var(--gold-dark);font-weight:500;">← Back to Home</a>
+  </header>
+
+  <div class="filter-bar">
+    <select id="statusFilter">
+      <option value="all">All Applications</option>
+      <option value="pending">Pending</option>
+      <option value="approved">Approved</option>
+      <option value="rejected">Rejected</option>
+    </select>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Experience</th>
+        <th>Goals</th>
+        <th>Preferred Schedule</th>
+        <th>Status</th>
+        <th>Submitted</th>
+      </tr>
+    </thead>
+    <tbody id="applicationsTable">
+      <tr><td colspan="7" style="text-align:center;color:var(--text-light);">Loading...</td></tr>
+    </tbody>
+  </table>
+
+  <footer>© 2025 Crown Trade Academy. All rights reserved.</footer>
+
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://eygjxxdgxzatchqgwvep.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const tableBody = document.getElementById('applicationsTable');
+    const filter = document.getElementById('statusFilter');
+
+    async function loadApplications() {
+      let query = supabase.from('mentorship_applications').select('*').order('created_at', { ascending: false });
+      const selected = filter.value;
+
+      if (selected !== 'all') {
+        query = query.eq('status', selected);
+      }
+
+      const { data, error } = await query;
+      if (error) {
+        console.error('Error loading applications:', error);
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:red;">Error loading data</td></tr>`;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-light);">No applications found</td></tr>`;
+        return;
+      }
+
+      tableBody.innerHTML = data.map(app => `
+        <tr>
+          <td>${app.full_name}</td>
+          <td>${app.email}</td>
+          <td>${app.trading_experience || '-'}</td>
+          <td>${app.goals || '-'}</td>
+          <td>${app.preferred_schedule || '-'}</td>
+          <td><span class="status ${app.status}">${app.status}</span></td>
+          <td>${new Date(app.created_at).toLocaleString()}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Load on start + when filter changes
+    filter.addEventListener('change', loadApplications);
+    loadApplications();
+
+    // Realtime listener for updates
+    supabase.channel('db-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'mentorship_applications' }, loadApplications)
+      .subscribe();
+  </script>
+
+</body>
+</html>
