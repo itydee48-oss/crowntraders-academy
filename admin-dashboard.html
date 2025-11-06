@@ -1,1314 +1,567 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Crown Trade Academy</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --nude-light: #F9F6F2;
-            --nude-medium: #E8DFD6;
-            --nude-dark: #D4C8BC;
-            --nude-accent: #C4B5A3;
-            --gold: #C8A97E;
-            --gold-dark: #B89463;
-            --charcoal: #3A3A3A;
-            --text-light: #7A7A7A;
-            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            --success: #27AE60;
-            --warning: #E67E22;
-            --danger: #E74C3C;
-            --info: #3498DB;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--nude-light);
-            color: var(--charcoal);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4, h5 {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-
-        /* Header */
-        .premium-header {
-            background-color: rgba(249, 246, 242, 0.95);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            width: 100%;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(212, 200, 188, 0.3);
-            transition: var(--transition);
-        }
-
-        .premium-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1.2rem 2rem;
-        }
-
-        .logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--charcoal);
-            text-decoration: none;
-            letter-spacing: 1px;
-            position: relative;
-        }
-
-        .logo::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 30px;
-            height: 2px;
-            background-color: var(--gold);
-            transition: var(--transition);
-        }
-
-        .logo:hover::after {
-            width: 100%;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--charcoal);
-            font-weight: 500;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-            position: relative;
-            transition: var(--transition);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background-color: var(--gold);
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: var(--gold);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .admin-welcome {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: var(--charcoal);
-            font-weight: 500;
-        }
-
-        .logout-btn {
-            background: var(--gold);
-            color: var(--nude-light);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .logout-btn:hover {
-            background: var(--gold-dark);
-        }
-
-        /* Main Content */
-        .admin-dashboard {
-            padding: 12rem 2rem 6rem;
-            min-height: 100vh;
-        }
-
-        .premium-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* Welcome Banner */
-        .welcome-banner {
-            background: linear-gradient(135deg, var(--nude-medium) 0%, var(--nude-dark) 100%);
-            padding: 3rem;
-            margin-bottom: 3rem;
-            border-left: 4px solid var(--gold);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .welcome-banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 200px;
-            height: 200px;
-            background: rgba(200, 169, 126, 0.1);
-            border-radius: 50%;
-            transform: translate(50%, -50%);
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .stat-card {
-            background: var(--nude-light);
-            border: 1px solid var(--nude-medium);
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-            transition: var(--transition);
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--gold);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .stat-icon {
-            font-size: 2.5rem;
-            color: var(--gold);
-            margin-bottom: 1rem;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 0.5rem;
-            font-family: 'Cormorant Garamond', serif;
-        }
-
-        .stat-label {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        /* Dashboard Sections */
-        .dashboard-section-card {
-            background: var(--nude-light);
-            border: 1px solid var(--nude-medium);
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .dashboard-section-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--gold);
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            color: var(--charcoal);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid var(--nude-medium);
-        }
-
-        .tab {
-            padding: 1rem 2rem;
-            background: none;
-            border: none;
-            border-bottom: 3px solid transparent;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            color: var(--text-light);
-        }
-
-        .tab.active {
-            color: var(--charcoal);
-            border-bottom-color: var(--gold);
-        }
-
-        .tab:hover {
-            color: var(--charcoal);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Tables */
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-
-        .admin-table th,
-        .admin-table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--nude-medium);
-        }
-
-        .admin-table th {
-            background: var(--nude-medium);
-            font-weight: 600;
-            color: var(--charcoal);
-        }
-
-        .admin-table tr:hover {
-            background: rgba(200, 169, 126, 0.05);
-        }
-
-        /* Status Badges */
-        .status-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 0;
-            font-size: 0.8rem;
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        .status-pending {
-            background: rgba(230, 126, 34, 0.1);
-            color: var(--warning);
-        }
-
-        .status-approved {
-            background: rgba(39, 174, 96, 0.1);
-            color: var(--success);
-        }
-
-        .status-rejected {
-            background: rgba(231, 76, 60, 0.1);
-            color: var(--danger);
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .btn-sm {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 0;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 500;
-            transition: var(--transition);
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .btn-approve {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-approve:hover {
-            background: #219653;
-        }
-
-        .btn-reject {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-reject:hover {
-            background: #C0392B;
-        }
-
-        .btn-view {
-            background: var(--info);
-            color: white;
-        }
-
-        .btn-view:hover {
-            background: #2980B9;
-        }
-
-        /* Pricing Controls */
-        .pricing-controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .price-card {
-            background: var(--nude-medium);
-            padding: 2rem;
-            border-left: 4px solid var(--gold);
-        }
-
-        .price-input-group {
-            margin-bottom: 1rem;
-        }
-
-        .price-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--charcoal);
-        }
-
-        .price-input {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 1px solid var(--nude-accent);
-            background: var(--nude-light);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .price-input:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 0 2px rgba(200, 169, 126, 0.1);
-        }
-
-        .btn-primary {
-            display: inline-block;
-            background: var(--gold);
-            color: var(--nude-light);
-            padding: 1rem 2rem;
-            border-radius: 0;
-            font-weight: 500;
-            text-decoration: none;
-            letter-spacing: 1px;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--gold);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-            cursor: pointer;
-            margin-top: 1rem;
-        }
-
-        .btn-primary:hover {
-            background: transparent;
-            color: var(--gold);
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: 0.5s;
-        }
-
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-
-        /* Revenue Chart */
-        .chart-container {
-            background: var(--nude-light);
-            padding: 2rem;
-            border: 1px solid var(--nude-medium);
-            margin-top: 2rem;
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .chart-placeholder {
-            text-align: center;
-            color: var(--text-light);
-        }
-
-        .chart-placeholder i {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            color: var(--nude-accent);
-        }
-
-        /* Quick Stats */
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .quick-stat {
-            background: var(--nude-medium);
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .quick-stat-number {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 0.5rem;
-        }
-
-        .quick-stat-label {
-            color: var(--text-light);
-            font-size: 0.8rem;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--charcoal);
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--nude-medium);
-            border-top: 1px solid rgba(212, 200, 188, 0.2);
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: var(--nude-light);
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-links a {
-            text-decoration: none;
-            color: var(--nude-medium);
-            font-size: 0.9rem;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--gold);
-        }
-
-        .copyright {
-            font-size: 0.9rem;
-            color: var(--nude-dark);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .premium-nav {
-                flex-direction: column;
-                padding: 1rem;
-                gap: 1rem;
-            }
-            
-            .nav-links {
-                margin-top: 1rem;
-                gap: 1.5rem;
-                flex-direction: column;
-            }
-            
-            .admin-dashboard {
-                padding: 10rem 1.5rem 4rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .tabs {
-                flex-direction: column;
-            }
-            
-            .admin-table {
-                font-size: 0.8rem;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-            
-            .pricing-controls {
-                grid-template-columns: 1fr;
-            }
-            
-            .quick-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .footer-links {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Dashboard - Crown Trade Academy</title>
+
+  <!-- Fonts / icons (same aesthetic) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root{
+      --nude-light:#F9F6F2;
+      --nude-medium:#E8DFD6;
+      --nude-dark:#D4C8BC;
+      --gold:#C8A97E;
+      --gold-dark:#B89463;
+      --charcoal:#3A3A3A;
+      --text-light:#7A7A7A;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Montserrat',sans-serif;
+      background:var(--nude-light);
+      color:var(--charcoal);
+      min-height:100vh;
+    }
+
+    /* Header */
+    .admin-header{
+      position:fixed;
+      top:0; left:0; right:0;
+      background:rgba(249,246,242,0.98);
+      border-bottom:1px solid rgba(212,200,188,0.4);
+      z-index:100;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:1rem 2rem;
+    }
+    .brand{
+      font-family:'Cormorant Garamond',serif;
+      font-weight:600;
+      font-size:1.4rem;
+      color:var(--charcoal);
+      text-decoration:none;
+    }
+    .header-actions{display:flex;gap:1rem;align-items:center}
+    .btn{
+      background:var(--gold);
+      color:var(--nude-light);
+      padding:0.5rem 0.9rem;
+      border-radius:8px;
+      text-decoration:none;
+      cursor:pointer;
+      border:0;
+      font-weight:600;
+    }
+    .btn.ghost{background:transparent;color:var(--charcoal);border:1px solid var(--nude-dark)}
+
+    /* Layout */
+    .container{display:flex;padding-top:84px} /* account for header */
+    .sidebar{
+      width:260px;
+      background:linear-gradient(180deg,var(--nude-light),#fff);
+      border-right:1px solid rgba(212,200,188,0.3);
+      min-height:calc(100vh - 84px);
+      padding:2rem 1.2rem;
+    }
+    .sidebar h3{font-family:'Cormorant Garamond',serif;margin-bottom:1rem}
+    .nav-item{padding:0.6rem 0;border-radius:6px;color:var(--charcoal);display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+    .nav-item:hover{background:rgba(200,169,126,0.06);color:var(--gold-dark)}
+    .nav-item.active{background:var(--nude-medium);font-weight:600}
+
+    .main{
+      flex:1;
+      padding:2rem;
+    }
+
+    /* Cards */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1.5rem}
+    .card{
+      background:#fff;padding:1rem;border-radius:10px;border:1px solid rgba(212,200,188,0.5);
+      box-shadow:0 6px 18px rgba(0,0,0,0.03);
+    }
+    .card h4{margin:0 0 0.6rem;font-size:1rem}
+    .card p{margin:0;font-weight:700;font-size:1.3rem}
+
+    /* Table */
+    table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden}
+    th,td{padding:0.8rem 1rem;text-align:left;border-bottom:1px solid rgba(212,200,188,0.25)}
+    thead th{background:var(--nude-medium);font-weight:600}
+    tr:hover td{background:rgba(232,223,214,0.4)}
+    .status{padding:0.25rem 0.6rem;border-radius:6px;font-weight:600;text-transform:capitalize}
+    .status.pending{color:#d4a017}
+    .status.approved{color:#2b8f45}
+    .status.rejected{color:#c0412e}
+
+    /* Controls */
+    .controls{display:flex;gap:0.6rem;align-items:center}
+    .search{padding:0.5rem 0.8rem;border-radius:8px;border:1px solid var(--nude-dark);width:260px}
+    .small-btn{padding:0.35rem 0.6rem;border-radius:6px;border:0;cursor:pointer;font-weight:600}
+
+    /* Login modal */
+    .modal{
+      position:fixed;left:0;right:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);
+    }
+    .modal-card{background:var(--nude-light);padding:2rem;border-radius:10px;width:360px;box-shadow:0 10px 30px rgba(0,0,0,0.25)}
+    .input{width:100%;padding:0.6rem;margin-bottom:0.8rem;border-radius:6px;border:1px solid var(--nude-dark)}
+    .muted{color:var(--text-light);font-size:0.9rem}
+
+    /* Responsive */
+    @media (max-width:900px){
+      .sidebar{display:none}
+      .container{padding-top:100px}
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="premium-header">
-        <nav class="premium-nav">
-            <a href="index.html" class="logo">Crown Trade Academy</a>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="admin-dashboard.html" class="active">Admin Dashboard</a></li>
-                <div class="admin-welcome">
-                    <span id="adminGreeting">Welcome, Admin</span>
-                    <button class="logout-btn" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </div>
-            </ul>
-        </nav>
-    </header>
 
-    <!-- Admin Dashboard Section -->
-    <section class="admin-dashboard">
-        <div class="premium-container">
-            <!-- Welcome Banner -->
-            <div class="welcome-banner">
-                <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--charcoal);">Admin Dashboard</h1>
-                <p style="font-size: 1.2rem; color: var(--text-light);">Manage applications, users, and system settings</p>
-                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                    <div style="background: rgba(255,255,255,0.3); padding: 0.5rem 1rem; border-left: 3px solid var(--gold);">
-                        <strong>Last Login:</strong> <span id="lastLogin">Today</span>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.3); padding: 0.5rem 1rem; border-left: 3px solid var(--gold);">
-                        <strong>System Status:</strong> <span style="color: var(--success);">✓ Operational</span>
-                    </div>
-                </div>
-            </div>
+  <!-- header -->
+  <header class="admin-header">
+    <a class="brand" href="index.html">Crown Trade Academy — Admin</a>
+    <div class="header-actions" id="headerActions">
+      <span id="adminName" class="muted" style="margin-right:1rem"></span>
+      <button id="signOutBtn" class="btn ghost" style="display:none">Sign out</button>
+      <button id="showLoginBtn" class="btn">Admin Sign in</button>
+    </div>
+  </header>
 
-            <!-- Stats Overview -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-number" id="pendingApplications">0</div>
-                    <div class="stat-label">Pending Applications</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-number" id="totalUsers">0</div>
-                    <div class="stat-label">Total Users</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-coins"></i>
-                    </div>
-                    <div class="stat-number" id="totalRevenue">KES 0</div>
-                    <div class="stat-label">Total Revenue</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="stat-number" id="approvalRate">0%</div>
-                    <div class="stat-label">Approval Rate</div>
-                </div>
-            </div>
+  <div class="container">
+    <!-- sidebar -->
+    <aside class="sidebar">
+      <h3>Control Panel</h3>
+      <div id="navMentorship" class="nav-item active">Mentorship</div>
+      <div id="navUsers" class="nav-item">Users</div>
+      <div id="navAffiliates" class="nav-item">Affiliates</div>
+      <div id="navSettings" class="nav-item">Settings</div>
+      <div style="height:20px"></div>
+      <hr style="border:none;border-top:1px solid rgba(212,200,188,0.4);margin:1rem 0"/>
+      <div style="font-size:0.9rem;color:var(--text-light)">Signed in as</div>
+      <div id="sideEmail" style="font-weight:700;margin-top:0.3rem;word-break:break-all"></div>
+    </aside>
 
-            <!-- Main Dashboard Tabs -->
-            <div class="dashboard-section-card">
-                <div class="tabs">
-                    <button class="tab active" onclick="switchTab('pending')">
-                        <i class="fas fa-clock"></i> Pending Approvals
-                    </button>
-                    <button class="tab" onclick="switchTab('users')">
-                        <i class="fas fa-users"></i> User Management
-                    </button>
-                    <button class="tab" onclick="switchTab('pricing')">
-                        <i class="fas fa-tags"></i> Program Pricing
-                    </button>
-                    <button class="tab" onclick="switchTab('revenue')">
-                        <i class="fas fa-chart-bar"></i> Revenue Analytics
-                    </button>
-                </div>
-
-                <!-- Pending Approvals Tab -->
-                <div id="pending-tab" class="tab-content active">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-user-check" style="color: var(--gold);"></i>
-                            Pending Applications
-                        </h2>
-                        <button class="btn-primary" onclick="refreshApplications()">
-                            <i class="fas fa-sync-alt"></i> Refresh
-                        </button>
-                    </div>
-
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Program</th>
-                                    <th>Amount</th>
-                                    <th>Date Applied</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="pendingApplicationsList">
-                                <!-- Dynamic content will be inserted here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- User Management Tab -->
-                <div id="users-tab" class="tab-content">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-user-cog" style="color: var(--gold);"></i>
-                            User Management
-                        </h2>
-                        <button class="btn-primary" onclick="exportUsers()">
-                            <i class="fas fa-download"></i> Export Users
-                        </button>
-                    </div>
-
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Program</th>
-                                    <th>Join Date</th>
-                                    <th>Status</th>
-                                    <th>Referrals</th>
-                                    <th>Earnings</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="usersList">
-                                <!-- Dynamic content will be inserted here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Program Pricing Tab -->
-                <div id="pricing-tab" class="tab-content">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-money-bill-wave" style="color: var(--gold);"></i>
-                            Program Pricing
-                        </h2>
-                        <button class="btn-primary" onclick="savePricing()">
-                            <i class="fas fa-save"></i> Save Changes
-                        </button>
-                    </div>
-
-                    <div class="pricing-controls">
-                        <div class="price-card">
-                            <h3 style="margin-bottom: 1.5rem; color: var(--charcoal);">Referral Program</h3>
-                            <div class="price-input-group">
-                                <label class="price-label">Program Price (KES)</label>
-                                <input type="number" class="price-input" id="referralPrice" value="500" min="0">
-                            </div>
-                            <div class="price-input-group">
-                                <label class="price-label">Referral Commission (KES)</label>
-                                <input type="number" class="price-input" id="referralCommission" value="200" min="0">
-                            </div>
-                        </div>
-
-                        <div class="price-card">
-                            <h3 style="margin-bottom: 1.5rem; color: var(--charcoal);">Mentorship Program</h3>
-                            <div class="price-input-group">
-                                <label class="price-label">Program Price (KES)</label>
-                                <input type="number" class="price-input" id="mentorshipPrice" value="50000" min="0">
-                            </div>
-                        </div>
-
-                        <div class="price-card">
-                            <h3 style="margin-bottom: 1.5rem; color: var(--charcoal);">Combined Program</h3>
-                            <div class="price-input-group">
-                                <label class="price-label">Program Price (KES)</label>
-                                <input type="number" class="price-input" id="combinedPrice" value="50500" min="0">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="quick-stats">
-                        <div class="quick-stat">
-                            <div class="quick-stat-number" id="currentReferralPrice">KES 500</div>
-                            <div class="quick-stat-label">Current Referral Price</div>
-                        </div>
-                        <div class="quick-stat">
-                            <div class="quick-stat-number" id="currentMentorshipPrice">KES 50,000</div>
-                            <div class="quick-stat-label">Current Mentorship Price</div>
-                        </div>
-                        <div class="quick-stat">
-                            <div class="quick-stat-number" id="totalProgramsSold">0</div>
-                            <div class="quick-stat-label">Total Programs Sold</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Revenue Analytics Tab -->
-                <div id="revenue-tab" class="tab-content">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-chart-line" style="color: var(--gold);"></i>
-                            Revenue Analytics
-                        </h2>
-                        <button class="btn-primary" onclick="generateReport()">
-                            <i class="fas fa-file-export"></i> Generate Report
-                        </button>
-                    </div>
-
-                    <div class="chart-container">
-                        <div class="chart-placeholder">
-                            <i class="fas fa-chart-bar"></i>
-                            <h3>Revenue Overview</h3>
-                            <p>Revenue analytics and graphs will be displayed here</p>
-                            <div style="margin-top: 2rem;">
-                                <div class="quick-stat">
-                                    <div class="quick-stat-number" id="monthlyRevenue">KES 0</div>
-                                    <div class="quick-stat-label">This Month's Revenue</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="quick-stats">
-                        <div class="quick-stat">
-                            <div class="quick-stat-number" id="referralProgramRevenue">KES 0</div>
-                            <div class="quick-stat-label">Referral Program Revenue</div>
-                        </div>
-                        <div class="quick-stat">
-                            <div class="quick-stat-number" id="mentorshipProgramRevenue">KES 0</div>
-                            <div class="quick-stat-label">Mentorship Program Revenue</div>
-                        </div>
-                        <div class="quick-stat">
-                            <div class="quick-stat-number" id="combinedProgramRevenue">KES 0</div>
-                            <div class="quick-stat-label">Combined Program Revenue</div>
-                        </div>
-                        <div class="quick-stat">
-                            <div class="quick-stat-number" id="averageRevenue">KES 0</div>
-                            <div class="quick-stat-label">Average per User</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- System Tools -->
-            <div class="dashboard-section-card">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-tools" style="color: var(--gold);"></i>
-                        System Tools
-                    </h2>
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                    <button class="btn-primary" onclick="backupData()">
-                        <i class="fas fa-database"></i> Backup Data
-                    </button>
-                    <button class="btn-primary" onclick="clearPending()">
-                        <i class="fas fa-trash"></i> Clear Old Pending
-                    </button>
-                    <button class="btn-primary" onclick="sendBulkEmail()">
-                        <i class="fas fa-envelope"></i> Bulk Email
-                    </button>
-                    <button class="btn-primary" onclick="systemSettings()">
-                        <i class="fas fa-cog"></i> System Settings
-                    </button>
-                </div>
-            </div>
+    <!-- main -->
+    <main class="main">
+      <!-- Mentorship view -->
+      <section id="mentorshipView">
+        <div class="grid" style="margin-bottom:1.3rem">
+          <div class="card">
+            <h4>Total Applications</h4>
+            <p id="totalApplications">—</p>
+          </div>
+          <div class="card">
+            <h4>Pending</h4>
+            <p id="pendingApplications">—</p>
+          </div>
+          <div class="card">
+            <h4>Approved</h4>
+            <p id="approvedApplications">—</p>
+          </div>
+          <div class="card">
+            <h4>Rejected</h4>
+            <p id="rejectedApplications">—</p>
+          </div>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">Crown Trade Academy</div>
-            <ul class="footer-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="admin-dashboard.html">Admin Dashboard</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms of Service</a></li>
-            </ul>
-            <p class="copyright">&copy; 2024 Crown Trade Academy. All rights reserved.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem">
+          <div class="controls">
+            <input id="searchInput" class="search" placeholder="Search by name or email">
+            <select id="statusFilter" class="input" style="margin-left:0.6rem;padding:0.45rem;border-radius:8px;border:1px solid var(--nude-dark)">
+              <option value="all">All status</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+          <div>
+            <button id="refreshBtn" class="small-btn btn ghost">Refresh</button>
+          </div>
         </div>
-    </footer>
 
-    <script>
-        // Admin Dashboard Management
-        let adminData = {};
-        let pendingApplications = [];
-        let approvedUsers = [];
+        <div style="overflow:auto;border-radius:8px">
+          <table>
+            <thead>
+              <tr>
+                <th>Full name</th>
+                <th>Email</th>
+                <th>Experience</th>
+                <th>Goals</th>
+                <th>Preferred schedule</th>
+                <th>Status</th>
+                <th>Submitted</th>
+                <th style="width:160px;text-align:center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="applicationsTable">
+              <tr><td colspan="8" style="text-align:center;color:var(--text-light)">Sign in to view applications</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-        // Initialize admin dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAdminLogin();
-            loadAdminData();
-            loadPendingApplications();
-            loadApprovedUsers();
-            loadPricingData();
-            loadRevenueData();
-            updateStats();
-        });
+      <!-- Placeholder other sections -->
+      <section id="usersView" style="display:none">
+        <h2>Users</h2>
+        <p class="muted">(Coming soon) Manage user accounts, roles, and profiles.</p>
+      </section>
 
-        // Check if admin is logged in
-        function checkAdminLogin() {
-            const isAdminLoggedIn = localStorage.getItem('adminLoggedIn');
-            
-            if (!isAdminLoggedIn) {
-                alert('Admin access required. Please log in.');
-                window.location.href = 'admin-login.html';
-                return;
-            }
-        }
+      <section id="affiliatesView" style="display:none">
+        <h2>Affiliates</h2>
+        <p class="muted">(Coming soon) Affiliate dashboard & payouts.</p>
+      </section>
 
-        // Load admin data
-        function loadAdminData() {
-            adminData = {
-                name: 'Administrator',
-                lastLogin: new Date().toLocaleString()
-            };
+      <section id="settingsView" style="display:none">
+        <h2>Settings</h2>
+        <p class="muted">(Coming soon) App settings, integrations and secrets.</p>
+      </section>
+    </main>
+  </div>
 
-            document.getElementById('adminGreeting').textContent = `Welcome, ${adminData.name}`;
-            document.getElementById('lastLogin').textContent = adminData.lastLogin;
-        }
+  <!-- Sign-in modal -->
+  <div id="loginModal" class="modal" style="display:none">
+    <div class="modal-card">
+      <h3 style="margin-top:0">Admin Sign In</h3>
+      <p class="muted">Use your admin email & password</p>
+      <input id="emailInput" class="input" placeholder="Email" type="email">
+      <input id="passwordInput" class="input" placeholder="Password" type="password">
+      <div style="display:flex;gap:0.6rem;justify-content:flex-end">
+        <button id="cancelLogin" class="btn ghost">Cancel</button>
+        <button id="doLogin" class="btn">Sign in</button>
+      </div>
+      <p id="loginError" class="muted" style="margin-top:0.8rem;color:#c0412e"></p>
+    </div>
+  </div>
 
-        // Load pending applications from localStorage
-        function loadPendingApplications() {
-            pendingApplications = JSON.parse(localStorage.getItem('pendingApprovals') || '[]');
-            updatePendingApplicationsList();
-        }
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        // Load approved users from localStorage
-        function loadApprovedUsers() {
-            approvedUsers = JSON.parse(localStorage.getItem('approvedUsers') || '[]');
-            updateUsersList();
-        }
+  <script>
+  /*****************************************************************************
+   * ADMIN DASHBOARD (single-file)
+   *
+   * Instructions:
+   * 1) Ensure you created the 'mentorship_applications' table in Supabase:
+   *    - id uuid default gen_random_uuid()
+   *    - full_name text
+   *    - email text
+   *    - trading_experience text
+   *    - goals text
+   *    - preferred_schedule text
+   *    - status text default 'pending'
+   *    - created_at timestamptz default now()
+   *
+   * 2) (Recommended) Create a 'profiles' table where you set is_admin = true
+   *    for admin user(s). If you don't have a profiles table, set ADMIN_EMAIL
+   *    below to the email you want to treat as admin.
+   *
+   * 3) Drop this file into your repo as admin-dashboard.html and open it.
+   *
+   *****************************************************************************/
 
-        // Load pricing data
-        function loadPricingData() {
-            const pricing = JSON.parse(localStorage.getItem('programPricing') || '{}');
-            
-            // Set default prices if not exists
-            if (!pricing.referral) {
-                pricing.referral = 500;
-                pricing.mentorship = 50000;
-                pricing.combined = 50500;
-                pricing.referralCommission = 200;
-                localStorage.setItem('programPricing', JSON.stringify(pricing));
-            }
+  // ---------- CONFIG: replace with your project details ----------
+  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
-            // Update form inputs
-            document.getElementById('referralPrice').value = pricing.referral;
-            document.getElementById('mentorshipPrice').value = pricing.mentorship;
-            document.getElementById('combinedPrice').value = pricing.combined;
-            document.getElementById('referralCommission').value = pricing.referralCommission;
+  // If you don't have a profiles table with is_admin, set the fallback admin email here:
+  const ADMIN_EMAIL = ''; // e.g. 'your.email@example.com'  <-- set this if needed
 
-            // Update quick stats
-            document.getElementById('currentReferralPrice').textContent = `KES ${pricing.referral.toLocaleString()}`;
-            document.getElementById('currentMentorshipPrice').textContent = `KES ${pricing.mentorship.toLocaleString()}`;
-        }
+  // ---------- init supabase ----------
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Load revenue data
-        function loadRevenueData() {
-            const revenueData = JSON.parse(localStorage.getItem('revenueData') || '{}');
-            
-            // Calculate totals
-            let totalRevenue = 0;
-            let referralRevenue = 0;
-            let mentorshipRevenue = 0;
-            let combinedRevenue = 0;
+  // ---------- DOM refs ----------
+  const showLoginBtn = document.getElementById('showLoginBtn');
+  const loginModal = document.getElementById('loginModal');
+  const doLoginBtn = document.getElementById('doLogin');
+  const cancelLoginBtn = document.getElementById('cancelLogin');
+  const signOutBtn = document.getElementById('signOutBtn');
+  const adminNameEl = document.getElementById('adminName');
+  const sideEmail = document.getElementById('sideEmail');
+  const headerActions = document.getElementById('headerActions');
+  const loginError = document.getElementById('loginError');
 
-            approvedUsers.forEach(user => {
-                const amount = getPackageAmount(user.package);
-                totalRevenue += amount;
+  const applicationsTable = document.getElementById('applicationsTable');
+  const totalApplications = document.getElementById('totalApplications');
+  const pendingApplications = document.getElementById('pendingApplications');
+  const approvedApplications = document.getElementById('approvedApplications');
+  const rejectedApplications = document.getElementById('rejectedApplications');
+  const statusFilter = document.getElementById('statusFilter');
+  const searchInput = document.getElementById('searchInput');
+  const refreshBtn = document.getElementById('refreshBtn');
 
-                switch(user.package) {
-                    case 'referral-only':
-                        referralRevenue += amount;
-                        break;
-                    case 'mentorship-only':
-                        mentorshipRevenue += amount;
-                        break;
-                    case 'combined':
-                        combinedRevenue += amount;
-                        break;
-                }
-            });
+  // nav items
+  const navMentorship = document.getElementById('navMentorship');
+  const navUsers = document.getElementById('navUsers');
+  const navAffiliates = document.getElementById('navAffiliates');
+  const navSettings = document.getElementById('navSettings');
+  const mentorshipView = document.getElementById('mentorshipView');
+  const usersView = document.getElementById('usersView');
+  const affiliatesView = document.getElementById('affiliatesView');
+  const settingsView = document.getElementById('settingsView');
 
-            // Update UI
-            document.getElementById('monthlyRevenue').textContent = `KES ${totalRevenue.toLocaleString()}`;
-            document.getElementById('referralProgramRevenue').textContent = `KES ${referralRevenue.toLocaleString()}`;
-            document.getElementById('mentorshipProgramRevenue').textContent = `KES ${mentorshipRevenue.toLocaleString()}`;
-            document.getElementById('combinedProgramRevenue').textContent = `KES ${combinedRevenue.toLocaleString()}`;
-            document.getElementById('averageRevenue').textContent = `KES ${approvedUsers.length > 0 ? Math.round(totalRevenue / approvedUsers.length) : 0}`;
-        }
+  // auth inputs
+  const emailInput = document.getElementById('emailInput');
+  const passwordInput = document.getElementById('passwordInput');
 
-        // Update dashboard statistics
-        function updateStats() {
-            document.getElementById('pendingApplications').textContent = pendingApplications.length;
-            document.getElementById('totalUsers').textContent = approvedUsers.length;
-            
-            const totalRevenue = approvedUsers.reduce((sum, user) => sum + getPackageAmount(user.package), 0);
-            document.getElementById('totalRevenue').textContent = `KES ${totalRevenue.toLocaleString()}`;
-            
-            const totalApplications = pendingApplications.length + approvedUsers.length;
-            const approvalRate = totalApplications > 0 ? Math.round((approvedUsers.length / totalApplications) * 100) : 0;
-            document.getElementById('approvalRate').textContent = `${approvalRate}%`;
+  // ---------- state ----------
+  let currentUser = null;
+  let realtimeSubscription = null;
 
-            document.getElementById('totalProgramsSold').textContent = approvedUsers.length;
-        }
+  // ---------- UI helpers ----------
+  function showModal() { loginModal.style.display = 'flex'; loginError.textContent = ''; }
+  function hideModal() { loginModal.style.display = 'none'; emailInput.value=''; passwordInput.value=''; loginError.textContent=''; }
+  function setSignedInUI(user, profile) {
+    showLoginBtn.style.display = 'none';
+    signOutBtn.style.display = 'inline-block';
+    adminNameEl.textContent = profile?.full_name || user.email;
+    sideEmail.textContent = user.email;
+  }
+  function setSignedOutUI() {
+    showLoginBtn.style.display = 'inline-block';
+    signOutBtn.style.display = 'none';
+    adminNameEl.textContent = '';
+    sideEmail.textContent = '';
+    applicationsTable.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-light)">Sign in to view applications</td></tr>`;
+    totalApplications.textContent = '-';
+    pendingApplications.textContent = '-';
+    approvedApplications.textContent = '-';
+    rejectedApplications.textContent = '-';
+  }
 
-        // Update pending applications list
-        function updatePendingApplicationsList() {
-            const list = document.getElementById('pendingApplicationsList');
-            list.innerHTML = '';
+  // ---------- Navigation (single-file SPA behaviour) ----------
+  function clearActiveNav() {
+    [navMentorship, navUsers, navAffiliates, navSettings].forEach(n => n.classList.remove('active'));
+    [mentorshipView, usersView, affiliatesView, settingsView].forEach(v => v.style.display = 'none');
+  }
+  navMentorship.addEventListener('click', ()=>{ clearActiveNav(); navMentorship.classList.add('active'); mentorshipView.style.display='block'; loadApplications(); });
+  navUsers.addEventListener('click', ()=>{ clearActiveNav(); navUsers.classList.add('active'); usersView.style.display='block'; });
+  navAffiliates.addEventListener('click', ()=>{ clearActiveNav(); navAffiliates.classList.add('active'); affiliatesView.style.display='block'; });
+  navSettings.addEventListener('click', ()=>{ clearActiveNav(); navSettings.classList.add('active'); settingsView.style.display='block'; });
 
-            if (pendingApplications.length === 0) {
-                list.innerHTML = `
-                    <tr>
-                        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-light);">
-                            <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 1rem; display: block; color: var(--success);"></i>
-                            No pending applications. All caught up!
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
+  // ---------- Admin check ----------
+  async function isAdminUser(user) {
+    if (!user) return false;
+    // Try to read from profiles table if it exists
+    try {
+      const { data: profile, error } = await supabase.from('profiles').select('is_admin,full_name').eq('id', user.id).single();
+      if (!error && profile) {
+        return { ok: !!profile.is_admin, profile };
+      }
+    } catch (e) {
+      // silently continue to fallback
+    }
+    // fallback: check email against ADMIN_EMAIL if provided
+    if (ADMIN_EMAIL && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+      return { ok: true, profile: { full_name: user.email } };
+    }
+    return { ok: false };
+  }
 
-            pendingApplications.forEach((application, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${application.fullName}</td>
-                    <td>${application.email}</td>
-                    <td>${application.packageName}</td>
-                    <td>KES ${application.amount.toLocaleString()}</td>
-                    <td>${new Date(application.timestamp).toLocaleDateString()}</td>
-                    <td><span class="status-badge status-pending">Pending</span></td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-sm btn-approve" onclick="approveApplication(${index})">
-                                <i class="fas fa-check"></i> Approve
-                            </button>
-                            <button class="btn-sm btn-reject" onclick="rejectApplication(${index})">
-                                <i class="fas fa-times"></i> Reject
-                            </button>
-                            <button class="btn-sm btn-view" onclick="viewApplication(${index})">
-                                <i class="fas fa-eye"></i> View
-                            </button>
-                        </div>
-                    </td>
-                `;
-                list.appendChild(row);
-            });
-        }
+  // ---------- Load applications and metrics ----------
+  async function loadApplications() {
+    if (!currentUser) return;
+    const selectedStatus = statusFilter.value;
+    const search = (searchInput.value || '').toLowerCase();
 
-        // Update users list
-        function updateUsersList() {
-            const list = document.getElementById('usersList');
-            list.innerHTML = '';
+    let query = supabase.from('mentorship_applications').select('*').order('created_at', { ascending: false });
 
-            if (approvedUsers.length === 0) {
-                list.innerHTML = `
-                    <tr>
-                        <td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-light);">
-                            <i class="fas fa-users" style="font-size: 2rem; margin-bottom: 1rem; display: block; color: var(--nude-accent);"></i>
-                            No approved users yet.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
+    if (selectedStatus !== 'all') {
+      query = query.eq('status', selectedStatus);
+    }
 
-            approvedUsers.forEach((user, index) => {
-                const userStats = getUserStats(user.email);
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${user.fullName}</td>
-                    <td>${user.email}</td>
-                    <td>${user.packageName}</td>
-                    <td>${user.registrationDate}</td>
-                    <td><span class="status-badge status-approved">Active</span></td>
-                    <td>${userStats.totalReferrals}</td>
-                    <td>KES ${userStats.totalEarnings.toLocaleString()}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-sm btn-view" onclick="viewUser(${index})">
-                                <i class="fas fa-eye"></i> View
-                            </button>
-                            <button class="btn-sm btn-reject" onclick="deactivateUser(${index})">
-                                <i class="fas fa-user-slash"></i> Deactivate
-                            </button>
-                        </div>
-                    </td>
-                `;
-                list.appendChild(row);
-            });
-        }
+    const { data, error } = await query;
+    if (error) {
+      console.error('Error loading', error);
+      applicationsTable.innerHTML = `<tr><td colspan="8" style="text-align:center;color:red">Failed to load</td></tr>`;
+      return;
+    }
 
-        // Get user stats from dashboard data
-        function getUserStats(email) {
-            const dashboardStats = JSON.parse(localStorage.getItem('dashboardStats') || '{}');
-            return dashboardStats[email] || {
-                totalReferrals: 0,
-                totalEarnings: 0,
-                availableBalance: 0,
-                conversionRate: 0,
-                referrals: []
-            };
-        }
+    // Filter client-side by search
+    const filtered = (data || []).filter(row => {
+      if (!search) return true;
+      return (row.full_name || '').toLowerCase().includes(search) || (row.email || '').toLowerCase().includes(search);
+    });
 
-        // Get package amount
-        function getPackageAmount(packageType) {
-            const amounts = {
-                'mentorship-only': 50000,
-                'referral-only': 500,
-                'combined': 50500
-            };
-            return amounts[packageType] || 0;
-        }
+    // Render rows
+    if (!filtered.length) {
+      applicationsTable.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-light)">No applications found</td></tr>`;
+    } else {
+      applicationsTable.innerHTML = filtered.map(row => {
+        const created = row.created_at ? new Date(row.created_at).toLocaleString() : '-';
+        const goals = row.goals ? (row.goals.length > 80 ? row.goals.slice(0,77) + '...' : row.goals) : '-';
+        return `<tr data-id="${row.id}">
+          <td>${escapeHtml(row.full_name || '')}</td>
+          <td>${escapeHtml(row.email || '')}</td>
+          <td>${escapeHtml(row.trading_experience || '-')}</td>
+          <td title="${escapeHtml(row.goals || '')}">${escapeHtml(goals)}</td>
+          <td>${escapeHtml(row.preferred_schedule || '-')}</td>
+          <td><span class="status ${row.status}">${escapeHtml(row.status || 'pending')}</span></td>
+          <td>${created}</td>
+          <td style="text-align:center">
+            <button class="small-btn" data-action="approve" style="background:#2b8f45;color:#fff;border-radius:6px">Approve</button>
+            <button class="small-btn" data-action="reject" style="margin-left:6px;background:#c0412e;color:#fff;border-radius:6px">Reject</button>
+          </td>
+        </tr>`}).join('');
+    }
 
-        // Tab switching function
-        function switchTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Remove active class from all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab content
-            document.getElementById(`${tabName}-tab`).classList.add('active');
-            
-            // Add active class to clicked tab
-            event.target.classList.add('active');
-        }
+    // update metrics
+    const totals = (data || []);
+    totalApplications.textContent = totals.length;
+    pendingApplications.textContent = totals.filter(r => r.status === 'pending').length;
+    approvedApplications.textContent = totals.filter(r => r.status === 'approved').length;
+    rejectedApplications.textContent = totals.filter(r => r.status === 'rejected').length;
+  }
 
-        // Approve application
-        function approveApplication(index) {
-            const application = pendingApplications[index];
-            
-            // Move to approved users
-            approvedUsers.push({
-                ...application,
-                status: 'approved',
-                approvedDate: new Date().toISOString()
-            });
-            
-            // Remove from pending
-            pendingApplications.splice(index, 1);
-            
-            // Update localStorage
-            localStorage.setItem('approvedUsers', JSON.stringify(approvedUsers));
-            localStorage.setItem('pendingApprovals', JSON.stringify(pendingApplications));
-            
-            // Update UI
-            updatePendingApplicationsList();
-            updateUsersList();
-            updateStats();
-            loadRevenueData();
-            
-            alert(`Application for ${application.fullName} approved successfully!`);
-        }
+  // ---------- Approve / Reject handlers ----------
+  async function updateApplicationStatus(id, newStatus) {
+    try {
+      const { error } = await supabase.from('mentorship_applications').update({ status: newStatus }).eq('id', id);
+      if (error) throw error;
+      // success: loadApplications will be triggered via realtime, but call it to be safe
+      await loadApplications();
+    } catch (err) {
+      console.error('Failed to update status', err);
+      alert('Failed to update status: ' + (err.message || err));
+    }
+  }
 
-        // Reject application
-        function rejectApplication(index) {
-            const application = pendingApplications[index];
-            
-            if (confirm(`Are you sure you want to reject ${application.fullName}'s application?`)) {
-                pendingApplications.splice(index, 1);
-                localStorage.setItem('pendingApprovals', JSON.stringify(pendingApplications));
-                
-                updatePendingApplicationsList();
-                updateStats();
-                
-                alert(`Application for ${application.fullName} rejected.`);
-            }
-        }
+  // table click delegation for approve/reject
+  applicationsTable.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const row = btn.closest('tr');
+    const id = row?.getAttribute('data-id');
+    if (!id) return;
+    const action = btn.getAttribute('data-action');
+    if (action === 'approve') updateApplicationStatus(id, 'approved');
+    if (action === 'reject') {
+      const reason = prompt('Optional: add a rejection note (this will not be saved currently). Press Cancel to continue without note.');
+      updateApplicationStatus(id, 'rejected');
+    }
+  });
 
-        // View application details
-        function viewApplication(index) {
-            const application = pendingApplications[index];
-            alert(`Application Details:\n\nName: ${application.fullName}\nEmail: ${application.email}\nPhone: ${application.phone}\nProgram: ${application.packageName}\nAmount: KES ${application.amount.toLocaleString()}\nApplied: ${new Date(application.timestamp).toLocaleString()}`);
-        }
+  // ---------- Realtime subscription ----------
+  function subscribeRealtime() {
+    if (realtimeSubscription) {
+      try { supabase.removeChannel(realtimeSubscription); } catch(e){}
+      realtimeSubscription = null;
+    }
+    realtimeSubscription = supabase.channel('mentorship-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'mentorship_applications' }, (payload) => {
+        // any change -> refresh
+        loadApplications();
+      })
+      .subscribe();
+  }
 
-        // View user details
-        function viewUser(index) {
-            const user = approvedUsers[index];
-            const userStats = getUserStats(user.email);
-            
-            alert(`User Details:\n\nName: ${user.fullName}\nEmail: ${user.email}\nPhone: ${user.phone}\nProgram: ${user.packageName}\nJoined: ${user.registrationDate}\nReferrals: ${userStats.totalReferrals}\nTotal Earnings: KES ${userStats.totalEarnings.toLocaleString()}\nBalance: KES ${userStats.availableBalance.toLocaleString()}`);
-        }
+  // ---------- Auth flows ----------
+  showLoginBtn.addEventListener('click', ()=> showModal());
+  cancelLoginBtn.addEventListener('click', ()=> hideModal());
 
-        // Deactivate user
-        function deactivateUser(index) {
-            const user = approvedUsers[index];
-            
-            if (confirm(`Are you sure you want to deactivate ${user.fullName}?`)) {
-                approvedUsers.splice(index, 1);
-                localStorage.setItem('approvedUsers', JSON.stringify(approvedUsers));
-                
-                updateUsersList();
-                updateStats();
-                loadRevenueData();
-                
-                alert(`User ${user.fullName} has been deactivated.`);
-            }
-        }
+  doLoginBtn.addEventListener('click', async () => {
+    loginError.textContent = '';
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    if (!email || !password) { loginError.textContent = 'Provide email & password'; return; }
+    doLoginBtn.disabled = true;
+    doLoginBtn.textContent = 'Signing in...';
+    try {
+      const res = await supabase.auth.signInWithPassword({ email, password });
+      if (res.error) {
+        loginError.textContent = res.error.message || 'Sign-in failed';
+        doLoginBtn.disabled = false;
+        doLoginBtn.textContent = 'Sign in';
+        return;
+      }
+      // signed in: onAuthStateChange will handle UI
+      hideModal();
+    } catch (err) {
+      loginError.textContent = err.message || 'Sign-in error';
+    } finally {
+      doLoginBtn.disabled = false;
+      doLoginBtn.textContent = 'Sign in';
+    }
+  });
 
-        // Save pricing changes
-        function savePricing() {
-            const pricing = {
-                referral: parseInt(document.getElementById('referralPrice').value),
-                mentorship: parseInt(document.getElementById('mentorshipPrice').value),
-                combined: parseInt(document.getElementById('combinedPrice').value),
-                referralCommission: parseInt(document.getElementById('referralCommission').value)
-            };
-            
-            localStorage.setItem('programPricing', JSON.stringify(pricing));
-            
-            // Update quick stats
-            document.getElementById('currentReferralPrice').textContent = `KES ${pricing.referral.toLocaleString()}`;
-            document.getElementById('currentMentorshipPrice').textContent = `KES ${pricing.mentorship.toLocaleString()}`;
-            
-            alert('Pricing updated successfully!');
-        }
+  signOutBtn.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    currentUser = null;
+    setSignedOutUI();
+  });
 
-        // Refresh applications
-        function refreshApplications() {
-            loadPendingApplications();
-            alert('Applications list refreshed!');
-        }
+  // listen to auth changes
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (session?.user) {
+      currentUser = session.user;
+      const adminCheck = await isAdminUser(currentUser);
+      if (!adminCheck.ok) {
+        alert('This account is not an admin. Please sign in with an admin account.');
+        await supabase.auth.signOut();
+        currentUser = null;
+        setSignedOutUI();
+        return;
+      }
+      const profile = adminCheck.profile || {};
+      setSignedInUI(currentUser, profile);
+      // show admin sections
+      navMentorship.style.display = 'block';
+      sideEmail.textContent = currentUser.email;
+      subscribeRealtime();
+      loadApplications();
+    } else {
+      // not signed in
+      currentUser = null;
+      setSignedOutUI();
+      if (realtimeSubscription) { try { supabase.removeChannel(realtimeSubscription); } catch(e){} }
+    }
+  });
 
-        // Export users
-        function exportUsers() {
-            alert('User export feature would download a CSV file with all user data.');
-        }
+  // initial check: if user is already signed in (persisted session)
+  (async function initialAuthCheck(){
+    const { data } = await supabase.auth.getSession();
+    if (data?.session?.user) {
+      currentUser = data.session.user;
+      const adminCheck = await isAdminUser(currentUser);
+      if (adminCheck.ok) {
+        setSignedInUI(currentUser, adminCheck.profile || {});
+        subscribeRealtime();
+        loadApplications();
+      } else {
+        // sign out non-admin silently
+        await supabase.auth.signOut();
+        setSignedOutUI();
+      }
+    } else {
+      setSignedOutUI();
+    }
+  })();
 
-        // Generate report
-        function generateReport() {
-            alert('Revenue report generation started. This would create a detailed PDF report.');
-        }
+  // ---------- small UI controls ----------
+  refreshBtn.addEventListener('click', loadApplications);
+  statusFilter.addEventListener('change', loadApplications);
+  searchInput.addEventListener('input', debounce(loadApplications, 350));
 
-        // System tools functions
-        function backupData() {
-            alert('System backup initiated. All data would be downloaded as a backup file.');
-        }
+  // ---------- utilities ----------
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"'`=\/]/g, function (s) {
+      return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;' })[s];
+    });
+  }
 
-        function clearPending() {
-            if (confirm('Clear all pending applications older than 30 days?')) {
-                alert('Old pending applications cleared (simulated).');
-            }
-        }
+  function debounce(fn, wait) {
+    let t;
+    return function(...args) {
+      clearTimeout(t);
+      t = setTimeout(()=> fn.apply(this, args), wait);
+    }
+  }
 
-        function sendBulkEmail() {
-            alert('Bulk email composer would open here.');
-        }
-
-        function systemSettings() {
-            alert('System settings panel would open here.');
-        }
-
-        // Logout function
-        function logout() {
-            localStorage.removeItem('adminLoggedIn');
-            window.location.href = 'admin-login.html';
-        }
-
-        // Auto-refresh data every 30 seconds
-        setInterval(() => {
-            loadPendingApplications();
-            loadApprovedUsers();
-            updateStats();
-        }, 30000);
-    </script>
+  </script>
 </body>
 </html>
