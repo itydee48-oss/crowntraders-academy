@@ -1,567 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin Dashboard - Crown Trade Academy</title>
-
-  <!-- Fonts / icons (same aesthetic) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <style>
-    :root{
-      --nude-light:#F9F6F2;
-      --nude-medium:#E8DFD6;
-      --nude-dark:#D4C8BC;
-      --gold:#C8A97E;
-      --gold-dark:#B89463;
-      --charcoal:#3A3A3A;
-      --text-light:#7A7A7A;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:'Montserrat',sans-serif;
-      background:var(--nude-light);
-      color:var(--charcoal);
-      min-height:100vh;
-    }
-
-    /* Header */
-    .admin-header{
-      position:fixed;
-      top:0; left:0; right:0;
-      background:rgba(249,246,242,0.98);
-      border-bottom:1px solid rgba(212,200,188,0.4);
-      z-index:100;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:1rem 2rem;
-    }
-    .brand{
-      font-family:'Cormorant Garamond',serif;
-      font-weight:600;
-      font-size:1.4rem;
-      color:var(--charcoal);
-      text-decoration:none;
-    }
-    .header-actions{display:flex;gap:1rem;align-items:center}
-    .btn{
-      background:var(--gold);
-      color:var(--nude-light);
-      padding:0.5rem 0.9rem;
-      border-radius:8px;
-      text-decoration:none;
-      cursor:pointer;
-      border:0;
-      font-weight:600;
-    }
-    .btn.ghost{background:transparent;color:var(--charcoal);border:1px solid var(--nude-dark)}
-
-    /* Layout */
-    .container{display:flex;padding-top:84px} /* account for header */
-    .sidebar{
-      width:260px;
-      background:linear-gradient(180deg,var(--nude-light),#fff);
-      border-right:1px solid rgba(212,200,188,0.3);
-      min-height:calc(100vh - 84px);
-      padding:2rem 1.2rem;
-    }
-    .sidebar h3{font-family:'Cormorant Garamond',serif;margin-bottom:1rem}
-    .nav-item{padding:0.6rem 0;border-radius:6px;color:var(--charcoal);display:flex;justify-content:space-between;align-items:center;cursor:pointer}
-    .nav-item:hover{background:rgba(200,169,126,0.06);color:var(--gold-dark)}
-    .nav-item.active{background:var(--nude-medium);font-weight:600}
-
-    .main{
-      flex:1;
-      padding:2rem;
-    }
-
-    /* Cards */
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1.5rem}
-    .card{
-      background:#fff;padding:1rem;border-radius:10px;border:1px solid rgba(212,200,188,0.5);
-      box-shadow:0 6px 18px rgba(0,0,0,0.03);
-    }
-    .card h4{margin:0 0 0.6rem;font-size:1rem}
-    .card p{margin:0;font-weight:700;font-size:1.3rem}
-
-    /* Table */
-    table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden}
-    th,td{padding:0.8rem 1rem;text-align:left;border-bottom:1px solid rgba(212,200,188,0.25)}
-    thead th{background:var(--nude-medium);font-weight:600}
-    tr:hover td{background:rgba(232,223,214,0.4)}
-    .status{padding:0.25rem 0.6rem;border-radius:6px;font-weight:600;text-transform:capitalize}
-    .status.pending{color:#d4a017}
-    .status.approved{color:#2b8f45}
-    .status.rejected{color:#c0412e}
-
-    /* Controls */
-    .controls{display:flex;gap:0.6rem;align-items:center}
-    .search{padding:0.5rem 0.8rem;border-radius:8px;border:1px solid var(--nude-dark);width:260px}
-    .small-btn{padding:0.35rem 0.6rem;border-radius:6px;border:0;cursor:pointer;font-weight:600}
-
-    /* Login modal */
-    .modal{
-      position:fixed;left:0;right:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);
-    }
-    .modal-card{background:var(--nude-light);padding:2rem;border-radius:10px;width:360px;box-shadow:0 10px 30px rgba(0,0,0,0.25)}
-    .input{width:100%;padding:0.6rem;margin-bottom:0.8rem;border-radius:6px;border:1px solid var(--nude-dark)}
-    .muted{color:var(--text-light);font-size:0.9rem}
-
-    /* Responsive */
-    @media (max-width:900px){
-      .sidebar{display:none}
-      .container{padding-top:100px}
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - CrownTraders Academy</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <!-- header -->
-  <header class="admin-header">
-    <a class="brand" href="index.html">Crown Trade Academy — Admin</a>
-    <div class="header-actions" id="headerActions">
-      <span id="adminName" class="muted" style="margin-right:1rem"></span>
-      <button id="signOutBtn" class="btn ghost" style="display:none">Sign out</button>
-      <button id="showLoginBtn" class="btn">Admin Sign in</button>
-    </div>
+  <header class="premium-header">
+    <nav class="premium-nav">
+      <a href="index.html" class="logo">CrownTraders Academy</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="admin-dashboard.html" class="active">Admin</a>
+      </div>
+    </nav>
   </header>
 
-  <div class="container">
-    <!-- sidebar -->
-    <aside class="sidebar">
-      <h3>Control Panel</h3>
-      <div id="navMentorship" class="nav-item active">Mentorship</div>
-      <div id="navUsers" class="nav-item">Users</div>
-      <div id="navAffiliates" class="nav-item">Affiliates</div>
-      <div id="navSettings" class="nav-item">Settings</div>
-      <div style="height:20px"></div>
-      <hr style="border:none;border-top:1px solid rgba(212,200,188,0.4);margin:1rem 0"/>
-      <div style="font-size:0.9rem;color:var(--text-light)">Signed in as</div>
-      <div id="sideEmail" style="font-weight:700;margin-top:0.3rem;word-break:break-all"></div>
-    </aside>
+  <main class="content" style="padding: 40px;">
+    <h1>Mentorship Applications</h1>
+    <table border="1" cellspacing="0" cellpadding="10" style="width:100%; margin-top:20px; text-align:left;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Experience</th>
+          <th>Goals</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="applicationsTable">
+        <tr><td colspan="7">Loading...</td></tr>
+      </tbody>
+    </table>
+  </main>
 
-    <!-- main -->
-    <main class="main">
-      <!-- Mentorship view -->
-      <section id="mentorshipView">
-        <div class="grid" style="margin-bottom:1.3rem">
-          <div class="card">
-            <h4>Total Applications</h4>
-            <p id="totalApplications">—</p>
-          </div>
-          <div class="card">
-            <h4>Pending</h4>
-            <p id="pendingApplications">—</p>
-          </div>
-          <div class="card">
-            <h4>Approved</h4>
-            <p id="approvedApplications">—</p>
-          </div>
-          <div class="card">
-            <h4>Rejected</h4>
-            <p id="rejectedApplications">—</p>
-          </div>
-        </div>
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem">
-          <div class="controls">
-            <input id="searchInput" class="search" placeholder="Search by name or email">
-            <select id="statusFilter" class="input" style="margin-left:0.6rem;padding:0.45rem;border-radius:8px;border:1px solid var(--nude-dark)">
-              <option value="all">All status</option>
-              <option value="pending">Pending</option>
-              <option value="approved">Approved</option>
-              <option value="rejected">Rejected</option>
-            </select>
-          </div>
-          <div>
-            <button id="refreshBtn" class="small-btn btn ghost">Refresh</button>
-          </div>
-        </div>
+    const SUPABASE_URL = "https://eygjxxdgxzatchqgwvep.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        <div style="overflow:auto;border-radius:8px">
-          <table>
-            <thead>
-              <tr>
-                <th>Full name</th>
-                <th>Email</th>
-                <th>Experience</th>
-                <th>Goals</th>
-                <th>Preferred schedule</th>
-                <th>Status</th>
-                <th>Submitted</th>
-                <th style="width:160px;text-align:center">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="applicationsTable">
-              <tr><td colspan="8" style="text-align:center;color:var(--text-light)">Sign in to view applications</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+    const tableBody = document.getElementById("applicationsTable");
 
-      <!-- Placeholder other sections -->
-      <section id="usersView" style="display:none">
-        <h2>Users</h2>
-        <p class="muted">(Coming soon) Manage user accounts, roles, and profiles.</p>
-      </section>
-
-      <section id="affiliatesView" style="display:none">
-        <h2>Affiliates</h2>
-        <p class="muted">(Coming soon) Affiliate dashboard & payouts.</p>
-      </section>
-
-      <section id="settingsView" style="display:none">
-        <h2>Settings</h2>
-        <p class="muted">(Coming soon) App settings, integrations and secrets.</p>
-      </section>
-    </main>
-  </div>
-
-  <!-- Sign-in modal -->
-  <div id="loginModal" class="modal" style="display:none">
-    <div class="modal-card">
-      <h3 style="margin-top:0">Admin Sign In</h3>
-      <p class="muted">Use your admin email & password</p>
-      <input id="emailInput" class="input" placeholder="Email" type="email">
-      <input id="passwordInput" class="input" placeholder="Password" type="password">
-      <div style="display:flex;gap:0.6rem;justify-content:flex-end">
-        <button id="cancelLogin" class="btn ghost">Cancel</button>
-        <button id="doLogin" class="btn">Sign in</button>
-      </div>
-      <p id="loginError" class="muted" style="margin-top:0.8rem;color:#c0412e"></p>
-    </div>
-  </div>
-
-  <!-- Supabase SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script>
-  /*****************************************************************************
-   * ADMIN DASHBOARD (single-file)
-   *
-   * Instructions:
-   * 1) Ensure you created the 'mentorship_applications' table in Supabase:
-   *    - id uuid default gen_random_uuid()
-   *    - full_name text
-   *    - email text
-   *    - trading_experience text
-   *    - goals text
-   *    - preferred_schedule text
-   *    - status text default 'pending'
-   *    - created_at timestamptz default now()
-   *
-   * 2) (Recommended) Create a 'profiles' table where you set is_admin = true
-   *    for admin user(s). If you don't have a profiles table, set ADMIN_EMAIL
-   *    below to the email you want to treat as admin.
-   *
-   * 3) Drop this file into your repo as admin-dashboard.html and open it.
-   *
-   *****************************************************************************/
-
-  // ---------- CONFIG: replace with your project details ----------
-  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
-
-  // If you don't have a profiles table with is_admin, set the fallback admin email here:
-  const ADMIN_EMAIL = ''; // e.g. 'your.email@example.com'  <-- set this if needed
-
-  // ---------- init supabase ----------
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // ---------- DOM refs ----------
-  const showLoginBtn = document.getElementById('showLoginBtn');
-  const loginModal = document.getElementById('loginModal');
-  const doLoginBtn = document.getElementById('doLogin');
-  const cancelLoginBtn = document.getElementById('cancelLogin');
-  const signOutBtn = document.getElementById('signOutBtn');
-  const adminNameEl = document.getElementById('adminName');
-  const sideEmail = document.getElementById('sideEmail');
-  const headerActions = document.getElementById('headerActions');
-  const loginError = document.getElementById('loginError');
-
-  const applicationsTable = document.getElementById('applicationsTable');
-  const totalApplications = document.getElementById('totalApplications');
-  const pendingApplications = document.getElementById('pendingApplications');
-  const approvedApplications = document.getElementById('approvedApplications');
-  const rejectedApplications = document.getElementById('rejectedApplications');
-  const statusFilter = document.getElementById('statusFilter');
-  const searchInput = document.getElementById('searchInput');
-  const refreshBtn = document.getElementById('refreshBtn');
-
-  // nav items
-  const navMentorship = document.getElementById('navMentorship');
-  const navUsers = document.getElementById('navUsers');
-  const navAffiliates = document.getElementById('navAffiliates');
-  const navSettings = document.getElementById('navSettings');
-  const mentorshipView = document.getElementById('mentorshipView');
-  const usersView = document.getElementById('usersView');
-  const affiliatesView = document.getElementById('affiliatesView');
-  const settingsView = document.getElementById('settingsView');
-
-  // auth inputs
-  const emailInput = document.getElementById('emailInput');
-  const passwordInput = document.getElementById('passwordInput');
-
-  // ---------- state ----------
-  let currentUser = null;
-  let realtimeSubscription = null;
-
-  // ---------- UI helpers ----------
-  function showModal() { loginModal.style.display = 'flex'; loginError.textContent = ''; }
-  function hideModal() { loginModal.style.display = 'none'; emailInput.value=''; passwordInput.value=''; loginError.textContent=''; }
-  function setSignedInUI(user, profile) {
-    showLoginBtn.style.display = 'none';
-    signOutBtn.style.display = 'inline-block';
-    adminNameEl.textContent = profile?.full_name || user.email;
-    sideEmail.textContent = user.email;
-  }
-  function setSignedOutUI() {
-    showLoginBtn.style.display = 'inline-block';
-    signOutBtn.style.display = 'none';
-    adminNameEl.textContent = '';
-    sideEmail.textContent = '';
-    applicationsTable.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-light)">Sign in to view applications</td></tr>`;
-    totalApplications.textContent = '-';
-    pendingApplications.textContent = '-';
-    approvedApplications.textContent = '-';
-    rejectedApplications.textContent = '-';
-  }
-
-  // ---------- Navigation (single-file SPA behaviour) ----------
-  function clearActiveNav() {
-    [navMentorship, navUsers, navAffiliates, navSettings].forEach(n => n.classList.remove('active'));
-    [mentorshipView, usersView, affiliatesView, settingsView].forEach(v => v.style.display = 'none');
-  }
-  navMentorship.addEventListener('click', ()=>{ clearActiveNav(); navMentorship.classList.add('active'); mentorshipView.style.display='block'; loadApplications(); });
-  navUsers.addEventListener('click', ()=>{ clearActiveNav(); navUsers.classList.add('active'); usersView.style.display='block'; });
-  navAffiliates.addEventListener('click', ()=>{ clearActiveNav(); navAffiliates.classList.add('active'); affiliatesView.style.display='block'; });
-  navSettings.addEventListener('click', ()=>{ clearActiveNav(); navSettings.classList.add('active'); settingsView.style.display='block'; });
-
-  // ---------- Admin check ----------
-  async function isAdminUser(user) {
-    if (!user) return false;
-    // Try to read from profiles table if it exists
-    try {
-      const { data: profile, error } = await supabase.from('profiles').select('is_admin,full_name').eq('id', user.id).single();
-      if (!error && profile) {
-        return { ok: !!profile.is_admin, profile };
+    async function loadApplications() {
+      const { data, error } = await supabase.from("mentorship_applications").select("*").order("id", { ascending: false });
+      if (error) {
+        tableBody.innerHTML = `<tr><td colspan="7">Error loading data</td></tr>`;
+        return;
       }
-    } catch (e) {
-      // silently continue to fallback
-    }
-    // fallback: check email against ADMIN_EMAIL if provided
-    if (ADMIN_EMAIL && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-      return { ok: true, profile: { full_name: user.email } };
-    }
-    return { ok: false };
-  }
 
-  // ---------- Load applications and metrics ----------
-  async function loadApplications() {
-    if (!currentUser) return;
-    const selectedStatus = statusFilter.value;
-    const search = (searchInput.value || '').toLowerCase();
+      if (data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7">No applications yet</td></tr>`;
+        return;
+      }
 
-    let query = supabase.from('mentorship_applications').select('*').order('created_at', { ascending: false });
-
-    if (selectedStatus !== 'all') {
-      query = query.eq('status', selectedStatus);
-    }
-
-    const { data, error } = await query;
-    if (error) {
-      console.error('Error loading', error);
-      applicationsTable.innerHTML = `<tr><td colspan="8" style="text-align:center;color:red">Failed to load</td></tr>`;
-      return;
-    }
-
-    // Filter client-side by search
-    const filtered = (data || []).filter(row => {
-      if (!search) return true;
-      return (row.full_name || '').toLowerCase().includes(search) || (row.email || '').toLowerCase().includes(search);
-    });
-
-    // Render rows
-    if (!filtered.length) {
-      applicationsTable.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-light)">No applications found</td></tr>`;
-    } else {
-      applicationsTable.innerHTML = filtered.map(row => {
-        const created = row.created_at ? new Date(row.created_at).toLocaleString() : '-';
-        const goals = row.goals ? (row.goals.length > 80 ? row.goals.slice(0,77) + '...' : row.goals) : '-';
-        return `<tr data-id="${row.id}">
-          <td>${escapeHtml(row.full_name || '')}</td>
-          <td>${escapeHtml(row.email || '')}</td>
-          <td>${escapeHtml(row.trading_experience || '-')}</td>
-          <td title="${escapeHtml(row.goals || '')}">${escapeHtml(goals)}</td>
-          <td>${escapeHtml(row.preferred_schedule || '-')}</td>
-          <td><span class="status ${row.status}">${escapeHtml(row.status || 'pending')}</span></td>
-          <td>${created}</td>
-          <td style="text-align:center">
-            <button class="small-btn" data-action="approve" style="background:#2b8f45;color:#fff;border-radius:6px">Approve</button>
-            <button class="small-btn" data-action="reject" style="margin-left:6px;background:#c0412e;color:#fff;border-radius:6px">Reject</button>
+      tableBody.innerHTML = data.map(app => `
+        <tr>
+          <td>${app.id}</td>
+          <td>${app.full_name}</td>
+          <td>${app.email}</td>
+          <td>${app.trading_experience || '-'}</td>
+          <td>${app.goals || '-'}</td>
+          <td>${app.status}</td>
+          <td>
+            <button onclick="updateStatus(${app.id}, 'approved')">Approve</button>
+            <button onclick="updateStatus(${app.id}, 'rejected')">Reject</button>
           </td>
-        </tr>`}).join('');
+        </tr>
+      `).join("");
     }
 
-    // update metrics
-    const totals = (data || []);
-    totalApplications.textContent = totals.length;
-    pendingApplications.textContent = totals.filter(r => r.status === 'pending').length;
-    approvedApplications.textContent = totals.filter(r => r.status === 'approved').length;
-    rejectedApplications.textContent = totals.filter(r => r.status === 'rejected').length;
-  }
+    window.updateStatus = async function(id, status) {
+      const { error } = await supabase.from("mentorship_applications").update({ status }).eq("id", id);
+      if (error) {
+        alert("Failed to update status");
+        console.error(error);
+        return;
+      }
+      loadApplications();
+    };
 
-  // ---------- Approve / Reject handlers ----------
-  async function updateApplicationStatus(id, newStatus) {
-    try {
-      const { error } = await supabase.from('mentorship_applications').update({ status: newStatus }).eq('id', id);
-      if (error) throw error;
-      // success: loadApplications will be triggered via realtime, but call it to be safe
-      await loadApplications();
-    } catch (err) {
-      console.error('Failed to update status', err);
-      alert('Failed to update status: ' + (err.message || err));
-    }
-  }
+    // Load data on page open
+    loadApplications();
 
-  // table click delegation for approve/reject
-  applicationsTable.addEventListener('click', (e) => {
-    const btn = e.target.closest('button');
-    if (!btn) return;
-    const row = btn.closest('tr');
-    const id = row?.getAttribute('data-id');
-    if (!id) return;
-    const action = btn.getAttribute('data-action');
-    if (action === 'approve') updateApplicationStatus(id, 'approved');
-    if (action === 'reject') {
-      const reason = prompt('Optional: add a rejection note (this will not be saved currently). Press Cancel to continue without note.');
-      updateApplicationStatus(id, 'rejected');
-    }
-  });
-
-  // ---------- Realtime subscription ----------
-  function subscribeRealtime() {
-    if (realtimeSubscription) {
-      try { supabase.removeChannel(realtimeSubscription); } catch(e){}
-      realtimeSubscription = null;
-    }
-    realtimeSubscription = supabase.channel('mentorship-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'mentorship_applications' }, (payload) => {
-        // any change -> refresh
+    // Realtime updates
+    supabase.channel("realtime:applications")
+      .on("postgres_changes", { event: "*", schema: "public", table: "mentorship_applications" }, payload => {
+        console.log("Realtime update:", payload);
         loadApplications();
       })
       .subscribe();
-  }
-
-  // ---------- Auth flows ----------
-  showLoginBtn.addEventListener('click', ()=> showModal());
-  cancelLoginBtn.addEventListener('click', ()=> hideModal());
-
-  doLoginBtn.addEventListener('click', async () => {
-    loginError.textContent = '';
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-    if (!email || !password) { loginError.textContent = 'Provide email & password'; return; }
-    doLoginBtn.disabled = true;
-    doLoginBtn.textContent = 'Signing in...';
-    try {
-      const res = await supabase.auth.signInWithPassword({ email, password });
-      if (res.error) {
-        loginError.textContent = res.error.message || 'Sign-in failed';
-        doLoginBtn.disabled = false;
-        doLoginBtn.textContent = 'Sign in';
-        return;
-      }
-      // signed in: onAuthStateChange will handle UI
-      hideModal();
-    } catch (err) {
-      loginError.textContent = err.message || 'Sign-in error';
-    } finally {
-      doLoginBtn.disabled = false;
-      doLoginBtn.textContent = 'Sign in';
-    }
-  });
-
-  signOutBtn.addEventListener('click', async () => {
-    await supabase.auth.signOut();
-    currentUser = null;
-    setSignedOutUI();
-  });
-
-  // listen to auth changes
-  supabase.auth.onAuthStateChange(async (event, session) => {
-    if (session?.user) {
-      currentUser = session.user;
-      const adminCheck = await isAdminUser(currentUser);
-      if (!adminCheck.ok) {
-        alert('This account is not an admin. Please sign in with an admin account.');
-        await supabase.auth.signOut();
-        currentUser = null;
-        setSignedOutUI();
-        return;
-      }
-      const profile = adminCheck.profile || {};
-      setSignedInUI(currentUser, profile);
-      // show admin sections
-      navMentorship.style.display = 'block';
-      sideEmail.textContent = currentUser.email;
-      subscribeRealtime();
-      loadApplications();
-    } else {
-      // not signed in
-      currentUser = null;
-      setSignedOutUI();
-      if (realtimeSubscription) { try { supabase.removeChannel(realtimeSubscription); } catch(e){} }
-    }
-  });
-
-  // initial check: if user is already signed in (persisted session)
-  (async function initialAuthCheck(){
-    const { data } = await supabase.auth.getSession();
-    if (data?.session?.user) {
-      currentUser = data.session.user;
-      const adminCheck = await isAdminUser(currentUser);
-      if (adminCheck.ok) {
-        setSignedInUI(currentUser, adminCheck.profile || {});
-        subscribeRealtime();
-        loadApplications();
-      } else {
-        // sign out non-admin silently
-        await supabase.auth.signOut();
-        setSignedOutUI();
-      }
-    } else {
-      setSignedOutUI();
-    }
-  })();
-
-  // ---------- small UI controls ----------
-  refreshBtn.addEventListener('click', loadApplications);
-  statusFilter.addEventListener('change', loadApplications);
-  searchInput.addEventListener('input', debounce(loadApplications, 350));
-
-  // ---------- utilities ----------
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>"'`=\/]/g, function (s) {
-      return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;' })[s];
-    });
-  }
-
-  function debounce(fn, wait) {
-    let t;
-    return function(...args) {
-      clearTimeout(t);
-      t = setTimeout(()=> fn.apply(this, args), wait);
-    }
-  }
-
   </script>
 </body>
 </html>
