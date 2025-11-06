@@ -319,4 +319,33 @@
 </script>
 
 </body>
-</html>
+</html><script>
+  const form = document.getElementById('mentorshipForm');
+  const message = document.getElementById('formMessage');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    message.textContent = 'Submitting...';
+
+    const full_name = document.getElementById('full_name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const trading_experience = document.getElementById('trading_experience').value;
+    const goals = document.getElementById('goals').value.trim();
+
+    const { data, error } = await supabase.from('mentorship_applications').insert([
+      { full_name, email, trading_experience, goals }
+    ]);
+
+    if (error) {
+      console.error('❌ Submission error:', error);
+      message.textContent = 'Error submitting. Please try again.';
+      message.style.color = 'red';
+    } else {
+      console.log('✅ Application saved:', data);
+      message.textContent = '✅ Application submitted successfully!';
+      message.style.color = 'green';
+      form.reset();
+    }
+  });
+</script>
+
