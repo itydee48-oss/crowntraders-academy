@@ -255,7 +255,39 @@
             <p>Join our referral program and earn significant commissions by bringing new traders to our platform. Get access to your personal referral dashboard, track your earnings, and grow your network.</p>
             <a href="referral-signup.html" class="btn-primary" style="margin-top: 2rem;">Join Referral Program</a>
         </div>
-    </section>
+    </section><!-- Mentorship Application Form -->
+<section id="mentorship" style="padding:6rem 0; background:var(--nude-medium); text-align:center;">
+  <div class="premium-container">
+    <div class="section-title">
+      <h2>Apply for Mentorship</h2>
+      <p style="color:var(--text-light);">Join the Elite Brotherhood — fill in your details below.</p>
+    </div>
+
+    <form id="mentorshipForm" style="max-width:600px; margin:0 auto; text-align:left;">
+      <label>Full Name</label>
+      <input type="text" id="full_name" required style="width:100%; padding:0.8rem; margin-bottom:1rem; border:1px solid var(--nude-dark); border-radius:5px;">
+
+      <label>Email</label>
+      <input type="email" id="email" required style="width:100%; padding:0.8rem; margin-bottom:1rem; border:1px solid var(--nude-dark); border-radius:5px;">
+
+      <label>Trading Experience</label>
+      <select id="trading_experience" required style="width:100%; padding:0.8rem; margin-bottom:1rem; border:1px solid var(--nude-dark); border-radius:5px;">
+        <option value="">Select level</option>
+        <option>Beginner</option>
+        <option>Intermediate</option>
+        <option>Advanced</option>
+      </select>
+
+      <label>Your Goals</label>
+      <textarea id="goals" required style="width:100%; padding:0.8rem; margin-bottom:1rem; border:1px solid var(--nude-dark); border-radius:5px;" placeholder="What do you want to achieve through this mentorship?"></textarea>
+
+      <button type="submit" class="btn-primary" style="width:100%;">Submit Application</button>
+    </form>
+
+    <p id="formMessage" style="margin-top:1rem; color:var(--charcoal); font-weight:500;"></p>
+  </div>
+</section>
+
 
     <!-- Footer -->
     <footer class="premium-footer">
