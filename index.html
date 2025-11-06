@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Your existing CSS remains the same */
         :root {
             --nude-light: #F9F6F2;
             --nude-medium: #E8DFD6;
@@ -197,7 +196,7 @@
                 <li><a href="#home">Home</a></li>
                 <li><a href="#programs">Programs</a></li>
                 <li><a href="#mentors">Mentors</a></li>
-                <li><a href="referral-signup.html">Referral Program</a></li> <!-- CHANGED: Goes to signup page -->
+                <li><a href="referral-signup.html">Referral Program</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
@@ -208,7 +207,7 @@
         <div class="hero-content">
             <h1>Elite Trading & Marketing Education</h1>
             <p>Master the markets with our premium mentorship programs and unlock exclusive earning opportunities through our referral network.</p>
-            <a href="referral-signup.html" class="btn-primary">Join Referral Program</a> <!-- CHANGED: Goes to signup page -->
+            <a href="referral-signup.html" class="btn-primary">Join Referral Program</a>
         </div>
     </section>
 
@@ -233,7 +232,7 @@
                     </div>
                     <h3>Referral Network</h3>
                     <p>Earn substantial commissions by referring traders to our platform. Join our referral program and start earning today.</p>
-                    <a href="referral-signup.html" class="btn-primary">Join Referral Program</a> <!-- CHANGED: Goes to signup page -->
+                    <a href="referral-signup.html" class="btn-primary">Join Referral Program</a>
                 </div>
                 <div class="program-card">
                     <div class="program-icon">
@@ -254,7 +253,7 @@
                 <h2>Earn With Our Referral Program</h2>
             </div>
             <p>Join our referral program and earn significant commissions by bringing new traders to our platform. Get access to your personal referral dashboard, track your earnings, and grow your network.</p>
-            <a href="referral-signup.html" class="btn-primary" style="margin-top: 2rem;">Join Referral Program</a> <!-- CHANGED: Goes to signup page -->
+            <a href="referral-signup.html" class="btn-primary" style="margin-top: 2rem;">Join Referral Program</a>
         </div>
     </section>
 
@@ -265,12 +264,24 @@
             <p style="margin-top: 2rem; color: var(--nude-medium);">&copy; 2024 Crown Trade Academy. All rights reserved. Trading involves risk.</p>
         </div>
     </footer>
-<!-- Supabase JS SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = https://eygjxxdgxzatchqgwvep.supabase.co;
-  const SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg;
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-</script>
+
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
+      const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      async function testConnection() {
+        const { data, error } = await supabaseClient.from('users').select('*');
+        if (error) {
+          console.error('❌ Connection failed:', error);
+        } else {
+          console.log('✅ Supabase connected successfully:', data);
+        }
+      }
+
+      testConnection();
+    </script>
 </body>
 </html>
