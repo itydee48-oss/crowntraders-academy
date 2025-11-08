@@ -3,342 +3,369 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Verification - Crown Trade Academy</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Payment Verification - CrownTraders Academy</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        :root {
-            --nude-light: #F9F6F2;
-            --nude-medium: #E8DFD6;
-            --nude-dark: #D4C8BC;
-            --nude-accent: #C4B5A3;
-            --gold: #C8A97E;
-            --gold-dark: #B89463;
-            --charcoal: #3A3A3A;
-            --text-light: #7A7A7A;
-            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--nude-light);
-            color: var(--charcoal);
-            line-height: 1.6;
-        }
-
-        h1, h2, h3, h4, h5 {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 600;
-        }
-
-        .premium-header {
-            background-color: rgba(249, 246, 242, 0.95);
-            position: fixed;
-            width: 100%;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(212, 200, 188, 0.3);
-        }
-
-        .premium-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1.2rem 2rem;
-        }
-
-        .logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--charcoal);
-            text-decoration: none;
-        }
-
-        .payment-hero {
-            background: linear-gradient(135deg, rgba(249, 246, 242, 0.9) 0%, rgba(232, 223, 214, 0.8) 100%);
-            padding: 12rem 2rem 4rem;
-            text-align: center;
-        }
-
-        .premium-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .payment-section {
-            padding: 4rem 0;
-        }
-
-        .payment-card {
+        .payment-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
             background: white;
-            padding: 3rem;
-            border: 1px solid var(--nude-medium);
-            margin-bottom: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
-
-        .payment-details {
-            background: var(--nude-medium);
-            padding: 2rem;
-            margin-bottom: 2rem;
+        .user-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
         }
-
-        .payment-info {
+        .payment-methods {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
         }
-
-        .info-item {
+        .payment-method {
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             text-align: center;
-            padding: 1.5rem;
-            background: var(--nude-light);
-            border: 1px solid var(--nude-dark);
-        }
-
-        .info-item h4 {
-            color: var(--gold);
-            margin-bottom: 0.5rem;
-        }
-
-        .upload-area {
-            border: 2px dashed var(--nude-dark);
-            padding: 3rem;
-            text-align: center;
-            margin: 2rem 0;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s;
         }
-
-        .upload-area:hover {
-            border-color: var(--gold);
+        .payment-method.selected {
+            border-color: #d4af37;
+            background: #fffbf0;
         }
-
-        .upload-area i {
-            font-size: 3rem;
-            color: var(--gold);
-            margin-bottom: 1rem;
+        .payment-method:hover {
+            border-color: #b8941f;
         }
-
-        #fileInput {
+        .payment-details {
             display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
         }
-
-        .preview-container {
-            margin: 1rem 0;
-            display: none;
+        .payment-details.active {
+            display: block;
         }
-
-        .preview-container img {
-            max-width: 300px;
-            max-height: 200px;
-            border: 1px solid var(--nude-medium);
+        .form-group {
+            margin-bottom: 20px;
         }
-
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #d4af37;
+            outline: none;
+        }
+        .file-upload {
+            border: 2px dashed #ddd;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .file-upload:hover {
+            border-color: #d4af37;
+        }
+        .file-upload.dragover {
+            border-color: #d4af37;
+            background: #fffbf0;
+        }
         .btn-primary {
-            display: inline-block;
-            background: var(--gold);
-            color: var(--nude-light);
-            padding: 1rem 2.5rem;
+            width: 100%;
+            padding: 15px;
+            background: #d4af37;
+            color: white;
             border: none;
-            font-weight: 500;
-            text-decoration: none;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
+            border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 1rem;
+            transition: background 0.3s;
         }
-
         .btn-primary:hover {
-            background: var(--gold-dark);
+            background: #b8941f;
         }
-
-        .btn-secondary {
-            display: inline-block;
-            background: transparent;
-            color: var(--charcoal);
-            padding: 1rem 2.5rem;
-            border: 1px solid var(--nude-dark);
-            font-weight: 500;
-            text-decoration: none;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 1rem;
+        .btn-primary:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
         }
-
-        .btn-secondary:hover {
-            background: var(--nude-medium);
-        }
-
-        .status-message {
-            padding: 1rem;
+        .confirmation {
             text-align: center;
-            margin: 1rem 0;
             display: none;
         }
-
-        .status-pending {
-            background: #FFF3CD;
-            color: #856404;
-            border: 1px solid #FFEEBA;
+        .confirmation.active {
+            display: block;
         }
-
-        .premium-footer {
-            background: var(--charcoal);
-            color: var(--nude-light);
-            padding: 4rem 0 2rem;
-            text-align: center;
+        .success-icon {
+            font-size: 60px;
+            color: #4CAF50;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="premium-header">
         <nav class="premium-nav">
-            <a href="index.html" class="logo">Crown Trade Academy</a>
+            <a href="index.html" class="logo">CrownTraders Academy</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="referral-signup.html">Join Referral</a>
+            </div>
         </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section class="payment-hero">
-        <div class="premium-container">
-            <h1>Complete Your Registration</h1>
-            <p>Make payment and upload screenshot to get access to your referral dashboard</p>
-        </div>
-    </section>
+    <main class="content">
+        <div class="payment-container">
+            <!-- User Info -->
+            <div class="user-info">
+                <h3>Account Information</h3>
+                <div id="userDetails">Loading...</div>
+            </div>
 
-    <!-- Payment Section -->
-    <section class="payment-section">
-        <div class="premium-container">
-            <div class="payment-card">
-                <h2 style="text-align: center; margin-bottom: 2rem;">Payment Details</h2>
-                
-                <div class="payment-details">
-                    <h3 style="color: var(--gold); margin-bottom: 1rem;">Payment Information</h3>
-                    <div class="payment-info">
-                        <div class="info-item">
+            <!-- Payment Form -->
+            <div id="paymentForm">
+                <h2>Complete Your Registration</h2>
+                <p>Pay $50 to activate your referral account and start earning commissions.</p>
+
+                <div class="form-group">
+                    <label>Select Payment Method</label>
+                    <div class="payment-methods">
+                        <div class="payment-method" onclick="selectPaymentMethod('bank')">
                             <h4>Bank Transfer</h4>
-                            <p>Bank: Equity Bank</p>
-                            <p>Account: 1234567890</p>
-                            <p>Name: Crown Trade Academy</p>
                         </div>
-                        <div class="info-item">
-                            <h4>Mobile Money</h4>
-                            <p>M-Pesa: 0712345678</p>
-                            <p>Paybill: 123456</p>
-                            <p>Account: Your Name</p>
+                        <div class="payment-method" onclick="selectPaymentMethod('mpesa')">
+                            <h4>M-Pesa</h4>
                         </div>
-                        <div class="info-item">
+                        <div class="payment-method" onclick="selectPaymentMethod('crypto')">
                             <h4>Crypto</h4>
-                            <p>BTC: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</p>
-                            <p>USDT (ERC20): 0x742d35Cc6634C0532925a3b8D</p>
                         </div>
                     </div>
-                    
-                    <div style="text-align: center; padding: 1rem; background: var(--gold); color: white;">
-                        <h4>Registration Fee: $50 / KSh 5,000</h4>
-                    </div>
                 </div>
 
-                <div class="upload-section">
-                    <h3 style="margin-bottom: 1rem;">Upload Payment Proof</h3>
-                    <p style="margin-bottom: 1rem; color: var(--text-light);">Upload a clear screenshot of your payment confirmation</p>
-                    
-                    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <h4>Click to Upload Screenshot</h4>
-                        <p>PNG, JPG, JPEG files accepted</p>
-                    </div>
-                    
-                    <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)">
-                    
-                    <div class="preview-container" id="previewContainer">
-                        <h4>Preview:</h4>
-                        <img id="imagePreview" src="#" alt="Preview">
-                        <button type="button" class="btn-secondary" onclick="removeImage()">Remove Image</button>
-                    </div>
-
-                    <div class="status-message" id="statusMessage">
-                        <i class="fas fa-clock"></i>
-                        <p>Your payment is under review. You will be redirected to your dashboard once approved.</p>
-                    </div>
-
-                    <button class="btn-primary" onclick="submitPayment()" id="submitBtn">I Have Paid - Submit for Approval</button>
+                <!-- Bank Transfer Details -->
+                <div id="bankDetails" class="payment-details">
+                    <h4>Bank Transfer Instructions</h4>
+                    <p><strong>Bank:</strong> Equity Bank</p>
+                    <p><strong>Account Name:</strong> CrownTraders Academy</p>
+                    <p><strong>Account Number:</strong> 1234567890</p>
+                    <p><strong>Branch:</strong> Nairobi Central</p>
+                    <p><strong>Amount:</strong> $50</p>
                 </div>
+
+                <!-- M-Pesa Details -->
+                <div id="mpesaDetails" class="payment-details">
+                    <h4>M-Pesa Instructions</h4>
+                    <p><strong>Paybill:</strong> 123456</p>
+                    <p><strong>Account Number:</strong> CROWNTRADERS</p>
+                    <p><strong>Amount:</strong> KSh 5,500</p>
+                </div>
+
+                <!-- Crypto Details -->
+                <div id="cryptoDetails" class="payment-details">
+                    <h4>Crypto Payment</h4>
+                    <p><strong>Bitcoin Address:</strong> 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</p>
+                    <p><strong>Ethereum Address:</strong> 0x742d35Cc6634C0532925a3b8D4C9e7a1e6f6c6e7</p>
+                    <p><strong>USDT (TRC20):</strong> TAb6RFK1u2S3L8L3QY6R5tY1W2E3R4T5Y6U7I8O9P0</p>
+                </div>
+
+                <!-- File Upload -->
+                <div class="form-group">
+                    <label>Upload Payment Proof</label>
+                    <div class="file-upload" id="fileUpload">
+                        <p>Click to upload or drag & drop payment screenshot</p>
+                        <p><small>Supported formats: JPG, PNG, PDF (Max 5MB)</small></p>
+                        <input type="file" id="paymentProof" accept=".jpg,.jpeg,.png,.pdf" style="display: none;">
+                    </div>
+                    <div id="fileName" style="margin-top: 10px;"></div>
+                </div>
+
+                <button type="button" class="btn-primary" onclick="submitPayment()" id="submitBtn" disabled>
+                    Submit Payment Verification
+                </button>
+            </div>
+
+            <!-- Confirmation Message -->
+            <div id="confirmation" class="confirmation">
+                <div class="success-icon">✓</div>
+                <h2>Payment Submitted Successfully!</h2>
+                <p>Your payment is under review. You will be notified once approved.</p>
+                <p>You can now access your referral dashboard.</p>
+                <button class="btn-primary" onclick="goToDashboard()">Go to Dashboard</button>
             </div>
         </div>
-    </section>
+    </main>
 
-    <!-- Footer -->
-    <footer class="premium-footer">
-        <div class="premium-container">
-            <a href="index.html" class="logo" style="color: var(--nude-light);">Crown Trade Academy</a>
-            <p style="margin-top: 2rem; color: var(--nude-medium);">&copy; 2024 Crown Trade Academy. All rights reserved.</p>
-        </div>
-    </footer>
+    <script type="module">
+        import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
-    <script>
-        function previewImage(event) {
-            const input = event.target;
-            const previewContainer = document.getElementById('previewContainer');
-            const preview = document.getElementById('imagePreview');
+        const SUPABASE_URL = "https://eygjxxdgxzatchqgwvep.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg";
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentUser = null;
+        let selectedMethod = null;
+        let uploadedFile = null;
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            currentUser = JSON.parse(localStorage.getItem('currentUser'));
             
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    previewContainer.style.display = 'block';
-                }
-                
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function removeImage() {
-            document.getElementById('fileInput').value = '';
-            document.getElementById('previewContainer').style.display = 'none';
-        }
-
-        function submitPayment() {
-            const fileInput = document.getElementById('fileInput');
-            const statusMessage = document.getElementById('statusMessage');
-            const submitBtn = document.getElementById('submitBtn');
-            
-            if (!fileInput.files[0]) {
-                alert('Please upload your payment screenshot first.');
+            if (!currentUser) {
+                alert('Please sign up first.');
+                window.location.href = 'referral-signup.html';
                 return;
             }
+
+            document.getElementById('userDetails').innerHTML = `
+                <p><strong>Name:</strong> ${currentUser.name}</p>
+                <p><strong>Email:</strong> ${currentUser.email}</p>
+                <p><strong>Referral Code:</strong> ${currentUser.referralCode}</p>
+            `;
+        });
+
+        // Select payment method
+        window.selectPaymentMethod = function(method) {
+            selectedMethod = method;
             
-            // Show pending status
-            statusMessage.className = 'status-message status-pending';
-            statusMessage.style.display = 'block';
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitted - Waiting for Approval';
+            // Update UI
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
             
-            // Simulate admin approval process
-            setTimeout(() => {
-                // In real implementation, this would be triggered by admin approval
-                // For demo, we'll auto-approve after 5 seconds
-                window.location.href = 'referral-dashboard.html';
-            }, 5000);
+            document.querySelectorAll('.payment-details').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById(method + 'Details').classList.add('active');
+            
+            checkFormCompletion();
+        };
+
+        // File upload handling
+        document.getElementById('fileUpload').addEventListener('click', function() {
+            document.getElementById('paymentProof').click();
+        });
+
+        document.getElementById('paymentProof').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                uploadedFile = e.target.files[0];
+                document.getElementById('fileName').textContent = `Selected: ${uploadedFile.name}`;
+                checkFormCompletion();
+            }
+        });
+
+        // Drag and drop functionality
+        document.getElementById('fileUpload').addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+
+        document.getElementById('fileUpload').addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
+
+        document.getElementById('fileUpload').addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            
+            if (e.dataTransfer.files.length > 0) {
+                uploadedFile = e.dataTransfer.files[0];
+                document.getElementById('paymentProof').files = e.dataTransfer.files;
+                document.getElementById('fileName').textContent = `Selected: ${uploadedFile.name}`;
+                checkFormCompletion();
+            }
+        });
+
+        // Check if form can be submitted
+        function checkFormCompletion() {
+            const canSubmit = selectedMethod && uploadedFile;
+            document.getElementById('submitBtn').disabled = !canSubmit;
         }
+
+        // Upload file to Supabase Storage
+        async function uploadFile(file) {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random()}.${fileExt}`;
+            const filePath = `payment-proofs/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('payment-screenshots')
+                .upload(filePath, file);
+
+            if (uploadError) {
+                throw new Error('File upload failed: ' + uploadError.message);
+            }
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('payment-screenshots')
+                .getPublicUrl(filePath);
+
+            return publicUrl;
+        }
+
+        // Submit payment
+        window.submitPayment = async function() {
+            if (!selectedMethod || !uploadedFile) {
+                alert('Please select payment method and upload proof.');
+                return;
+            }
+
+            try {
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('submitBtn').textContent = 'Processing...';
+
+                // Upload screenshot
+                const screenshotUrl = await uploadFile(uploadedFile);
+
+                // Save payment to Supabase
+                const { data, error } = await supabase
+                    .from('payments')
+                    .insert([
+                        {
+                            user_id: currentUser.id,
+                            amount: 50,
+                            payment_method: selectedMethod,
+                            screenshot_url: screenshotUrl,
+                            status: 'pending'
+                        }
+                    ])
+                    .select();
+
+                if (error) throw error;
+
+                // Show confirmation
+                document.getElementById('paymentForm').style.display = 'none';
+                document.getElementById('confirmation').classList.add('active');
+
+            } catch (error) {
+                console.error('Payment submission error:', error);
+                alert('Error submitting payment. Please try again.');
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('submitBtn').textContent = 'Submit Payment Verification';
+            }
+        };
+
+        // Redirect to dashboard
+        window.goToDashboard = function() {
+            window.location.href = 'referral-dashboard.html';
+        };
     </script>
 </body>
 </html>
