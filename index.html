@@ -1,163 +1,640 @@
+Absolutely, that’s a gorgeous design—classic yet modern, luxurious but approachable. I cleaned up and tailored it to your **Crown Trade Academy** branding and kept it fully responsive and polished with subtle animations.
+
+If you want, I can help break this down into modular files or add the hidden admin login you wanted.
+
+For now, here’s your full, ready-to-use **index.html** with all the styling, icons, fonts, and smooth animations you showed me:
+
+```html
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CrownTradeAcademy - Mentorship Program</title>
+  <title>Crown Trade Academy - Elite Trading Mentorship</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
-
-    /* COLORS */
     :root {
-      --nude-bg: #fdf6f0;
-      --gold: #c99b4e;
-      --gold-light: #dec388;
-      --text-dark: #3a2f25;
-      --text-secondary: #7d6b52;
-      --btn-bg: var(--gold);
-      --btn-hover: #b3863e;
+      --nude-light: #f9f6f2;
+      --nude-medium: #e8dfd6;
+      --nude-dark: #d4c8bc;
+      --nude-accent: #c4b5a3;
+      --gold: #c8a97e;
+      --gold-dark: #b89463;
+      --charcoal: #3a3a3a;
+      --text-light: #7a7a7a;
+      --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
-    /* RESET & BASE */
     * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
+
     body {
-      margin: 0;
-      font-family: 'Montserrat', sans-serif;
-      background: var(--nude-bg);
-      color: var(--text-dark);
-      line-height: 1.5;
-      min-height: 100vh;
+      font-family: "Montserrat", sans-serif;
+      background-color: var(--nude-light);
+      color: var(--charcoal);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* Header */
+    .premium-header {
+      background-color: rgba(249, 246, 242, 0.95);
+      backdrop-filter: blur(10px);
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(212, 200, 188, 0.3);
+      transition: var(--transition);
+    }
+
+    .premium-nav {
       display: flex;
-      flex-direction: column;
       justify-content: space-between;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    /* NAVBAR */
-    nav {
-      padding: 1rem 2rem;
-      font-weight: 700;
-      font-size: 1.4rem;
-      color: var(--gold);
-      letter-spacing: 2px;
-      user-select: none;
-    }
-
-    /* HERO SECTION */
-    .hero {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
-      text-align: center;
-      padding: 3rem 1.5rem;
-      max-width: 600px;
+      max-width: 1200px;
       margin: 0 auto;
-      background: linear-gradient(135deg, #f9f2e7 0%, #fdf6f0 100%);
-      border-radius: 1rem;
-      box-shadow: 0 10px 20px rgb(201 155 78 / 0.15);
-      margin-top: 3rem;
-      margin-bottom: 3rem;
+      padding: 1.2rem 2rem;
+    }
+
+    .logo {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      text-decoration: none;
+      letter-spacing: 1px;
+      position: relative;
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 30px;
+      height: 2px;
+      background-color: var(--gold);
+      transition: var(--transition);
+    }
+
+    .logo:hover::after {
+      width: 100%;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2.5rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--charcoal);
+      font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: var(--gold);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(
+          135deg,
+          rgba(249, 246, 242, 0.9) 0%,
+          rgba(232, 223, 214, 0.8) 100%
+        ),
+        url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80");
+      background-size: cover;
+      background-position: center;
+      color: var(--charcoal);
+      padding: 12rem 2rem 8rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(249, 246, 242, 0.6),
+        rgba(232, 223, 214, 0.4)
+      );
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
     .hero h1 {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
-      font-weight: 700;
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      opacity: 0;
+      animation: fadeInUp 1s ease forwards;
     }
 
     .hero p {
-      font-size: 1.15rem;
+      font-size: 1.3rem;
       margin-bottom: 2.5rem;
-      color: var(--text-secondary);
+      color: var(--text-light);
+      opacity: 0;
+      animation: fadeInUp 1s ease 0.3s forwards;
     }
 
     .btn-primary {
-      background-color: var(--btn-bg);
-      color: #fff;
-      padding: 0.75rem 2.5rem;
-      font-weight: 700;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 2rem;
-      box-shadow: 0 5px 10px rgb(201 155 78 / 0.6);
+      display: inline-block;
+      background: var(--gold);
+      color: var(--nude-light);
+      padding: 1rem 2.5rem;
+      border-radius: 0;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: 1px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeInUp 1s ease 0.6s forwards;
+      border: 1px solid var(--gold);
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
 
     .btn-primary:hover {
-      background-color: var(--btn-hover);
+      background: transparent;
+      color: var(--gold);
     }
 
-    /* REFERRAL SECTION */
-    .referral {
-      max-width: 400px;
-      margin: 0 auto 3rem;
-      padding: 1rem 2rem;
-      background: #fff;
-      border-radius: 1rem;
-      box-shadow: 0 5px 15px rgb(201 155 78 / 0.1);
-      color: var(--text-secondary);
-      font-weight: 600;
-      font-size: 1rem;
-      user-select: none;
-      opacity: 0.75;
-      transition: opacity 0.4s ease;
+    .btn-primary::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      transition: 0.5s;
     }
 
-    .referral:hover {
-      opacity: 1;
+    .btn-primary:hover::before {
+      left: 100%;
     }
 
-    /* FOOTER */
-    footer {
-      padding: 1rem 2rem;
+    /* Feature Cards */
+    .premium-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .features-section {
+      padding: 6rem 0;
+      background-color: var(--nude-light);
+    }
+
+    .section-title {
       text-align: center;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
+      margin-bottom: 4rem;
+      position: relative;
+    }
+
+    .section-title h2 {
+      font-size: 2.5rem;
+      color: var(--charcoal);
+      display: inline-block;
+      position: relative;
+    }
+
+    .section-title h2::after {
+      content: "";
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 2px;
+      background-color: var(--gold);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .feature-card {
+      background: var(--nude-light);
+      border-radius: 0;
+      padding: 3rem 2rem;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      border: 1px solid var(--nude-medium);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: var(--transition);
+    }
+
+    .feature-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      display: inline-block;
+      height: 80px;
+      width: 80px;
+      line-height: 80px;
+      border: 1px solid var(--nude-medium);
+      transition: var(--transition);
+      border-radius: 50%;
       user-select: none;
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 600px) {
-      .hero {
-        margin: 2rem 1rem;
-        padding: 2rem 1.5rem;
-      }
-      .hero h1 {
-        font-size: 2rem;
-      }
-      .btn-primary {
-        padding: 0.6rem 2rem;
-        font-size: 1rem;
-      }
+    .feature-card:hover .feature-icon {
+      background-color: var(--gold);
+      color: var(--nude-light);
+      border-color: var(--gold);
     }
-  </style>
-</head>
-<body>
-  <nav>CrownTradeAcademy</nav>
 
-  <main>
-    <section class="hero" role="main">
-      <h1>Unlock Your Trading Potential</h1>
-      <p>Join our exclusive mentorship program to master trading strategies, grow your capital, and elevate your skills with expert guidance.</p>
-      <a href="mentorship-registration.html" class="btn-primary" aria-label="Join Mentorship Program">Join Now</a>
-    </section>
+    .feature-card h3 {
+      margin-bottom: 1.2rem;
+      color: var(--charcoal);
+      font-size: 1.5rem;
+    }
 
-    <section class="referral" aria-label="Referral Program Information">
-      Earn by referring friends to CrownTradeAcademy — build your network and get rewarded for helping others succeed.
-    </section>
-  </main>
+    .feature-card p {
+      color: var(--text-light);
+      line-height: 1.7;
+      user-select: none;
+    }
 
-  <footer>
-    &copy; 2025 CrownTradeAcademy. All rights reserved.
-  </footer>
-</body>
-</html>
+    /* Statistics Section */
+    .stats-section {
+      background: var(--nude-medium);
+      padding: 5rem 0;
+      text-align: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 3rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .stat-item {
+      padding: 2rem 1rem;
+    }
+
+    .stat-number {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 3.5rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      line-height: 1;
+    }
+
+    .stat-label {
+      color: var(--charcoal);
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Testimonials Section */
+    .testimonials-section {
+      background: var(--nude-light);
+      padding: 6rem 0;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2.5rem;
+      margin-top: 3rem;
+    }
+
+    .testimonial-card {
+      background: var(--nude-light);
+      border: 1px solid var(--nude-medium);
+      padding: 2.5rem;
+      position: relative;
+      transition: var(--transition);
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: 1rem;
+      left: 2rem;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 4rem;
+      color: var(--gold);
+      opacity: 0.3;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .testimonial-content {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 2rem;
+    }
+
+    .testimonial-content p {
+      font-style: italic;
+      color: var(--text-light);
+      line-height: 1.7;
+      user-select: text;
+    }
+
+    .testimonial-author {
+      border-top: 1px solid var(--nude-medium);
+      padding-top: 1.5rem;
+      user-select: none;
+    }
+
+    .author-name {
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 0.3rem;
+    }
+
+    .author-role {
+      font-size: 0.9rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Process Section */
+    .process-section {
+      background: linear-gradient(135deg, var(--nude-light) 0%, var(--nude-medium) 100%);
+      padding: 6rem 0;
+    }
+
+    .process-steps {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .process-step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: var(--nude-light);
+      border: 1px solid var(--nude-medium);
+      transition: var(--transition);
+      position: relative;
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+
+    .process-step:hover {
+      transform: translateX(10px);
+      border-color: var(--gold);
+    }
+
+    .process-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-number {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 3rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-right: 2rem;
+      line-height: 1;
+      min-width: 60px;
+      user-select: none;
+    }
+
+    .step-content h3 {
+      margin-bottom: 0.8rem;
+      color: var(--charcoal);
+      font-size: 1.4rem;
+      user-select: text;
+    }
+
+    .step-content p {
+      color: var(--text-light);
+      line-height: 1.7;
+      user-select: text;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, var(--nude-medium) 0%, var(--nude-dark) 100%);
+      color: var(--charcoal);
+      text-align: center;
+      padding: 6rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80");
+      background-size: cover;
+      background-position: center;
+      opacity: 0.1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .cta-section h2 {
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .cta-section p {
+      font-size: 1.2rem;
+      opacity: 0.85;
+      margin-bottom: 2.5rem;
+      color: var(--text-light);
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      background: transparent;
+      color: var(--charcoal);
+      padding: 1rem 2.5rem;
+      border-radius: 0;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: 1px;
+      transition: var(--transition);
+      border: 1px solid var(--charcoal);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: var(--charcoal);
+      color: var(--nude-light);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--charcoal);
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--nude-medium);
+      border-top: 1px solid rgba(212, 200, 188, 0.2);
+      user-select: none;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--nude-light);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: var(--nude-medium);
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--gold);
+    }
+
+    .copyright {
+      font-size: 0.9rem;
+      color: var(--nude-dark);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+   
+```
