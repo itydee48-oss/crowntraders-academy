@@ -1,351 +1,163 @@
-<!DOCTYPE html> 
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" >
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crown Trade Academy - Elite Trading & Marketing</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --nude-light: #F9F6F2;
-            --nude-medium: #E8DFD6;
-            --nude-dark: #D4C8BC;
-            --nude-accent: #C4B5A3;
-            --gold: #C8A97E;
-            --gold-dark: #B89463;
-            --charcoal: #3A3A3A;
-            --text-light: #7A7A7A;
-            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--nude-light);
-            color: var(--charcoal);
-            line-height: 1.6;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CrownTradeAcademy - Mentorship Program</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
-        h1, h2, h3, h4, h5 {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 600;
-        }
+    /* COLORS */
+    :root {
+      --nude-bg: #fdf6f0;
+      --gold: #c99b4e;
+      --gold-light: #dec388;
+      --text-dark: #3a2f25;
+      --text-secondary: #7d6b52;
+      --btn-bg: var(--gold);
+      --btn-hover: #b3863e;
+    }
 
-        .premium-header {
-            background-color: rgba(249, 246, 242, 0.95);
-            position: fixed;
-            width: 100%;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(212, 200, 188, 0.3);
-        }
+    /* RESET & BASE */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: var(--nude-bg);
+      color: var(--text-dark);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-        .premium-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1.2rem 2rem;
-        }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
 
-        .logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--charcoal);
-            text-decoration: none;
-        }
+    /* NAVBAR */
+    nav {
+      padding: 1rem 2rem;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+      user-select: none;
+    }
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-        }
+    /* HERO SECTION */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 3rem 1.5rem;
+      max-width: 600px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #f9f2e7 0%, #fdf6f0 100%);
+      border-radius: 1rem;
+      box-shadow: 0 10px 20px rgb(201 155 78 / 0.15);
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+    }
 
-        .nav-links a {
-            text-decoration: none;
-            color: var(--charcoal);
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
 
-        .nav-links a:hover {
-            color: var(--gold);
-        }
+    .hero p {
+      font-size: 1.15rem;
+      margin-bottom: 2.5rem;
+      color: var(--text-secondary);
+    }
 
-        .hero {
-            background: linear-gradient(135deg, rgba(249, 246, 242, 0.9) 0%, rgba(232, 223, 214, 0.8) 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0 2rem;
-        }
+    .btn-primary {
+      background-color: var(--btn-bg);
+      color: #fff;
+      padding: 0.75rem 2.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 2rem;
+      box-shadow: 0 5px 10px rgb(201 155 78 / 0.6);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-        .hero-content {
-            max-width: 800px;
-        }
+    .btn-primary:hover {
+      background-color: var(--btn-hover);
+    }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-        }
+    /* REFERRAL SECTION */
+    .referral {
+      max-width: 400px;
+      margin: 0 auto 3rem;
+      padding: 1rem 2rem;
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 5px 15px rgb(201 155 78 / 0.1);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 1rem;
+      user-select: none;
+      opacity: 0.75;
+      transition: opacity 0.4s ease;
+    }
 
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2.5rem;
-            color: var(--text-light);
-        }
+    .referral:hover {
+      opacity: 1;
+    }
 
-        .btn-primary {
-            display: inline-block;
-            background: var(--gold);
-            color: var(--nude-light);
-            padding: 1rem 2.5rem;
-            border: none;
-            font-weight: 500;
-            text-decoration: none;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+    /* FOOTER */
+    footer {
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      user-select: none;
+    }
 
-        .btn-primary:hover {
-            background: var(--gold-dark);
-        }
-
-        .premium-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .programs-section {
-            padding: 6rem 0;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--charcoal);
-        }
-
-        .programs {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .program-card {
-            background: var(--nude-light);
-            padding: 3rem 2rem;
-            text-align: center;
-            border: 1px solid var(--nude-medium);
-        }
-
-        .program-icon {
-            font-size: 2.5rem;
-            color: var(--gold);
-            margin-bottom: 1.5rem;
-        }
-
-        .program-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
-
-        .program-card p {
-            color: var(--text-light);
-            margin-bottom: 2rem;
-        }
-
-        .referral-section {
-            padding: 6rem 0;
-            background: var(--nude-medium);
-            text-align: center;
-        }
-
-        .premium-footer {
-            background: var(--charcoal);
-            color: var(--nude-light);
-            padding: 4rem 0 2rem;
-            text-align: center;
-        }
-    </style>
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .hero {
+        margin: 2rem 1rem;
+        padding: 2rem 1.5rem;
+      }
+      .hero h1 {
+        font-size: 2rem;
+      }
+      .btn-primary {
+        padding: 0.6rem 2rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="premium-header">
-        <nav class="premium-nav">
-            <a href="#" class="logo">Crown Trade Academy</a>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#programs">Programs</a></li>
-                <li><a href="#mentors">Mentors</a></li>
-                <li><a href="referral-signup.html">Referral Program</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+  <nav>CrownTradeAcademy</nav>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-content">
-            <h1>Elite Trading & Marketing Education</h1>
-            <p>Master the markets with our premium mentorship programs and unlock exclusive earning opportunities through our referral network.</p>
-            <a href="referral-signup.html" class="btn-primary">Join Referral Program</a>
-        </div>
+  <main>
+    <section class="hero" role="main">
+      <h1>Unlock Your Trading Potential</h1>
+      <p>Join our exclusive mentorship program to master trading strategies, grow your capital, and elevate your skills with expert guidance.</p>
+      <a href="mentorship-registration.html" class="btn-primary" aria-label="Join Mentorship Program">Join Now</a>
     </section>
 
-    <!-- Programs Section -->
-    <section class="programs-section" id="programs">
-        <div class="premium-container">
-            <div class="section-title">
-                <h2>Our Premium Programs</h2>
-            </div>
-            <div class="programs">
-                <div class="program-card">
-                    <div class="program-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Pro Trader Mentorship</h3>
-                    <p>One-on-one guidance from experienced traders to accelerate your learning curve and maximize profits.</p>
-                    <a href="mentorship-signup.html" class="btn-primary">Learn More</a>
-                </div>
-                <div class="program-card">
-                    <div class="program-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Referral Network</h3>
-                    <p>Earn substantial commissions by referring traders to our platform. Join our referral program and start earning today.</p>
-                    <a href="referral-signup.html" class="btn-primary">Join Referral Program</a>
-                </div>
-                <div class="program-card">
-                    <div class="program-icon">
-                        <i class="fas fa-gem"></i>
-                    </div>
-                    <h3>VIP Masterclass</h3>
-                    <p>Advanced strategies and techniques for serious traders looking to achieve financial freedom.</p>
-                    <a href="vip-signup.html" class="btn-primary">Enroll Now</a>
-                </div>
-            </div>
-        </div>
+    <section class="referral" aria-label="Referral Program Information">
+      Earn by referring friends to CrownTradeAcademy — build your network and get rewarded for helping others succeed.
     </section>
+  </main>
 
-    <!-- Referral Section -->
-    <section class="referral-section">
-        <div class="premium-container">
-            <div class="section-title">
-                <h2>Earn With Our Referral Program</h2>
-            </div>
-            <p>Join our referral program and earn significant commissions by bringing new traders to our platform. Get access to your personal referral dashboard, track your earnings, and grow your network.</p>
-            <a href="referral-signup.html" class="btn-primary" style="margin-top: 2rem;">Join Referral Program</a>
-        </div>
-    </section><!-- Mentorship Application Form -->
-<section id="mentorship" style="padding:6rem 0; background:var(--nude-medium); text-align:center;">
-  <div class="premium-container">
-    <div class="section-title">
-      <h2>Apply for Mentorship</h2>
-      <p style="color:var(--text-light);">Join the Elite Brotherhood — fill in your details below.</p>
-    </div>
-
-    <form id="mentorshipForm" style="max-width:600px; margin:0 auto; text-align:left;">
-      <label>Full Name</label>
-      <input type="text" id="full_name" required style="width:100%; padding:0.8rem; margin-bottom:1rem; border:1px solid var(--nude-dark); border-radius:5px;">
-
-      <label>Email</label>
-      <input type="email" id="email" required style="width:100%; padding:0.8rem; margin-bottom:1rem; border:1px solid var(--nude-dark); border-radius:5px;">
-
-      <label>Trading Experience</label>
-      <select id="trading_experience" required style="width:100%; padding:0.8rem; margin-bottom:1rem; border:1px solid var(--nude-dark); border-radius:5px;">
-        <option value="">Select level</option>
-        <option>Beginner</option>
-        <option>Intermediate</option>
-        <option>Advanced</option>
-      </select>
-
-      <label>Your Goals</label>
-      <textarea id="goals" required style="width:100%; padding:0.8rem; margin-bottom:1rem; border:1px solid var(--nude-dark); border-radius:5px;" placeholder="What do you want to achieve through this mentorship?"></textarea>
-
-      <button type="submit" class="btn-primary" style="width:100%;">Submit Application</button>
-    </form>
-
-    <p id="formMessage" style="margin-top:1rem; color:var(--charcoal); font-weight:500;"></p>
-  </div>
-</section>
-
-
-    <!-- Footer -->
-    <footer class="premium-footer">
-        <div class="premium-container">
-            <a href="#" class="logo" style="color: var(--nude-light);">Crown Trade Academy</a>
-            <p style="margin-top: 2rem; color: var(--nude-medium);">&copy; 2024 Crown Trade Academy. All rights reserved. Trading involves risk.</p>
-        </div>
-    </footer>
-<!-- Supabase JS SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
-
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // Optional: test connection
-  async function testConnection() {
-    try {
-      const { data, error } = await supabase.from('users').select('*').limit(1);
-      if (error) throw error;
-      console.log('✅ Supabase connected successfully', data);
-    } catch (err) {
-      console.error('❌ Connection error:', err.message);
-    }
-  }
-
-  testConnection();
-</script>
-
+  <footer>
+    &copy; 2025 CrownTradeAcademy. All rights reserved.
+  </footer>
 </body>
-</html><script>
-  const form = document.getElementById('mentorshipForm');
-  const message = document.getElementById('formMessage');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    message.textContent = 'Submitting...';
-
-    const full_name = document.getElementById('full_name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const trading_experience = document.getElementById('trading_experience').value;
-    const goals = document.getElementById('goals').value.trim();
-
-    const { data, error } = await supabase.from('mentorship_applications').insert([
-      { full_name, email, trading_experience, goals }
-    ]);
-
-    if (error) {
-      console.error('❌ Submission error:', error);
-      message.textContent = 'Error submitting. Please try again.';
-      message.style.color = 'red';
-    } else {
-      console.log('✅ Application saved:', data);
-      message.textContent = '✅ Application submitted successfully!';
-      message.style.color = 'green';
-      form.reset();
-    }
-  });
-</script>
-
+</html>
