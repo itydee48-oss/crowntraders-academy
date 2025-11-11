@@ -1,0 +1,50 @@
+<!-- FILE: dashboard-main.html -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mentorship Platform — Main Admin</title>
+<script>
+// Tailwind CDN and custom config (nude / warm-gold accent)
+window.tailwind = {
+config: {
+theme: {
+extend: {
+colors: {
+nude: {
+50: '#fcfbf9',
+100: '#faf6f2',
+200: '#f3ede2',
+300: '#eadfc9',
+400: '#e0c9b0',
+500: '#caa988',n
+600: '#b68c63',
+700: '#8e6a4e',
+800: '#6d4f3b',
+900: '#463626'
+},
+gold: {
+50: '#fffbf1',
+500: '#c59a4a',
+700: '#a2762f'
+}
+}
+}
+}
+}
+}
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+/* subtle card glass effect */
+.card {
+background: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(250,246,242,0.82));
+box-shadow: 0 6px 18px rgba(18,17,16,0.06);
+border-radius: 12px;
+padding: 18px;
+}
+.muted { color: #6b6b6b }
+</style>
+</head>
+</html>
