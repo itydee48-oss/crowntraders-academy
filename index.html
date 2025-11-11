@@ -1,27 +1,24 @@
-Absolutely, that’s a gorgeous design—classic yet modern, luxurious but approachable. I cleaned up and tailored it to your **Crown Trade Academy** branding and kept it fully responsive and polished with subtle animations.
-
-If you want, I can help break this down into modular files or add the hidden admin login you wanted.
-
-For now, here’s your full, ready-to-use **index.html** with all the styling, icons, fonts, and smooth animations you showed me:
-
-```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Crown Trade Academy - Elite Trading Mentorship</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Google Fonts -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
     rel="stylesheet"
   />
+
+  <!-- Font Awesome -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
   />
+
   <style>
+    /* Root colors */
     :root {
       --nude-light: #f9f6f2;
       --nude-medium: #e8dfd6;
@@ -29,23 +26,74 @@ For now, here’s your full, ready-to-use **index.html** with all the styling, i
       --nude-accent: #c4b5a3;
       --gold: #c8a97e;
       --gold-dark: #b89463;
-      --charcoal: #3a3a3a;
+      --charcoal: #2f2f2f;
+      --charcoal-light: #444444;
       --text-light: #7a7a7a;
+      --text-muted: #a09587;
       --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      --shadow-glow: 0 0 10px 3px rgba(200, 169, 126, 0.5);
     }
 
+    /* Reset */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    body {
+    body,
+    html {
+      height: 100%;
       font-family: "Montserrat", sans-serif;
       background-color: var(--nude-light);
       color: var(--charcoal);
-      line-height: 1.6;
       overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Candlestick background container */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80")
+        no-repeat center/cover;
+      filter: grayscale(60%) brightness(0.15) contrast(1.3);
+      opacity: 0.22;
+      z-index: -2;
+      animation: subtleGlow 10s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    /* Optional subtle glow animation on background */
+    @keyframes subtleGlow {
+      0% {
+        filter: grayscale(60%) brightness(0.15) contrast(1.3);
+        transform: scale(1);
+      }
+      100% {
+        filter: grayscale(55%) brightness(0.2) contrast(1.4);
+        transform: scale(1.02);
+      }
+    }
+
+    /* Overlay layer for softness */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(
+        135deg,
+        rgba(249, 246, 242, 0.88),
+        rgba(232, 223, 214, 0.85)
+      );
+      z-index: -1;
     }
 
     h1,
@@ -54,48 +102,59 @@ For now, here’s your full, ready-to-use **index.html** with all the styling, i
     h4,
     h5 {
       font-family: "Cormorant Garamond", serif;
-      font-weight: 600;
-      line-height: 1.3;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--charcoal);
     }
 
     /* Header */
-    .premium-header {
-      background-color: rgba(249, 246, 242, 0.95);
-      backdrop-filter: blur(10px);
+    header {
       position: fixed;
+      top: 0;
       width: 100%;
-      z-index: 1000;
-      border-bottom: 1px solid rgba(212, 200, 188, 0.3);
+      background: rgba(249, 246, 242, 0.92);
+      border-bottom: 1px solid var(--nude-medium);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+      z-index: 9999;
       transition: var(--transition);
+      backdrop-filter: saturate(180%) blur(10px);
     }
 
-    .premium-nav {
+    header.scrolled {
+      background: rgba(249, 246, 242, 1);
+      box-shadow: var(--shadow-glow);
+      border-bottom-color: var(--gold);
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1.2rem 2rem;
+      padding: 1.25rem 2rem;
     }
 
     .logo {
       font-family: "Cormorant Garamond", serif;
-      font-size: 1.8rem;
       font-weight: 700;
+      font-size: 2rem;
       color: var(--charcoal);
       text-decoration: none;
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
       position: relative;
+      transition: var(--transition);
     }
 
     .logo::after {
       content: "";
       position: absolute;
-      bottom: -5px;
+      bottom: -6px;
       left: 0;
-      width: 30px;
-      height: 2px;
-      background-color: var(--gold);
+      width: 40px;
+      height: 3px;
+      background: var(--gold);
+      border-radius: 2px;
       transition: var(--transition);
     }
 
@@ -103,230 +162,165 @@ For now, here’s your full, ready-to-use **index.html** with all the styling, i
       width: 100%;
     }
 
-    .nav-links {
+    ul.nav-links {
       display: flex;
       list-style: none;
-      gap: 2.5rem;
+      gap: 2.8rem;
     }
 
-    .nav-links a {
+    ul.nav-links li a {
+      font-weight: 600;
+      font-size: 0.95rem;
       text-decoration: none;
       color: var(--charcoal);
-      font-weight: 500;
-      font-size: 0.9rem;
-      letter-spacing: 0.5px;
+      padding: 0.5rem 0;
       position: relative;
       transition: var(--transition);
+      letter-spacing: 0.05em;
     }
 
-    .nav-links a::after {
+    ul.nav-links li a::after {
       content: "";
       position: absolute;
-      bottom: -5px;
+      bottom: -6px;
       left: 0;
       width: 0;
-      height: 1px;
-      background-color: var(--gold);
+      height: 2px;
+      background: var(--gold);
+      border-radius: 1px;
       transition: var(--transition);
     }
 
-    .nav-links a:hover {
+    ul.nav-links li a:hover {
       color: var(--gold);
     }
 
-    .nav-links a:hover::after {
+    ul.nav-links li a:hover::after {
       width: 100%;
     }
 
     /* Hero Section */
     .hero {
-      background: linear-gradient(
-          135deg,
-          rgba(249, 246, 242, 0.9) 0%,
-          rgba(232, 223, 214, 0.8) 100%
-        ),
-        url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80");
-      background-size: cover;
-      background-position: center;
-      color: var(--charcoal);
-      padding: 12rem 2rem 8rem;
+      padding: 12rem 2rem 9rem;
+      max-width: 900px;
+      margin: 0 auto;
       text-align: center;
       position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        to bottom,
-        rgba(249, 246, 242, 0.6),
-        rgba(232, 223, 214, 0.4)
-      );
       z-index: 1;
     }
 
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
     .hero h1 {
-      font-size: 3.5rem;
-      margin-bottom: 1.5rem;
-      font-weight: 600;
-      letter-spacing: 1px;
+      font-size: 3.75rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      letter-spacing: 1.5px;
+      margin-bottom: 1rem;
       opacity: 0;
-      animation: fadeInUp 1s ease forwards;
+      animation: fadeInUp 1.2s ease forwards;
     }
 
     .hero p {
-      font-size: 1.3rem;
-      margin-bottom: 2.5rem;
-      color: var(--text-light);
+      font-family: "Montserrat", sans-serif;
+      font-weight: 400;
+      font-size: 1.4rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto 2.8rem;
       opacity: 0;
-      animation: fadeInUp 1s ease 0.3s forwards;
+      animation: fadeInUp 1.2s ease 0.3s forwards;
+      line-height: 1.7;
     }
 
     .btn-primary {
-      display: inline-block;
-      background: var(--gold);
+      font-family: "Montserrat", sans-serif;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      border: none;
+      padding: 1rem 3.2rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: 1.2px;
       color: var(--nude-light);
-      padding: 1rem 2.5rem;
-      border-radius: 0;
-      font-weight: 500;
+      cursor: pointer;
       text-decoration: none;
-      letter-spacing: 1px;
+      display: inline-block;
+      border-radius: 4px;
+      box-shadow: 0 5px 25px rgba(200, 169, 126, 0.4);
       transition: var(--transition);
       position: relative;
       overflow: hidden;
       opacity: 0;
-      animation: fadeInUp 1s ease 0.6s forwards;
-      border: 1px solid var(--gold);
-      cursor: pointer;
+      animation: fadeInUp 1.2s ease 0.6s forwards;
     }
 
     .btn-primary:hover {
-      background: transparent;
-      color: var(--gold);
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      box-shadow: 0 7px 35px rgba(200, 169, 126, 0.65);
+      color: var(--nude-light);
     }
 
     .btn-primary::before {
       content: "";
       position: absolute;
       top: 0;
-      left: -100%;
-      width: 100%;
+      left: -110%;
+      width: 110%;
       height: 100%;
       background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0.25),
         transparent
       );
-      transition: 0.5s;
+      transition: 0.5s ease;
     }
 
     .btn-primary:hover::before {
-      left: 100%;
+      left: 110%;
     }
 
-    /* Feature Cards */
-    .premium-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
+    /* Features Section */
     .features-section {
-      padding: 6rem 0;
-      background-color: var(--nude-light);
-    }
-
-    .section-title {
-      text-align: center;
-      margin-bottom: 4rem;
-      position: relative;
-    }
-
-    .section-title h2 {
-      font-size: 2.5rem;
-      color: var(--charcoal);
-      display: inline-block;
-      position: relative;
-    }
-
-    .section-title h2::after {
-      content: "";
-      position: absolute;
-      bottom: -15px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 2px;
-      background-color: var(--gold);
-    }
-
-    .features {
+      padding: 6rem 2rem 8rem;
+      max-width: 1100px;
+      margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.8rem;
+      z-index: 1;
+      position: relative;
     }
 
     .feature-card {
       background: var(--nude-light);
-      border-radius: 0;
-      padding: 3rem 2rem;
+      border: 1.5px solid var(--nude-medium);
+      border-radius: 6px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+      padding: 2.5rem 2rem 3rem;
       text-align: center;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
       transition: var(--transition);
-      border: 1px solid var(--nude-medium);
+      cursor: default;
       position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(30px);
-    }
-
-    .feature-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: var(--gold);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: var(--transition);
-    }
-
-    .feature-card:hover::before {
-      transform: scaleX(1);
     }
 
     .feature-card:hover {
+      border-color: var(--gold);
+      box-shadow: var(--shadow-glow);
       transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
     }
 
     .feature-icon {
-      font-size: 2.5rem;
+      font-size: 3.25rem;
       color: var(--gold);
       margin-bottom: 1.5rem;
-      display: inline-block;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
       height: 80px;
       width: 80px;
-      line-height: 80px;
-      border: 1px solid var(--nude-medium);
-      transition: var(--transition);
+      border: 2px solid var(--nude-medium);
       border-radius: 50%;
-      user-select: none;
+      transition: var(--transition);
     }
 
     .feature-card:hover .feature-icon {
@@ -336,191 +330,222 @@ For now, here’s your full, ready-to-use **index.html** with all the styling, i
     }
 
     .feature-card h3 {
-      margin-bottom: 1.2rem;
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 600;
+      font-size: 1.7rem;
       color: var(--charcoal);
-      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: 0.03em;
     }
 
     .feature-card p {
-      color: var(--text-light);
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-muted);
       line-height: 1.7;
-      user-select: none;
+      letter-spacing: 0.01em;
     }
 
     /* Statistics Section */
     .stats-section {
       background: var(--nude-medium);
-      padding: 5rem 0;
+      padding: 5rem 2rem 7rem;
       text-align: center;
+      max-width: 900px;
+      margin: 0 auto 5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.05);
+      position: relative;
+      z-index: 1;
     }
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 3rem;
-      max-width: 900px;
-      margin: 0 auto;
     }
 
     .stat-item {
-      padding: 2rem 1rem;
+      padding: 0.5rem 1rem;
     }
 
     .stat-number {
       font-family: "Cormorant Garamond", serif;
-      font-size: 3.5rem;
-      font-weight: 600;
-      color: var(--gold);
-      margin-bottom: 0.5rem;
-      line-height: 1;
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--gold-dark);
+      margin-bottom: 0.2rem;
+      letter-spacing: 0.02em;
+      user-select: none;
     }
 
     .stat-label {
-      color: var(--charcoal);
-      font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: 1px;
+      font-weight: 600;
+      color: var(--charcoal-light);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
+      user-select: none;
     }
 
     /* Testimonials Section */
     .testimonials-section {
-      background: var(--nude-light);
-      padding: 6rem 0;
+      max-width: 1100px;
+      margin: 0 auto 6rem;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 4rem;
+      position: relative;
+    }
+
+    .section-title h2 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      letter-spacing: 0.03em;
+      font-family: "Cormorant Garamond", serif;
     }
 
     .testimonials-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2.5rem;
-      margin-top: 3rem;
+      gap: 2.8rem;
     }
 
     .testimonial-card {
       background: var(--nude-light);
-      border: 1px solid var(--nude-medium);
-      padding: 2.5rem;
+      border: 1.2px solid var(--nude-medium);
+      border-radius: 6px;
+      padding: 2.3rem 2rem 2.5rem;
+      box-shadow: 0 7px 20px rgba(0, 0, 0, 0.04);
       position: relative;
       transition: var(--transition);
-      opacity: 0;
-      transform: translateY(30px);
     }
 
     .testimonial-card:hover {
+      box-shadow: var(--shadow-glow);
       transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
     }
 
     .testimonial-card::before {
-      content: '"';
+      content: "“";
       position: absolute;
       top: 1rem;
-      left: 2rem;
+      left: 1.8rem;
       font-family: "Cormorant Garamond", serif;
-      font-size: 4rem;
+      font-size: 5rem;
       color: var(--gold);
-      opacity: 0.3;
+      opacity: 0.2;
       line-height: 1;
       user-select: none;
     }
 
     .testimonial-content {
-      position: relative;
-      z-index: 2;
-      margin-bottom: 2rem;
-    }
-
-    .testimonial-content p {
       font-style: italic;
-      color: var(--text-light);
+      color: var(--text-muted);
       line-height: 1.7;
-      user-select: text;
+      margin-bottom: 1.8rem;
     }
 
     .testimonial-author {
       border-top: 1px solid var(--nude-medium);
-      padding-top: 1.5rem;
-      user-select: none;
-    }
-
-    .author-name {
-      font-weight: 600;
+      padding-top: 1rem;
+      font-weight: 700;
+      font-family: "Montserrat", sans-serif;
       color: var(--charcoal);
-      margin-bottom: 0.3rem;
-    }
-
-    .author-role {
-      font-size: 0.9rem;
-      color: var(--gold);
+      font-size: 1rem;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      user-select: none;
     }
 
     /* Process Section */
     .process-section {
-      background: linear-gradient(135deg, var(--nude-light) 0%, var(--nude-medium) 100%);
-      padding: 6rem 0;
+      background: linear-gradient(
+        135deg,
+        var(--nude-light) 0%,
+        var(--nude-medium) 100%
+      );
+      padding: 6rem 2rem 8rem;
+      max-width: 900px;
+      margin: 0 auto 6rem;
+      border-radius: 10px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.05);
+      position: relative;
+      z-index: 1;
     }
 
     .process-steps {
-      max-width: 800px;
-      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
     }
 
     .process-step {
       display: flex;
       align-items: flex-start;
-      margin-bottom: 3rem;
-      padding: 2rem;
+      gap: 1.7rem;
       background: var(--nude-light);
-      border: 1px solid var(--nude-medium);
+      border: 1.5px solid var(--nude-medium);
+      padding: 2rem 2.2rem;
+      border-radius: 6px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+      cursor: default;
       transition: var(--transition);
-      position: relative;
-      opacity: 0;
-      transform: translateX(-30px);
     }
 
     .process-step:hover {
-      transform: translateX(10px);
       border-color: var(--gold);
-    }
-
-    .process-step:last-child {
-      margin-bottom: 0;
+      box-shadow: var(--shadow-glow);
+      transform: translateX(8px);
     }
 
     .step-number {
       font-family: "Cormorant Garamond", serif;
-      font-size: 3rem;
-      font-weight: 600;
+      font-size: 3.5rem;
+      font-weight: 700;
       color: var(--gold);
-      margin-right: 2rem;
-      line-height: 1;
-      min-width: 60px;
+      min-width: 70px;
       user-select: none;
     }
 
     .step-content h3 {
-      margin-bottom: 0.8rem;
+      font-weight: 700;
       color: var(--charcoal);
       font-size: 1.4rem;
-      user-select: text;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.03em;
     }
 
     .step-content p {
-      color: var(--text-light);
-      line-height: 1.7;
-      user-select: text;
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.6;
+      letter-spacing: 0.01em;
     }
 
     /* CTA Section */
     .cta-section {
-      background: linear-gradient(135deg, var(--nude-medium) 0%, var(--nude-dark) 100%);
+      background: linear-gradient(
+        135deg,
+        var(--nude-medium) 0%,
+        var(--nude-dark) 100%
+      );
       color: var(--charcoal);
       text-align: center;
-      padding: 6rem 2rem;
+      padding: 6rem 2rem 8rem;
       position: relative;
       overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      max-width: 900px;
+      margin: 0 auto 5rem;
+      user-select: none;
     }
 
     .cta-section::before {
@@ -530,111 +555,247 @@ For now, here’s your full, ready-to-use **index.html** with all the styling, i
       left: 0;
       width: 100%;
       height: 100%;
-      background: url("https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80");
-      background-size: cover;
-      background-position: center;
-      opacity: 0.1;
+      background: url("https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80")
+        no-repeat center/cover;
+      opacity: 0.12;
+      filter: grayscale(90%) brightness(0.6);
       pointer-events: none;
-      user-select: none;
-    }
-
-    .cta-content {
-      position: relative;
-      z-index: 2;
-      max-width: 700px;
-      margin: 0 auto;
+      z-index: -1;
     }
 
     .cta-section h2 {
-      font-size: 2.8rem;
-      margin-bottom: 1.5rem;
-      font-weight: 600;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 3rem;
+      margin-bottom: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--charcoal);
     }
 
     .cta-section p {
-      font-size: 1.2rem;
+      font-family: "Montserrat", sans-serif;
+      font-size: 1.25rem;
+      line-height: 1.65;
       opacity: 0.85;
       margin-bottom: 2.5rem;
-      color: var(--text-light);
-    }
-
-    .btn-secondary {
-      display: inline-block;
-      background: transparent;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
       color: var(--charcoal);
-      padding: 1rem 2.5rem;
-      border-radius: 0;
-      font-weight: 500;
-      text-decoration: none;
-      letter-spacing: 1px;
-      transition: var(--transition);
-      border: 1px solid var(--charcoal);
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-    }
-
-    .btn-secondary:hover {
-      background: var(--charcoal);
-      color: var(--nude-light);
     }
 
     /* Footer */
     footer {
       background: var(--charcoal);
-      text-align: center;
-      padding: 3rem 1rem;
-      color: var(--nude-medium);
-      border-top: 1px solid rgba(212, 200, 188, 0.2);
-      user-select: none;
-    }
-
-    .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .footer-logo {
-      font-family: "Cormorant Garamond", serif;
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
       color: var(--nude-light);
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      list-style: none;
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .footer-links a {
-      text-decoration: none;
-      color: var(--nude-medium);
+      padding: 2.5rem 2rem;
+      text-align: center;
       font-size: 0.9rem;
-      transition: var(--transition);
+      letter-spacing: 0.1em;
+      user-select: none;
+      font-family: "Montserrat", sans-serif;
+      position: relative;
+      z-index: 1;
     }
 
-    .footer-links a:hover {
+    footer a {
       color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
     }
 
-    .copyright {
-      font-size: 0.9rem;
-      color: var(--nude-dark);
+    footer a:hover {
+      color: var(--nude-light);
+      text-decoration: underline;
     }
 
     /* Animations */
     @keyframes fadeInUp {
-      from {
+      0% {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(24px);
       }
-      to {
+      100% {
         opacity: 1;
         transform: translateY(0);
       }
-   
-```
+    }
+
+    /* Responsive */
+    @media (max-width: 720px) {
+      .hero h1 {
+        font-size: 2.8rem;
+      }
+      .feature-card {
+        padding: 1.8rem 1.5rem 2.2rem;
+      }
+      .stat-number {
+        font-size: 3.2rem;
+      }
+      .process-step {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .step-number {
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="header">
+    <nav>
+      <a href="#" class="logo">Crown Trade Academy</a>
+      <ul class="nav-links">
+        <li><a href="#features">Why Join</a></li>
+        <li><a href="#success">Success Stories</a></li>
+        <li><a href="#process">How It Works</a></li>
+        <li><a href="#cta">Enroll Now</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero" role="banner">
+    <h1>Elite Trading Mentorship That Transforms Traders Into Masters</h1>
+    <p>
+      Join a selective program designed to sharpen your market intuition, discipline, and execution with
+      personalized coaching, advanced strategies, and psychological mastery.
+    </p>
+    <a href="#cta" class="btn-primary" role="button" aria-label="Enroll Now">Enroll Now</a>
+  </section>
+
+  <section id="features" class="features-section" aria-label="Program Benefits and Features">
+    <div class="feature-card" tabindex="0">
+      <div class="feature-icon"><i class="fa-solid fa-brain"></i></div>
+      <h3>Deep Market Psychology</h3>
+      <p>Master the hidden triggers behind market moves and trader behavior for unparalleled edge.</p>
+    </div>
+    <div class="feature-card" tabindex="0">
+      <div class="feature-icon"><i class="fa-solid fa-crosshairs"></i></div>
+      <h3>Sniper Precision Entries</h3>
+      <p>Learn the art of pinpoint entries and risk management to minimize losses and maximize gains.</p>
+    </div>
+    <div class="feature-card" tabindex="0">
+      <div class="feature-icon"><i class="fa-solid fa-user-lock"></i></div>
+      <h3>Exclusive Mentorship</h3>
+      <p>Access weekly 1-on-1 coaching calls, strategy reviews, and mindset coaching from elite traders.</p>
+    </div>
+    <div class="feature-card" tabindex="0">
+      <div class="feature-icon"><i class="fa-solid fa-trophy"></i></div>
+      <h3>Proven Success Framework</h3>
+      <p>Follow a battle-tested path used by top traders with actionable lessons and practical drills.</p>
+    </div>
+  </section>
+
+  <section id="stats" class="stats-section" aria-label="Program Success Statistics">
+    <div class="stats-grid">
+      <div class="stat-item" tabindex="0" aria-label="Over 500 successful mentees">
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Successful Mentees</div>
+      </div>
+      <div class="stat-item" tabindex="0" aria-label="95% positive mentee feedback">
+        <div class="stat-number">95%</div>
+        <div class="stat-label">Positive Feedback</div>
+      </div>
+      <div class="stat-item" tabindex="0" aria-label="Average 3x return on investment">
+        <div class="stat-number">3x</div>
+        <div class="stat-label">Average ROI</div>
+      </div>
+      <div class="stat-item" tabindex="0" aria-label="2000+ hours of content delivered">
+        <div class="stat-number">2000+</div>
+        <div class="stat-label">Hours of Content</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="success" class="testimonials-section" aria-label="Success Stories from Traders">
+    <div class="section-title">
+      <h2>Real Success Stories</h2>
+    </div>
+    <div class="testimonials-grid">
+      <article class="testimonial-card" tabindex="0" aria-label="Testimonial from James M.">
+        <p class="testimonial-content">
+          “Before Crown Trade Academy, I was stuck in losing patterns. The mentorship reshaped my mindset and gave me
+          sniper-like precision. Now I’m consistently profitable and confident.”
+        </p>
+        <div class="testimonial-author">— James M., Professional Trader</div>
+      </article>
+      <article class="testimonial-card" tabindex="0" aria-label="Testimonial from Sophia L.">
+        <p class="testimonial-content">
+          “The focus on psychology and discipline is unmatched. This program is the secret weapon for anyone serious about
+          trading.”
+        </p>
+        <div class="testimonial-author">— Sophia L., Forex Mentor</div>
+      </article>
+      <article class="testimonial-card" tabindex="0" aria-label="Testimonial from Marcus T.">
+        <p class="testimonial-content">
+          “Crown Trade Academy transformed me from a hobbyist to a pro. The one-on-one mentorship and detailed setups gave me
+          an edge I never had.”
+        </p>
+        <div class="testimonial-author">— Marcus T., Swing Trader</div>
+      </article>
+    </div>
+  </section>
+
+  <section id="process" class="process-section" aria-label="How the Mentorship Works">
+    <div class="section-title">
+      <h2>How It Works</h2>
+    </div>
+    <div class="process-steps">
+      <div class="process-step" tabindex="0">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Application & Selection</h3>
+          <p>We onboard only committed traders to maintain an elite community and personalized attention.</p>
+        </div>
+      </div>
+      <div class="process-step" tabindex="0">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Personalized Assessment</h3>
+          <p>Your current skills, mindset, and trading style are analyzed to tailor your growth path.</p>
+        </div>
+      </div>
+      <div class="process-step" tabindex="0">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Structured Weekly Coaching</h3>
+          <p>Access live sessions, market walkthroughs, and Q&A with your mentor every week.</p>
+        </div>
+      </div>
+      <div class="process-step" tabindex="0">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Ongoing Support & Community</h3>
+          <p>Get 24/7 access to a private group for accountability, peer review, and rapid feedback.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta" class="cta-section" role="region" aria-labelledby="enroll-heading">
+    <h2 id="enroll-heading">Ready To Master The Markets?</h2>
+    <p>Unlock your full potential with Crown Trade Academy’s elite mentorship. Take the step from trader to master.</p>
+    <a href="#" class="btn-primary" role="button" aria-label="Start your enrollment today">Start Your Enrollment</a>
+  </section>
+
+  <footer role="contentinfo">
+    &copy; 2025 Crown Trade Academy — Crafted with precision and passion.  
+    <br />
+    <a href="mailto:contact@crowntradeacademy.com" aria-label="Email us">contact@crowntradeacademy.com</a>
+  </footer>
+
+  <script>
+    // Header background toggle on scroll
+    const header = document.getElementById("header");
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 40) {
+        header.classList.add("scrolled");
+      } else {
+        header.classList.remove("scrolled");
+      }
+    });
+  </script>
+</body>
+</html>
