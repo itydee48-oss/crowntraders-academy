@@ -1,0 +1,132 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crown Trade Academy - Client Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --nude-light: #f9f6f2;
+      --nude-medium: #e8dfd6;
+      --nude-dark: #d4c8bc;
+      --nude-accent: #c4b5a3;
+      --gold: #c8a97e;
+      --gold-dark: #b89463;
+      --charcoal: #3a3a3a;
+      --text-light: #7a7a7a;
+      --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    body {
+      font-family: "Montserrat", sans-serif;
+      background-color: var(--nude-light);
+      color: var(--charcoal);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 700;
+      font-size: 2.8rem;
+      letter-spacing: 1px;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    form {
+      background: var(--nude-medium);
+      padding: 2rem 2.5rem;
+      border-radius: 0;
+      border: 1px solid var(--nude-dark);
+      box-shadow: 0 5px 15px rgba(200, 169, 126, 0.3);
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    input {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      margin-bottom: 1.6rem;
+      border: 1px solid var(--nude-dark);
+      border-radius: 0;
+      font-size: 1rem;
+      font-family: "Montserrat", sans-serif;
+      transition: var(--transition);
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 10px rgba(200, 169, 126, 0.5);
+    }
+    button {
+      width: 100%;
+      background: var(--gold);
+      border: none;
+      padding: 1rem;
+      color: var(--nude-light);
+      font-weight: 600;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: 0;
+    }
+    button:hover {
+      background: var(--gold-dark);
+    }
+    #loginMessage {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: var(--charcoal);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Client Login</h1>
+  <form id="loginForm" aria-label="Client login form">
+    <label for="email">Email Address</label>
+    <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@example.com" />
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" required minlength="6" />
+    <button type="submit">Login</button>
+  </form>
+  <p id="loginMessage" role="alert" aria-live="assertive"></p>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const loginMessage = document.getElementById('loginMessage');
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = loginForm.email.value.trim();
+      const password = loginForm.password.value;
+
+      // TODO: Connect to Supabase or your auth backend here to validate user
+
+      // For demonstration simulate successful login:
+      if(email && password.length >= 6) {
+        loginMessage.style.color = 'green';
+        loginMessage.textContent = 'Login successful! Redirecting to dashboard...';
+        setTimeout(() => {
+          // Redirect to dashboard (update with actual path)
+          window.location.href = 'dashboard.html';
+        }, 1500);
+      } else {
+        loginMessage.style.color = 'red';
+        loginMessage.textContent = 'Invalid email or password.';
+      }
+    });
+  </script>
+</body>
+</html>
