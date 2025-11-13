@@ -1,164 +1,151 @@
+<!-- program-selection.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Crown Trade Academy - Choose Your Path</title>
-<style>
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background: #F9F6F2;
-    color: #3A3A3A;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 4rem 1rem;
-    min-height: 100vh;
-  }
-  h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 700;
-    margin-bottom: 2rem;
-  }
-  .options {
-    display: flex;
-    gap: 3rem;
-    max-width: 900px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .option-card {
-    background: #E8DFD6;
-    border: 2px solid #C8A97E;
-    border-radius: 12px;
-    padding: 2rem;
-    width: 320px;
-    cursor: pointer;
-    position: relative;
-    transition: box-shadow 0.3s ease;
-  }
-  .option-card:hover {
-    box-shadow: 0 8px 20px rgba(200, 169, 126, 0.6);
-  }
-  .option-card h2 {
-    margin-bottom: 1rem;
-    font-weight: 600;
-  }
-  .option-card p {
-    color: #7A7A7A;
-    margin-bottom: 1rem;
-    min-height: 70px;
-  }
-  .learn-more {
-    font-size: 0.9rem;
-    color: #B89463;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-  /* Modal styles */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(58, 58, 58, 0.7);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  .modal {
-    background: #F9F6F2;
-    padding: 2rem;
-    border-radius: 8px;
-    max-width: 400px;
-    box-shadow: 0 8px 20px rgba(200, 169, 126, 0.8);
-    position: relative;
-  }
-  .modal h3 {
-    margin-bottom: 1rem;
-  }
-  .close-btn {
-    position: absolute;
-    top: 8px;
-    right: 12px;
-    cursor: pointer;
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #B89463;
-  }
-  /* CTA buttons */
-  .select-btn {
-    background: #C8A97E;
-    border: none;
-    padding: 0.8rem 1.6rem;
-    color: #F9F6F2;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: background 0.3s ease;
-  }
-  .select-btn:hover {
-    background: #B89463;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crown Trade Academy - Program Selection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <style>
+    :root {
+      --nude-light: #f9f6f2;
+      --nude-medium: #e8dfd6;
+      --nude-dark: #d4c8bc;
+      --nude-accent: #c4b5a3;
+      --gold: #c8a97e;
+      --gold-dark: #b89463;
+      --charcoal: #3a3a3a;
+      --text-light: #7a7a7a;
+      --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    body {
+      font-family: "Montserrat", sans-serif;
+      background-color: var(--nude-light);
+      color: var(--charcoal);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0 2rem;
+    }
+    header {
+      margin: 2rem 0 3rem;
+      text-align: center;
+    }
+    h1 {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 700;
+      font-size: 2.8rem;
+      letter-spacing: 1px;
+    }
+    p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      margin-top: 0.8rem;
+    }
+    .options {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+    }
+    .option-card {
+      background: var(--nude-medium);
+      border: 1px solid var(--nude-dark);
+      padding: 3rem 2.5rem;
+      width: 320px;
+      border-radius: 0;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(200, 169, 126, 0.2);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .option-card:hover,
+    .option-card:focus {
+      background: var(--gold);
+      color: var(--nude-light);
+      box-shadow: 0 15px 40px rgba(200, 169, 126, 0.6);
+      outline: none;
+    }
+    .option-card h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    .option-card p {
+      flex-grow: 1;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+    .btn-select {
+      background: transparent;
+      border: 2px solid var(--charcoal);
+      padding: 0.8rem 1.5rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      border-radius: 0;
+      color: inherit;
+      transition: var(--transition);
+      font-size: 1rem;
+    }
+    .option-card:hover .btn-select,
+    .option-card:focus .btn-select {
+      background: var(--nude-light);
+      color: var(--gold-dark);
+      border-color: var(--nude-light);
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>Choose Your Path</h1>
+    <p>Select the program that suits your goals. Ready to trade or earn through referrals?</p>
+  </header>
 
-<h1>Choose Your Path</h1>
+  <main class="options" role="list">
+    <article tabindex="0" class="option-card" data-target="registration.html?program=trading" role="listitem">
+      <h2>Trading Mentorship Program</h2>
+      <p>Get direct access to our expert mentorship, premium resources, and personalized coaching.</p>
+      <button class="btn-select" aria-label="Select Trading Mentorship Program">Select</button>
+    </article>
 
-<div class="options">
+    <article tabindex="0" class="option-card" data-target="registration.html?program=referral" role="listitem">
+      <h2>Referral Program</h2>
+      <p>Join our referral system to earn commissions by introducing new members to the academy.</p>
+      <button class="btn-select" aria-label="Select Referral Program">Select</button>
+    </article>
+  </main>
 
-  <div class="option-card" id="mentorship-option">
-    <h2>Trading Mentorship</h2>
-    <p>Learn proven strategies and trade with confidence. Personalized coaching and market insights.</p>
-    <div class="learn-more" onclick="openModal('mentorship-modal')">Learn More</div>
-    <button class="select-btn" onclick="selectOption('mentorship')">Select</button>
-  </div>
-
-  <div class="option-card" id="referral-option">
-    <h2>Referral Program</h2>
-    <p>Earn rewards by growing our community. Easy onboarding and generous bonuses.</p>
-    <div class="learn-more" onclick="openModal('referral-modal')">Learn More</div>
-    <button class="select-btn" onclick="selectOption('referral')">Select</button>
-  </div>
-
-</div>
-
-<!-- Mentorship Modal -->
-<div class="modal-overlay" id="mentorship-modal">
-  <div class="modal">
-    <div class="close-btn" onclick="closeModal('mentorship-modal')">&times;</div>
-    <h3>Trading Mentorship Details</h3>
-    <p>Our mentorship program offers personalized coaching, live sessions, exclusive resources, and ongoing support designed to help you become a confident, profitable trader.</p>
-  </div>
-</div>
-
-<!-- Referral Modal -->
-<div class="modal-overlay" id="referral-modal">
-  <div class="modal">
-    <div class="close-btn" onclick="closeModal('referral-modal')">&times;</div>
-    <h3>Referral Program Details</h3>
-    <p>Grow your network and earn substantial commissions for every new member you bring to Crown Trade Academy. We provide marketing materials and support to maximize your earnings.</p>
-  </div>
-</div>
-
-<script>
-  function openModal(id) {
-    document.getElementById(id).style.display = 'flex';
-  }
-  function closeModal(id) {
-    document.getElementById(id).style.display = 'none';
-  }
-  function selectOption(option) {
-    // Here you handle the selection:
-    // For example, send the choice to your backend and then redirect
-    alert('You selected: ' + option);
-    // Replace alert with actual logic:
-    // e.g., fetch('/api/saveChoice', {method: 'POST', body: JSON.stringify({program: option})})...
-  }
-</script>
-
+  <script>
+    const cards = document.querySelectorAll('.option-card');
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const url = card.getAttribute('data-target');
+        window.location.href = url;
+      });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const url = card.getAttribute('data-target');
+          window.location.href = url;
+        }
+      });
+    });
+  </script>
 </body>
 </html>
