@@ -1,161 +1,140 @@
-<!-- payment.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Crown Trade Academy - Payment</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
-    rel="stylesheet"
-  />
-  <style>
-    :root {
-      --nude-light: #f9f6f2;
-      --nude-medium: #e8dfd6;
-      --nude-dark: #d4c8bc;
-      --nude-accent: #c4b5a3;
-      --gold: #c8a97e;
-      --gold-dark: #b89463;
-      --charcoal: #3a3a3a;
-      --text-light: #7a7a7a;
-      --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-    body {
-      font-family: "Montserrat", sans-serif;
-      background-color: var(--nude-light);
-      color: var(--charcoal);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      padding: 2rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    h1 {
-      font-family: "Cormorant Garamond", serif;
-      font-weight: 700;
-      font-size: 2.5rem;
-      letter-spacing: 1px;
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    .payment-info {
-      background: var(--nude-medium);
-      border: 1px solid var(--nude-dark);
-      padding: 2rem 2.5rem;
-      border-radius: 0;
-      box-shadow: 0 5px 15px rgba(200, 169, 126, 0.3);
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
-      text-align: center;
-    }
-    label {
-      font-weight: 600;
-      display: block;
-      margin-bottom: 0.5rem;
-      margin-top: 1.2rem;
-    }
-    input[type="file"] {
-      width: 100%;
-      padding: 0.4rem 0;
-    }
-    .btn-upload,
-    .btn-paid {
-      margin-top: 2rem;
-      width: 100%;
-      padding: 1rem;
-      font-weight: 600;
-      font-size: 1.1rem;
-      border: none;
-      cursor: pointer;
-      border-radius: 0;
-      transition: var(--transition);
-    }
-    .btn-upload {
-      background: var(--gold);
-      color: var(--nude-light);
-      margin-bottom: 1rem;
-    }
-    .btn-upload:hover {
-      background: var(--gold-dark);
-    }
-    .btn-paid {
-      background: var(--charcoal);
-      color: var(--nude-light);
-    }
-    .btn-paid:hover {
-      background: #222;
-    }
-    #message {
-      margin-top: 1rem;
-      font-size: 1rem;
-      color: var(--charcoal);
-      text-align: center;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crown Trade Academy - Payment</title>
+<style>
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #f9f6f2;
+    color: #3a3a3a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .container {
+    background: #e8dfd6;
+    padding: 2rem 3rem;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(200, 169, 126, 0.3);
+    max-width: 420px;
+    text-align: center;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+  .info {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  label {
+    display: block;
+    margin: 1rem 0 0.5rem;
+    font-weight: 600;
+  }
+  input[type="file"] {
+    width: 100%;
+    padding: 0.3rem;
+  }
+  button {
+    background-color: #c8a97e;
+    border: none;
+    color: #f9f6f2;
+    padding: 1rem 2rem;
+    margin-top: 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 4px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #b89463;
+  }
+  .mpesa-number {
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .success-message {
+    color: green;
+    font-weight: 600;
+    margin-top: 1rem;
+    display: none;
+  }
+</style>
 </head>
 <body>
-  <h1>Payment & Confirmation</h1>
 
-  <div class="payment-info" aria-live="polite">
-    <p>Please pay the enrollment fee via <strong>M-Pesa</strong> to:</p>
-    <p style="font-size:1.4rem; font-weight: 700; letter-spacing: 1.5px; color: var(--gold-dark);">
-      076 996 8847
-    </p>
-    <p>After payment, upload your payment screenshot below and click "I have Paid".</p>
-  </div>
+<div class="container">
+  <h1>Payment Details</h1>
+  <p class="info">Please send the enrollment fee to the M-Pesa number below.</p>
+  <div class="mpesa-number" id="mpesaNumber"></div>
+  <p class="info" id="feeInfo"></p>
 
-  <form id="paymentForm" aria-label="Payment upload form" enctype="multipart/form-data">
-    <label for="paymentScreenshot">Upload Payment Screenshot*</label>
-    <input
-      type="file"
-      id="paymentScreenshot"
-      name="paymentScreenshot"
-      accept="image/png, image/jpeg"
-      required
-      aria-required="true"
-    />
-
-    <button type="submit" class="btn-upload">Upload & Confirm Payment</button>
+  <form id="paymentForm">
+    <label for="paymentProof">Upload Payment Screenshot:</label>
+    <input type="file" id="paymentProof" accept="image/*" required />
+    <button type="submit">I Have Paid</button>
   </form>
 
-  <button id="paidBtn" class="btn-paid" aria-label="I have Paid button">I Have Paid</button>
+  <p class="success-message" id="successMessage">Thank you for your payment. Your application is now pending approval.</p>
+</div>
 
-  <div id="message" role="alert" aria-live="assertive"></div>
+<script>
+  const mpesaNumberEl = document.getElementById('mpesaNumber');
+  const feeInfoEl = document.getElementById('feeInfo');
+  const paymentForm = document.getElementById('paymentForm');
+  const successMessage = document.getElementById('successMessage');
 
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const program = urlParams.get('program') || 'trading';
+  const selectedProgram = localStorage.getItem('selectedProgram');
 
-    const form = document.getElementById('paymentForm');
-    const paidBtn = document.getElementById('paidBtn');
-    const message = document.getElementById('message');
+  if (!selectedProgram) {
+    alert('No program selected. Redirecting to program selection.');
+    window.location.href = 'program-selection.html';
+  }
 
-    // Simulate upload handling
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const fileInput = document.getElementById('paymentScreenshot');
-      if (!fileInput.files.length) {
-        message.style.color = 'red';
-        message.textContent = 'Please upload a valid screenshot image.';
-        return;
-      }
-      message.style.color = 'green';
-      message.textContent = 'Screenshot uploaded successfully. You can now click "I Have Paid".';
-    });
+  const programDetails = {
+    mentorship: {
+      fee: 3000,
+      mpesa: '0769968847',
+    },
+    referral: {
+      fee: 500,
+      mpesa: '0769968847',
+    }
+  };
 
-    paidBtn.addEventListener('click', () => {
-      // Here you'd verify payment and uploaded screenshot on backend.
-      message.style.color = 'green';
-      message.textContent = 'Payment confirmation received. Please wait for approval.';
-      // Redirect after a pause to a wait/approval page or show instructions
-      setTimeout(() => {
-        window.location.href = 'waiting-approval.html?program=' + program;
-      }, 2500);
-    });
-  </script>
+  const currentProgram = programDetails[selectedProgram];
+
+  mpesaNumberEl.textContent = `M-Pesa Number: ${currentProgram.mpesa}`;
+  feeInfoEl.textContent = `Enrollment Fee: KES ${currentProgram.fee}`;
+
+  paymentForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Simulate payment proof upload & confirmation
+    const fileInput = document.getElementById('paymentProof');
+    if (fileInput.files.length === 0) {
+      alert('Please upload a payment screenshot.');
+      return;
+    }
+
+    // Here you would normally handle file upload to your backend or storage
+
+    // Show success message and disable the form
+    successMessage.style.display = 'block';
+    paymentForm.querySelector('button').disabled = true;
+    paymentForm.querySelector('button').textContent = 'Waiting for Approval';
+
+    // Optionally, you could redirect or further instructions here
+  });
+</script>
+
 </body>
 </html>
