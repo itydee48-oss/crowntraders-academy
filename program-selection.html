@@ -3,71 +3,189 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Crown Trade Academy - Choose Program</title>
+<title>Choose Your Path - Crown Trade Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
 <style>
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background: #f9f6f2;
-    color: #3a3a3a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
+  :root {
+    --nude-light: #F9F6F2;
+    --nude-medium: #E8DFD6;
+    --nude-dark: #D4C8BC;
+    --gold: #C8A97E;
+    --gold-dark: #B89463;
+    --charcoal: #3A3A3A;
+    --text-light: #7A7A7A;
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
-  .container {
-    background: #e8dfd6;
-    padding: 2rem 3rem;
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(200, 169, 126, 0.3);
-    max-width: 400px;
-    text-align: center;
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    background: var(--nude-light);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--charcoal);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: rgba(249,246,242,0.95);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--nude-dark);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  header .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--charcoal);
+    letter-spacing: 1px;
+    text-decoration: none;
+  }
+  main {
+    max-width: 900px;
+    margin: 3rem auto 6rem;
+    padding: 0 1.5rem;
+    flex-grow: 1;
   }
   h1 {
     font-family: 'Cormorant Garamond', serif;
-    margin-bottom: 1.5rem;
     font-weight: 600;
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: 0.8rem;
   }
-  button {
-    background-color: #c8a97e;
-    border: none;
-    color: #f9f6f2;
-    padding: 1rem 2rem;
-    margin: 1rem 0.5rem 0;
-    font-weight: 600;
+  p.intro {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    line-height: 1.6;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+    gap: 2.5rem;
+  }
+  .card {
+    background: var(--nude-medium);
+    border-radius: 12px;
+    padding: 2.5rem 2rem 3rem;
+    box-shadow: 0 10px 25px rgba(200,169,126,0.15);
+    border: 2px solid transparent;
     cursor: pointer;
-    font-size: 1rem;
-    border-radius: 4px;
-    width: 45%;
-    transition: background-color 0.3s ease;
+    position: relative;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
-  button:hover {
-    background-color: #b89463;
+  .card:hover {
+    border-color: var(--gold);
+    box-shadow: 0 15px 30px rgba(200,169,126,0.4);
+    transform: translateY(-8px);
+  }
+  .card-icon {
+    font-size: 4rem;
+    color: var(--gold-dark);
+    margin-bottom: 1.3rem;
+    transition: var(--transition);
+  }
+  .card:hover .card-icon {
+    color: var(--gold);
+    transform: scale(1.15);
+  }
+  .card h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    color: var(--charcoal);
+  }
+  .card p {
+    flex-grow: 1;
+    color: var(--text-light);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    padding: 0 0.3rem;
+  }
+  .select-btn {
+    background: var(--gold);
+    color: var(--nude-light);
+    border: none;
+    padding: 0.85rem 2.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+    box-shadow: 0 5px 10px rgba(200,169,126,0.4);
+  }
+  .select-btn:hover {
+    background: var(--gold-dark);
+    box-shadow: 0 8px 15px rgba(200,169,126,0.6);
+  }
+
+  /* Subtle pulse animation on buttons */
+  .select-btn:hover {
+    animation: pulseGlow 1.6s infinite alternate ease-in-out;
+  }
+  @keyframes pulseGlow {
+    0% { box-shadow: 0 5px 15px rgba(200,169,126,0.4); }
+    100% { box-shadow: 0 5px 25px rgba(200,169,126,0.75); }
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 2.2rem;
+    }
+    .cards {
+      grid-template-columns: 1fr;
+      gap: 1.8rem;
+    }
+    .card {
+      padding: 2rem 1.5rem 2.5rem;
+    }
   }
 </style>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
 </head>
 <body>
-
-<div class="container">
-  <h1>Select Your Program</h1>
-  <button id="mentorshipBtn">Mentorship (KES 3,000)</button>
-  <button id="referralBtn">Referral Program (KES 500)</button>
-</div>
-
-<script>
-  const mentorshipBtn = document.getElementById('mentorshipBtn');
-  const referralBtn = document.getElementById('referralBtn');
-
-  mentorshipBtn.addEventListener('click', () => {
-    localStorage.setItem('selectedProgram', 'mentorship');
-    window.location.href = 'payment.html';
-  });
-
-  referralBtn.addEventListener('click', () => {
-    localStorage.setItem('selectedProgram', 'referral');
-    window.location.href = 'payment.html';
-  });
-</script>
-
+  <header>
+    <a href="index.html" class="logo">Crown Trade Academy</a>
+  </header>
+  <main>
+    <h1>Choose Your Path</h1>
+    <p class="intro">
+      Select the program that best suits your goals. Whether you want expert mentorship or to build income through our referral program, Crown Trade Academy supports your success journey.
+    </p>
+    <div class="cards">
+      <div class="card" tabindex="0" role="button" onclick="location.href='mentorship-form.html'">
+        <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+        <h2>Elite Mentorship Program</h2>
+        <p>Learn directly from professional traders with proven strategies, personalized coaching, and live sessions to accelerate your trading mastery.</p>
+        <button class="select-btn" aria-label="Select Mentorship Program" onclick="location.href='mentorship-form.html'">Select</button>
+      </div>
+      <div class="card" tabindex="0" role="button" onclick="location.href='referral-register.html'">
+        <div class="card-icon"><i class="fas fa-handshake"></i></div>
+        <h2>Referral Program</h2>
+        <p>Earn passive income by introducing others to Crown Trade Academy. Get rewarded for every successful referral with attractive bonuses and support.</p>
+        <button class="select-btn" aria-label="Select Referral Program" onclick="location.href='referral-register.html'">Select</button>
+      </div>
+    </div>
+  </main>
 </body>
 </html>
