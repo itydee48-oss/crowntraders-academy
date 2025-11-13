@@ -1,151 +1,73 @@
-<!-- program-selection.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Crown Trade Academy - Program Selection</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
-    rel="stylesheet"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
-  <style>
-    :root {
-      --nude-light: #f9f6f2;
-      --nude-medium: #e8dfd6;
-      --nude-dark: #d4c8bc;
-      --nude-accent: #c4b5a3;
-      --gold: #c8a97e;
-      --gold-dark: #b89463;
-      --charcoal: #3a3a3a;
-      --text-light: #7a7a7a;
-      --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-    body {
-      font-family: "Montserrat", sans-serif;
-      background-color: var(--nude-light);
-      color: var(--charcoal);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      padding: 0 2rem;
-    }
-    header {
-      margin: 2rem 0 3rem;
-      text-align: center;
-    }
-    h1 {
-      font-family: "Cormorant Garamond", serif;
-      font-weight: 700;
-      font-size: 2.8rem;
-      letter-spacing: 1px;
-    }
-    p {
-      font-size: 1.1rem;
-      color: var(--text-light);
-      margin-top: 0.8rem;
-    }
-    .options {
-      display: flex;
-      gap: 2rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 3rem;
-    }
-    .option-card {
-      background: var(--nude-medium);
-      border: 1px solid var(--nude-dark);
-      padding: 3rem 2.5rem;
-      width: 320px;
-      border-radius: 0;
-      text-align: center;
-      cursor: pointer;
-      box-shadow: 0 5px 20px rgba(200, 169, 126, 0.2);
-      transition: var(--transition);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .option-card:hover,
-    .option-card:focus {
-      background: var(--gold);
-      color: var(--nude-light);
-      box-shadow: 0 15px 40px rgba(200, 169, 126, 0.6);
-      outline: none;
-    }
-    .option-card h2 {
-      font-family: "Cormorant Garamond", serif;
-      font-weight: 700;
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-    }
-    .option-card p {
-      flex-grow: 1;
-      font-size: 1rem;
-      margin-bottom: 2rem;
-      line-height: 1.5;
-    }
-    .btn-select {
-      background: transparent;
-      border: 2px solid var(--charcoal);
-      padding: 0.8rem 1.5rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      cursor: pointer;
-      border-radius: 0;
-      color: inherit;
-      transition: var(--transition);
-      font-size: 1rem;
-    }
-    .option-card:hover .btn-select,
-    .option-card:focus .btn-select {
-      background: var(--nude-light);
-      color: var(--gold-dark);
-      border-color: var(--nude-light);
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crown Trade Academy - Choose Program</title>
+<style>
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #f9f6f2;
+    color: #3a3a3a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .container {
+    background: #e8dfd6;
+    padding: 2rem 3rem;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(200, 169, 126, 0.3);
+    max-width: 400px;
+    text-align: center;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+  button {
+    background-color: #c8a97e;
+    border: none;
+    color: #f9f6f2;
+    padding: 1rem 2rem;
+    margin: 1rem 0.5rem 0;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 4px;
+    width: 45%;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #b89463;
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Choose Your Path</h1>
-    <p>Select the program that suits your goals. Ready to trade or earn through referrals?</p>
-  </header>
 
-  <main class="options" role="list">
-    <article tabindex="0" class="option-card" data-target="registration.html?program=trading" role="listitem">
-      <h2>Trading Mentorship Program</h2>
-      <p>Get direct access to our expert mentorship, premium resources, and personalized coaching.</p>
-      <button class="btn-select" aria-label="Select Trading Mentorship Program">Select</button>
-    </article>
+<div class="container">
+  <h1>Select Your Program</h1>
+  <button id="mentorshipBtn">Mentorship (KES 3,000)</button>
+  <button id="referralBtn">Referral Program (KES 500)</button>
+</div>
 
-    <article tabindex="0" class="option-card" data-target="registration.html?program=referral" role="listitem">
-      <h2>Referral Program</h2>
-      <p>Join our referral system to earn commissions by introducing new members to the academy.</p>
-      <button class="btn-select" aria-label="Select Referral Program">Select</button>
-    </article>
-  </main>
+<script>
+  const mentorshipBtn = document.getElementById('mentorshipBtn');
+  const referralBtn = document.getElementById('referralBtn');
 
-  <script>
-    const cards = document.querySelectorAll('.option-card');
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        const url = card.getAttribute('data-target');
-        window.location.href = url;
-      });
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          const url = card.getAttribute('data-target');
-          window.location.href = url;
-        }
-      });
-    });
-  </script>
+  mentorshipBtn.addEventListener('click', () => {
+    localStorage.setItem('selectedProgram', 'mentorship');
+    window.location.href = 'payment.html';
+  });
+
+  referralBtn.addEventListener('click', () => {
+    localStorage.setItem('selectedProgram', 'referral');
+    window.location.href = 'payment.html';
+  });
+</script>
+
 </body>
 </html>
