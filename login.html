@@ -1,132 +1,104 @@
-<!-- login.html -->
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Crown Trade Academy - Client Login</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
-    rel="stylesheet"
-  />
-  <style>
-    :root {
-      --nude-light: #f9f6f2;
-      --nude-medium: #e8dfd6;
-      --nude-dark: #d4c8bc;
-      --nude-accent: #c4b5a3;
-      --gold: #c8a97e;
-      --gold-dark: #b89463;
-      --charcoal: #3a3a3a;
-      --text-light: #7a7a7a;
-      --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-    body {
-      font-family: "Montserrat", sans-serif;
-      background-color: var(--nude-light);
-      color: var(--charcoal);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      padding: 2rem;
-      max-width: 420px;
-      margin: 0 auto;
-    }
-    h1 {
-      font-family: "Cormorant Garamond", serif;
-      font-weight: 700;
-      font-size: 2.8rem;
-      letter-spacing: 1px;
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    form {
-      background: var(--nude-medium);
-      padding: 2rem 2.5rem;
-      border-radius: 0;
-      border: 1px solid var(--nude-dark);
-      box-shadow: 0 5px 15px rgba(200, 169, 126, 0.3);
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-    input {
-      width: 100%;
-      padding: 0.7rem 1rem;
-      margin-bottom: 1.6rem;
-      border: 1px solid var(--nude-dark);
-      border-radius: 0;
-      font-size: 1rem;
-      font-family: "Montserrat", sans-serif;
-      transition: var(--transition);
-    }
-    input:focus {
-      outline: none;
-      border-color: var(--gold);
-      box-shadow: 0 0 10px rgba(200, 169, 126, 0.5);
-    }
-    button {
-      width: 100%;
-      background: var(--gold);
-      border: none;
-      padding: 1rem;
-      color: var(--nude-light);
-      font-weight: 600;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: var(--transition);
-      border-radius: 0;
-    }
-    button:hover {
-      background: var(--gold-dark);
-    }
-    #loginMessage {
-      margin-top: 1rem;
-      font-size: 1rem;
-      color: var(--charcoal);
-      text-align: center;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Login - Crown Trade Academy</title>
+<style>
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #F9F6F2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .login-container {
+    background: white;
+    padding: 2.5rem 3rem;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    width: 320px;
+    text-align: center;
+  }
+  h2 {
+    margin-bottom: 1.5rem;
+    color: #3A3A3A;
+  }
+  input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #C4B5A3;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  button {
+    background-color: #C8A97E;
+    color: #F9F6F2;
+    border: none;
+    padding: 1rem;
+    width: 100%;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #B89463;
+  }
+  .error-msg {
+    color: #B00020;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    display: none;
+  }
+</style>
 </head>
 <body>
-  <h1>Client Login</h1>
-  <form id="loginForm" aria-label="Client login form">
-    <label for="email">Email Address</label>
-    <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@example.com" />
-    <label for="password">Password</label>
-    <input id="password" name="password" type="password" required minlength="6" />
-    <button type="submit">Login</button>
-  </form>
-  <p id="loginMessage" role="alert" aria-live="assertive"></p>
 
-  <script>
-    const loginForm = document.getElementById('loginForm');
-    const loginMessage = document.getElementById('loginMessage');
+<div class="login-container">
+  <h2>Client Login</h2>
+  <div id="error" class="error-msg"></div>
+  <input type="email" id="email" placeholder="Email" required />
+  <input type="password" id="password" placeholder="Password" required />
+  <button id="loginBtn">Login</button>
+</div>
 
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const email = loginForm.email.value.trim();
-      const password = loginForm.password.value;
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // Initialize Supabase
+  const supabaseUrl = 'YOUR_SUPABASE_URL';
+  const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-      // TODO: Connect to Supabase or your auth backend here to validate user
+  const loginBtn = document.getElementById('loginBtn');
+  const errorMsg = document.getElementById('error');
 
-      // For demonstration simulate successful login:
-      if(email && password.length >= 6) {
-        loginMessage.style.color = 'green';
-        loginMessage.textContent = 'Login successful! Redirecting to dashboard...';
-        setTimeout(() => {
-          // Redirect to dashboard (update with actual path)
-          window.location.href = 'dashboard.html';
-        }, 1500);
-      } else {
-        loginMessage.style.color = 'red';
-        loginMessage.textContent = 'Invalid email or password.';
-      }
-    });
-  </script>
+  loginBtn.addEventListener('click', async () => {
+    errorMsg.style.display = 'none';
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!email || !password) {
+      errorMsg.textContent = 'Please enter both email and password.';
+      errorMsg.style.display = 'block';
+      return;
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      errorMsg.textContent = error.message;
+      errorMsg.style.display = 'block';
+    } else {
+      // Redirect on successful login
+      window.location.href = 'client-dashboard.html';
+    }
+  });
+</script>
+
 </body>
 </html>
