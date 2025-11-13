@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crown Trade Academy - Choose Your Path</title>
+<style>
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #F9F6F2;
+    color: #3A3A3A;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem 1rem;
+    min-height: 100vh;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+  .options {
+    display: flex;
+    gap: 3rem;
+    max-width: 900px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .option-card {
+    background: #E8DFD6;
+    border: 2px solid #C8A97E;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 320px;
+    cursor: pointer;
+    position: relative;
+    transition: box-shadow 0.3s ease;
+  }
+  .option-card:hover {
+    box-shadow: 0 8px 20px rgba(200, 169, 126, 0.6);
+  }
+  .option-card h2 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  .option-card p {
+    color: #7A7A7A;
+    margin-bottom: 1rem;
+    min-height: 70px;
+  }
+  .learn-more {
+    font-size: 0.9rem;
+    color: #B89463;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  /* Modal styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(58, 58, 58, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .modal {
+    background: #F9F6F2;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 400px;
+    box-shadow: 0 8px 20px rgba(200, 169, 126, 0.8);
+    position: relative;
+  }
+  .modal h3 {
+    margin-bottom: 1rem;
+  }
+  .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    cursor: pointer;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #B89463;
+  }
+  /* CTA buttons */
+  .select-btn {
+    background: #C8A97E;
+    border: none;
+    padding: 0.8rem 1.6rem;
+    color: #F9F6F2;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+  }
+  .select-btn:hover {
+    background: #B89463;
+  }
+</style>
+</head>
+<body>
+
+<h1>Choose Your Path</h1>
+
+<div class="options">
+
+  <div class="option-card" id="mentorship-option">
+    <h2>Trading Mentorship</h2>
+    <p>Learn proven strategies and trade with confidence. Personalized coaching and market insights.</p>
+    <div class="learn-more" onclick="openModal('mentorship-modal')">Learn More</div>
+    <button class="select-btn" onclick="selectOption('mentorship')">Select</button>
+  </div>
+
+  <div class="option-card" id="referral-option">
+    <h2>Referral Program</h2>
+    <p>Earn rewards by growing our community. Easy onboarding and generous bonuses.</p>
+    <div class="learn-more" onclick="openModal('referral-modal')">Learn More</div>
+    <button class="select-btn" onclick="selectOption('referral')">Select</button>
+  </div>
+
+</div>
+
+<!-- Mentorship Modal -->
+<div class="modal-overlay" id="mentorship-modal">
+  <div class="modal">
+    <div class="close-btn" onclick="closeModal('mentorship-modal')">&times;</div>
+    <h3>Trading Mentorship Details</h3>
+    <p>Our mentorship program offers personalized coaching, live sessions, exclusive resources, and ongoing support designed to help you become a confident, profitable trader.</p>
+  </div>
+</div>
+
+<!-- Referral Modal -->
+<div class="modal-overlay" id="referral-modal">
+  <div class="modal">
+    <div class="close-btn" onclick="closeModal('referral-modal')">&times;</div>
+    <h3>Referral Program Details</h3>
+    <p>Grow your network and earn substantial commissions for every new member you bring to Crown Trade Academy. We provide marketing materials and support to maximize your earnings.</p>
+  </div>
+</div>
+
+<script>
+  function openModal(id) {
+    document.getElementById(id).style.display = 'flex';
+  }
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+  function selectOption(option) {
+    // Here you handle the selection:
+    // For example, send the choice to your backend and then redirect
+    alert('You selected: ' + option);
+    // Replace alert with actual logic:
+    // e.g., fetch('/api/saveChoice', {method: 'POST', body: JSON.stringify({program: option})})...
+  }
+</script>
+
+</body>
+</html>
