@@ -1,198 +1,778 @@
+<!-- admin-dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Dashboard - Crown Trade Academy</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Dashboard — Crown Trade Academy</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: #f9f6f2;
-      color: #3a3a3a;
-      margin: 0;
+    :root{
+      --bg: #070707;
+      --panel: #0f1113;
+      --muted: #bfb3a0;
+      --gold: #c8a97e;
+      --gold-2: #b89463;
+      --accent: rgba(200,169,126,0.08);
+      --glass: rgba(255,255,255,0.02);
+      --success: #2ec27a;
+      --danger: #ef5350;
+      --card-radius: 10px;
     }
-    header {
-      background: #b89463;
-      color: white;
-      padding: 1rem 2rem;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      background: linear-gradient(180deg,#050505 0%,#0b0b0c 60%);
+      color:#efeae0;
+      font-family: Montserrat, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue";
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* layout */
+    .wrap{
+      display:grid;
+      grid-template-columns:260px 1fr;
+      gap:24px;
+      padding:26px;
+      align-items:start;
+      min-height:100vh;
+    }
+
+    /* Sidebar */
+    .sidebar{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border:1px solid rgba(255,255,255,0.03);
+      padding:20px;
+      border-radius:12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .brand{
       font-family: 'Cormorant Garamond', serif;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      color:var(--gold);
+      letter-spacing:1px;
+      font-size:1.25rem;
+      margin-bottom:14px;
     }
-    .logout-btn {
-      background: transparent;
-      border: 1px solid white;
-      padding: 0.3rem 0.8rem;
-      color: white;
-      cursor: pointer;
-      font-weight: 600;
-      border-radius: 3px;
-      transition: background 0.3s ease;
+    .nav { display:flex; flex-direction:column; gap:8px; margin-bottom:18px; }
+    .nav button{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid transparent;
+      padding:10px 12px;
+      text-align:left;
+      border-radius:8px;
+      font-weight:600;
+      cursor:pointer;
+      transition: all 180ms ease;
     }
-    .logout-btn:hover {
-      background: white;
-      color: #b89463;
+    .nav button:hover{ background:var(--accent); color:var(--gold); border-left:3px solid var(--gold); }
+    .nav .active{ color:var(--gold); border-left:3px solid var(--gold); box-shadow: 0 8px 20px rgba(184,145,63,0.06); }
+
+    .small{ color:var(--muted); font-size:13px; margin-top:8px; }
+
+    /* main */
+    main{
+      padding:18px;
+      border-radius:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      border:1px solid rgba(255,255,255,0.03);
+      min-height:80vh;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      overflow:auto;
     }
-    main {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+
+    header.top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
     }
-    h1 {
+    .welcome h1{
+      margin:0;
       font-family: 'Cormorant Garamond', serif;
-      margin-bottom: 2rem;
+      color:var(--gold);
+      font-size:22px;
     }
-    .stats {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 3rem;
+    .welcome p{ margin:4px 0 0; color:var(--muted); font-size:13px; }
+
+    .stats-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+      gap:12px;
+      margin-bottom:20px;
     }
-    .stat-card {
-      background: white;
-      border: 1px solid #d4c8bc;
-      padding: 1.5rem 2rem;
-      flex: 1 1 220px;
-      border-radius: 6px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      text-align: center;
-      transition: box-shadow 0.3s ease;
+    .stat{
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      padding:14px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.03);
     }
-    .stat-card:hover {
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    .stat .label{ color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:1px; }
+    .stat .value{ margin-top:8px; font-weight:700; font-size:20px; color:#fff; }
+
+    /* tables + cards */
+    .card{ background:rgba(255,255,255,0.02); padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); margin-bottom:16px; }
+    table{ width:100%; border-collapse:collapse; font-size:14px; }
+    thead th{ text-align:left; padding:10px 8px; color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:0.8px; border-bottom:1px solid rgba(255,255,255,0.03); }
+    tbody td{ padding:10px 8px; border-bottom:1px solid rgba(255,255,255,0.02); color:#e9e6db; vertical-align:middle; }
+    .muted{ color:var(--muted); font-size:13px; }
+
+    button.primary{
+      background:linear-gradient(90deg,var(--gold),var(--gold-2));
+      color:#070707; border:none; padding:8px 12px; border-radius:8px; font-weight:700; cursor:pointer;
+      box-shadow:0 8px 20px rgba(184,145,63,0.12);
     }
-    .stat-number {
-      font-size: 2.8rem;
-      font-weight: 700;
-      color: #b89463;
-      margin-bottom: 0.5rem;
+    button.ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.03); padding:7px 10px; border-radius:8px; cursor:pointer; }
+
+    .btn-approve{ background: linear-gradient(90deg,#2ec27a,#1e9b5c); color:#041; border:none; padding:7px 10px; border-radius:7px; cursor:pointer; font-weight:700; }
+    .btn-reject{ background:#ef5350;color:#fff;border:none;padding:7px 10px;border-radius:7px;cursor:pointer;font-weight:700; }
+
+    /* small helpers */
+    .flex{ display:flex; gap:12px; align-items:center; }
+    .right{ margin-left:auto; }
+    .tag{ padding:6px 8px; border-radius:999px; background:rgba(255,255,255,0.02); color:var(--muted); font-weight:700; font-size:12px; }
+
+    /* responsive */
+    @media(max-width:980px){
+      .wrap{ grid-template-columns: 1fr; padding:12px; }
+      nav.sidebar{ display:flex; flex-direction:row; gap:8px; overflow:auto; padding:10px; border-radius:8px; }
+      nav.sidebar .brand{ display:none; }
     }
-    .stat-label {
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: #3a3a3a;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 2rem;
-    }
-    th, td {
-      padding: 1rem;
-      border: 1px solid #d4c8bc;
-      text-align: left;
-    }
-    th {
-      background: #e8dfd6;
-      font-weight: 600;
-    }
-    tr:hover {
-      background: #f0e9dc;
-    }
+    /* toast */
+    .toast{ position:fixed; right:20px; bottom:20px; background:#111; color:#fff; padding:12px 16px; border-radius:8px; box-shadow:0 8px 30px rgba(0,0,0,0.6); opacity:0; transform:translateY(10px); transition:all 260ms ease; z-index:9999; }
+    .toast.show{ opacity:1; transform:none; }
   </style>
 </head>
+
 <body>
-  <header>
-    <div id="mentorName">Mentor Dashboard</div>
-    <button class="logout-btn" id="logoutBtn">Logout</button>
-  </header>
+  <div class="wrap" role="application">
+    <!-- LEFT: Sidebar -->
+    <aside class="sidebar" role="navigation" aria-label="Admin navigation">
+      <div class="brand">Crown Trade Academy</div>
 
-  <main>
-    <h1>Welcome, <span id="mentorDisplay"></span></h1>
+      <nav class="nav" role="menu" aria-label="Admin menu">
+        <button class="active" id="nav-overview" role="menuitem">Overview</button>
+        <button id="nav-payments" role="menuitem">Payments</button>
+        <button id="nav-withdrawals" role="menuitem">Withdrawals</button>
+        <button id="nav-clients" role="menuitem">Clients</button>
+        <button id="nav-assign" role="menuitem">Assignments</button>
+      </nav>
 
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-number" id="totalBusiness">0</div>
-        <div class="stat-label">Total Accumulated Business (KES)</div>
+      <div class="small">Signed in as <div style="font-weight:700; color:var(--gold);" id="admin-email">—</div></div>
+      <div style="height:12px"></div>
+      <div class="small">Quick actions</div>
+      <div style="display:flex; gap:8px; margin-top:8px">
+        <button class="primary" id="btn-auto-assign">Auto-assign clients</button>
+        <button class="ghost" id="btn-refresh">Refresh</button>
       </div>
-      <div class="stat-card">
-        <div class="stat-number" id="clientsCount">0</div>
-        <div class="stat-label">Assigned Clients</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="pendingApprovals">0</div>
-        <div class="stat-label">Pending Approvals</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="activeClients">0</div>
-        <div class="stat-label">Active Clients</div>
-      </div>
-    </div>
+      <div style="height:18px"></div>
+      <div class="small">System</div>
+      <div style="margin-top:8px"><button class="ghost" id="btn-logout">Logout</button></div>
+    </aside>
 
-    <h2>Assigned Clients</h2>
-    <table id="clientsTable">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Program</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Client rows will go here -->
-      </tbody>
-    </table>
-  </main>
+    <!-- RIGHT: Main -->
+    <main id="main" role="main" aria-live="polite">
+      <header class="top">
+        <div class="welcome">
+          <h1>Admin Dashboard</h1>
+          <p>Manage approvals, view revenue, and assign clients to mentors.</p>
+        </div>
+        <div style="text-align:right">
+          <div class="muted">Connected as</div>
+          <div style="font-weight:700; color:var(--gold);" id="admin-name">Admin</div>
+        </div>
+      </header>
 
+      <!-- Overview -->
+      <section id="section-overview" class="section">
+        <div class="stats-grid">
+          <div class="stat card">
+            <div class="label">Total Revenue (approved payments)</div>
+            <div class="value" id="stat-revenue">KES 0</div>
+          </div>
+          <div class="stat card">
+            <div class="label">Total Clients</div>
+            <div class="value" id="stat-clients">0</div>
+          </div>
+          <div class="stat card">
+            <div class="label">Total Mentors</div>
+            <div class="value" id="stat-mentors">0</div>
+          </div>
+          <div class="stat card">
+            <div class="label">Pending Approvals</div>
+            <div class="value" id="stat-pending">0</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:12px">
+            <h3 style="margin:0">Recent Payments (latest 8)</h3>
+            <div class="right muted">Click approve to confirm payment</div>
+          </div>
+          <div style="margin-top:12px; overflow:auto">
+            <table id="recent-payments-table" aria-live="polite">
+              <thead>
+                <tr><th>Client</th><th>Amount</th><th>Status</th><th>When</th><th></th></tr>
+              </thead>
+              <tbody id="recent-payments-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Payments -->
+      <section id="section-payments" class="section" hidden>
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:12px">
+            <h3 style="margin:0">Pending Payments</h3>
+            <div class="right muted">Review and approve receipts</div>
+          </div>
+
+          <div style="margin-top:12px;overflow:auto">
+            <table aria-live="polite" id="payments-table">
+              <thead>
+                <tr><th>Client</th><th>Amount</th><th>Status</th><th>Receipt</th><th>When</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="payments-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Withdrawals -->
+      <section id="section-withdrawals" class="section" hidden>
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:12px">
+            <h3 style="margin:0">Withdrawals</h3>
+            <div class="right muted">Approve or reject withdrawal requests</div>
+          </div>
+
+          <div style="margin-top:12px;overflow:auto">
+            <table id="withdrawals-table">
+              <thead><tr><th>User</th><th>Amount</th><th>Status</th><th>Requested</th><th>Actions</th></tr></thead>
+              <tbody id="withdrawals-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Clients -->
+      <section id="section-clients" class="section" hidden>
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:12px">
+            <h3 style="margin:0">Clients</h3>
+            <div class="right muted">Manage clients and assignments</div>
+          </div>
+
+          <div style="margin-top:12px; overflow:auto">
+            <table id="clients-table">
+              <thead><tr><th>Name</th><th>Email</th><th>Assigned Mentor</th><th>Joined</th><th>Actions</th></tr></thead>
+              <tbody id="clients-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Assignments -->
+      <section id="section-assign" class="section" hidden>
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:12px">
+            <h3 style="margin:0">Assignments</h3>
+            <div class="right muted">Auto-assign distributes unassigned clients fairly</div>
+          </div>
+
+          <div style="margin-top:12px">
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
+              <button class="primary" id="btn-run-auto">Run Auto-assign (round-robin)</button>
+              <button class="ghost" id="btn-view-assignments">Refresh assignments</button>
+            </div>
+
+            <div style="overflow:auto">
+              <table id="assignments-table">
+                <thead><tr><th>Client</th><th>Mentor</th><th>Assigned at</th></tr></thead>
+                <tbody id="assignments-body"></tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="toast" id="toast">Saved</div>
+
+  <!-- Supabase client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Load mentor username from localStorage
-    const mentorUsername = localStorage.getItem('mentorUsername');
+    // ********** CONFIGURE THESE **********
+    const SUPABASE_URL = 'https://YOUR_SUPABASE_PROJECT.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    // *************************************
 
-    if (!mentorUsername) {
-      alert('Not logged in! Redirecting to login page.');
-      window.location.href = 'admin-login.html';
-    } else {
-      document.getElementById('mentorName').textContent = mentorUsername.toUpperCase() + ' Dashboard';
-      document.getElementById('mentorDisplay').textContent = mentorUsername.charAt(0).toUpperCase() + mentorUsername.slice(1);
+    // initialize supabase
+    const supabase = supabaseLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // helpers
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+    const toast = (txt, time = 2500) => {
+      const el = document.getElementById('toast');
+      el.textContent = txt;
+      el.classList.add('show');
+      setTimeout(()=>el.classList.remove('show'), time);
+    };
+
+    // navigation
+    const sections = {
+      overview: $('#section-overview'),
+      payments: $('#section-payments'),
+      withdrawals: $('#section-withdrawals'),
+      clients: $('#section-clients'),
+      assign: $('#section-assign')
+    };
+
+    function showSection(name){
+      Object.values(sections).forEach(s => s.hidden = true);
+      sections[name].hidden = false;
+      // active nav btn
+      $$('.nav button').forEach(b => b.classList.remove('active'));
+      const btn = document.querySelector(`#nav-${name}`);
+      if(btn) btn.classList.add('active');
     }
 
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem('mentorUsername');
-      window.location.href = 'admin-login.html';
+    // attach nav listeners
+    $('#nav-overview').addEventListener('click', ()=>showSection('overview'));
+    $('#nav-payments').addEventListener('click', ()=>showSection('payments'));
+    $('#nav-withdrawals').addEventListener('click', ()=>showSection('withdrawals'));
+    $('#nav-clients').addEventListener('click', ()=>showSection('clients'));
+    $('#nav-assign').addEventListener('click', ()=>showSection('assign'));
+
+    // logout
+    $('#btn-logout').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      window.location.href = 'login.html';
     });
 
-    // Sample data (replace with real from your DB / Supabase)
-    const clientsData = [
-      { name: "John Doe", email: "john@example.com", program: "Mentorship", status: "Active", mentor: "mentor1" },
-      { name: "Jane Smith", email: "jane@example.com", program: "Referral", status: "Pending", mentor: "mentor1" },
-      { name: "Alex Johnson", email: "alex@example.com", program: "Mentorship", status: "Active", mentor: "mentor2" },
-      { name: "Emily Davis", email: "emily@example.com", program: "Referral", status: "Approved", mentor: "mentor3" }
-    ];
+    // page state
+    let currentAdmin = null;
+    let mentors = [];
+    let clients = [];
+    let assignments = [];
+    let payments = [];
+    let withdrawals = [];
 
-    function loadClients() {
-      const tbody = document.getElementById('clientsTable').querySelector('tbody');
-      tbody.innerHTML = '';
+    // run auth check on load
+    (async function init(){
+      // get session
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if(error) {
+        console.error('Auth error', error);
+        window.location.href = 'login.html';
+        return;
+      }
+      if(!session || !session.user){
+        window.location.href = 'login.html';
+        return;
+      }
 
-      const filteredClients = clientsData.filter(client => client.mentor === mentorUsername);
+      // fetch admin row from users table (assumes supabase auth and users table linked by email)
+      const userEmail = session.user.email;
+      const { data: adminRows, error: uErr } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', userEmail)
+        .limit(1);
 
-      filteredClients.forEach(client => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${client.name}</td>
-          <td>${client.email}</td>
-          <td>${client.program}</td>
-          <td>${client.status}</td>
-        `;
-        tbody.appendChild(tr);
-      });
+      if(uErr || !adminRows || adminRows.length === 0){
+        console.error('No local user row found for logged in user', uErr);
+        // optionally create a user row here
+        alert('No user record found in the users table for your account. Contact system admin.');
+        await supabase.auth.signOut();
+        window.location.href = 'login.html';
+        return;
+      }
 
-      // Update stats
-      document.getElementById('clientsCount').textContent = filteredClients.length;
-      document.getElementById('pendingApprovals').textContent = filteredClients.filter(c => c.status === 'Pending').length;
-      document.getElementById('activeClients').textContent = filteredClients.filter(c => c.status === 'Active').length;
-      // Assuming each client brings in 3000 KES for mentorship and 500 KES for referral as business
-      let totalBusiness = 0;
-      filteredClients.forEach(c => {
-        if (c.program === "Mentorship" && c.status === "Active") totalBusiness += 3000;
-        if (c.program === "Referral" && c.status === "Active") totalBusiness += 500;
-      });
-      document.getElementById('totalBusiness').textContent = totalBusiness.toLocaleString();
+      currentAdmin = adminRows[0];
+      if(currentAdmin.role !== 'admin'){
+        alert('Access denied. Admins only.');
+        await supabase.auth.signOut();
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // show admin info
+      $('#admin-email').textContent = currentAdmin.email;
+      $('#admin-name').textContent = currentAdmin.full_name || currentAdmin.email;
+
+      // initial data load
+      await refreshAll();
+
+      // enable refresh button
+      $('#btn-refresh').addEventListener('click', refreshAll);
+
+      // auto assign button
+      $('#btn-auto-assign').addEventListener('click', autoAssignClients);
+      $('#btn-run-auto').addEventListener('click', autoAssignClients);
+      $('#btn-view-assignments').addEventListener('click', loadAssignments);
+    })();
+
+    /* ----------------------
+       Data loading functions
+       ---------------------- */
+
+    async function refreshAll(){
+      showSection('overview');
+      await Promise.all([
+        loadMentors(),
+        loadClients(),
+        loadPayments(),
+        loadWithdrawals(),
+        loadAssignments()
+      ]);
+      calculateStats();
+      renderRecentPayments();
+      renderPaymentsTable();
+      renderWithdrawals();
+      renderClientsTable();
+      renderAssignments();
+      toast('Data refreshed');
     }
 
-    loadClients();
+    async function loadMentors(){
+      const { data, error } = await supabase
+        .from('users')
+        .select('id, full_name, email, role')
+        .eq('role', 'mentor');
+
+      if(error){ console.error('loadMentors error', error); return; }
+      mentors = data || [];
+      $('#stat-mentors').textContent = mentors.length;
+    }
+
+    async function loadClients(){
+      const { data, error } = await supabase
+        .from('users')
+        .select('id, full_name, email, role, created_at')
+        .eq('role', 'client')
+        .order('created_at', { ascending: false });
+
+      if(error){ console.error('loadClients error', error); return; }
+      clients = data || [];
+      $('#stat-clients').textContent = clients.length;
+    }
+
+    async function loadPayments(){
+      const { data, error } = await supabase
+        .from('payments')
+        .select('id, user_id, amount, status, created_at')
+        .order('created_at', { ascending: false })
+        .limit(100);
+
+      if(error){ console.error('loadPayments error', error); return; }
+      payments = data || [];
+    }
+
+    async function loadWithdrawals(){
+      const { data, error } = await supabase
+        .from('withdrawals')
+        .select('id, user_id, amount, status, created_at')
+        .order('created_at', { ascending:false })
+        .limit(100);
+
+      if(error){ console.error('loadWithdrawals error', error); return; }
+      withdrawals = data || [];
+    }
+
+    async function loadAssignments(){
+      const { data, error } = await supabase
+        .from('assignments')
+        .select('id, client_id, mentor_id, created_at')
+        .order('created_at', { ascending:false })
+        .limit(500);
+
+      if(error){ console.error('loadAssignments error', error); return; }
+      assignments = data || [];
+    }
+
+    /* ----------------------
+       Render functions
+       ---------------------- */
+
+    function calculateStats(){
+      // total revenue = sum of approved payments
+      const approvedPayments = payments.filter(p => p.status === 'approved' || p.status === 'confirmed');
+      const totalRevenue = approvedPayments.reduce((s, p) => s + Number(p.amount || 0), 0);
+      $('#stat-revenue').textContent = `KES ${Number(totalRevenue).toLocaleString()}`;
+
+      // pending approvals count
+      const pendingCount = payments.filter(p => p.status === 'pending').length + withdrawals.filter(w => w.status === 'pending').length;
+      $('#stat-pending').textContent = pendingCount;
+    }
+
+    function renderRecentPayments(){
+      const list = payments.slice(0,8);
+      const tbody = $('#recent-payments-body');
+      tbody.innerHTML = '';
+      for(const p of list){
+        const client = clients.find(c => c.id === p.user_id) || { full_name: p.user_id, email: '' };
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(client.full_name || client.email)}</td>
+          <td>KES ${Number(p.amount).toLocaleString()}</td>
+          <td>${escapeHtml(p.status)}</td>
+          <td>${new Date(p.created_at).toLocaleString()}</td>
+          <td style="text-align:right">
+            ${ p.status === 'pending' ? `<button class="btn-approve" data-id="${p.id}">Approve</button>
+            <button class="btn-reject" data-id="${p.id}">Reject</button>` : ''}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+      // attach handlers
+      $$('#recent-payments-body .btn-approve').forEach(b => b.addEventListener('click', e => approvePayment(e.target.dataset.id)));
+      $$('#recent-payments-body .btn-reject').forEach(b => b.addEventListener('click', e => rejectPayment(e.target.dataset.id)));
+    }
+
+    function renderPaymentsTable(){
+      const tbody = $('#payments-body');
+      tbody.innerHTML = '';
+      const pending = payments.filter(p => p.status === 'pending' || p.status === null);
+      if(pending.length === 0){
+        tbody.innerHTML = `<tr><td colspan="6" class="muted">No pending payments</td></tr>`;
+        return;
+      }
+      for(const p of pending){
+        const client = clients.find(c => c.id === p.user_id) || { full_name: p.user_id, email: '' };
+        const receiptLink = p.receipt_url ? `<a href="${escapeHtml(p.receipt_url)}" target="_blank">View</a>` : '—';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(client.full_name || client.email)}</td>
+          <td>KES ${Number(p.amount).toLocaleString()}</td>
+          <td>${escapeHtml(p.status || 'pending')}</td>
+          <td>${receiptLink}</td>
+          <td>${new Date(p.created_at).toLocaleString()}</td>
+          <td>
+            <div class="flex">
+              <button class="btn-approve" data-id="${p.id}">Approve</button>
+              <button class="btn-reject" data-id="${p.id}">Reject</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+      // attach actions
+      $$('#payments-body .btn-approve').forEach(b => b.addEventListener('click', e => approvePayment(e.target.dataset.id)));
+      $$('#payments-body .btn-reject').forEach(b => b.addEventListener('click', e => rejectPayment(e.target.dataset.id)));
+    }
+
+    function renderWithdrawals(){
+      const tbody = $('#withdrawals-body');
+      tbody.innerHTML = '';
+      if(withdrawals.length === 0){
+        tbody.innerHTML = `<tr><td colspan="5" class="muted">No withdrawals</td></tr>`;
+        return;
+      }
+      for(const w of withdrawals){
+        const user = clients.find(c => c.id === w.user_id) || { full_name: w.user_id };
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(user.full_name || user.email || w.user_id)}</td>
+          <td>KES ${Number(w.amount).toLocaleString()}</td>
+          <td>${escapeHtml(w.status)}</td>
+          <td>${new Date(w.created_at).toLocaleString()}</td>
+          <td>
+            ${ w.status === 'pending' ? `<button class="btn-approve" data-id="${w.id}">Approve</button>
+                                        <button class="btn-reject" data-id="${w.id}">Reject</button>` : '—' }
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+      // attach
+      $$('#withdrawals-body .btn-approve').forEach(b => b.addEventListener('click', e => approveWithdrawal(e.target.dataset.id)));
+      $$('#withdrawals-body .btn-reject').forEach(b => b.addEventListener('click', e => rejectWithdrawal(e.target.dataset.id)));
+    }
+
+    function renderClientsTable(){
+      const tbody = $('#clients-body');
+      tbody.innerHTML = '';
+      if(clients.length === 0){
+        tbody.innerHTML = `<tr><td colspan="5" class="muted">No clients yet</td></tr>`;
+        return;
+      }
+      for(const c of clients){
+        const asg = assignments.find(a => a.client_id === c.id);
+        const mentor = mentors.find(m => m.id === (asg && asg.mentor_id)) || null;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(c.full_name)}</td>
+          <td>${escapeHtml(c.email)}</td>
+          <td>${mentor ? escapeHtml(mentor.full_name) : '<span class="muted">Unassigned</span>'}</td>
+          <td>${new Date(c.created_at).toLocaleDateString()}</td>
+          <td>
+            <div class="flex">
+              <select data-client="${c.id}" class="assign-select">
+                <option value="">-- choose mentor --</option>
+                ${mentors.map(m => `<option value="${m.id}" ${mentor && mentor.id===m.id ? 'selected' : ''}>${escapeHtml(m.full_name)}</option>`).join('')}
+              </select>
+              <button class="ghost assign-btn" data-client="${c.id}">Assign</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+      // attach assign handlers
+      $$('.assign-btn').forEach(b => b.addEventListener('click', e=>{
+        const clientId = e.target.dataset.client;
+        const sel = document.querySelector(`select[data-client="${clientId}"]`);
+        if(!sel.value){ toast('Choose a mentor first'); return; }
+        manualAssign(clientId, sel.value);
+      }));
+    }
+
+    function renderAssignments(){
+      const tbody = $('#assignments-body');
+      tbody.innerHTML = '';
+      if(assignments.length === 0){
+        tbody.innerHTML = `<tr><td colspan="3" class="muted">No assignments yet</td></tr>`;
+        return;
+      }
+      for(const a of assignments){
+        const client = clients.find(c => c.id === a.client_id) || { full_name: a.client_id };
+        const mentor = mentors.find(m => m.id === a.mentor_id) || { full_name: a.mentor_id };
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${escapeHtml(client.full_name || client.email)}</td>
+                        <td>${escapeHtml(mentor.full_name || mentor.email)}</td>
+                        <td>${new Date(a.created_at).toLocaleString()}</td>`;
+        tbody.appendChild(tr);
+      }
+    }
+
+    /* ----------------------
+       Actions: approve/reject etc
+       ---------------------- */
+
+    async function approvePayment(paymentId){
+      if(!confirm('Approve this payment?')) return;
+      const { error } = await supabase
+        .from('payments')
+        .update({ status: 'approved', approved_at: new Date().toISOString(), approved_by: currentAdmin.id })
+        .eq('id', paymentId);
+      if(error){ console.error('approvePayment error', error); toast('Error approving'); return; }
+      toast('Payment approved');
+      await loadPayments();
+      calculateStats();
+      renderPaymentsTable();
+      renderRecentPayments();
+    }
+
+    async function rejectPayment(paymentId){
+      if(!confirm('Reject this payment?')) return;
+      const { error } = await supabase
+        .from('payments')
+        .update({ status: 'rejected' })
+        .eq('id', paymentId);
+      if(error){ console.error('rejectPayment error', error); toast('Error rejecting'); return; }
+      toast('Payment rejected');
+      await loadPayments();
+      renderPaymentsTable();
+      renderRecentPayments();
+    }
+
+    async function approveWithdrawal(id){
+      if(!confirm('Approve this withdrawal?')) return;
+      const { error } = await supabase
+        .from('withdrawals')
+        .update({ status: 'approved', approved_at: new Date().toISOString(), approved_by: currentAdmin.id })
+        .eq('id', id);
+      if(error){ console.error('approveWithdrawal err', error); toast('Error'); return; }
+      toast('Withdrawal approved');
+      await loadWithdrawals();
+      renderWithdrawals();
+    }
+
+    async function rejectWithdrawal(id){
+      if(!confirm('Reject this withdrawal?')) return;
+      const { error } = await supabase
+        .from('withdrawals')
+        .update({ status: 'rejected' })
+        .eq('id', id);
+      if(error){ console.error('rejectWithdrawal err', error); toast('Error'); return; }
+      toast('Withdrawal rejected');
+      await loadWithdrawals();
+      renderWithdrawals();
+    }
+
+    async function manualAssign(clientId, mentorId){
+      // check existing assignment
+      const existing = assignments.find(a => a.client_id === clientId);
+      if(existing){
+        const { error } = await supabase
+          .from('assignments')
+          .update({ mentor_id: mentorId, created_at: new Date().toISOString() })
+          .eq('id', existing.id);
+        if(error){ console.error('manualAssign update err', error); toast('Error assigning'); return; }
+        toast('Assignment updated');
+      } else {
+        const { error } = await supabase
+          .from('assignments')
+          .insert([{ client_id: clientId, mentor_id: mentorId }]);
+        if(error){ console.error('manualAssign insert err', error); toast('Error assigning'); return; }
+        toast('Client assigned');
+      }
+      await loadAssignments();
+      await loadClients();
+      renderClientsTable();
+      renderAssignments();
+    }
+
+    async function autoAssignClients(){
+      if(mentors.length === 0){ toast('No mentors available'); return; }
+      // find unassigned clients
+      const assignedClientIds = assignments.map(a => a.client_id);
+      const unassigned = clients.filter(c => !assignedClientIds.includes(c.id));
+      if(unassigned.length === 0){ toast('No unassigned clients'); return; }
+
+      // round-robin distribution
+      let cur = 0;
+      const inserts = unassigned.map(c => {
+        const mentor = mentors[cur % mentors.length];
+        cur++;
+        return { client_id: c.id, mentor_id: mentor.id };
+      });
+
+      // bulk insert
+      const { error } = await supabase
+        .from('assignments')
+        .insert(inserts);
+      if(error){ console.error('autoAssign error', error); toast('Auto-assign failed'); return; }
+
+      toast(`Assigned ${inserts.length} clients to ${mentors.length} mentors`);
+      await loadAssignments();
+      await loadClients();
+      renderClientsTable();
+      renderAssignments();
+    }
+
+    /* ----------------------
+       Utility helpers
+       ---------------------- */
+
+    function escapeHtml(str = ''){
+      return String(str)
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'",'&#039;');
+    }
+
   </script>
 </body>
 </html>
