@@ -1,160 +1,331 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mentor Dashboard</title>
-  <style>
-    body {
-      margin: 0;
-      background: #0d0d0d;
-      font-family: Arial, sans-serif;
-      color: #f2f2f2;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mentor Dashboard - Crown Trade Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Montserrat:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --nude-light: #F9F6F2;
+    --nude-medium: #E8DFD6;
+    --nude-dark: #D4C8BC;
+    --nude-accent: #C4B5A3;
+    --gold: #C8A97E;
+    --gold-dark: #B89463;
+    --charcoal: #3A3A3A;
+    --text-light: #7A7A7A;
+    --transition: all 0.3s ease;
+  }
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--nude-light);
+    color: var(--charcoal);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: rgba(249,246,242,0.95);
+    padding: 1rem 2rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--gold-dark);
+    letter-spacing: 1.5px;
+  }
+  main {
+    flex: 1;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  section {
+    background: var(--nude-light);
+    border: 1px solid var(--nude-medium);
+    padding: 1.8rem 2rem;
+    border-radius: 0;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 15px rgba(200, 169, 126, 0.1);
+    transition: var(--transition);
+  }
+  section:hover {
+    box-shadow: 0 12px 30px rgba(200, 169, 126, 0.25);
+  }
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--gold-dark);
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 0.3rem;
+  }
+
+  /* Client List */
+  #clients-list {
+    list-style: none;
+  }
+  #clients-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--nude-medium);
+    padding: 0.8rem 0;
+    font-weight: 500;
+  }
+  #clients-list li:last-child {
+    border: none;
+  }
+  .client-name {
+    flex: 1;
+    color: var(--charcoal);
+  }
+  .client-actions button {
+    background: var(--gold);
+    border: none;
+    color: var(--nude-light);
+    padding: 0.4rem 1rem;
+    margin-left: 0.8rem;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    transition: var(--transition);
+  }
+  .client-actions button.reject {
+    background: var(--nude-accent);
+    color: var(--charcoal);
+  }
+  .client-actions button:hover {
+    filter: brightness(1.1);
+  }
+  .client-actions button.reject:hover {
+    filter: brightness(0.9);
+  }
+
+  /* Upload Lessons */
+  #upload-lesson {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  #upload-lesson input[type="file"] {
+    border: 1px solid var(--nude-medium);
+    padding: 0.6rem;
+    cursor: pointer;
+    color: var(--charcoal);
+  }
+  #upload-lesson button {
+    align-self: flex-start;
+    background: var(--gold);
+    border: none;
+    color: var(--nude-light);
+    padding: 0.7rem 1.8rem;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    transition: var(--transition);
+  }
+  #upload-lesson button:hover {
+    filter: brightness(1.1);
+  }
+
+  /* Call Requests */
+  #call-requests {
+    list-style: none;
+  }
+  #call-requests li {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--nude-medium);
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+  }
+  #call-requests li:last-child {
+    border: none;
+  }
+  #call-requests button {
+    background: var(--gold);
+    border: none;
+    color: var(--nude-light);
+    padding: 0.3rem 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    transition: var(--transition);
+  }
+  #call-requests button:hover {
+    filter: brightness(1.1);
+  }
+
+  /* Stats Widget */
+  #stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+  }
+  .stat-card {
+    background: var(--nude-medium);
+    flex: 1;
+    text-align: center;
+    padding: 1rem 0;
+    border-radius: 4px;
+    color: var(--charcoal);
+    font-weight: 600;
+    box-shadow: 0 3px 8px rgba(200,169,126,0.15);
+  }
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    color: var(--gold);
+    margin-bottom: 0.2rem;
+  }
+  .stat-label {
+    font-size: 0.9rem;
+    letter-spacing: 1.2px;
+    color: var(--charcoal);
+  }
+
+  /* Profile & Logout */
+  #profile-logout {
+    text-align: right;
+    margin-bottom: 1rem;
+  }
+  #profile-logout button {
+    background: transparent;
+    border: 1.8px solid var(--gold);
+    padding: 0.4rem 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--gold-dark);
+    cursor: pointer;
+    border-radius: 0;
+    transition: var(--transition);
+  }
+  #profile-logout button:hover {
+    background: var(--gold);
+    color: var(--nude-light);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    #stats {
+      flex-direction: column;
+      gap: 1.3rem;
     }
-    .sidebar {
-      width: 260px;
-      height: 100vh;
-      background: #1a1a1a;
-      position: fixed;
-      padding: 30px 20px;
-      box-sizing: border-box;
-      border-right: 1px solid #333;
+    .stat-card {
+      flex: none;
     }
-    .sidebar h2 {
-      font-size: 22px;
-      margin-bottom: 30px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: gold;
+    #clients-list li {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.4rem;
     }
-    .sidebar a {
-      display: block;
-      padding: 12px 10px;
-      margin-bottom: 10px;
-      text-decoration: none;
-      color: #ccc;
-      background: #111;
-      border-radius: 8px;
-      transition: 0.2s;
-      font-size: 15px;
+    .client-actions button {
+      margin-left: 0;
+      margin-right: 0.6rem;
     }
-    .sidebar a:hover {
-      background: gold;
-      color: #000;
-    }
-    .main {
-      margin-left: 260px;
-      padding: 40px;
-    }
-    .section-title {
-      font-size: 26px;
-      margin-bottom: 20px;
-      color: gold;
-    }
-    .card {
-      background: #1a1a1a;
-      padding: 25px;
-      border-radius: 12px;
-      margin-bottom: 25px;
-      border: 1px solid #333;
-    }
-    .card h3 {
-      margin-top: 0;
-      color: gold;
-      font-size: 20px;
-    }
-    .btn {
-      background: gold;
-      color: #000;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.2s;
-    }
-    .btn:hover {
-      background: #d4af37;
-    }
-    input, textarea, select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #333;
-      background: #0f0f0f;
-      color: #fff;
-      margin-top: 8px;
-      margin-bottom: 15px;
-      box-sizing: border-box;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <div class="sidebar">
-    <h2>Mentor</h2>
-    <a href="#clients">Assigned Clients</a>
-    <a href="#stats">My Stats</a>
-    <a href="#calls">Request Calls</a>
-    <a href="#chat">Chat</a>
-    <a href="#materials">Upload Materials</a>
-    <a href="#meetings">Meetings</a>
+
+<header>
+  Mentor Dashboard - Crown Trade Academy
+</header>
+
+<main>
+  <div id="profile-logout">
+    <button onclick="logout()">Logout</button>
   </div>
 
-  <div class="main">
+  <section>
+    <h2>Clients Pending Approval</h2>
+    <ul id="clients-list">
+      <!-- Dynamically loaded clients -->
+      <li>
+        <span class="client-name">Jane Doe</span>
+        <div class="client-actions">
+          <button onclick="approveClient('Jane Doe')">Approve</button>
+          <button class="reject" onclick="rejectClient('Jane Doe')">Reject</button>
+        </div>
+      </li>
+      <li>
+        <span class="client-name">John Smith</span>
+        <div class="client-actions">
+          <button onclick="approveClient('John Smith')">Approve</button>
+          <button class="reject" onclick="rejectClient('John Smith')">Reject</button>
+        </div>
+      </li>
+    </ul>
+  </section>
 
-    <div class="card" id="clients">
-      <h3>Assigned Clients</h3>
-      <p>List of clients automatically assigned by the system.</p>
-      <ul>
-        <li>Client 1</li>
-        <li>Client 2</li>
-        <li>Client 3</li>
-      </ul>
+  <section>
+    <h2>Upload Lessons & Resources</h2>
+    <form id="upload-lesson" onsubmit="uploadLesson(event)">
+      <input type="file" accept=".pdf,.mp4,.docx" multiple required />
+      <button type="submit">Upload</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Call Requests</h2>
+    <ul id="call-requests">
+      <li>
+        <span>Client: Mary Lee</span>
+        <button onclick="handleCallRequest('Mary Lee')">Mark as Done</button>
+      </li>
+      <li>
+        <span>Client: Alex Turner</span>
+        <button onclick="handleCallRequest('Alex Turner')">Mark as Done</button>
+      </li>
+    </ul>
+  </section>
+
+  <section id="stats">
+    <div class="stat-card">
+      <div class="stat-number" id="total-clients">12</div>
+      <div class="stat-label">Total Clients</div>
     </div>
-
-    <div class="card" id="stats">
-      <h3>My Stats</h3>
-      <p>View your contribution and performance in the business.</p>
-      <ul>
-        <li>Total Clients: 12</li>
-        <li>Active Clients: 10</li>
-        <li>Monthly Rating: 4.8 / 5</li>
-      </ul>
+    <div class="stat-card">
+      <div class="stat-number" id="approved-clients">8</div>
+      <div class="stat-label">Approved</div>
     </div>
-
-    <div class="card" id="calls">
-      <h3>Request a Call</h3>
-      <label>Call Topic</label>
-      <input type="text" placeholder="Enter topic..." />
-      <label>Preferred Time</label>
-      <input type="datetime-local" />
-      <button class="btn">Request Call</button>
+    <div class="stat-card">
+      <div class="stat-number" id="pending-clients">4</div>
+      <div class="stat-label">Pending</div>
     </div>
+  </section>
+</main>
 
-    <div class="card" id="chat">
-      <h3>Chat with Clients</h3>
-      <textarea rows="4" placeholder="Type your message..."></textarea>
-      <button class="btn">Send Message</button>
-    </div>
+<script>
+  function approveClient(name) {
+    alert(`Approved client: ${name}`);
+    // TODO: Integrate backend approval logic here
+  }
+  function rejectClient(name) {
+    alert(`Rejected client: ${name}`);
+    // TODO: Integrate backend rejection logic here
+  }
+  function uploadLesson(e) {
+    e.preventDefault();
+    alert('Lessons uploaded (mock)');
+    // TODO: Implement real file upload to storage/backend here
+  }
+  function handleCallRequest(name) {
+    alert(`Call request from ${name} marked as done`);
+    // TODO: Integrate call request management backend
+  }
+  function logout() {
+    alert('Logged out (mock)');
+    // TODO: Clear session and redirect to login page
+  }
+</script>
 
-    <div class="card" id="materials">
-      <h3>Upload Materials</h3>
-      <label>Upload Video/PDF</label>
-      <input type="file" />
-      <button class="btn">Upload</button>
-    </div>
-
-    <div class="card" id="meetings">
-      <h3>Arrange Meetings</h3>
-      <label>Meeting Title</label>
-      <input type="text" />
-      <label>Date & Time</label>
-      <input type="datetime-local" />
-      <label>Meeting Link</label>
-      <input type="text" placeholder="Zoom/Google Meet link" />
-      <button class="btn">Schedule Meeting</button>
-    </div>
-
-  </div>
 </body>
 </html>
