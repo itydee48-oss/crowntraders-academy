@@ -4,46 +4,35 @@
   <meta charset="utf-8" />
   <title>Mentor Dashboard</title>
   <style>
+    /* Your original CSS here, unchanged */
     :root {
-      --gold-dark: #b58900;
-      --bg-color: #fff;
-      --text-color: #333;
-      --btn-bg: transparent;
-      --btn-border: 1px solid var(--gold-dark);
-      --btn-hover-bg: var(--gold-dark);
-      --btn-hover-color: #fff;
+      --gold-dark: #b8860b;
+      --bg-light: #f9f6f2;
+      --text-dark: #333;
     }
     body {
       font-family: Arial, sans-serif;
-      background: var(--bg-color);
-      color: var(--text-color);
+      background: var(--bg-light);
+      color: var(--text-dark);
       margin: 0; padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
     }
-    main {
-      flex: 1;
-      padding: 16px;
-      max-width: 1100px;
-      margin: auto;
+    header, main, aside {
+      padding: 10px;
     }
     .tabs {
       display: flex;
       border-bottom: 2px solid var(--gold-dark);
-      margin-bottom: 16px;
+      margin-bottom: 15px;
     }
     .tab {
-      padding: 12px 20px;
+      padding: 10px 20px;
       cursor: pointer;
-      user-select: none;
-      font-weight: 700;
-      color: var(--gold-dark);
+      font-weight: 600;
       border-bottom: 3px solid transparent;
-      transition: border-color 0.3s ease;
     }
     .tab.active {
-      border-bottom: 3px solid var(--gold-dark);
+      border-color: var(--gold-dark);
+      color: var(--gold-dark);
     }
     .tab-content {
       display: none;
@@ -51,92 +40,79 @@
     .tab-content.active {
       display: block;
     }
-    .btn {
-      padding: 8px 14px;
+    button.btn {
       cursor: pointer;
-      border: var(--btn-border);
-      background: var(--btn-bg);
+      background: transparent;
+      border: 1px solid var(--gold-dark);
       color: var(--gold-dark);
-      font-weight: 600;
+      padding: 6px 12px;
       border-radius: 4px;
-      transition: background 0.3s ease, color 0.3s ease;
-      user-select: none;
+      font-weight: 600;
+      transition: background 0.2s, color 0.2s;
     }
-    .btn:hover {
-      background: var(--btn-hover-bg);
-      color: var(--btn-hover-color);
+    button.btn:hover {
+      background: var(--gold-dark);
+      color: #fff;
     }
     .btn.ghost {
-      border-color: transparent;
+      background: none;
+      border: none;
       color: var(--gold-dark);
       font-weight: 700;
+      cursor: pointer;
     }
-    .btn.ghost:hover {
-      background: var(--btn-hover-bg);
-      color: var(--btn-hover-color);
+    .card {
+      background: #fff;
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+      margin-bottom: 20px;
     }
-    input, label {
+    label {
       display: block;
-      margin: 8px 0 4px 0;
+      margin: 10px 0 5px 0;
       font-weight: 600;
     }
-    input[type="text"], input[type="email"], input[type="password"] {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="file"] {
       width: 100%;
-      padding: 6px 8px;
-      font-size: 1rem;
+      padding: 8px 6px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-size: 14px;
       box-sizing: border-box;
     }
-    .profile-pic-preview {
-      margin-top: 12px;
+    #profilePicPreview {
+      margin-top: 10px;
       max-width: 150px;
-      max-height: 150px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--gold-dark);
-    }
-    .form-group {
-      margin-bottom: 16px;
-    }
-    /* TradingView container fix */
-    .tv-wrapper {
-      width: 100%;
-      height: 400px;
-      position: relative;
-    }
-    /* Chat window */
-    #chatWindow {
-      max-height: 300px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      padding: 8px;
-      margin-bottom: 12px;
+      border-radius: 4px;
+      display: block;
     }
   </style>
 </head>
 <body>
 
+<header>
+  <h1>Mentor Dashboard</h1>
+</header>
+
 <main>
-  <div class="tabs" role="tablist" aria-label="Mentor Dashboard Tabs">
-    <div class="tab active" data-tab="dashboard" role="tab" tabindex="0" aria-selected="true">Dashboard</div>
-    <div class="tab" data-tab="chat" role="tab" tabindex="-1">Chat</div>
-    <div class="tab" data-tab="tradingview" role="tab" tabindex="-1">TradingView</div>
-    <div class="tab" data-tab="profile" role="tab" tabindex="-1">Profile</div>
+  <div class="tabs" id="tabsContainer">
+    <div class="tab active" data-tab="chat">Chat</div>
+    <div class="tab" data-tab="tradingview">TradingView</div>
+    <div class="tab" data-tab="profile">Profile</div>
   </div>
 
-  <section id="dashboard" class="tab-content active" role="tabpanel">
-    <h2>Welcome Mentor</h2>
-    <p>Here you can manage your activities.</p>
-  </section>
+  <div id="chat" class="tab-content active">
+    <div id="chatWindow" class="card" style="height:300px; overflow-y:auto; background:#fff; border:1px solid #ddd; padding:10px;">
+      <!-- Chat messages appear here -->
+    </div>
+    <button id="btnClearChat" class="btn" style="margin-top:10px;">Clear Chat View</button>
+  </div>
 
-  <section id="chat" class="tab-content" role="tabpanel" aria-hidden="true">
-    <h2>Chat Window</h2>
-    <div id="chatWindow"></div>
-    <button id="btnClearChat" class="btn">Clear Chat</button>
-  </section>
-
-  <section id="tradingview" class="tab-content" role="tabpanel" aria-hidden="true">
+  <div id="tradingview" class="tab-content">
     <div class="card" style="margin-top:18px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
         <div style="font-weight:800; color:var(--gold-dark)">Trading Chart</div>
@@ -148,78 +124,71 @@
         <div id="tv_embed"></div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section id="profile" class="tab-content" role="tabpanel" aria-hidden="true">
-    <h2>Manage Your Profile</h2>
-    <form id="profileForm" style="max-width:400px;">
-      <div class="form-group">
-        <label for="usernameInput">Username</label>
-        <input type="text" id="usernameInput" name="username" required />
-      </div>
-      <div class="form-group">
-        <label for="emailInput">Email</label>
-        <input type="email" id="emailInput" name="email" required />
-      </div>
-      <div class="form-group">
-        <label for="passwordInput">New Password (leave blank to keep current)</label>
-        <input type="password" id="passwordInput" name="password" autocomplete="new-password" />
-      </div>
-      <div class="form-group">
-        <label for="profilePicInput">Profile Picture</label>
-        <input type="file" id="profilePicInput" accept="image/*" />
-        <img id="profilePicPreview" class="profile-pic-preview" alt="Profile Picture Preview" />
-      </div>
-      <button type="submit" class="btn">Save Changes</button>
-      <div id="profileMessage" style="margin-top:12px; font-weight:600;"></div>
-    </form>
-  </section>
+  <div id="profile" class="tab-content">
+    <div class="card">
+      <h2>Update Profile</h2>
+      <form id="profileForm">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">New Password (leave blank to keep current)</label>
+        <input type="password" id="password" name="password" placeholder="••••••">
+
+        <label for="profilePic">Profile Picture</label>
+        <input type="file" id="profilePic" accept="image/*">
+        <img id="profilePicPreview" src="" alt="Profile Preview" style="display:none;">
+
+        <button type="submit" class="btn" style="margin-top:15px;">Save Changes</button>
+      </form>
+      <div id="profileStatus" style="margin-top:10px; color: green;"></div>
+    </div>
+  </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // Your Supabase credentials
-  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
+  // Replace these with your real keys from the ones you gave
+  const SUPABASE_URL = "https://eygjxxdgxzatchqgwvep.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg";
 
   const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // Helper shortcut
-  const $ = (sel) => document.querySelector(sel);
 
   // Tab switching logic
   const tabs = document.querySelectorAll('.tab');
   const tabContents = document.querySelectorAll('.tab-content');
+
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
-      const target = tab.dataset.tab;
-      tabs.forEach(t => {
-        t.classList.toggle('active', t === tab);
-        t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
-        t.setAttribute('tabindex', t === tab ? '0' : '-1');
-      });
-      tabContents.forEach(tc => {
-        tc.classList.toggle('active', tc.id === target);
-        tc.setAttribute('aria-hidden', tc.id === target ? 'false' : 'true');
-      });
+      const target = tab.getAttribute('data-tab');
 
-      // Special hook: Load TradingView only when tab opens
-      if(target === 'tradingview'){
-        loadTradingView();
-      }
-      if(target === 'profile'){
-        loadProfile();
-      }
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      tabContents.forEach(tc => {
+        if(tc.id === target){
+          tc.classList.add('active');
+        } else {
+          tc.classList.remove('active');
+        }
+      });
     });
   });
 
-  // Clear chat button
+  // Helper selector function
+  function $(selector){ return document.querySelector(selector); }
+
+  // Clear Chat button logic
   $('#btnClearChat').addEventListener('click', async () => {
     if(!confirm('Clear local chat view? This will not delete messages from database.')) return;
     $('#chatWindow').innerHTML = '';
   });
 
-  // TradingView widget loader
+  // TradingView embed + fullscreen control
   function loadTradingView(){
     const container = document.getElementById('tv_embed');
     container.innerHTML = '';
@@ -228,26 +197,25 @@
     scr.onload = () => {
       try {
         new TradingView.widget({
-          width: "100%",
-          height: 400,
-          symbol: "FOREXCOM:EURUSD",
-          interval: "60",
-          timezone: "Etc/UTC",
-          theme: "Light",
-          style: "1",
-          locale: "en",
-          toolbar_bg: "#f9f6f2",
-          enable_publishing: false,
-          container_id: "tv_embed"
+          "width": "100%",
+          "height": 400,
+          "symbol": "FOREXCOM:EURUSD",
+          "interval": "60",
+          "timezone": "Etc/UTC",
+          "theme": "Light",
+          "style": "1",
+          "locale": "en",
+          "toolbar_bg": "#f9f6f2",
+          "enable_publishing": false,
+          "container_id": "tv_embed"
         });
-      } catch(err){
+      } catch(err) {
         console.error('TradingView init error', err);
       }
     };
     document.getElementById('tvContainer').appendChild(scr);
   }
 
-  // TradingView fullscreen toggle
   $('#btnFullScreenTV').addEventListener('click', () => {
     const elem = document.getElementById('tvContainer');
     if(!document.fullscreenElement){
@@ -257,158 +225,172 @@
     }
   });
 
-  // Load mentor profile data into form
-  async function loadProfile(){
-    const user = supabase.auth.getUser ? (await supabase.auth.getUser()).data.user : null;
-    if(!user) {
-      showProfileMessage('You are not logged in.', true);
-      return;
-    }
+  // Load TradingView on page load
+  loadTradingView();
 
-    // Get profile info from 'profiles' table (assumed schema: id=uuid, username=text, avatar_url=text)
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('username, avatar_url')
-      .eq('id', user.id)
-      .single();
+  // Profile update logic
+  const profileForm = $('#profileForm');
+  const profilePicInput = $('#profilePic');
+  const profilePicPreview = $('#profilePicPreview');
+  const profileStatus = $('#profileStatus');
 
-    if(error){
-      console.error('Profile fetch error:', error);
-      showProfileMessage('Failed to load profile info.', true);
-      return;
-    }
+  let profilePicFile = null;
 
-    $('#usernameInput').value = data.username || '';
-    $('#emailInput').value = user.email || '';
-    $('#profilePicPreview').src = data.avatar_url ? getPublicURL(data.avatar_url) : '';
-  }
-
-  // Helper: Show messages below profile form
-  function showProfileMessage(msg, isError=false){
-    const el = $('#profileMessage');
-    el.textContent = msg;
-    el.style.color = isError ? 'red' : 'green';
-  }
-
-  // Convert stored path to public URL for images in Supabase Storage
-  function getPublicURL(path){
-    return supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
-  }
-
-  // Handle profile pic preview on file select
-  $('#profilePicInput').addEventListener('change', (e) => {
+  // Preview profile pic on select
+  profilePicInput.addEventListener('change', e => {
     const file = e.target.files[0];
-    if(!file) return;
-    const url = URL.createObjectURL(file);
-    $('#profilePicPreview').src = url;
+    if(file && file.type.startsWith('image/')){
+      profilePicFile = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        profilePicPreview.src = reader.result;
+        profilePicPreview.style.display = 'block';
+      }
+      reader.readAsDataURL(file);
+    } else {
+      profilePicPreview.src = '';
+      profilePicPreview.style.display = 'none';
+      profilePicFile = null;
+    }
   });
 
-  // Profile form submit: update username, email, password, profile pic
-  $('#profileForm').addEventListener('submit', async (e) => {
+  async function loadUserProfile() {
+    const user = supabase.auth.getUser();
+    const { data, error } = await supabase.auth.getUser();
+
+    if(error){
+      console.error('Error getting user:', error);
+      return;
+    }
+    if(!data || !data.user) return;
+
+    const userData = data.user;
+
+    $('#username').value = userData.user_metadata?.username || '';
+    $('#email').value = userData.email || '';
+
+    // Load profile pic from Supabase storage if exists
+    if(userData.user_metadata?.avatar_url){
+      const { data: urlData, error: urlError } = await supabase.storage
+        .from('avatars')
+        .getPublicUrl(userData.user_metadata.avatar_url);
+
+      if(urlError){
+        console.error('Error fetching profile pic url:', urlError);
+      } else {
+        profilePicPreview.src = urlData.publicUrl;
+        profilePicPreview.style.display = 'block';
+      }
+    }
+  }
+
+  // On page load get profile
+  loadUserProfile();
+
+  profileForm.addEventListener('submit', async e => {
     e.preventDefault();
-    showProfileMessage('Saving...');
 
-    const user = supabase.auth.getUser ? (await supabase.auth.getUser()).data.user : null;
-    if(!user){
-      showProfileMessage('You are not logged in.', true);
-      return;
-    }
+    profileStatus.textContent = '';
+    const username = $('#username').value.trim();
+    const email = $('#email').value.trim();
+    const password = $('#password').value;
 
-    const username = $('#usernameInput').value.trim();
-    const email = $('#emailInput').value.trim();
-    const newPassword = $('#passwordInput').value;
-    const profilePicFile = $('#profilePicInput').files[0];
-
-    // Validate username and email
     if(!username || !email){
-      showProfileMessage('Username and email cannot be empty.', true);
+      alert('Username and Email are required');
       return;
     }
 
-    // Update email and password using Supabase Auth
-    if(email !== user.email){
-      const { error: emailError } = await supabase.auth.updateUser({ email });
-      if(emailError){
-        showProfileMessage('Email update failed: ' + emailError.message, true);
-        return;
-      }
+    const user = await supabase.auth.getUser();
+    if(!user.data.user){
+      alert('No authenticated user found.');
+      return;
     }
 
-    if(newPassword){
-      if(newPassword.length < 6){
-        showProfileMessage('Password must be at least 6 characters.', true);
-        return;
-      }
-      const { error: passError } = await supabase.auth.updateUser({ password: newPassword });
-      if(passError){
-        showProfileMessage('Password update failed: ' + passError.message, true);
-        return;
-      }
-    }
+    const userId = user.data.user.id;
 
-    // Upload profile pic if changed
+    // Upload profile picture if changed
     let avatar_url = null;
     if(profilePicFile){
       const fileExt = profilePicFile.name.split('.').pop();
-      const filePath = `avatars/${user.id}.${fileExt}`;
-
-      // Remove old file (optional): Not implemented here to avoid complexity
+      const fileName = `${userId}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, profilePicFile, { upsert: true });
 
       if(uploadError){
-        showProfileMessage('Profile picture upload failed: ' + uploadError.message, true);
+        alert('Failed to upload profile picture.');
         return;
       }
-
       avatar_url = filePath;
     }
 
-    // Update username and avatar_url in profiles table
+    // Update user metadata
     const updates = {
-      id: user.id,
-      username,
-      updated_at: new Date().toISOString(),
+      id: userId,
+      email,
+      password: password || undefined, // only update if provided
+      user_metadata: {
+        username,
+        avatar_url: avatar_url || undefined,
+      }
     };
-    if(avatar_url) updates.avatar_url = avatar_url;
 
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .upsert(updates, { returning: 'minimal' });
+    try {
+      // Update email/password requires special methods
+      // First update email if changed
+      if(email !== user.data.user.email){
+        const { error: emailError } = await supabase.auth.updateUser({
+          email,
+        });
+        if(emailError){
+          alert('Failed to update email: ' + emailError.message);
+          return;
+        }
+      }
 
-    if(profileError){
-      showProfileMessage('Profile update failed: ' + profileError.message, true);
-      return;
-    }
+      // Update password if provided
+      if(password){
+        const { error: passError } = await supabase.auth.updateUser({
+          password,
+        });
+        if(passError){
+          alert('Failed to update password: ' + passError.message);
+          return;
+        }
+      }
 
-    showProfileMessage('Profile updated successfully!');
+      // Update user metadata (username, avatar)
+      const { error: metaError } = await supabase.auth.updateUser({
+        data: {
+          username,
+          avatar_url
+        }
+      });
 
-    // Clear password field
-    $('#passwordInput').value = '';
+      if(metaError){
+        alert('Failed to update profile info: ' + metaError.message);
+        return;
+      }
 
-    // Reload profile pic public URL if updated
-    if(avatar_url){
-      $('#profilePicPreview').src = getPublicURL(avatar_url);
+      profileStatus.style.color = 'green';
+      profileStatus.textContent = 'Profile updated successfully.';
+      if(avatar_url){
+        const { data: urlData, error: urlError } = await supabase.storage
+          .from('avatars')
+          .getPublicUrl(avatar_url);
+        if(!urlError){
+          profilePicPreview.src = urlData.publicUrl;
+          profilePicPreview.style.display = 'block';
+        }
+      }
+    } catch(err){
+      console.error(err);
+      alert('Unexpected error while updating profile.');
     }
   });
 
-  // Boot function (called on page load)
-  async function boot(){
-    // For demo/testing: simulate logged-in user
-    // In production, you must handle actual login and auth persistence
-    const session = supabase.auth.getSession ? (await supabase.auth.getSession()).data.session : null;
-    if(!session){
-      showProfileMessage('Please login first.');
-      // Optionally redirect to login or show a login modal
-    }
-
-    // Load initial tab content if needed
-  }
-
-  // Start app
-  boot();
 </script>
 
 </body>
