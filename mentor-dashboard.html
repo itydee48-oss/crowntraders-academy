@@ -1,295 +1,594 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Mentor Dashboard</title>
-<style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f8f4f0;
-    color: #3a3a3a;
-    margin: 0;
-    padding: 0;
-  }
-  .tabs {
-    display: flex;
-    background: #d9cbbd;
-    border-bottom: 2px solid #b89f85;
-  }
-  .tab {
-    flex: 1;
-    padding: 15px;
-    cursor: pointer;
-    text-align: center;
-    font-weight: 600;
-    color: #5a4a3c;
-    transition: background 0.3s;
-  }
-  .tab:hover {
-    background: #b89f85;
-    color: white;
-  }
-  .tab.active {
-    background: #a68466;
-    color: white;
-  }
-  .tab-content {
-    padding: 20px;
-    background: white;
-    min-height: 400px;
-  }
-  form label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-  form input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  button {
-    background: #a68466;
-    border: none;
-    padding: 10px 20px;
-    color: white;
-    font-weight: 700;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  button:hover {
-    background: #8c6f4e;
-  }
-  #chat-window {
-    border: 1px solid #ccc;
-    height: 300px;
-    overflow-y: auto;
-    padding: 10px;
-    background: #f5f1eb;
-    border-radius: 6px;
-  }
-  .message {
-    margin-bottom: 10px;
-    max-width: 70%;
-    padding: 8px 12px;
-    border-radius: 15px;
-    clear: both;
-  }
-  .message.sent {
-    background-color: #a68466;
-    color: white;
-    float: right;
-  }
-  .message.received {
-    background-color: #d9cbbd;
-    color: #3a3a3a;
-    float: left;
-  }
-  #profile-msg {
-    margin-top: 10px;
-    font-weight: 600;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mentor Dashboard - Luxe Tabs</title>
+  <style>
+    /* --- Luxe Nude Theme & General Styling --- */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8f4f0;
+      color: #3a3a3a;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Tabs Container */
+    .tabs {
+      display: flex;
+      background: #d9cbbd;
+      border-bottom: 3px solid #b89f85;
+      user-select: none;
+      box-shadow: 0 2px 6px rgba(168,139,96,0.25);
+    }
+    .tab {
+      flex: 1;
+      padding: 16px 20px;
+      text-align: center;
+      font-weight: 700;
+      color: #5a4a3c;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+      letter-spacing: 0.03em;
+    }
+    .tab:hover:not(.active) {
+      background: #b89f85;
+      color: white;
+    }
+    .tab.active {
+      background: #a68466;
+      color: white;
+      box-shadow: inset 0 -4px 0 #7a644a;
+    }
+
+    /* Content Area */
+    .tab-content {
+      flex-grow: 1;
+      background: white;
+      padding: 30px 40px;
+      box-sizing: border-box;
+      min-height: 500px;
+    }
+    .tab-content > * {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    /* Dashboard Stats Cards */
+    .stats {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .stat-card {
+      background: #f1e9d2;
+      border-radius: 12px;
+      padding: 25px 30px;
+      box-shadow: 0 4px 8px rgba(168,139,96,0.15);
+      flex: 1 1 250px;
+      color: #5a4a3c;
+      font-weight: 600;
+      text-align: center;
+      transition: transform 0.25s ease;
+      cursor: default;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(168,139,96,0.3);
+    }
+    .stat-value {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+    .stat-label {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* Section Titles */
+    h2 {
+      font-weight: 900;
+      color: #6d5c43;
+      margin-bottom: 20px;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+
+    /* Form Styling */
+    form {
+      max-width: 450px;
+      margin: 0 auto;
+    }
+    form label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #7a644a;
+      letter-spacing: 0.03em;
+    }
+    form input, form textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 18px;
+      border: 1.5px solid #d4c8a8;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: #3a3a3a;
+      transition: border-color 0.3s ease;
+    }
+    form input:focus, form textarea:focus {
+      border-color: #a68466;
+      outline: none;
+    }
+    button {
+      display: block;
+      width: 100%;
+      background: #a68466;
+      color: white;
+      border: none;
+      padding: 15px 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      letter-spacing: 0.05em;
+    }
+    button:hover {
+      background: #8c6f4e;
+    }
+    #profile-msg {
+      margin-top: 12px;
+      font-weight: 700;
+      color: #4a774a;
+      text-align: center;
+      min-height: 24px;
+    }
+
+    /* Chat Styles */
+    #chat-window {
+      background: #f5f1eb;
+      border-radius: 12px;
+      height: 320px;
+      overflow-y: auto;
+      padding: 15px 20px;
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      line-height: 1.3;
+      color: #3a3a3a;
+    }
+    .message {
+      max-width: 70%;
+      padding: 10px 16px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      clear: both;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+    .message.sent {
+      background-color: #a68466;
+      color: white;
+      float: right;
+      text-align: right;
+      box-shadow: 0 3px 6px rgba(168,139,96,0.5);
+    }
+    .message.received {
+      background-color: #d9cbbd;
+      color: #3a3a3a;
+      float: left;
+      box-shadow: 0 3px 6px rgba(168,139,96,0.2);
+    }
+    #chat-form {
+      display: flex;
+      gap: 10px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    #chat-input {
+      flex-grow: 1;
+      padding: 12px 16px;
+      border: 1.5px solid #d4c8a8;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: #3a3a3a;
+      transition: border-color 0.3s ease;
+    }
+    #chat-input:focus {
+      border-color: #a68466;
+      outline: none;
+    }
+
+    /* TradingView Widget container */
+    #tradingview-widget {
+      max-width: 900px;
+      margin: 30px auto 40px auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 12px rgba(168,139,96,0.25);
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+      .stats {
+        flex-direction: column;
+      }
+      .stat-card {
+        max-width: 100%;
+      }
+      #chat-form {
+        flex-direction: column;
+      }
+      #chat-input {
+        width: 100%;
+      }
+      button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="tabs">
-  <div class="tab active" data-tab="dashboard">Dashboard</div>
-  <div class="tab" data-tab="profile">Profile Settings</div>
-  <div class="tab" data-tab="chat">Chat</div>
-</div>
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" data-tab="dashboard">Dashboard</div>
+    <div class="tab" data-tab="profile">Profile Settings</div>
+    <div class="tab" data-tab="chat">Chat</div>
+  </div>
 
-<div id="dashboard" class="tab-content">
-  <h2>Welcome Mentor!</h2>
-  <p>This is your overview panel. Here you can see your stats and upcoming lessons.</p>
-</div>
+  <!-- Dashboard Tab -->
+  <section id="dashboard" class="tab-content">
+    <h2>Your Overview</h2>
+    <div class="stats">
+      <div class="stat-card" id="stat-clients">
+        <div class="stat-value" id="clients-count">0</div>
+        <div class="stat-label">Active Clients</div>
+      </div>
+      <div class="stat-card" id="stat-lessons">
+        <div class="stat-value" id="lessons-count">0</div>
+        <div class="stat-label">Upcoming Lessons</div>
+      </div>
+      <div class="stat-card" id="stat-earnings">
+        <div class="stat-value" id="earnings-amount">KES 0</div>
+        <div class="stat-label">Total Earnings</div>
+      </div>
+    </div>
 
-<div id="profile" class="tab-content" style="display:none;">
-  <h2>Update Profile</h2>
-  <form id="profile-form">
-    <label for="name">Name:</label>
-    <input type="text" id="name" required />
-    
-    <label for="email">Email:</label>
-    <input type="email" id="email" required />
-    
-    <label for="photo">Photo URL:</label>
-    <input type="url" id="photo" />
-    
-    <button type="submit">Save Changes</button>
-  </form>
-  <div id="profile-msg"></div>
-</div>
+    <div id="tradingview-widget">
+      <!-- TradingView Widget will load here -->
+    </div>
 
-<div id="chat" class="tab-content" style="display:none;">
-  <h2>Chat with Clients</h2>
-  <div id="chat-window"></div>
-  <form id="chat-form" style="margin-top:10px;">
-    <input type="text" id="chat-input" placeholder="Type your message..." required autocomplete="off" style="width:80%;" />
-    <button type="submit">Send</button>
-  </form>
-</div>
+    <h2>Recent Uploads</h2>
+    <ul id="uploads-list" style="max-width:900px; margin:auto; color:#5a4a3c;">
+      <!-- Dynamic list of uploaded videos/docs -->
+    </ul>
+  </section>
 
-<!-- Include Supabase library -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // Replace with your Supabase project info
-  const supabaseUrl = 'YOUR_SUPABASE_URL';
-  const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
-  const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+  <!-- Profile Tab -->
+  <section id="profile" class="tab-content" style="display:none;">
+    <h2>Update Your Profile</h2>
+    <form id="profile-form">
+      <label for="name">Full Name</label>
+      <input id="name" type="text" required />
 
-  // Simple tab switcher
-  const tabs = document.querySelectorAll('.tab');
-  const contents = document.querySelectorAll('.tab-content');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      contents.forEach(c => (c.style.display = 'none'));
-      document.getElementById(tab.dataset.tab).style.display = 'block';
-    });
-  });
+      <label for="email">Email Address</label>
+      <input id="email" type="email" required />
 
-  // Profile management
-  const profileForm = document.getElementById('profile-form');
-  const profileMsg = document.getElementById('profile-msg');
+      <label for="photo">Photo URL</label>
+      <input id="photo" type="url" placeholder="Optional" />
 
-  async function loadProfile() {
-    const user = supabase.auth.getUser();
-    if (!user) {
-      profileMsg.textContent = 'You must be logged in.';
-      return;
-    }
+      <button type="submit">Save Changes</button>
+    </form>
+    <div id="profile-msg"></div>
+  </section>
 
-    // fetch user from supabase auth
-    const { data: { user: currentUser }, error: authErr } = await supabase.auth.getUser();
-    if (authErr || !currentUser) {
-      profileMsg.textContent = 'You must be logged in.';
-      return;
-    }
+  <!-- Chat Tab -->
+  <section id="chat" class="tab-content" style="display:none;">
+    <h2>Chat with Clients</h2>
+    <div id="chat-window"></div>
+    <form id="chat-form">
+      <input type="text" id="chat-input" placeholder="Type your message..." required autocomplete="off" />
+      <button type="submit">Send</button>
+    </form>
+  </section>
 
-    // Fetch mentor profile by user id
-    let { data, error } = await supabase
-      .from('mentors')
-      .select('name, email, photo_url')
-      .eq('user_id', currentUser.id)
-      .single();
+  <!-- Supabase and JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // --- Config ---
+    const supabaseUrl = 'YOUR_SUPABASE_URL';
+    const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
+    const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-    if (error) {
-      profileMsg.textContent = 'Error loading profile.';
-      return;
-    }
+    // Current logged-in user info (to be populated)
+    let currentUser = null;
+    let mentorProfile = null;
 
-    document.getElementById('name').value = data?.name || '';
-    document.getElementById('email').value = data?.email || currentUser.email;
-    document.getElementById('photo').value = data?.photo_url || '';
-  }
-
-  profileForm.addEventListener('submit', async e => {
-    e.preventDefault();
-    const { data: { user }, error: authErr } = await supabase.auth.getUser();
-    if (authErr || !user) {
-      profileMsg.textContent = 'You must be logged in.';
-      return;
-    }
-
-    const updates = {
-      user_id: user.id,
-      name: document.getElementById('name').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      photo_url: document.getElementById('photo').value.trim(),
-      updated_at: new Date().toISOString(),
-    };
-
-    let { error } = await supabase.from('mentors').upsert(updates, {
-      onConflict: 'user_id',
+    // Tab functionality
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        contents.forEach(c => (c.style.display = 'none'));
+        document.getElementById(tab.dataset.tab).style.display = 'block';
+      });
     });
 
-    if (error) {
-      profileMsg.textContent = 'Failed to update profile.';
-    } else {
-      profileMsg.style.color = 'green';
-      profileMsg.textContent = 'Profile updated successfully.';
-    }
-  });
-
-  // Chat system
-  const chatWindow = document.getElementById('chat-window');
-  const chatForm = document.getElementById('chat-form');
-  const chatInput = document.getElementById('chat-input');
-
-  // Hardcoded client id for demo - replace with dynamic client selection
-  const clientId = 'CLIENT_USER_ID_HERE';
-
-  async function loadMessages() {
-    const { data: { user }, error: authErr } = await supabase.auth.getUser();
-    if (authErr || !user) return;
-
-    let { data, error } = await supabase
-      .from('messages')
-      .select('*')
-      .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
-      .order('created_at', { ascending: true });
-
-    if (error) {
-      chatWindow.innerHTML = '<p>Error loading messages.</p>';
-      return;
+    // --- Load current user ---
+    async function loadUser() {
+      const { data, error } = await supabase.auth.getUser();
+      if (error || !data.user) {
+        alert('You must be logged in to access this page.');
+        // Redirect or show login prompt
+        return;
+      }
+      currentUser = data.user;
     }
 
-    chatWindow.innerHTML = '';
-    data.forEach(msg => {
-      const div = document.createElement('div');
-      div.classList.add('message');
-      div.classList.add(msg.sender_id === user.id ? 'sent' : 'received');
-      div.textContent = msg.message;
-      chatWindow.appendChild(div);
+    // --- Load mentor profile ---
+    async function loadProfile() {
+      if (!currentUser) return;
+      const { data, error } = await supabase
+        .from('mentors')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .single();
+
+      if (error) {
+        console.error('Error loading mentor profile:', error);
+        return;
+      }
+      mentorProfile = data;
+
+      // Populate profile form
+      document.getElementById('name').value = mentorProfile?.name || '';
+      document.getElementById('email').value = mentorProfile?.email || currentUser.email;
+      document.getElementById('photo').value = mentorProfile?.photo_url || '';
+    }
+
+    // --- Save profile updates ---
+    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+
+      const updates = {
+        user_id: currentUser.id,
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        photo_url: document.getElementById('photo').value.trim(),
+        updated_at: new Date().toISOString(),
+      };
+
+      const { error } = await supabase.from('mentors').upsert(updates, {
+        onConflict: 'user_id',
+      });
+
+      const msgEl = document.getElementById('profile-msg');
+      if (error) {
+        msgEl.style.color = 'red';
+        msgEl.textContent = 'Failed to update profile.';
+      } else {
+        msgEl.style.color = 'green';
+        msgEl.textContent = 'Profile updated successfully.';
+      }
     });
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  }
 
-  chatForm.addEventListener('submit', async e => {
-    e.preventDefault();
-    const { data: { user }, error: authErr } = await supabase.auth.getUser();
-    if (authErr || !user) return;
+    // --- Load Dashboard Stats ---
+    async function loadStats() {
+      if (!currentUser) return;
+      // Active clients count for this mentor
+      const { data: clients, error: clientsError } = await supabase
+        .from('clients')
+        .select('id')
+        .eq('mentor_id', currentUser.id);
 
-    const messageText = chatInput.value.trim();
-    if (!messageText) return;
+      // Upcoming lessons count (dummy example, assumes lessons table exists)
+      const { data: lessons, error: lessonsError } = await supabase
+        .from('lessons')
+        .select('id')
+        .eq('mentor_id', currentUser.id)
+        .gte('date', new Date().toISOString());
 
-    const { error } = await supabase.from('messages').insert([
-      {
-        sender_id: user.id,
-        receiver_id: clientId,
-        message: messageText,
-      },
-    ]);
+      // Earnings sum (dummy example, assumes payments table exists)
+      const { data: earningsData, error: earningsError } = await supabase
+        .from('payments')
+        .select('amount')
+        .eq('mentor_id', currentUser.id);
 
-    if (error) {
-      alert('Failed to send message.');
-      return;
+      if (!clientsError) document.getElementById('clients-count').textContent = clients.length;
+      if (!lessonsError) document.getElementById('lessons-count').textContent = lessons.length;
+      if (!earningsError) {
+        const total = earningsData.reduce((acc, p) => acc + (p.amount || 0), 0);
+        document.getElementById('earnings-amount').textContent = `KES ${total.toLocaleString()}`;
+      }
     }
 
-    chatInput.value = '';
-    loadMessages();
-  });
+    // --- Load Recent Uploads ---
+    async function loadUploads() {
+      if (!currentUser) return;
+      const { data, error } = await supabase
+        .from('uploads')
+        .select('*')
+        .eq('mentor_id', currentUser.id)
+        .order('uploaded_at', { ascending: false })
+        .limit(5);
 
-  // Real-time subscription for new messages (incoming to this user)
-  supabase
-    .channel(`public:messages:receiver_id=eq.${supabase.auth.getUser().then(res => res.data.user?.id)}`)
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+      const uploadsList = document.getElementById('uploads-list');
+      uploadsList.innerHTML = '';
+
+      if (error) {
+        uploadsList.innerHTML = '<li>Error loading uploads.</li>';
+        return;
+      }
+      if (data.length === 0) {
+        uploadsList.innerHTML = '<li>No recent uploads found.</li>';
+        return;
+      }
+
+      data.forEach(upload => {
+        const li = document.createElement('li');
+        const name = upload.title || 'Untitled';
+        const link = upload.url || '#';
+        li.innerHTML = `<a href="${link}" target="_blank" rel="noopener noreferrer" style="color:#a68466;text-decoration:none;">${name}</a>`;
+        uploadsList.appendChild(li);
+      });
+    }
+
+    // --- TradingView Widget Setup ---
+    function loadTradingView() {
+      const container = document.getElementById('tradingview-widget');
+      container.innerHTML = '';
+      const script = document.createElement('script');
+      script.src = "https://s3.tradingview.com/tv.js";
+      script.onload = () => {
+        new TradingView.widget({
+          width: "100%",
+          height: 400,
+          symbol: "FOREXCOM:EURUSD",
+          interval: "60",
+          timezone: "Etc/UTC",
+          theme: "Light",
+          style: "1",
+          locale: "en",
+          toolbar_bg: "#f8f4f0",
+          enable_publishing: false,
+          allow_symbol_change: true,
+          container_id: "tradingview-widget"
+        });
+      };
+      container.appendChild(script);
+    }
+
+    // --- Chat System ---
+
+    const chatWindow = document.getElementById('chat-window');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+
+    // You will want to dynamically select the client to chat with in a real app.
+    // For demo, we'll chat with first client of mentor.
+    let chatClientId = null;
+
+    async function loadChatClient() {
+      if (!currentUser) return;
+      const { data: clients, error } = await supabase
+        .from('clients')
+        .select('user_id')
+        .eq('mentor_id', currentUser.id)
+        .limit(1);
+
+      if (error || clients.length === 0) {
+        chatWindow.innerHTML = '<p>No clients available to chat.</p>';
+        chatClientId = null;
+        return;
+      }
+
+      chatClientId = clients[0].user_id;
       loadMessages();
-    })
-    .subscribe();
+      setupRealtimeChat();
+    }
 
-  // On page load
-  (async () => {
-    await loadProfile();
-    await loadMessages();
-  })();
-</script>
+    async function loadMessages() {
+      if (!currentUser || !chatClientId) return;
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
+        .order('created_at', { ascending: true });
 
+      if (error) {
+        chatWindow.innerHTML = '<p>Error loading messages.</p>';
+        return;
+      }
+
+      chatWindow.innerHTML = '';
+      data.forEach(msg => {
+        // Show only messages between mentor and chatClientId
+        if (
+          (msg.sender_id === currentUser.id && msg.receiver_id === chatClientId) ||
+          (msg.sender_id === chatClientId && msg.receiver_id === currentUser.id)
+        ) {
+          const div = document.createElement('div');
+          div.classList.add('message');
+          div.classList.add(msg.sender_id === currentUser.id ? 'sent' : 'received');
+          div.textContent = msg.message;
+          chatWindow.appendChild(div);
+        }
+      });
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUser || !chatClientId) return;
+
+      const messageText = chatInput.value.trim();
+      if (!messageText) return;
+
+      const { error } = await supabase.from('messages').insert([
+        {
+          sender_id: currentUser.id,
+          receiver_id: chatClientId,
+          message: messageText,
+          created_at: new Date().toISOString()
+        }
+      ]);
+
+      if (error) {
+        alert('Failed to send message.');
+        return;
+      }
+
+      chatInput.value = '';
+      loadMessages();
+    });
+
+    // Setup real-time subscription to new messages
+    function setupRealtimeChat() {
+      if (!currentUser) return;
+      supabase
+        .channel('public:messages')
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'messages' },
+          payload => {
+            if (
+              (payload.new.sender_id === currentUser.id && payload.new.receiver_id === chatClientId) ||
+              (payload.new.sender_id === chatClientId && payload.new.receiver_id === currentUser.id)
+            ) {
+              loadMessages();
+            }
+          }
+        )
+        .subscribe();
+    }
+
+    // --- Initialization ---
+    async function init() {
+      await loadUser();
+      await loadProfile();
+      await loadStats();
+      await loadUploads();
+      await loadTradingView();
+      await loadChatClient();
+    }
+
+    window.onload = init;
+  </script>
 </body>
 </html>
