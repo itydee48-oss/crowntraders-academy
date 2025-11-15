@@ -1,397 +1,247 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Mentor Dashboard</title>
-  <style>
-    /* Your original CSS here, unchanged */
-    :root {
-      --gold-dark: #b8860b;
-      --bg-light: #f9f6f2;
-      --text-dark: #333;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      background: var(--bg-light);
-      color: var(--text-dark);
-      margin: 0; padding: 0;
-    }
-    header, main, aside {
-      padding: 10px;
-    }
-    .tabs {
-      display: flex;
-      border-bottom: 2px solid var(--gold-dark);
-      margin-bottom: 15px;
-    }
-    .tab {
-      padding: 10px 20px;
-      cursor: pointer;
-      font-weight: 600;
-      border-bottom: 3px solid transparent;
-    }
-    .tab.active {
-      border-color: var(--gold-dark);
-      color: var(--gold-dark);
-    }
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    button.btn {
-      cursor: pointer;
-      background: transparent;
-      border: 1px solid var(--gold-dark);
-      color: var(--gold-dark);
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-weight: 600;
-      transition: background 0.2s, color 0.2s;
-    }
-    button.btn:hover {
-      background: var(--gold-dark);
-      color: #fff;
-    }
-    .btn.ghost {
-      background: none;
-      border: none;
-      color: var(--gold-dark);
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .card {
-      background: #fff;
-      padding: 15px;
-      border-radius: 6px;
-      box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      margin: 10px 0 5px 0;
-      font-weight: 600;
-    }
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    input[type="file"] {
-      width: 100%;
-      padding: 8px 6px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-    #profilePicPreview {
-      margin-top: 10px;
-      max-width: 150px;
-      border-radius: 4px;
-      display: block;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Platform</title>
+    <style>
+        :root {
+            --gold-dark: #b8941f;
+            --gold: #d4af37;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .btn.ghost {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+        }
+        
+        .btn.ghost:hover {
+            background: var(--gold);
+            color: white;
+        }
+        
+        .tv-wrapper {
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        #chatWindow {
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        
+        .message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            background: #f5f5f5;
+        }
+        
+        .message.system {
+            background: #fff3cd;
+            border-left: 3px solid var(--gold);
+        }
+    </style>
 </head>
 <body>
+    <main>
+        <div class="container">
+            <!-- TradingView Widget -->
+            <div class="card" style="margin-top:18px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <div style="font-weight:800; color:var(--gold-dark)">Trading Chart</div>
+                    <div>
+                        <button id="btnFullScreenTV" class="btn ghost">Fullscreen</button>
+                    </div>
+                </div>
+                <div class="tv-wrapper" id="tvContainer">
+                    <!-- TradingView Chart -->
+                    <div id="tv_embed"></div>
+                </div>
+            </div>
 
-<header>
-  <h1>Mentor Dashboard</h1>
-</header>
-
-<main>
-  <div class="tabs" id="tabsContainer">
-    <div class="tab active" data-tab="chat">Chat</div>
-    <div class="tab" data-tab="tradingview">TradingView</div>
-    <div class="tab" data-tab="profile">Profile</div>
-  </div>
-
-  <div id="chat" class="tab-content active">
-    <div id="chatWindow" class="card" style="height:300px; overflow-y:auto; background:#fff; border:1px solid #ddd; padding:10px;">
-      <!-- Chat messages appear here -->
-    </div>
-    <button id="btnClearChat" class="btn" style="margin-top:10px;">Clear Chat View</button>
-  </div>
-
-  <div id="tradingview" class="tab-content">
-    <div class="card" style="margin-top:18px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <div style="font-weight:800; color:var(--gold-dark)">Trading Chart</div>
-        <div>
-          <button id="btnFullScreenTV" class="btn ghost">Fullscreen</button>
+            <!-- Chat Section -->
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <div style="font-weight:800; color:var(--gold-dark)">Chat</div>
+                    <div>
+                        <button id="btnClearChat" class="btn ghost">Clear Chat</button>
+                    </div>
+                </div>
+                <div id="chatWindow"></div>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="chatInput" placeholder="Type your message..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:5px;">
+                    <button id="btnSendMessage" class="btn" style="background:var(--gold); color:white;">Send</button>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="tv-wrapper" id="tvContainer">
-        <div id="tv_embed"></div>
-      </div>
-    </div>
-  </div>
+    </main>
 
-  <div id="profile" class="tab-content">
-    <div class="card">
-      <h2>Update Profile</h2>
-      <form id="profileForm">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required>
-
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="password">New Password (leave blank to keep current)</label>
-        <input type="password" id="password" name="password" placeholder="••••••">
-
-        <label for="profilePic">Profile Picture</label>
-        <input type="file" id="profilePic" accept="image/*">
-        <img id="profilePicPreview" src="" alt="Profile Preview" style="display:none;">
-
-        <button type="submit" class="btn" style="margin-top:15px;">Save Changes</button>
-      </form>
-      <div id="profileStatus" style="margin-top:10px; color: green;"></div>
-    </div>
-  </div>
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // Replace these with your real keys from the ones you gave
-  const SUPABASE_URL = "https://eygjxxdgxzatchqgwvep.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg";
-
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // Tab switching logic
-  const tabs = document.querySelectorAll('.tab');
-  const tabContents = document.querySelectorAll('.tab-content');
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const target = tab.getAttribute('data-tab');
-
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-
-      tabContents.forEach(tc => {
-        if(tc.id === target){
-          tc.classList.add('active');
-        } else {
-          tc.classList.remove('active');
-        }
-      });
-    });
-  });
-
-  // Helper selector function
-  function $(selector){ return document.querySelector(selector); }
-
-  // Clear Chat button logic
-  $('#btnClearChat').addEventListener('click', async () => {
-    if(!confirm('Clear local chat view? This will not delete messages from database.')) return;
-    $('#chatWindow').innerHTML = '';
-  });
-
-  // TradingView embed + fullscreen control
-  function loadTradingView(){
-    const container = document.getElementById('tv_embed');
-    container.innerHTML = '';
-    const scr = document.createElement('script');
-    scr.src = 'https://s3.tradingview.com/tv.js';
-    scr.onload = () => {
-      try {
-        new TradingView.widget({
-          "width": "100%",
-          "height": 400,
-          "symbol": "FOREXCOM:EURUSD",
-          "interval": "60",
-          "timezone": "Etc/UTC",
-          "theme": "Light",
-          "style": "1",
-          "locale": "en",
-          "toolbar_bg": "#f9f6f2",
-          "enable_publishing": false,
-          "container_id": "tv_embed"
+    <script>
+        // Helper function to select elements
+        const $ = (selector) => document.querySelector(selector);
+        
+        /**********************
+         * Chat functionality
+         **********************/
+        // Clear chat button
+        $('#btnClearChat').addEventListener('click', async () => {
+            if(!confirm('Clear local chat view? This will not delete messages from database.')) return;
+            $('#chatWindow').innerHTML = '';
+            addSystemMessage('Chat cleared successfully.');
         });
-      } catch(err) {
-        console.error('TradingView init error', err);
-      }
-    };
-    document.getElementById('tvContainer').appendChild(scr);
-  }
 
-  $('#btnFullScreenTV').addEventListener('click', () => {
-    const elem = document.getElementById('tvContainer');
-    if(!document.fullscreenElement){
-      elem.requestFullscreen?.();
-    } else {
-      document.exitFullscreen?.();
-    }
-  });
-
-  // Load TradingView on page load
-  loadTradingView();
-
-  // Profile update logic
-  const profileForm = $('#profileForm');
-  const profilePicInput = $('#profilePic');
-  const profilePicPreview = $('#profilePicPreview');
-  const profileStatus = $('#profileStatus');
-
-  let profilePicFile = null;
-
-  // Preview profile pic on select
-  profilePicInput.addEventListener('change', e => {
-    const file = e.target.files[0];
-    if(file && file.type.startsWith('image/')){
-      profilePicFile = file;
-      const reader = new FileReader();
-      reader.onload = () => {
-        profilePicPreview.src = reader.result;
-        profilePicPreview.style.display = 'block';
-      }
-      reader.readAsDataURL(file);
-    } else {
-      profilePicPreview.src = '';
-      profilePicPreview.style.display = 'none';
-      profilePicFile = null;
-    }
-  });
-
-  async function loadUserProfile() {
-    const user = supabase.auth.getUser();
-    const { data, error } = await supabase.auth.getUser();
-
-    if(error){
-      console.error('Error getting user:', error);
-      return;
-    }
-    if(!data || !data.user) return;
-
-    const userData = data.user;
-
-    $('#username').value = userData.user_metadata?.username || '';
-    $('#email').value = userData.email || '';
-
-    // Load profile pic from Supabase storage if exists
-    if(userData.user_metadata?.avatar_url){
-      const { data: urlData, error: urlError } = await supabase.storage
-        .from('avatars')
-        .getPublicUrl(userData.user_metadata.avatar_url);
-
-      if(urlError){
-        console.error('Error fetching profile pic url:', urlError);
-      } else {
-        profilePicPreview.src = urlData.publicUrl;
-        profilePicPreview.style.display = 'block';
-      }
-    }
-  }
-
-  // On page load get profile
-  loadUserProfile();
-
-  profileForm.addEventListener('submit', async e => {
-    e.preventDefault();
-
-    profileStatus.textContent = '';
-    const username = $('#username').value.trim();
-    const email = $('#email').value.trim();
-    const password = $('#password').value;
-
-    if(!username || !email){
-      alert('Username and Email are required');
-      return;
-    }
-
-    const user = await supabase.auth.getUser();
-    if(!user.data.user){
-      alert('No authenticated user found.');
-      return;
-    }
-
-    const userId = user.data.user.id;
-
-    // Upload profile picture if changed
-    let avatar_url = null;
-    if(profilePicFile){
-      const fileExt = profilePicFile.name.split('.').pop();
-      const fileName = `${userId}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, profilePicFile, { upsert: true });
-
-      if(uploadError){
-        alert('Failed to upload profile picture.');
-        return;
-      }
-      avatar_url = filePath;
-    }
-
-    // Update user metadata
-    const updates = {
-      id: userId,
-      email,
-      password: password || undefined, // only update if provided
-      user_metadata: {
-        username,
-        avatar_url: avatar_url || undefined,
-      }
-    };
-
-    try {
-      // Update email/password requires special methods
-      // First update email if changed
-      if(email !== user.data.user.email){
-        const { error: emailError } = await supabase.auth.updateUser({
-          email,
+        // Send message button
+        $('#btnSendMessage').addEventListener('click', sendMessage);
+        
+        // Enter key to send message
+        $('#chatInput').addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                sendMessage();
+            }
         });
-        if(emailError){
-          alert('Failed to update email: ' + emailError.message);
-          return;
-        }
-      }
 
-      // Update password if provided
-      if(password){
-        const { error: passError } = await supabase.auth.updateUser({
-          password,
+        function sendMessage() {
+            const input = $('#chatInput');
+            const message = input.value.trim();
+            
+            if(message) {
+                appendMessageToWindow({
+                    sender_id: 'user',
+                    sender_label: 'You',
+                    message: message,
+                    created_at: new Date().toISOString()
+                });
+                input.value = '';
+                
+                // Auto-scroll to bottom
+                $('#chatWindow').scrollTop = $('#chatWindow').scrollHeight;
+            }
+        }
+
+        /**********************
+         * TradingView embed + fullscreen control
+         **********************/
+        function loadTradingView(){
+            const container = document.getElementById('tv_embed');
+            container.innerHTML = '';
+            const scr = document.createElement('script');
+            scr.src = 'https://s3.tradingview.com/tv.js';
+            scr.onload = () => {
+                try {
+                    new TradingView.widget({
+                        "width": "100%",
+                        "height": 400,
+                        "symbol": "FOREXCOM:EURUSD",
+                        "interval": "60",
+                        "timezone": "Etc/UTC",
+                        "theme": "Light",
+                        "style": "1",
+                        "locale": "en",
+                        "toolbar_bg": "#f9f6f2",
+                        "enable_publishing": false,
+                        "container_id": "tv_embed"
+                    });
+                } catch(err) {
+                    console.error('TradingView init error', err);
+                }
+            };
+            document.getElementById('tvContainer').appendChild(scr);
+        }
+
+        // Fullscreen button
+        $('#btnFullScreenTV').addEventListener('click', () => {
+            const elem = document.getElementById('tvContainer');
+            if(!document.fullscreenElement) {
+                if(elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if(elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else if(elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                }
+            } else {
+                if(document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if(document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if(document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
         });
-        if(passError){
-          alert('Failed to update password: ' + passError.message);
-          return;
+
+        /**********************
+         * Message handling functions
+         **********************/
+        function appendMessageToWindow(msg) {
+            const chatWindow = $('#chatWindow');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${msg.sender_id === 'system' ? 'system' : ''}`;
+            
+            const time = new Date(msg.created_at).toLocaleTimeString();
+            messageDiv.innerHTML = `
+                <strong>${msg.sender_label}</strong> 
+                <small style="color:#666">(${time})</small><br>
+                ${msg.message}
+            `;
+            
+            chatWindow.appendChild(messageDiv);
         }
-      }
 
-      // Update user metadata (username, avatar)
-      const { error: metaError } = await supabase.auth.updateUser({
-        data: {
-          username,
-          avatar_url
+        function addSystemMessage(text) {
+            appendMessageToWindow({ 
+                sender_id: 'system', 
+                sender_label: 'System', 
+                message: text, 
+                created_at: new Date().toISOString() 
+            });
         }
-      });
 
-      if(metaError){
-        alert('Failed to update profile info: ' + metaError.message);
-        return;
-      }
-
-      profileStatus.style.color = 'green';
-      profileStatus.textContent = 'Profile updated successfully.';
-      if(avatar_url){
-        const { data: urlData, error: urlError } = await supabase.storage
-          .from('avatars')
-          .getPublicUrl(avatar_url);
-        if(!urlError){
-          profilePicPreview.src = urlData.publicUrl;
-          profilePicPreview.style.display = 'block';
+        /**********************
+         * Initialize the application
+         **********************/
+        function boot() {
+            // Load TradingView
+            loadTradingView();
+            
+            // Add welcome message
+            addSystemMessage('Welcome to the trading platform! Charts and chat are ready.');
+            
+            // Test all buttons are accessible
+            console.log('All buttons initialized:', {
+                fullscreen: $('#btnFullScreenTV'),
+                clearChat: $('#btnClearChat'),
+                sendMessage: $('#btnSendMessage')
+            });
         }
-      }
-    } catch(err){
-      console.error(err);
-      alert('Unexpected error while updating profile.');
-    }
-  });
 
-</script>
-
+        // Start the application when page loads
+        document.addEventListener('DOMContentLoaded', boot);
+    </script>
 </body>
 </html>
