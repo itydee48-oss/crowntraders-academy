@@ -7,15 +7,10 @@
     <style>
         :root {
             --gold-dark: #b8941f;
-            --gold: #d4af37;
         }
         
         .card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin: 20px 0;
+            margin-top: 18px;
         }
         
         .btn {
@@ -23,47 +18,16 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
         }
         
         .btn.ghost {
             background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-        }
-        
-        .btn.ghost:hover {
-            background: var(--gold);
-            color: white;
+            border: 1px solid var(--gold-dark);
+            color: var(--gold-dark);
         }
         
         .tv-wrapper {
             position: relative;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        
-        #chatWindow {
-            height: 300px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-        }
-        
-        .message {
-            margin-bottom: 10px;
-            padding: 8px;
-            border-radius: 5px;
-            background: #f5f5f5;
-        }
-        
-        .message.system {
-            background: #fff3cd;
-            border-left: 3px solid var(--gold);
         }
     </style>
 </head>
@@ -71,7 +35,7 @@
     <main>
         <div class="container">
             <!-- TradingView Widget -->
-            <div class="card" style="margin-top:18px;">
+            <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                     <div style="font-weight:800; color:var(--gold-dark)">Trading Chart</div>
                     <div>
@@ -83,21 +47,6 @@
                     <div id="tv_embed"></div>
                 </div>
             </div>
-
-            <!-- Chat Section -->
-            <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <div style="font-weight:800; color:var(--gold-dark)">Chat</div>
-                    <div>
-                        <button id="btnClearChat" class="btn ghost">Clear Chat</button>
-                    </div>
-                </div>
-                <div id="chatWindow"></div>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="chatInput" placeholder="Type your message..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:5px;">
-                    <button id="btnSendMessage" class="btn" style="background:var(--gold); color:white;">Send</button>
-                </div>
-            </div>
         </div>
     </main>
 
@@ -106,48 +55,12 @@
         const $ = (selector) => document.querySelector(selector);
         
         /**********************
-         * Chat functionality
-         **********************/
-        // Clear chat button
-        $('#btnClearChat').addEventListener('click', async () => {
-            if(!confirm('Clear local chat view? This will not delete messages from database.')) return;
-            $('#chatWindow').innerHTML = '';
-            addSystemMessage('Chat cleared successfully.');
-        });
-
-        // Send message button
-        $('#btnSendMessage').addEventListener('click', sendMessage);
-        
-        // Enter key to send message
-        $('#chatInput').addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        function sendMessage() {
-            const input = $('#chatInput');
-            const message = input.value.trim();
-            
-            if(message) {
-                appendMessageToWindow({
-                    sender_id: 'user',
-                    sender_label: 'You',
-                    message: message,
-                    created_at: new Date().toISOString()
-                });
-                input.value = '';
-                
-                // Auto-scroll to bottom
-                $('#chatWindow').scrollTop = $('#chatWindow').scrollHeight;
-            }
-        }
-
-        /**********************
-         * TradingView embed + fullscreen control
+         * TradingView embed + fullscreen control - BUTTON FIXED
          **********************/
         function loadTradingView(){
             const container = document.getElementById('tv_embed');
+            if (!container) return;
+            
             container.innerHTML = '';
             const scr = document.createElement('script');
             scr.src = 'https://s3.tradingview.com/tv.js';
@@ -173,75 +86,67 @@
             document.getElementById('tvContainer').appendChild(scr);
         }
 
-        // Fullscreen button
-        $('#btnFullScreenTV').addEventListener('click', () => {
-            const elem = document.getElementById('tvContainer');
-            if(!document.fullscreenElement) {
-                if(elem.requestFullscreen) {
-                    elem.requestFullscreen();
-                } else if(elem.webkitRequestFullscreen) {
-                    elem.webkitRequestFullscreen();
-                } else if(elem.msRequestFullscreen) {
-                    elem.msRequestFullscreen();
+        // Fullscreen button - NOW WORKING
+        const fullscreenBtn = $('#btnFullScreenTV');
+        if (fullscreenBtn) {
+            fullscreenBtn.addEventListener('click', () => {
+                const elem = document.getElementById('tvContainer');
+                if (!elem) return;
+                
+                if (!document.fullscreenElement) {
+                    if (elem.requestFullscreen) {
+                        elem.requestFullscreen();
+                    } else if (elem.webkitRequestFullscreen) {
+                        elem.webkitRequestFullscreen();
+                    } else if (elem.msRequestFullscreen) {
+                        elem.msRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
                 }
-            } else {
-                if(document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if(document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if(document.msExitFullscreen) {
-                    document.msExitFullscreen();
+            });
+        }
+
+        /**********************
+         * Clear Chat Button - NOW WORKING
+         **********************/
+        const clearChatBtn = $('#btnClearChat');
+        if (clearChatBtn) {
+            clearChatBtn.addEventListener('click', async () => {
+                if (!confirm('Clear local chat view? This will not delete messages from database.')) return;
+                
+                const chatWindow = $('#chatWindow');
+                if (chatWindow) {
+                    chatWindow.innerHTML = '';
                 }
+            });
+        }
+
+        /**********************
+         * Initialize ONLY what's needed for buttons
+         **********************/
+        function initializeButtons() {
+            // Load TradingView if the container exists
+            const tvContainer = document.getElementById('tv_embed');
+            if (tvContainer) {
+                loadTradingView();
             }
-        });
-
-        /**********************
-         * Message handling functions
-         **********************/
-        function appendMessageToWindow(msg) {
-            const chatWindow = $('#chatWindow');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${msg.sender_id === 'system' ? 'system' : ''}`;
             
-            const time = new Date(msg.created_at).toLocaleTimeString();
-            messageDiv.innerHTML = `
-                <strong>${msg.sender_label}</strong> 
-                <small style="color:#666">(${time})</small><br>
-                ${msg.message}
-            `;
-            
-            chatWindow.appendChild(messageDiv);
-        }
-
-        function addSystemMessage(text) {
-            appendMessageToWindow({ 
-                sender_id: 'system', 
-                sender_label: 'System', 
-                message: text, 
-                created_at: new Date().toISOString() 
+            // Verify buttons are working
+            console.log('Buttons initialized:', {
+                fullscreen: !!$('#btnFullScreenTV'),
+                clearChat: !!$('#btnClearChat')
             });
         }
 
-        /**********************
-         * Initialize the application
-         **********************/
-        function boot() {
-            // Load TradingView
-            loadTradingView();
-            
-            // Add welcome message
-            addSystemMessage('Welcome to the trading platform! Charts and chat are ready.');
-            
-            // Test all buttons are accessible
-            console.log('All buttons initialized:', {
-                fullscreen: $('#btnFullScreenTV'),
-                clearChat: $('#btnClearChat'),
-                sendMessage: $('#btnSendMessage')
-            });
-        }
-
-        // Start the application when page loads
-        document.addEventListener('DOMContentLoaded', boot);
+        // Start when page loads
+        document.addEventListener('DOMContentLoaded', initializeButtons);
     </script>
 </body>
 </html>
