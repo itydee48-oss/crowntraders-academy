@@ -3,11 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Crown Trade Academy — Mentor Console (Version A, Working)</title>
-
-  <!-- Fonts -->
+  <title>Crown Trade Academy — Mentor Console (Version A, Fully Working 2025)</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-
   <style>
     :root{
       --nude-light:#F9F6F2;
@@ -18,173 +15,69 @@
       --charcoal:#2e2e2e;
       --muted:#7A7A7A;
     }
-    *{box-sizing:border-box}
+    *{box-sizing:border-box;margin:0;padding:0}
     body{
-      margin:0;
       font-family: 'Montserrat', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue";
       background: linear-gradient(180deg, var(--nude-light), #fff);
       color:var(--charcoal);
       -webkit-font-smoothing:antialiased;
       min-height:100vh;
     }
-
-    /* Layout */
-    .app {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap:24px;
-      padding:22px;
-    }
-    /* Sidebar */
+    .app { display: grid; grid-template-columns: 260px 1fr; gap:24px; padding:22px; }
     .sidebar {
       background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(232,223,214,0.4));
       border:1px solid rgba(212,200,188,0.6);
-      padding:22px;
-      border-radius:10px;
-      height:calc(100vh - 44px);
-      position:sticky;
-      top:22px;
-      overflow:auto;
+      padding:22px; border-radius:10px; height:calc(100vh - 44px);
+      position:sticky; top:22px; overflow:auto;
     }
-    .brand {
-      font-family:'Cormorant Garamond', serif;
-      color:var(--gold-dark);
-      font-size:1.6rem;
-      margin-bottom:12px;
-      letter-spacing:1px;
-    }
+    .brand { font-family:'Cormorant Garamond', serif; color:var(--gold-dark); font-size:1.6rem; margin-bottom:12px; letter-spacing:1px; }
     .sidebar .info { font-size:0.95rem; color:var(--muted); margin-bottom:18px; }
     .nav { display:flex; flex-direction:column; gap:8px; margin-bottom:18px; }
     .nav button{
-      background:transparent;
-      border:1px solid rgba(0,0,0,0.04);
-      padding:10px 12px;
-      text-align:left;
-      border-radius:6px;
-      cursor:pointer;
-      color:var(--charcoal);
-      font-weight:600;
-      transition: all 180ms;
+      background:transparent; border:1px solid rgba(0,0,0,0.04); padding:10px 12px;
+      text-align:left; border-radius:6px; cursor:pointer; color:var(--charcoal);
+      font-weight:600; transition: all 180ms;
     }
     .nav button.active{ background:linear-gradient(90deg,var(--gold),var(--gold-dark)); color:white; box-shadow:0 8px 20px rgba(184,145,63,0.08); }
-
     .small { font-size:13px; color:var(--muted); margin-top:12px; }
     .actions { margin-top:18px; display:flex; gap:10px; flex-wrap:wrap; }
     .btn { background:var(--gold); color:#fff; border:none; padding:10px 14px; font-weight:700; cursor:pointer; border-radius:6px; }
     .btn.ghost{ background:transparent; border:1px solid rgba(0,0,0,0.06); color:var(--charcoal); }
-
-    /* Main */
     .main {
-      padding:18px;
-      border-radius:10px;
+      padding:18px; border-radius:10px;
       background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(232,223,214,0.3));
-      border:1px solid rgba(212,200,188,0.6);
-      min-height:calc(100vh - 44px);
-      overflow:auto;
+      border:1px solid rgba(212,200,188,0.6); min-height:calc(100vh - 44px); overflow:auto;
     }
-
-    /* Top header inside main */
-    .topbar {
-      display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px;
-    }
+    .topbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
     .topbar .title { font-family:'Cormorant Garamond', serif; font-size:1.4rem; color:var(--gold-dark); }
     .profile-pill { display:flex; gap:12px; align-items:center; color:var(--charcoal); }
     .avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(90deg,var(--gold),var(--gold-dark)); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; }
-
-    /* Tabs inside content */
-    .tabs {
-      display:flex;
-      gap:10px;
-      margin-bottom:18px;
-      flex-wrap:wrap;
-    }
-    .tab {
-      padding:10px 14px;
-      border-radius:8px;
-      background:transparent;
-      border:1px solid rgba(0,0,0,0.03);
-      cursor:pointer;
-      font-weight:700;
-      color:var(--charcoal);
-    }
+    .tabs { display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
+    .tab { padding:10px 14px; border-radius:8px; background:transparent; border:1px solid rgba(0,0,0,0.03); cursor:pointer; font-weight:700; color:var(--charcoal); }
     .tab.active { background:var(--gold); color:white; box-shadow:0 8px 20px rgba(184,145,63,0.08); }
-
-    /* Layout for two-column content area */
-    .content-grid {
-      display:grid;
-      grid-template-columns: 1fr 420px;
-      gap:18px;
-      align-items:start;
-    }
-
-    /* Dashboard panel styles (cards) */
-    .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(232,223,214,0.6));
-      border:1px solid rgba(212,200,188,0.6);
-      padding:16px;
-      border-radius:8px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.04);
-    }
+    .content-grid { display:grid; grid-template-columns: 1fr 420px; gap:18px; align-items:start; }
+    .card { background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(232,223,214,0.6)); border:1px solid rgba(212,200,188,0.6); padding:16px; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.04); }
     .cards { display:flex; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
-    .stat {
-      flex:1; min-width:160px;
-      padding:18px;
-      border-radius:8px;
-      text-align:center;
-      background:linear-gradient(180deg,#fff,#f7efe2);
-      font-weight:700;
-    }
+    .stat { flex:1; min-width:160px; padding:18px; border-radius:8px; text-align:center; background:linear-gradient(180deg,#fff,#f7efe2); font-weight:700; }
     .stat .num { font-family:'Cormorant Garamond', serif; font-size:28px; color:var(--gold-dark); }
     .stat .label { color:var(--muted); font-size:12px; margin-top:6px; text-transform:uppercase; letter-spacing:1px; }
-
-    /* Uploads list */
     .uploads-list { list-style:none; padding-left:0; margin:0; }
     .uploads-list li { padding:8px 0; border-bottom:1px dashed rgba(0,0,0,0.03); color:var(--charcoal); }
-
-    /* Chat area */
-    .chat {
-      display:flex;
-      flex-direction:column;
-      height:520px;
-    }
-    .conversations {
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      max-height:160px;
-      overflow:auto;
-      margin-bottom:12px;
-    }
+    .chat { display:flex; flex-direction:column; height:520px; }
+    .conversations { display:flex; flex-direction:column; gap:8px; max-height:160px; overflow:auto; margin-bottom:12px; }
     .conversation { padding:8px 10px; border-radius:8px; background:rgba(255,255,255,0.7); cursor:pointer; border:1px solid rgba(0,0,0,0.03); }
     .conversation.active { background:linear-gradient(90deg,var(--gold),var(--gold-dark)); color:white; }
-
-    .chat-window {
-      flex:1;
-      background:#fff8ee;
-      border-radius:8px;
-      padding:12px;
-      overflow:auto;
-      margin-bottom:12px;
-      border:1px solid rgba(212,200,188,0.6);
-    }
+    .chat-window { flex:1; background:#fff8ee; border-radius:8px; padding:12px; overflow:auto; margin-bottom:12px; border:1px solid rgba(212,200,188,0.6); }
     .msg { display:block; max-width:78%; padding:10px 14px; border-radius:16px; margin-bottom:10px; clear:both; word-wrap:break-word; }
     .msg.sent { background:linear-gradient(90deg,var(--gold),var(--gold-dark)); color:#fff; margin-left:auto; text-align:right; }
     .msg.recv { background:#efe6d7; color:var(--charcoal); margin-right:auto; text-align:left; }
-
     .chat-form { display:flex; gap:10px; }
     .chat-form input { flex:1; padding:12px; border-radius:8px; border:1px solid rgba(0,0,0,0.05); }
     .chat-form button { padding:12px 18px; border-radius:8px; border:none; background:var(--gold); color:#fff; font-weight:700; cursor:pointer; }
-
-    /* TradingView area with fullscreen option */
     .tv-wrapper { height:420px; border-radius:8px; overflow:hidden; position:relative; }
     .tv-full-btn { position:absolute; right:12px; top:12px; z-index:20; padding:8px 10px; background:rgba(255,255,255,0.9); border-radius:6px; border:1px solid rgba(0,0,0,0.06); cursor:pointer; font-weight:700; }
-    .tv-frame { width:100%; height:100%; }
-
-    /* Profile form styles */
     .profile-form label { display:block; font-weight:700; margin-bottom:6px; color:var(--muted); }
-    .profile-form input { width:100%; padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04); margin-bottom:12px; }
-
-    /* Responsive */
+    .profile-form input, .profile-form select { width:100%; padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04); margin-bottom:12px; }
     @media(max-width:1000px){
       .app{ grid-template-columns: 1fr; padding:12px; }
       .sidebar{ position:relative; height:auto; width:100%; display:flex; gap:12px; align-items:center; justify-content:space-between; }
@@ -197,33 +90,30 @@
 <body>
   <div class="app">
     <!-- Sidebar -->
-    <aside class="sidebar" aria-label="Main navigation">
+    <aside class="sidebar">
       <div class="brand">Crown Trade Academy</div>
       <div class="info">
-        <div id="mentorName">Mentor</div>
+        <div id="mentorName">Loading...</div>
         <div style="font-size:13px; color:var(--muted);" id="mentorEmail">—</div>
       </div>
-
-      <nav class="nav" role="navigation">
+      <nav class="nav">
         <button data-tab="overview" class="active">Overview</button>
         <button data-tab="lessons">Lessons</button>
         <button data-tab="meetings">Meetings</button>
         <button data-tab="chatTab">Chat</button>
         <button data-tab="profileTab">Profile</button>
       </nav>
-
       <div class="small">Quick actions</div>
       <div class="actions">
         <button class="btn" id="btnRefresh">Refresh</button>
         <button class="btn ghost" id="btnLogout">Logout</button>
       </div>
-
       <div style="margin-top:16px" class="small">Help & Support</div>
       <div style="margin-top:6px; font-size:13px; color:var(--muted)">contact@crowntrade.academy</div>
     </aside>
 
-    <!-- Main content -->
-    <main class="main" role="main">
+    <!-- Main -->
+    <main class="main">
       <div class="topbar">
         <div class="title">Mentor Console — Luxury Edition</div>
         <div class="profile-pill">
@@ -235,7 +125,6 @@
         </div>
       </div>
 
-      <!-- tabs inside main -->
       <div class="tabs" id="mainTabs">
         <div class="tab active" data-show="overviewTab">Dashboard</div>
         <div class="tab" data-show="lessonsTab">Lessons</div>
@@ -244,687 +133,295 @@
         <div class="tab" data-show="profileTabContent">Profile</div>
       </div>
 
-      <!-- content grid -->
       <div class="content-grid">
-        <!-- Left column -->
         <div>
-          <!-- Overview Tab -->
+          <!-- Overview -->
           <div id="overviewTab" class="tab-content" style="display:block">
             <h2>Overview</h2>
             <div class="cards card">
-              <div class="stat">
-                <div class="num" id="statClients">0</div>
-                <div class="label">Active Clients</div>
-              </div>
-              <div class="stat">
-                <div class="num" id="statLessons">0</div>
-                <div class="label">Upcoming Lessons</div>
-              </div>
-              <div class="stat">
-                <div class="num" id="statEarnings">KES 0</div>
-                <div class="label">Earnings</div>
-              </div>
+              <div class="stat"><div class="num" id="statClients">0</div><div class="label">Active Clients</div></div>
+              <div class="stat"><div class="num" id="statLessons">0</div><div class="label">Upcoming Lessons</div></div>
+              <div class="stat"><div class="num" id="statEarnings">KES 0</div><div class="label">Earnings</div></div>
             </div>
-
             <div class="card">
               <h3 style="font-family:'Cormorant Garamond', serif; color:var(--gold-dark); margin-bottom:12px">Recent Uploads</h3>
-              <ul class="uploads-list" id="uploadsList">
-                <li>Loading uploads...</li>
-              </ul>
+              <ul class="uploads-list" id="uploadsList"><li>Loading...</li></ul>
             </div>
           </div>
 
-          <!-- Lessons Tab -->
+          <!-- Lessons -->
           <div id="lessonsTab" class="tab-content" style="display:none">
             <h2>Lessons & Uploads</h2>
             <div class="card">
               <form id="uploadForm">
                 <label for="uploadTitle">Title</label>
-                <input id="uploadTitle" required placeholder="Lesson title (e.g., Candlestick Basics)" />
-                <label for="uploadFile">File URL (or paste storage URL)</label>
+                <input id="uploadTitle" required placeholder="e.g., Candlestick Mastery" />
+                <label for="uploadFile">File URL</label>
                 <input id="uploadFile" placeholder="https://..." required />
                 <div style="display:flex; gap:10px; margin-top:8px">
-                  <button type="submit" class="btn">Upload</button>
-                  <button type="button" id="btnSample" class="btn ghost">Use sample</button>
+                  <button type="submit" class="btn">Upload Lesson</button>
+                  <button type="button" id="btnSample" class="btn ghost">Sample</button>
                 </div>
               </form>
-              <div id="uploadMsg" style="margin-top:10px; color:var(--muted)"></div>
+              <div id="uploadMsg" style="margin-top:10px; color:var(--gold-dark)"></div>
             </div>
           </div>
 
-          <!-- Meetings Tab -->
+          <!-- Meetings -->
           <div id="meetingsTab" class="tab-content" style="display:none">
             <h2>Meetings</h2>
             <div class="card">
-              <label>Schedule a meeting</label>
               <input id="meetingTitle" placeholder="Meeting title" />
               <input id="meetingDate" type="datetime-local" style="margin-top:8px" />
-              <input id="meetingLink" placeholder="Optional link (Zoom/Meet)" style="margin-top:8px" />
+              <input id="meetingLink" placeholder="Zoom/Meet link (optional)" style="margin-top:8px" />
               <div style="margin-top:10px; display:flex; gap:8px;">
                 <button id="btnSchedule" class="btn">Schedule</button>
-                <button id="btnViewMeetings" class="btn ghost">View upcoming</button>
               </div>
               <div id="meetingsList" style="margin-top:12px; color:var(--muted)"></div>
             </div>
           </div>
 
-          <!-- Chat Tab (left column shows conversations & big chat in right column but we place main chat here too)-->
+          <!-- Chat Conversations -->
           <div id="chatTabContent" class="tab-content" style="display:none">
             <h2>Chat — Conversations</h2>
             <div class="card">
-              <div style="display:flex; gap:12px; align-items:center; margin-bottom:10px;">
-                <div style="flex:1">
-                  <input id="searchConv" placeholder="Search clients or messages..." style="width:100%; padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.05)" />
-                </div>
-                <div>
-                  <button id="btnNewConv" class="btn ghost">New Chat</button>
-                </div>
-              </div>
-
               <div class="conversations" id="conversationList">
-                <!-- conversation items -->
                 <div class="conversation active" data-room="general">General Room</div>
-                <div class="conversation" data-room="">Loading your clients...</div>
               </div>
-
-              <div style="margin-top:12px; color:var(--muted)">Select a conversation to open chat on the right.</div>
             </div>
           </div>
 
-          <!-- Profile Tab (left column) -->
+          <!-- Profile -->
           <div id="profileTabContent" class="tab-content" style="display:none">
-            <h2>Profile</h2>
+            <h2>Profile Settings</h2>
             <div class="card">
+              <div style="text-align:center;margin-bottom:20px">
+                <img id="profilePreview" src="https://via.placeholder.com/120" style="width:120px;height:120px;border-radius:50%;border:4px solid var(--gold);object-fit:cover" alt="Profile" />
+                <br><br>
+                <input type="file" id="photoUpload" accept="image/*" style="display:none" />
+                <button class="btn ghost" onclick="document.getElementById('photoUpload').click()">Change Photo</button>
+              </div>
               <form id="profileForm" class="profile-form">
-                <label>Full name</label>
-                <input id="profileName" required />
+                <label>Username</label>
+                <input id="profileUsername" required />
                 <label>Email</label>
                 <input id="profileEmail" type="email" required />
-                <label>Photo URL</label>
-                <input id="profilePhoto" placeholder="Optional image url" />
-                <div style="margin-top:10px">
-                  <button type="submit" class="btn">Save Profile</button>
-                </div>
-                <div id="profileMsg" style="margin-top:10px; color:var(--muted)"></div>
+                <label>New Password (leave blank to keep)</label>
+                <input id="profilePassword" type="password" />
+                <button type="submit" class="btn" style="margin-top:15px">Save Changes</button>
+                <div id="profileMsg" style="margin-top:10px;color:var(--gold-dark)"></div>
               </form>
             </div>
           </div>
         </div>
 
-        <!-- Right column (chat pane & TradingView) -->
+        <!-- Right Column -->
         <aside>
-          <!-- Chat pane -->
           <div class="card chat" id="chatPane">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <div><strong id="chatTitle">General Room</strong><div style="font-size:12px;color:var(--muted)" id="chatSubtitle">Public conversations and announcements</div></div>
-              <div style="display:flex; gap:8px; align-items:center;">
-                <button id="btnToggleSound" class="btn ghost">🔔</button>
-                <button id="btnClearChat" class="btn ghost">Clear</button>
-              </div>
+              <div><strong id="chatTitle">General Room</strong></div>
+              <button id="btnClearChat" class="btn ghost">Clear</button>
             </div>
-
-            <div class="chat-window" id="chatWindow" aria-live="polite">
-              <!-- messages -->
-            </div>
-
-            <form id="sendForm" class="chat-form" autocomplete="off">
-              <input id="messageInput" placeholder="Write a message..." />
+            <div class="chat-window" id="chatWindow"></div>
+            <form id="sendForm" class="chat-form">
+              <input id="messageInput" placeholder="Type a message..." autocomplete="off" />
               <button type="submit" class="btn">Send</button>
             </form>
           </div>
 
-          <!-- TradingView widget -->
           <div class="card" style="margin-top:18px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <div style="font-weight:800; color:var(--gold-dark)">Trading Chart</div>
-              <div>
-                <button id="btnFullScreenTV" class="btn ghost">Fullscreen</button>
-              </div>
+              <div style="font-weight:800; color:var(--gold-dark)">Live Chart</div>
+              <button id="btnFullScreenTV" class="btn ghost">Fullscreen</button>
             </div>
             <div class="tv-wrapper" id="tvContainer">
-              <!-- tradingview -->
               <div id="tv_embed"></div>
             </div>
           </div>
         </aside>
       </div>
-
     </main>
   </div>
 
-  <!-- Supabase & TradingView -->
+  <!-- Supabase + TradingView -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-  /************************************************************************
-   *  Replace these with your Supabase project values
-   ************************************************************************/
-  const SUPABASE_URL = 'YOUR_SUPABASE_URL';           // <-- REPLACE
-  const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // <-- REPLACE
+    const supabaseUrl = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
+    const { createClient } = Supabase;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    window.supabase = supabase;
 
-  // Use official global object from CDN
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let currentUser = null;
+    let currentMentor = null;
+    let activeRoom = 'general';
 
-  // App state
-  let currentUser = null;
-  let currentMentor = null;
-  let activeRoom = 'general';
-  let assignedClients = [];
-
-  // Helpers
-  const $ = sel => document.querySelector(sel);
-  const $$ = sel => Array.from(document.querySelectorAll(sel));
-  function toast(msg){ console.log('TOAST:', msg); try{ alert(msg);}catch(e){} }
-  function escapeHtml(str=''){ return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-
-  /**********************
-   * Tab wiring (sidebar and top tabs)
-   **********************/
-  // Sidebar nav
-  document.querySelectorAll('.nav button').forEach(btn=>{
-    btn.addEventListener('click', ()=> {
-      const tab = btn.getAttribute('data-tab');
-      // activate sidebar
-      document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      // show corresponding main tab (map names)
-      const map = { 'overview':'overviewTab', 'lessons':'lessonsTab', 'meetings':'meetingsTab', 'chatTab':'chatTabContent', 'profileTab':'profileTabContent' };
-      const show = map[tab];
-      document.querySelectorAll('#mainTabs .tab').forEach(t=>t.classList.remove('active'));
-      document.querySelectorAll('#mainTabs .tab').forEach(t=> {
-        if(t.dataset.show === show) t.classList.add('active');
-      });
-      // display the main tab content
-      document.querySelectorAll('.tab-content').forEach(c=> c.style.display = 'none');
-      const el = document.getElementById(show);
-      if(el) el.style.display = 'block';
-      window.scrollTo({top:0, behavior:'smooth'});
-    });
-  });
-
-  // top tabs inside main
-  document.querySelectorAll('#mainTabs .tab').forEach(t=>{
-    t.addEventListener('click', ()=>{
-      document.querySelectorAll('#mainTabs .tab').forEach(x=>x.classList.remove('active'));
-      t.classList.add('active');
-      // hide all contents
-      document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none');
-      const id = t.dataset.show;
-      const el = document.getElementById(id);
-      if(el) el.style.display = 'block';
-      // sync sidebar active state (optional)
-    });
-  });
-
-  /**********************
-   * Auth & Boot
-   **********************/
-  async function boot() {
-    try {
-      const { data: { session }, error: sessErr } = await supabase.auth.getSession();
-      if(sessErr) console.warn('Auth session error', sessErr);
-
-      if(!session || !session.user) {
-        // Not logged in — enable demo mode but allow UI testing
-        toast('No active Supabase session detected. Running in demo mode — connect Supabase to enable live data.');
-        // Create a demo currentUser/mentor so UI buttons work visually
-        currentUser = { id: 'demo-user', email: 'demo@demo.test', user_metadata: { full_name: 'Demo Mentor' } };
-        currentMentor = { user_id: 'demo-user', name: 'Demo Mentor', email: 'demo@demo.test', photo_url: null };
-        fillUIWithMentor();
-        seedDemoData();
-        return;
-      }
-
+    // Auth check + redirect if not mentor
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return location.href = 'login.html';
       currentUser = session.user;
-      // load mentor row
-      const { data: mentorRow, error: mentorErr } = await supabase
-        .from('mentors')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .maybeSingle();
 
-      if(mentorErr) console.error('mentor load err', mentorErr);
+      const { data: profile } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+      if (!profile || profile.role !== 'mentor') return location.href = 'login.html';
 
-      if(mentorRow) {
-        currentMentor = mentorRow;
-      } else {
-        // fallback: create mentor row using user info
-        currentMentor = { user_id: currentUser.id, name: currentUser.user_metadata?.full_name || currentUser.email.split('@')[0], email: currentUser.email, photo_url: null };
-        await supabase.from('mentors').upsert(currentMentor, { onConflict: 'user_id' }).catch(()=>{});
-      }
-
-      fillUIWithMentor();
-
-      // load backend data
-      await loadAssignedClients();
-      await loadUploads();
-      await loadStats();
-      await loadMeetings();
-
-      // conversations & chat
-      buildConversations();
-      selectConversation('general');
-      setupRealtimeMessages();
-
-    } catch(err) {
-      console.error(err);
-      toast('Boot error — check console');
-    } finally {
-      // Load TradingView in any case
+      currentMentor = profile;
+      fillMentorUI();
+      loadClients();
+      loadUploads();
       loadTradingView();
+      setupRealtime();
     }
-  }
 
-  function fillUIWithMentor(){
-    $('#mentorName').textContent = currentMentor.name || currentUser?.email || 'Mentor';
-    $('#mentorEmail').textContent = currentMentor.email || currentUser?.email || '—';
-    $('#topName').textContent = currentMentor.name || currentUser?.email || 'Mentor';
-    $('#topEmail').textContent = currentMentor.email || currentUser?.email || '—';
-    $('#avatarInitials').textContent = (currentMentor.name || 'M').split(' ').map(s=>s[0]).slice(0,2).join('').toUpperCase();
-    // populate profile form
-    $('#profileName').value = currentMentor.name || '';
-    $('#profileEmail').value = currentMentor.email || '';
-    $('#profilePhoto').value = currentMentor.photo_url || '';
-  }
+    function fillMentorUI() {
+      document.getElementById('mentorName').textContent = currentMentor.username || currentMentor.email.split('@')[0];
+      document.getElementById('mentorEmail').textContent = currentMentor.email;
+      document.getElementById('topName').textContent = currentMentor.username || 'Mentor';
+      document.getElementById('topEmail').textContent = currentMentor.email;
+      document.getElementById('avatarInitials').textContent = (currentMentor.username || 'M').slice(0,2).toUpperCase();
+      document.getElementById('profileUsername').value = currentMentor.username || '';
+      document.getElementById('profileEmail').value = currentMentor.email;
+      if (currentMentor.avatar_url) document.getElementById('profilePreview').src = currentMentor.avatar_url;
+    }
 
-  /**********************
-   * Demo fallback data (when not logged in)
-   **********************/
-  function seedDemoData(){
-    assignedClients = [
-      { id:'client-1', full_name:'John Doe', email:'john@example.com' },
-      { id:'client-2', full_name:'Jane Smith', email:'jane@example.com' }
-    ];
-    // build conversations right away
-    buildConversations();
-    // demo uploads
-    const ul = $('#uploadsList'); ul.innerHTML = '';
-    ['Candlestick Intro','Liquidity Traps','FVG Masterclass'].forEach((t,i)=>{
-      const li = document.createElement('li');
-      li.innerHTML = `<a href="#" style="color:var(--gold-dark);text-decoration:none;font-weight:700">${t}</a><div style="font-size:12px;color:var(--muted)">Demo • ${new Date().toLocaleString()}</div>`;
-      ul.appendChild(li);
+    // Tab switching
+    document.querySelectorAll('.nav button, #mainTabs .tab').forEach(el => {
+      el.addEventListener('click', () => {
+        const target = el.dataset.tab || el.dataset.show;
+        if (!target) return;
+
+        document.querySelectorAll('.nav button, #mainTabs .tab').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        const content = document.getElementById(target.replace('Tab','') + (target.includes('Tab') ? '' : 'Tab'));
+        if (content) content.style.display = 'block';
+      });
     });
-    // demo stats
-    $('#statClients').textContent = assignedClients.length;
-    $('#statLessons').textContent = 2;
-    $('#statEarnings').textContent = 'KES 0';
-    // demo messages
-    const cw = $('#chatWindow'); cw.innerHTML = '';
-    const m1 = { sender_label:'System', message:'Welcome to the Demo General Room', created_at: new Date().toISOString(), sender_id:'system' };
-    appendMessageToWindow(m1);
-  }
 
-  /**********************
-   * Load assigned clients (from assignments -> users)
-   **********************/
-  async function loadAssignedClients(){
-    try {
-      const { data: assigns, error: aerr } = await supabase
-        .from('assignments')
-        .select('client_id')
-        .eq('mentor_id', currentMentor.user_id);
+    // Logout
+    document.getElementById('btnLogout').onclick = async () => {
+      await supabase.auth.signOut();
+      location.href = 'login.html';
+    };
 
-      assignedClients = [];
-      if(aerr) {
-        console.warn('assignments load err', aerr);
-      } else {
-        for(const a of (assigns || [])){
-          const { data: u, error: uerr } = await supabase.from('users').select('id, full_name, email').eq('id', a.client_id).maybeSingle();
-          if(u && !uerr) assignedClients.push(u);
-        }
+    // Profile save + photo upload
+    document.getElementById('photoUpload').onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const { data, error } = await supabase.storage.from('avatars').upload(`mentor-${currentUser.id}`, file, { upsert: true });
+      if (!error) {
+        const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(`mentor-${currentUser.id}`);
+        document.getElementById('profilePreview').src = publicUrl + '?' + Date.now();
+        await supabase.from('profiles').update({ avatar_url: publicUrl }).eq('id', currentUser.id);
       }
-    } catch(e){
-      console.error('loadAssignedClients err', e);
-    }
+    };
 
-    // update conversations list
-    const convContainer = $('#conversationList');
-    convContainer.innerHTML = '';
-    const general = document.createElement('div'); general.className = 'conversation' + (activeRoom==='general'?' active':''); general.dataset.room='general'; general.textContent='General Room'; convContainer.appendChild(general);
-    const mentorRoom = document.createElement('div'); mentorRoom.className = 'conversation' + (activeRoom===`mentor_${currentMentor.user_id}`?' active':''); mentorRoom.dataset.room = `mentor_${currentMentor.user_id}`; mentorRoom.textContent = 'Mentor Room (mentors only)'; convContainer.appendChild(mentorRoom);
+    document.getElementById('profileForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('profileUsername').value.trim();
+      const email = document.getElementById('profileEmail').value.trim();
+      const password = document.getElementById('profilePassword').value;
 
-    if(assignedClients.length === 0){
-      const el = document.createElement('div'); el.className='conversation'; el.textContent='No clients assigned yet';
-      convContainer.appendChild(el);
-    } else {
-      assignedClients.forEach(c=>{
-        const d = document.createElement('div');
-        d.className = 'conversation' + (activeRoom===`dm_${c.id}`?' active':'');
-        d.dataset.room = `dm_${c.id}`;
-        d.innerHTML = `${escapeHtml(c.full_name || c.email)} <div style="font-size:12px;color:var(--muted)">${escapeHtml(c.email)}</div>`;
-        convContainer.appendChild(d);
+      const updates = { username, email };
+      await supabase.from('profiles').update(updates).eq('id', currentUser.id);
+      if (password) await supabase.auth.updateUser({ password });
+
+      document.getElementById('profileMsg').textContent = 'Saved successfully';
+      fillMentorUI();
+    };
+
+    // Chat system
+    async function loadClients() {
+      const { data } = await supabase.from('profiles').select('id,username').eq('role', 'client');
+      const list = document.getElementById('conversationList');
+      list.innerHTML = '<div class="conversation active" data-room="general">General Room</div>';
+      data?.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'conversation';
+        div.dataset.room = `dm_${c.id}`;
+        div.textContent = c.username || c.id.slice(0,8);
+        div.onclick = () => selectRoom(`dm_${c.id}`, c.username || 'Client');
+        list.appendChild(div);
       });
     }
 
-    $$('.conversation').forEach(el=>{
-      el.addEventListener('click', ()=> selectConversation(el.dataset.room));
-    });
-  }
-
-  /**********************
-   * Conversations array
-   **********************/
-  function buildConversations(){
-    // builds minimal list; loadAssignedClients updates clients entries
-    // nothing else required here for now
-  }
-
-  /**********************
-   * Chat: select conversation & load messages (room-based)
-   **********************/
-  function selectConversation(room){
-    activeRoom = room || 'general';
-    $$('.conversation').forEach(el=> el.classList.toggle('active', el.dataset.room === activeRoom));
-    $('#chatTitle').textContent = (activeRoom === 'general' ? 'General Room' : (activeRoom.startsWith('mentor_') ? 'Mentor Room' : 'Direct Message'));
-    $('#chatSubtitle').textContent = activeRoom === 'general' ? 'Public announcements and community' : (activeRoom.startsWith('mentor_') ? 'Mentors chat' : 'Private conversation');
-    loadMessagesForRoom(activeRoom);
-  }
-
-  async function loadMessagesForRoom(room){
-    $('#chatWindow').innerHTML = '<div style="color:var(--muted)">Loading messages...</div>';
-    try {
-      // Query messages for the room
-      const { data, error } = await supabase
-        .from('messages')
-        .select('*')
-        .eq('room', room)
-        .order('created_at', { ascending: true });
-
-      if(error) {
-        console.error('messages load error', error);
-        $('#chatWindow').innerHTML = `<div style="color:red">Error loading messages</div>`;
-        return;
-      }
-
-      $('#chatWindow').innerHTML = '';
-      for(const m of (data || [])){
-        appendMessageToWindow(m);
-      }
-      $('#chatWindow').scrollTop = $('#chatWindow').scrollHeight;
-    } catch(e){
-      console.error('loadMessagesForRoom err', e);
-      $('#chatWindow').innerHTML = `<div style="color:red">Error loading messages</div>`;
+    function selectRoom(room, title = 'Chat') {
+      activeRoom = room;
+      document.getElementById('chatTitle').textContent = title;
+      document.querySelectorAll('.conversation').forEach(c => c.classList.toggle('active', c.dataset.room === room));
+      loadMessages();
     }
-  }
 
-  function appendMessageToWindow(m){
-    const div = document.createElement('div');
-    const isSent = m.sender_id === currentMentor.user_id || (currentUser && m.sender_id === currentUser.id);
-    div.className = 'msg ' + (isSent ? 'sent' : 'recv');
-    const ts = new Date(m.created_at || new Date().toISOString()).toLocaleString();
-    div.innerHTML = `<div style="font-size:0.95rem">${escapeHtml(m.message)}</div><div style="font-size:11px; opacity:0.7; margin-top:6px">${escapeHtml(m.sender_label || (m.sender_id === currentMentor.user_id ? currentMentor.name : m.sender_id))} • ${ts}</div>`;
-    $('#chatWindow').appendChild(div);
-  }
+    async function loadMessages() {
+      const { data } = await supabase.from('messages').select('*').eq('room', activeRoom).order('created_at', { ascending: true });
+      const win = document.getElementById('chatWindow');
+      win.innerHTML = '';
+      data?.forEach(m => appendMessage(m));
+    }
 
-  // Send message
-  document.getElementById('sendForm').addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const text = document.getElementById('messageInput').value.trim();
-    if(!text) return;
-    const payload = {
-      room: activeRoom,
-      sender_id: currentMentor.user_id,
-      sender_label: currentMentor.name,
-      message: text,
-      created_at: new Date().toISOString()
+    function appendMessage(m) {
+      const div = document.createElement('div');
+      div.className = `msg ${m.sender_id === currentUser.id ? 'sent' : 'recv'}`;
+      div.innerHTML = `<div>${escapeHtml(m.message)}</div><small>${new Date(m.created_at).toLocaleTimeString()}</small>`;
+      document.getElementById('chatWindow').appendChild(div);
+      div.scrollIntoView();
+    }
+
+    document.getElementById('sendForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('messageInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+      await supabase.from('messages').insert({ room: activeRoom, sender_id: currentUser.id, message: msg });
+      input.value = '';
     };
-    // Attempt insert; if in demo mode (no real supabase), fallback to local append
-    if(SUPABASE_URL.includes('YOUR_SUPABASE_URL') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) {
-      // demo: append locally
-      appendMessageToWindow(payload);
-    } else {
-      const { error } = await supabase.from('messages').insert([payload]);
-      if(error){ console.error('send msg err', error); toast('Send failed'); return; }
-    }
-    document.getElementById('messageInput').value = '';
-    $('#chatWindow').scrollTop = $('#chatWindow').scrollHeight;
-  });
 
-  /**********************
-   * Real-time subscription
-   **********************/
-  function setupRealtimeMessages(){
-    // Only setup if we have valid keys; otherwise skip to avoid errors in demo
-    if(SUPABASE_URL.includes('YOUR_SUPABASE_URL') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) return;
-
-    supabase
-      .channel('public:messages')
-      .on('postgres_changes', { event:'INSERT', schema:'public', table:'messages' }, payload => {
-        const newMsg = payload.new;
-        if(newMsg.room === activeRoom){
-          appendMessageToWindow(newMsg);
-          $('#chatWindow').scrollTop = $('#chatWindow').scrollHeight;
-        } else {
-          const convEl = document.querySelector(`.conversation[data-room="${newMsg.room}"]`);
-          if(convEl && !convEl.classList.contains('active')){
-            convEl.style.boxShadow = 'inset 0 0 0 3px rgba(200,169,126,0.2)';
-          }
-        }
-      })
-      .subscribe();
-  }
-
-  /**********************
-   * Upload lessons
-   **********************/
-  $('#uploadForm').addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const title = $('#uploadTitle').value.trim();
-    const url = $('#uploadFile').value.trim();
-    if(!title || !url){ $('#uploadMsg').textContent = 'Provide title and URL'; return; }
-    const record = { mentor_id: currentMentor.user_id, title, url, uploaded_at: new Date().toISOString() };
-
-    if(SUPABASE_URL.includes('YOUR_SUPABASE_URL') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) {
-      // demo: just append locally
-      $('#uploadMsg').textContent = 'Uploaded (demo)';
-      const li = document.createElement('li');
-      li.innerHTML = `<a href="${url}" target="_blank" style="color:var(--gold-dark); text-decoration:none; font-weight:700">${escapeHtml(title)}</a> <div style="font-size:12px;color:var(--muted)">${new Date().toLocaleString()}</div>`;
-      $('#uploadsList').prepend(li);
-      $('#uploadTitle').value=''; $('#uploadFile').value='';
-      return;
+    function setupRealtime() {
+      supabase.channel('messages').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+        if (payload.new.room === activeRoom) appendMessage(payload.new);
+      }).subscribe();
     }
 
-    const { error } = await supabase.from('uploads').insert([record]);
-    if(error){ console.error(error); $('#uploadMsg').textContent = 'Upload failed'; return; }
-    $('#uploadMsg').textContent = 'Uploaded ✓';
-    $('#uploadTitle').value=''; $('#uploadFile').value='';
-    await loadUploads();
-  });
-
-  $('#btnSample').addEventListener('click', ()=>{
-    $('#uploadTitle').value = 'Sample Lesson: Candlestick Patterns';
-    $('#uploadFile').value = 'https://example.com/sample-lesson.pdf';
-  });
-
-  async function loadUploads(){
-    if(SUPABASE_URL.includes('YOUR_SUPABASE_URL') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) return;
-    const { data, error } = await supabase
-      .from('uploads')
-      .select('*')
-      .eq('mentor_id', currentMentor.user_id)
-      .order('uploaded_at', { ascending:false })
-      .limit(8);
-    const ul = $('#uploadsList');
-    ul.innerHTML = '';
-    if(error || !data || data.length === 0){ ul.innerHTML = '<li style="color:var(--muted)">No uploads yet</li>'; return; }
-    data.forEach(u=>{
-      const li = document.createElement('li');
-      li.innerHTML = `<a href="${u.url}" target="_blank" style="color:var(--gold-dark); text-decoration:none; font-weight:700">${escapeHtml(u.title)}</a> <div style="font-size:12px;color:var(--muted)">${new Date(u.uploaded_at).toLocaleString()}</div>`;
-      ul.appendChild(li);
-    });
-  }
-
-  /**********************
-   * loadStats
-   **********************/
-  async function loadStats(){
-    if(SUPABASE_URL.includes('YOUR_SUPABASE_URL') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) return;
-    try {
-      const { data: assigns } = await supabase.from('assignments').select('client_id').eq('mentor_id', currentMentor.user_id);
-      $('#statClients').textContent = (assigns?.length || 0);
-
-      const { data: lessons } = await supabase.from('lessons').select('id').eq('mentor_id', currentMentor.user_id).gte('date', new Date().toISOString()).limit(50);
-      $('#statLessons').textContent = lessons ? lessons.length : 0;
-
-      const { data: payments } = await supabase.from('payments').select('amount').eq('mentor_id', currentMentor.user_id);
-      const total = (payments || []).reduce((s,p)=> s + Number(p.amount || 0), 0);
-      $('#statEarnings').textContent = `KES ${total.toLocaleString()}`;
-    } catch(e){ console.error('loadStats err', e); }
-  }
-
-  /**********************
-   * Meetings
-   **********************/
-  $('#btnSchedule').addEventListener('click', async ()=>{
-    const title = $('#meetingTitle').value.trim();
-    const time = $('#meetingDate').value;
-    const link = $('#meetingLink').value.trim();
-    if(!title || !time){ toast('Enter title and date'); return; }
-    const rec = { mentor_id: currentMentor.user_id, title, scheduled_for: time, link, status: 'pending', created_at: new Date().toISOString() };
-
-    if(SUPABASE_URL.includes('YOUR_SUPABASE_URL') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) {
-      toast('Meeting scheduled (demo)');
-      $('#meetingTitle').value=''; $('#meetingDate').value=''; $('#meetingLink').value='';
-      loadMeetingsDemo(rec);
-      return;
-    }
-
-    const { error } = await supabase.from('mentor_meetings').insert([rec]);
-    if(error){ console.error(error); toast('Schedule failed'); return; }
-    $('#meetingTitle').value=''; $('#meetingDate').value=''; $('#meetingLink').value='';
-    toast('Meeting scheduled');
-    loadMeetings();
-  });
-
-  async function loadMeetings(){
-    if(SUPABASE_URL.includes('YOUR_SUPABASE_URL') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) return;
-    const { data, error } = await supabase.from('mentor_meetings').select('*').eq('mentor_id', currentMentor.user_id).order('scheduled_for',{ascending:true}).limit(12);
-    const out = $('#meetingsList');
-    out.innerHTML = '';
-    if(error || !data || data.length===0) { out.textContent = 'No upcoming meetings'; return; }
-    data.forEach(m=>{
-      const d = document.createElement('div');
-      d.innerHTML = `<strong>${escapeHtml(m.title)}</strong> — ${new Date(m.scheduled_for).toLocaleString()} ${m.link?(`<div style="font-size:12px;color:var(--muted)">${escapeHtml(m.link)}</div>`):''}`;
-      out.appendChild(d);
-    });
-  }
-
-  function loadMeetingsDemo(rec){
-    const out = $('#meetingsList');
-    const d = document.createElement('div');
-    d.innerHTML = `<strong>${escapeHtml(rec.title)}</strong> — ${new Date(rec.scheduled_for).toLocaleString()} ${rec.link?(`<div style="font-size:12px;color:var(--muted)">${escapeHtml(rec.link)}</div>`):''}`;
-    out.prepend(d);
-  }
-
-  /**********************
-   * Profile save
-   **********************/
-  $('#profileForm').addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const name = $('#profileName').value.trim();
-    const email = $('#profileEmail').value.trim();
-    const photo = $('#profilePhoto').value.trim();
-    if(!name || !email){ $('#profileMsg').textContent = 'Fill name and email'; return; }
-    const rec = { user_id: currentMentor.user_id, name, email, photo_url: photo, updated_at: new Date().toISOString() };
-
-    if(SUPABASE_URL.includes('YOUR_SUPABASE_URL') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) {
-      // demo
-      currentMentor.name = name; currentMentor.email = email; currentMentor.photo_url = photo;
-      fillUIWithMentor();
-      $('#profileMsg').textContent = 'Saved (demo)';
-      return;
-    }
-
-    const { error } = await supabase.from('mentors').upsert(rec, { onConflict: 'user_id' });
-    if(error){ console.error(error); $('#profileMsg').textContent = 'Save failed'; return; }
-    $('#profileMsg').textContent = 'Saved';
-    currentMentor.name = name; currentMentor.email = email; currentMentor.photo_url = photo;
-    fillUIWithMentor();
-  });
-
-  /**********************
-   * Logout
-   **********************/
-  $('#btnLogout').addEventListener('click', async ()=>{
-    try {
-      await supabase.auth.signOut();
-      toast('Signed out');
-      location.reload();
-    } catch(e){
-      console.error('logout err', e);
-      toast('Sign out error (check console)');
-    }
-  });
-
-  /**********************
-   * Refresh
-   **********************/
-  $('#btnRefresh').addEventListener('click', async ()=>{
-    await loadAssignedClients();
-    await loadUploads();
-    await loadStats();
-    toast('Refreshed');
-  });
-
-  /**********************
-   * Clear chat
-   **********************/
-  $('#btnClearChat').addEventListener('click', async ()=>{
-    if(!confirm('Clear local chat view? This will not delete messages from database.')) return;
-    $('#chatWindow').innerHTML = '';
-  });
-
-  /**********************
-   * TradingView embed + fullscreen control
-   **********************/
-  function loadTradingView(){
-    const container = document.getElementById('tv_embed');
-    container.innerHTML = '';
-    const scr = document.createElement('script');
-    scr.src = 'https://s3.tradingview.com/tv.js';
-    scr.onload = ()=>{
-      try {
-        new TradingView.widget({
-          "width": "100%",
-          "height": 400,
-          "symbol": "FOREXCOM:EURUSD",
-          "interval": "60",
-          "timezone": "Etc/UTC",
-          "theme": "Light",
-          "style": "1",
-          "locale": "en",
-          "toolbar_bg": "#f9f6f2",
-          "enable_publishing": false,
-          "container_id": "tv_embed"
-        });
-      } catch(err){
-        console.error('TradingView init error', err);
-      }
+    // Uploads
+    document.getElementById('uploadForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('uploadTitle').value.trim();
+      const url = document.getElementById('uploadFile').value.trim();
+      if (!title || !url) return;
+      await supabase.from('uploads').insert({ mentor_id: currentUser.id, title, url });
+      document.getElementById('uploadMsg').textContent = 'Uploaded!';
+      loadUploads();
     };
-    document.getElementById('tvContainer').appendChild(scr);
-  }
 
-  $('#btnFullScreenTV').addEventListener('click', ()=>{
-    const elem = document.getElementById('tvContainer');
-    if(!document.fullscreenElement){
-      elem.requestFullscreen?.();
-    } else {
-      document.exitFullscreen?.();
+    async function loadUploads() {
+      const { data } = await supabase.from('uploads').select('*').eq('mentor_id', currentUser.id).order('created_at', { ascending: false }).limit(10);
+      const list = document.getElementById('uploadsList');
+      list.innerHTML = data?.map(u => `<li><a href="${u.url}" target="_blank" style="color:var(--gold-dark);font-weight:700">${u.title}</a></li>`).join('') || '<li>No uploads yet</li>';
     }
-  });
 
-  /**********************
-   * Helper: append initial demo message
-   **********************/
-  function addSystemMessage(text){
-    appendMessageToWindow({ sender_id:'system', sender_label:'System', message:text, created_at: new Date().toISOString() });
-  }
+    // TradingView
+    function loadTradingView() {
+      new TradingView.widget({
+        container_id: "tv_embed",
+        width: "100%", height: 400,
+        symbol: "BINANCE:BTCUSDT", interval: "60", timezone: "Etc/UTC",
+        theme: "light", style: "1", locale: "en",
+        toolbar_bg: "#f9f6f2", enable_publishing: false
+      });
+    }
 
-  /**********************
-   * Boot the app
-   **********************/
-  // Start
-  boot();
+    document.getElementById('btnFullScreenTV').onclick = () => {
+      document.getElementById('tvContainer').requestFullscreen();
+    };
 
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Start
+    init();
   </script>
 </body>
 </html>
