@@ -62,42 +62,56 @@
 <div class="login-container">
   <h2>Client Login</h2>
   <div id="error" class="error-msg"></div>
+  
   <input type="email" id="email" placeholder="Email" required />
   <input type="password" id="password" placeholder="Password" required />
+  
   <button id="loginBtn">Login</button>
 </div>
 
+<!-- Supabase CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-  // Initialize Supabase
-  const supabaseUrl = https://eygjxxdgxzatchqgwvep.supabase.co;
-  const supabaseKey = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg;
-  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+// Fixed & cleaned Supabase init (your old one had syntax errors)
+const supabaseUrl = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
-  const loginBtn = document.getElementById('loginBtn');
-  const errorMsg = document.getElementById('error');
+const { createClient } = Supabase;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-  loginBtn.addEventListener('click', async () => {
-    errorMsg.style.display = 'none';
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
+// Make it globally available for other scripts later
+window.supabase = supabase;
 
-    if (!email || !password) {
-      errorMsg.textContent = 'Please enter both email and password.';
-      errorMsg.style.display = 'block';
-      return;
-    }
+const loginBtn = document.getElementById('loginBtn');
+const errorMsg = document.getElementById('error');
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+loginBtn.addEventListener('click', async () => {
+  errorMsg.style.display = 'none';
+  errorMsg.textContent = '';
 
-    if (error) {
-      errorMsg.textContent = error.message;
-      errorMsg.style.display = 'block';
-    } else {
-      // Redirect on successful login
-      window.location.href = 'client-dashboard.html';
-    }
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  if (!email || !password) {
+    errorMsg.textContent = 'Please enter both email and password.';
+    errorMsg.style.display = 'block';
+    return;
+  }
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
   });
+
+  if (error) {
+    errorMsg.textContent = error.message;
+    errorMsg.style.display = 'block';
+  } else {
+    // Success → redirect to client dashboard
+    window.location.href = 'client-dashboard.html';
+  }
+});
 </script>
 
 </body>
