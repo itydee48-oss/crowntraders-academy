@@ -2,6 +2,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Put this in the <head> of EVERY HTML page (index.html, dashboards, etc.) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+<script>
+// assets/js/supabase-client.js → but we're inlining it here for now (GitHub Pages friendly)
+const supabaseUrl = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyNzA4MDAsImV4cCI6MjA0NDg0NjgwMH0.0g8v3e9bfO3i2y9rW4nRj4bL5nO8v3e9bfO3i2y9rW4';
+
+const { createClient } = Supabase;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+window.supabase = supabase;  // makes it globally accessible
+console.log('Supabase client ready for GitHub Pages ✅');
+</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Crown Trade Academy - Elite Trading Mentorship</title>
