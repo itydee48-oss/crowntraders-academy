@@ -84,7 +84,7 @@
       <div id="tradingview"></div>
     </div>
 
-    <!-- Lessons & Profile tabs (same as before) -->
+    <!-- Lessons Tab -->
     <div id="lessons" class="card" style="display:none;">
       <h2>Upload Lesson</h2>
       <input placeholder="Title" id="lessonTitle" style="width:100%;padding:14px;margin:10px 0;border-radius:12px;border:1px solid #ddd;">
@@ -92,6 +92,7 @@
       <button class="btn" id="uploadLesson">Upload</button>
     </div>
 
+    <!-- Profile Tab -->
     <div id="profile" class="card" style="display:none;text-align:center;">
       <img id="profilePreview" src="https://i.imgur.com/8QjW9jF.jpeg" width="120" style="border-radius:50%;border:5px solid var(--gold);">
       <br><br>
@@ -105,119 +106,171 @@
   </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://s3.tradingview.com/tv.js"></script>
 <script>
-// ADD THIS AT THE TOP OF YOUR MENTOR DASHBOARD SCRIPT
-const supabase = Supabase.createClient(
-  'https://eygjxxdgxzatchqgwvep.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg'
-);
+const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
+
+const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentClientId = null;
 
 async function init() {
   const { data: { session } } = await supabase.auth.getSession();
-  if (!session) return location.href = 'login.html';
-
-  const { user } = session;
-  // rest of your existing code...
-  <script>
-  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
-
-  let currentUser = null;
-  let currentClientId = null;
-
-  async function init() {
-    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }});
-    if (!res.ok) return location.href = 'login.html';
-    currentUser = await res.json();
-
-    const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${currentUser.id}&select=*`, { headers: { apikey: SUPABASE_KEY }});
-    const [profile] = await profileRes.json();
-    if (!profile || profile.role !== 'mentor') return location.href = 'login.html';
-
-    document.getElementById('mentorName').textContent = profile.username || profile.email;
-    document.getElementById('topName').textContent = profile.username || 'Mentor';
-    document.getElementById('topEmail').textContent = profile.email;
-    document.getElementById('avatarInitials').textContent = (profile.username || 'M').slice(0,2).toUpperCase();
-    document.getElementById('profileUsername').value = profile.username || '';
-    document.getElementById('profileEmail').value = profile.email;
-    if (profile.avatar_url) document.getElementById('profilePreview').src = profile.avatar_url;
-
-    loadClients();
-    loadTradingView();
+  if (!session) {
+    location.href = 'login.html';
+    return;
   }
 
-  async function loadClients() {
-    const assignRes = await fetch(`${SUPABASE_URL}/rest/v1/mentor_assignments?mentor_id=eq.${currentUser.id}&select=client_id`, { headers: { apikey: SUPABASE_KEY }});
-    const assignments = await assignRes.json();
-    const clientIds = assignments.map(a => a.client_id).join(',');
+  currentUser = session.user;
 
-    if (!clientIds) {
-      document.getElementById('clientList').innerHTML = '<div>No clients assigned yet.</div>';
-      return;
-    }
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', currentUser.id)
+    .single();
 
-    const clientsRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=in.(${clientIds})&select=id,username,email,avatar_url`, { headers: { apikey: SUPABASE_KEY }});
-    const clients = await clientsRes.json();
-
-    document.getElementById('clientList').innerHTML = clients.map(c => `
-      <div class="client-item" onclick="openChat('${c.id}', '${c.username || c.email}')">
-        ${c.avatar_url ? `<img src="${c.avatar_url}">` : '<div style="width:40px;height:40px;background:#ddd;border-radius:50%;margin-right:12px;"></div>'}
-        <div><strong>${c.username || c.email}</strong></div>
-      </div>
-    `).join('');
+  if (error || !profile || profile.role !== 'mentor') {
+    location.href = 'login.html';
+    return;
   }
 
-  window.openChat = async (clientId, name) => {
-    currentClientId = clientId;
-    document.querySelectorAll('.client-item').forEach(el => el.classList.remove('active'));
-    event.target.closest('.client-item').classList.add('active');
-    document.getElementById('chatHeader').textContent = `Chat with ${name}`;
-    document.getElementById('messageInput').disabled = false;
-    document.querySelector('#chatForm button').disabled = false;
-    document.getElementById('chatWindow').innerHTML = '';
-    loadMessages();
-  };
+  document.getElementById('mentorName').textContent = profile.username || profile.email;
+  document.getElementById('topName').textContent = profile.username || 'Mentor';
+  document.getElementById('topEmail').textContent = profile.email;
+  document.getElementById('avatarInitials').textContent = (profile.username || 'M').slice(0,2).toUpperCase();
+  document.getElementById('profileUsername').value = profile.username || '';
+  document.getElementById('profileEmail').value = profile.email;
+  if (profile.avatar_url) document.getElementById('profilePreview').src = profile.avatar_url;
 
-  async function loadMessages() {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/messages?or=(and(sender_id=eq.${currentUser.id},receiver_id=eq.${currentClientId}),and(sender_id=eq.${currentClientId},receiver_id=eq.${currentUser.id}))&order=created_at.asc`, { headers: { apikey: SUPABASE_KEY }});
-    const msgs = await res.json();
-    document.getElementById('chatWindow').innerHTML = msgs.map(m => `
-      <div class="msg ${m.sender_id === currentUser.id ? 'sent' : 'recv'}">${m.message}</div>
-    `).join('');
-    document.getElementById('chatWindow').scrollTop = document.getElementById('chatWindow').scrollHeight;
+  loadClients();
+  loadTradingView();
+}
+
+async function loadClients() {
+  const { data: assignments, error } = await supabase
+    .from('mentor_assignments')
+    .select('client_id')
+    .eq('mentor_id', currentUser.id);
+
+  if (error || !assignments || assignments.length === 0) {
+    document.getElementById('clientList').innerHTML = '<div>No clients assigned yet.</div>';
+    return;
   }
 
-  document.getElementById('chatForm').onsubmit = async (e) => {
-    e.preventDefault();
-    const input = document.getElementById('messageInput');
-    const msg = input.value.trim();
-    if (!msg) return;
-    await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
-      method: 'POST',
-      headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ sender_id: currentUser.id, receiver_id: currentClientId, message: msg })
-    });
+  const clientIds = assignments.map(a => a.client_id);
+  
+  const { data: clients, error: clientsError } = await supabase
+    .from('profiles')
+    .select('id, username, email, avatar_url')
+    .in('id', clientIds);
+
+  if (clientsError || !clients) {
+    document.getElementById('clientList').innerHTML = '<div>Error loading clients</div>';
+    return;
+  }
+
+  document.getElementById('clientList').innerHTML = clients.map(c => `
+    <div class="client-item" onclick="openChat('${c.id}', '${c.username || c.email}')">
+      ${c.avatar_url ? `<img src="${c.avatar_url}">` : '<div style="width:40px;height:40px;background:#ddd;border-radius:50%;margin-right:12px;"></div>'}
+      <div><strong>${c.username || c.email}</strong></div>
+    </div>
+  `).join('');
+}
+
+window.openChat = async (clientId, name) => {
+  currentClientId = clientId;
+  document.querySelectorAll('.client-item').forEach(el => el.classList.remove('active'));
+  event.target.closest('.client-item').classList.add('active');
+  document.getElementById('chatHeader').textContent = `Chat with ${name}`;
+  document.getElementById('messageInput').disabled = false;
+  document.querySelector('#chatForm button').disabled = false;
+  document.getElementById('chatWindow').innerHTML = '';
+  loadMessages();
+};
+
+async function loadMessages() {
+  const { data: msgs, error } = await supabase
+    .from('messages')
+    .select('*')
+    .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${currentClientId}),and(sender_id.eq.${currentClientId},receiver_id.eq.${currentUser.id})`)
+    .order('created_at', { ascending: true });
+
+  if (error) return;
+
+  document.getElementById('chatWindow').innerHTML = msgs.map(m => `
+    <div class="msg ${m.sender_id === currentUser.id ? 'sent' : 'recv'}">${m.message}</div>
+  `).join('');
+  document.getElementById('chatWindow').scrollTop = document.getElementById('chatWindow').scrollHeight;
+}
+
+document.getElementById('chatForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const input = document.getElementById('messageInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  
+  const { error } = await supabase
+    .from('messages')
+    .insert([{ sender_id: currentUser.id, receiver_id: currentClientId, message: msg }]);
+
+  if (!error) {
     input.value = '';
     loadMessages();
-  };
+  }
+};
 
-  // Tab switching
-  document.querySelectorAll('.nav button').forEach(b => b.onclick = () => {
+// Tab switching - FIXED VERSION
+document.querySelectorAll('.nav button').forEach(b => {
+  b.onclick = () => {
     document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
     b.classList.add('active');
-    document.querySelectorAll('#clients,#lessons,#profile').forEach(d => d.style.display = 'none');
+    document.querySelectorAll('#clients, #lessons, #profile').forEach(d => {
+      d.style.display = 'none';
+    });
     document.getElementById(b.dataset.tab).style.display = 'block';
-  });
+  };
+});
 
-  document.getElementById('btnLogout').onclick = () => { location.href = 'login.html'; };
+document.getElementById('btnLogout').onclick = async () => {
+  await supabase.auth.signOut();
+  location.href = 'login.html';
+};
 
-  function loadTradingView() {
-    new TradingView.widget({ container_id: "tradingview", width: "100%", height: 460, symbol: "BINANCE:BTCUSDT", interval: "60", theme: "light" });
+function loadTradingView() {
+  if (typeof TradingView !== 'undefined') {
+    new TradingView.widget({
+      container_id: "tradingview",
+      width: "100%",
+      height: 460,
+      symbol: "BINANCE:BTCUSDT",
+      interval: "60",
+      theme: "light",
+      style: "1",
+      locale: "en",
+      toolbar_bg: "#f1f3f6",
+      enable_publishing: false,
+      allow_symbol_change: true,
+      details: true,
+      hotlist: true,
+      calendar: true,
+      studies: [
+        "BB@tv-basicstudies",
+        "RSI@tv-basicstudies"
+      ]
+    });
   }
+}
 
-  init();
-  setInterval(() => { if (currentClientId) loadMessages(); }, 4000);
+// Initialize the dashboard
+init();
+
+// Auto-refresh messages every 4 seconds if a client is selected
+setInterval(() => {
+  if (currentClientId) loadMessages();
+}, 4000);
 </script>
 </body>
 </html>
