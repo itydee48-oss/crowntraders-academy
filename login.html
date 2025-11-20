@@ -44,7 +44,6 @@
   <div id="msg" class="msg"></div>
 </div>
 
-<!-- Official Supabase JS client (tiny & bulletproof) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const supabase = Supabase.createClient(
@@ -66,15 +65,33 @@
       return;
     }
 
-    // Get role
-    const { data: profile } = await supabase.from('profiles').select('role').eq('id', data.user.id).single();
+    // Use the session token for profile fetch (this fixes 401)
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      msg.textContent = 'Session error - reload and try again';
+      return;
+    }
 
-    if (profile?.role === 'mentor') {
+    // Get profile with session token
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', data.user.id)
+      .single();
+
+    if (profileError && profileError.code !== 'PGRST116') {  // PGRST116 = no row
+      msg.textContent = 'Profile error: ' + profileError.message;
+      return;
+    }
+
+    const role = profile ? profile.role : null;
+
+    if (role === 'mentor') {
       location.href = 'mentor-dashboard.html';
-    } else if (profile?.role === 'client') {
+    } else if (role === 'client') {
       location.href = 'client-dashboard.html';
     } else {
-      msg.textContent = 'Role not set. Contact admin.';
+      msg.textContent = 'Role not set. Run SQL to set role = \'mentor\' or \'client\'.';
     }
   };
 
@@ -85,10 +102,12 @@
     if (email && password && password.length >= 6) {
       const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) {
-        alert('Error: ' + error.message);
+        alert('Signup error: ' + error.message);
       } else {
-        alert('Account created! Check your email to confirm, then log in.');
+        alert('Account created! Check your email (including spam) for confirmation link. Click it, then log in.');
       }
+    } else {
+      alert('Password must be at least 6 characters.');
     }
   };
 </script>
