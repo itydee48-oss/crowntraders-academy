@@ -3,127 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crown Trade Academy — Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>Crown Trade — Login</title>
   <style>
-    :root{--nude:#F9F6F2;--gold:#C8A97E;--gold-dark:#B89463;--charcoal:#2e2e2e;}
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Montserrat',sans-serif;background:linear-gradient(135deg,var(--nude),#fff);color:var(--charcoal);min-height:100vh;display:flex;align-items:center;justify-content:center;}
-    .login-box{max-width:440px;width:100%;background:rgba(255,255,255,0.95);padding:60px 50px;border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,0.1);border:1px solid rgba(200,169,126,0.4);text-align:center;}
-    .logo img{width:130px;height:130px;border-radius:50%;border:6px solid var(--gold);margin-bottom:20px;}
-    .brand{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--gold-dark);margin-bottom:8px;}
-    .tagline{font-size:1.1rem;color:var(--charcoal);margin-bottom:40px;}
-    input{width:100%;padding:18px 20px;margin:14px 0;border-radius:14px;border:1px solid rgba(0,0,0,0.12);font-size:1.05rem;}
-    input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(200,169,126,0.25);}
-    .btn{background:var(--gold);color:white;border:none;padding:18px;width:100%;border-radius:14px;font-weight:700;font-size:1.15rem;cursor:pointer;margin-top:20px;}
-    .btn:hover{background:var(--gold-dark);}
-    .switch{margin-top:30px;font-size:0.95rem;}
-    .switch a{color:var(--gold-dark);font-weight:600;text-decoration:none;}
-    .msg{margin-top:20px;color:#d32f2f;font-weight:600;min-height:24px;}
+    body{background:#F9F6F2;font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;}
+    .box{background:white;padding:50px;border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,0.1);text-align:center;width:400px;}
+    input{width:100%;padding:16px;margin:10px 0;border-radius:12px;border:1px solid #ddd;font-size:1.1rem;}
+    button{background:#C8A97E;color:white;border:none;padding:16px;width:100%;border-radius:12px;font-weight:bold;cursor:pointer;}
+    .msg{margin-top:15px;font-weight:bold;}
   </style>
 </head>
 <body>
-
-<div class="login-box">
-  <div class="logo">
-    <img src="https://i.imgur.com/8QjW9jF.jpeg" alt="Crown Trade">
-  </div>
-  <div class="brand">Crown Trade</div>
-  <div class="tagline">Luxury Trading Education • Mentor & Client Portal</div>
-
-  <form id="loginForm">
-    <input type="email" id="email" placeholder="Email address" required>
-    <input type="password" id="password" placeholder="Password" required>
-    <button type="submit" class="btn">Login</button>
-  </form>
-
-  <div class="switch">
-    New here? <a href="#" id="showRegister">Create account</a>
-  </div>
-
+<div class="box">
+  <h1>Crown Trade</h1>
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="password" id="password" placeholder="Password" required>
+  <button onclick="login()">Login</button>
   <div id="msg" class="msg"></div>
 </div>
 
 <script>
-  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
+  const URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+  const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
-  const headers = {
-    'apikey': ANON_KEY,
-    'Authorization': `Bearer ${ANON_KEY}`,
-    'Content-Type': 'application/json'
-  };
-
-  // Signup
-  document.getElementById('showRegister').onclick = async (e) => {
-    e.preventDefault();
-    const email = prompt('Enter your email:');
-    const password = prompt('Choose a password (6+ characters):');
-    if (email && password && password.length >= 6) {
-      const msg = document.getElementById('msg');
-      msg.textContent = 'Creating account...';
-      try {
-        const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          msg.textContent = 'Account created! Check your email (including spam) for the confirmation link. Click it, then log in.';
-        } else {
-          msg.textContent = 'Signup error: ' + (data.error_description || data.message || 'Try again');
-        }
-      } catch (err) {
-        document.getElementById('msg').textContent = 'Network error. Check connection.';
-      }
-    }
-  };
-
-  // Login
-  document.getElementById('loginForm').onsubmit = async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value.trim();
+  async function login() {
+    const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const msg = document.getElementById('msg');
-    msg.textContent = 'Logging in...';
 
-    try {
-      const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ email, password })
-      });
+    const res = await fetch(`${URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'apikey': KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
 
-      if (!res.ok) {
-        const err = await res.json();
-        msg.textContent = err.error_description || 'Invalid email or password';
-        return;
-      }
-
-      const { access_token, user } = await res.json();
-
-      // Get profile
-      const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?select=role&id=eq.${user.id}`, {
-        headers: { 'apikey': ANON_KEY }
-      });
-      const [profile] = await profileRes.json();
-
-      if (profile && profile.role === 'mentor') {
-        location.href = 'mentor-dashboard.html';
-      } else {
-        // Auto-create profile if missing
-        await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
-          method: 'POST',
-          headers: { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: user.id, email: user.email, role: 'client' })
-        });
-        location.href = 'client-dashboard.html';
-      }
-    } catch (err) {
-      msg.textContent = 'Network error. Check connection.';
+    if (!res.ok) {
+      msg.style.color = 'red';
+      msg.textContent = 'Wrong email or password';
+      return;
     }
-  };
+
+    const { user } = await res.json();
+
+    const profileRes = await fetch(`${URL}/rest/v1/profiles?id=eq.${user.id}&select=role`, { headers: { 'apikey': KEY } });
+    const [profile] = await profileRes.json();
+
+    if (profile?.role === 'mentor') {
+      location.href = 'mentor-dashboard.html';
+    } else {
+      msg.textContent = 'You are not a mentor';
+    }
+  }
 </script>
 </body>
 </html>
