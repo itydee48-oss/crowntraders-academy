@@ -1,692 +1,256 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Crown Trade Academy — Mentor Console (Offline-Ready)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crown Trade Academy — Mentor Console</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    :root{--nude-light:#F9F6F2;--nude-med:#E8DFD6;--nude-dark:#D4C8BC;--gold:#C8A97E;--gold-dark:#B89463;--charcoal:#2e2e2e;--muted:#7A7A7A;}
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Montserrat',system-ui;color:var(--charcoal);background:linear-gradient(180deg,var(--nude-light),#fff);min-height:100vh;}
-    .app{display:grid;grid-template-columns:260px 1fr;gap:24px;padding:22px;}
-    .sidebar{background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(232,223,214,0.4));border:1px solid rgba(212,200,188,0.6);padding:22px;border-radius:10px;height:calc(100vh-44px);position:sticky;top:22px;overflow:auto;}
-    .brand{font-family:'Cormorant Garamond',serif;color:var(--gold-dark);font-size:1.6rem;margin-bottom:12px;letter-spacing:1px;}
-    .info{font-size:0.95rem;color:var(--muted);margin-bottom:18px;}
-    .nav{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
-    .nav button{background:transparent;border:1px solid rgba(0,0,0,0.04);padding:10px 12px;text-align:left;border-radius:6px;cursor:pointer;color:var(--charcoal);font-weight:600;transition:all 180ms;}
-    .nav button.active{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;box-shadow:0 8px 20px rgba(184,145,63,0.08);}
-    .small{font-size:13px;color:var(--muted);margin-top:12px;}
-    .actions{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
-    .btn{background:var(--gold);color:#fff;border:none;padding:10px 14px;font-weight:700;cursor:pointer;border-radius:6px;}
-    .btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--charcoal);}
-    .main{padding:18px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.85),rgba(232,223,214,0.3));border:1px solid rgba(212,200,188,0.6);min-height:calc(100vh-44px);overflow:auto;}
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;}
-    .topbar .title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold-dark);}
-    .profile-pill{display:flex;gap:12px;align-items:center;color:var(--charcoal);}
-    .avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;display:flex;align-items:center;justify-content:center;font-weight:700;}
-    .tabs{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
-    .tab{padding:10px 14px;border-radius:8px;background:transparent;border:1px solid rgba(0,0,0,0.03);cursor:pointer;font-weight:700;color:var(--charcoal);}
-    .tab.active{background:var(--gold);color:white;box-shadow:0 8px 20px rgba(184,145,63,0.08);}
-    .content-grid{display:grid;grid-template-columns:1fr 420px;gap:18px;align-items:start;}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(232,223,214,0.6));border:1px solid rgba(212,200,188,0.6);padding:16px;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.04);margin-bottom:18px;}
-    .cards{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
-    .stat{flex:1;min-width:160px;padding:18px;border-radius:8px;text-align:center;background:linear-gradient(180deg,#fff,#f7efe2);font-weight:700;}
-    .stat .num{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold-dark);}
-    .stat .label{color:var(--muted);font-size:12px;margin-top:6px;text-transform:uppercase;letter-spacing:1px;}
-    .uploads-list{list-style:none;padding-left:0;margin:0;}
-    .uploads-list li{padding:8px 0;border-bottom:1px dashed rgba(0,0,0,0.03);color:var(--charcoal);}
-    .chat{display:flex;flex-direction:column;height:520px;}
-    .conversations{display:flex;flex-direction:column;gap:8px;max-height:160px;overflow:auto;margin-bottom:12px;}
-    .conversation{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.7);cursor:pointer;border:1px solid rgba(0,0,0,0.03);}
-    .conversation.active{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;}
-    .chat-window{flex:1;background:#fff8ee;border-radius:8px;padding:12px;overflow:auto;margin-bottom:12px;border:1px solid rgba(212,200,188,0.6);}
-    .msg{display:block;max-width:78%;padding:10px 14px;border-radius:16px;margin-bottom:10px;clear:both;word-wrap:break-word;}
-    .msg.sent{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:#fff;margin-left:auto;text-align:right;}
-    .msg.recv{background:#efe6d7;color:var(--charcoal);margin-right:auto;text-align:left;}
-    .chat-form{display:flex;gap:10px;}
-    .chat-form input{flex:1;padding:12px;border-radius:8px;border:1px solid rgba(0,0,0,0.05);}
-    .chat-form button{padding:12px 18px;border-radius:8px;border:none;background:var(--gold);color:#fff;font-weight:700;cursor:pointer;}
-    .tv-wrapper{height:420px;border-radius:8px;overflow:hidden;position:relative;background:#000;}
-    .profile-form label{display:block;font-weight:700;margin-bottom:6px;color:var(--muted);}
-    .profile-form input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.04);margin-bottom:12px;}
-    .hidden{display:none;}
-    @media(max-width:1000px){.app{grid-template-columns:1fr;padding:12px;}.sidebar{position:relative;height:auto;width:100%;display:flex;gap:12px;align-items:center;justify-content:space-between;}.content-grid{grid-template-columns:1fr;}.chat{height:420px;}.tv-wrapper{height:300px;}}
+    :root{--nude-light:#F9F6F2;--gold:#C8A97E;--gold-dark:#B89463;--charcoal:#2e2e2e;--muted:#7A7A7A;}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Montserrat',sans-serif;background:linear-gradient(180deg,var(--nude-light),#fff);color:var(--charcoal);min-height:100vh;}
+    .app{display:grid;grid-template-columns:260px 1fr;gap:24px;padding:22px;height:100vh;}
+    .sidebar{background:rgba(255,255,255,0.6);border:1px solid rgba(212,200,188,0.6);padding:22px;border-radius:10px;position:sticky;top:22px;height:fit-content;}
+    .brand{font-family:'Cormorant Garamond',serif;color:var(--gold-dark);font-size:1.8rem;margin-bottom:20px;}
+    .nav button{background:transparent;border:none;padding:12px 16px;width:100%;text-align:left;border-radius:8px;cursor:pointer;font-weight:600;transition:0.3s;}
+    .nav button:hover,.nav button.active{background:var(--gold);color:white;}
+    .btn{background:var(--gold);color:white;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:700;}
+    .btn.ghost{background:transparent;border:1px solid #ddd;color:var(--charcoal);}
+    .main{background:rgba(255,255,255,0.9);border:1px solid rgba(212,200,188,0.6);border-radius:10px;padding:20px;overflow:auto;}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+    .title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--gold-dark);}
+    .avatar{width:50px;height:50px;border-radius:50%;background:var(--gold);color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1.4rem;}
+    .tab{padding:10px 16px;border-radius:8px;background:transparent;border:1px solid #eee;cursor:pointer;margin-right:8px;}
+    .tab.active{background:var(--gold);color:white;}
+    .content-grid{display:grid;grid-template-columns:1fr 450px;gap:20px;}
+    .card{background:white;border:1px solid #eee;padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,0.05);}
+    .chat{height:520px;display:flex;flex-direction:column;background:white;border-radius:12px;overflow:hidden;}
+    .chat-window{flex:1;padding:16px;overflow-y:auto;background:#fdfaf7;}
+    .msg{max-width:80%;padding:10px 14px;border-radius:18px;margin-bottom:10px;clear:both;}
+    .msg.sent{background:var(--gold);color:white;margin-left:auto;}
+    .msg.recv{background:#f0f0f0;color:var(--charcoal);}
+    .chat-form{display:flex;padding:12px;background:white;border-top:1px solid #eee;}
+    .chat-form input{flex:1;padding:12px;border-radius:8px;border:1px solid #ddd;margin-right:8px;}
+    #profilePreview{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid var(--gold);}
+    @media(max-width:1000px){.app{grid-template-columns:1fr;}.content-grid{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
-  <div class="app">
-    <!-- Sidebar -->
-    <aside class="sidebar" aria-label="Main navigation">
-      <div class="brand">Crown Trade Academy</div>
-      <div class="info">
-        <div id="mentorName">Loading...</div>
-        <div style="font-size:13px; color:var(--muted);" id="mentorEmail">—</div>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">Crown Trade</div>
+    <div style="margin-bottom:20px;color:var(--muted);font-size:0.9rem;">
+      <div id="mentorName">Loading...</div>
+      <div id="mentorEmail">—</div>
+    </div>
+    <nav class="nav">
+      <button data-tab="overview" class="active">Overview</button>
+      <button data-tab="lessons">Lessons</button>
+      <button data-tab="chat">Chat</button>
+      <button data-tab="profile">Profile</button>
+    </nav>
+    <div style="margin-top:auto;padding-top:20px;">
+      <button class="btn ghost" style="width:100%;margin-bottom:8px;" id="btnRefresh">Refresh</button>
+      <button class="btn ghost" style="width:100%;" id="btnLogout">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="title">Mentor Console</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="avatar" id="avatarInitials">M</div>
+        <div><div id="topName">Mentor</div><small id="topEmail">—</small></div>
       </div>
-      <nav class="nav" role="navigation">
-        <button data-tab="overview" class="active">Overview</button>
-        <button data-tab="lessons">Lessons</button>
-        <button data-tab="meetings">Meetings</button>
-        <button data-tab="chatTab">Chat</button>
-        <button data-tab="profileTab">Profile</button>
-      </nav>
-      <div class="small">Quick actions</div>
-      <div class="actions">
-        <button class="btn" id="btnRefresh">Refresh</button>
-        <button class="btn ghost" id="btnLogout">Logout</button>
-      </div>
-      <div style="margin-top:16px" class="small">Help & Support</div>
-      <div style="margin-top:6px; font-size:13px; color:var(--muted)">contact@crowntrade.academy</div>
-    </aside>
-    <!-- Main content -->
-    <main class="main" role="main">
-      <div class="topbar">
-        <div class="title">Mentor Console — Luxury Edition</div>
-        <div class="profile-pill">
-          <div class="avatar" id="avatarInitials">M</div>
-          <div style="text-align:right">
-            <div id="topName" style="font-weight:700">Mentor</div>
-            <div style="font-size:12px;color:var(--muted)" id="topEmail">—</div>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <button class="tab active" data-tab="overview">Dashboard</button>
+      <button class="tab" data-tab="lessons">Lessons</button>
+      <button class="tab" data-tab="chat">Chat</button>
+      <button class="tab" data-tab="profile">Profile</button>
+    </div>
+
+    <div class="content-grid">
+      <div>
+        <div id="overview" style="display:block;">
+          <div class="card"><h2>Welcome back, <span id="welcomeName">Mentor</span></h2></div>
+          <div class="card">All systems operational. Your empire is growing.</div>
+        </div>
+
+        <div id="lessons" style="display:none;">
+          <div class="card">
+            <h2>Upload Lesson</h2>
+            <input placeholder="Lesson title" id="lessonTitle" style="width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ddd;">
+            <input placeholder="File URL" id="lessonUrl" style="width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ddd;">
+            <button class="btn" id="uploadLesson">Upload Lesson</button>
+            <div id="lessonMsg" style="margin-top:10px;color:var(--gold);"></div>
+          </div>
+        </div>
+
+        <div id="profile" style="display:none;">
+          <div class="card" style="text-align:center;">
+            <img id="profilePreview" src="https://i.imgur.com/8QjW9jF.jpeg" alt="Profile">
+            <br><br>
+            <input type="file" id="photoUpload" accept="image/*" style="display:none;">
+            <button class="btn ghost" onclick="document.getElementById('photoUpload').click()">Change Photo</button>
+            <br><br>
+            <input placeholder="Username" id="profileUsername" style="width:100%;padding:12px;margin:10px 0;border-radius:8px;">
+            <input placeholder="Email" id="profileEmail" style="width:100%;padding:12px;margin:10px 0;border-radius:8px;">
+            <input type="password" placeholder="New password (optional)" id="profilePassword" style="width:100%;padding:12px;margin:10px 0;border-radius:8px;">
+            <button class="btn" id="saveProfile">Save Changes</button>
+            <div id="profileMsg" style="margin-top:10px;color:var(--gold);"></div>
           </div>
         </div>
       </div>
-      <!-- tabs inside main -->
-      <div class="tabs" id="mainTabs">
-        <div class="tab active" data-show="overviewTab">Dashboard</div>
-        <div class="tab" data-show="lessonsTab">Lessons</div>
-        <div class="tab" data-show="meetingsTab">Meetings</div>
-        <div class="tab" data-show="chatTabContent">Chat</div>
-        <div class="tab" data-show="profileTabContent">Profile</div>
-      </div>
-      <!-- content grid -->
-      <div class="content-grid">
-        <!-- Left column -->
-        <div>
-          <!-- Overview Tab -->
-          <div id="overviewTab" class="tab-content">
-            <h2>Overview</h2>
-            <div class="cards card">
-              <div class="stat">
-                <div class="num" id="statClients">0</div>
-                <div class="label">Active Clients</div>
-              </div>
-              <div class="stat">
-                <div class="num" id="statLessons">0</div>
-                <div class="label">Upcoming Lessons</div>
-              </div>
-              <div class="stat">
-                <div class="num" id="statEarnings">KES 0</div>
-                <div class="label">Earnings</div>
-              </div>
-            </div>
-            <div class="card">
-              <h3 style="font-family:'Cormorant Garamond', serif; color:var(--gold-dark); margin-bottom:12px">Recent Uploads</h3>
-              <ul class="uploads-list" id="uploadsList">
-                <li>Loading uploads...</li>
-              </ul>
-            </div>
+
+      <aside>
+        <div class="card chat">
+          <div style="padding:16px;border-bottom:1px solid #eee;">
+            <strong>Live Chat</strong>
           </div>
-          <!-- Lessons Tab -->
-          <div id="lessonsTab" class="tab-content hidden">
-            <h2>Lessons & Uploads</h2>
-            <div class="card">
-              <form id="uploadForm">
-                <label for="uploadTitle">Title</label>
-                <input id="uploadTitle" required placeholder="Lesson title (e.g., Candlestick Basics)" />
-                <label for="uploadFile">File URL (or paste storage URL)</label>
-                <input id="uploadFile" placeholder="https://..." required />
-                <div style="display:flex; gap:10px; margin-top:8px">
-                  <button type="submit" class="btn">Upload</button>
-                  <button type="button" id="btnSample" class="btn ghost">Use sample</button>
-                </div>
-              </form>
-              <div id="uploadMsg" style="margin-top:10px; color:var(--muted)"></div>
-            </div>
+          <div class="chat-window" id="chatWindow">
+            <div class="msg recv">Welcome to Crown Trade Academy!</div>
           </div>
-          <!-- Meetings Tab -->
-          <div id="meetingsTab" class="tab-content hidden">
-            <h2>Meetings</h2>
-            <div class="card">
-              <label>Schedule a meeting</label>
-              <input id="meetingTitle" placeholder="Meeting title" />
-              <input id="meetingDate" type="datetime-local" style="margin-top:8px" />
-              <input id="meetingLink" placeholder="Optional link (Zoom/Meet)" style="margin-top:8px" />
-              <div style="margin-top:10px; display:flex; gap:8px;">
-                <button id="btnSchedule" class="btn">Schedule</button>
-                <button id="btnViewMeetings" class="btn ghost">View upcoming</button>
-              </div>
-              <div id="meetingsList" style="margin-top:12px; color:var(--muted)"></div>
-            </div>
-          </div>
-          <!-- Chat Tab -->
-          <div id="chatTabContent" class="tab-content hidden">
-            <h2>Chat — Conversations</h2>
-            <div class="card">
-              <div style="display:flex; gap:12px; align-items:center; margin-bottom:10px;">
-                <div style="flex:1">
-                  <input id="searchConv" placeholder="Search clients or messages..." style="width:100%; padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.05)" />
-                </div>
-                <div>
-                  <button id="btnNewConv" class="btn ghost">New Chat</button>
-                </div>
-              </div>
-              <div class="conversations" id="conversationList">
-                <div class="conversation active" data-room="general">General Room</div>
-                <div class="conversation" data-room="">Loading your clients...</div>
-              </div>
-              <div style="margin-top:12px; color:var(--muted)">Select a conversation to open chat on the right.</div>
-            </div>
-          </div>
-          <!-- Profile Tab -->
-          <div id="profileTabContent" class="tab-content hidden">
-            <h2>Profile Settings</h2>
-            <div class="card">
-              <div style="text-align:center;margin-bottom:20px">
-                <img id="profilePreview" src="https://via.placeholder.com/120" style="width:120px;height:120px;border-radius:50%;border:4px solid var(--gold);object-fit:cover" alt="Profile" />
-                <br><br>
-                <input type="file" id="photoUpload" accept="image/*" style="display:none" />
-                <button class="btn ghost" onclick="document.getElementById('photoUpload').click()">Change Photo</button>
-              </div>
-              <form id="profileForm" class="profile-form">
-                <label>Username</label>
-                <input id="profileUsername" required />
-                <label>Email</label>
-                <input id="profileEmail" type="email" required />
-                <label>New Password (leave blank to keep)</label>
-                <input id="profilePassword" type="password" />
-                <button type="submit" class="btn" style="margin-top:15px">Save Changes</button>
-                <div id="profileMsg" style="margin-top:10px; color:var(--gold-dark)"></div>
-              </form>
-            </div>
-          </div>
+          <form class="chat-form" id="chatForm">
+            <input id="messageInput" placeholder="Type a message..." autocomplete="off">
+            <button type="submit" class="btn">Send</button>
+          </form>
         </div>
-        <!-- Right column (chat & TradingView) -->
-        <aside>
-          <!-- Chat pane -->
-          <div class="card chat" id="chatPane">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <div><strong id="chatTitle">General Room</strong><div style="font-size:12px;color:var(--muted)" id="chatSubtitle">Public conversations and announcements</div></div>
-              <div style="display:flex; gap:8px; align-items:center;">
-                <button id="btnToggleSound" class="btn ghost">🔔</button>
-                <button id="btnClearChat" class="btn ghost">Clear</button>
-              </div>
-            </div>
-            <div class="chat-window" id="chatWindow" aria-live="polite">
-              <!-- messages -->
-            </div>
-            <form id="sendForm" class="chat-form" autocomplete="off">
-              <input id="messageInput" placeholder="Write a message..." />
-              <button type="submit" class="btn">Send</button>
-            </form>
+
+        <div class="card" style="margin-top:20px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <strong>Live Chart</strong>
+            <button class="btn ghost" id="fullscreenChart">Fullscreen</button>
           </div>
-          <!-- TradingView widget -->
-          <div class="card" style="margin-top:18px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <div style="font-weight:800; color:var(--gold-dark)">Trading Chart</div>
-              <div>
-                <button id="btnFullScreenTV" class="btn ghost">Fullscreen</button>
-              </div>
-            </div>
-            <div class="tv-wrapper" id="tvContainer">
-              <div id="tv_embed"></div>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </main>
-  </div>
+          <div id="tradingview" style="height:420px;border-radius:8px;overflow:hidden;"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
 
-  <!-- TradingView Script -->
-  <script src="https://s3.tradingview.com/tv.js"></script>
+<!-- TradingView -->
+<script src="https://s3.tradingview.com/tv.js"></script>
 
-  <script>
-    // INLINE SUPABASE CLIENT (No CDN dependency - works everywhere)
-    const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
+<script>
+// YOUR SUPABASE (DIRECT FETCH - NO CDN, NO ERRORS)
+const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
-    // Core Supabase functions (minimal inline implementation for auth, db, storage)
-    class InlineSupabase {
-      constructor(url, key) {
-        this.url = url;
-        this.key = key;
-        this.headers = { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' };
-      }
+let currentUser = null;
 
-      async authGetSession() {
-        try {
-          const res = await fetch(`${this.url}/auth/v1/user`, { headers: this.headers, credentials: 'include' });
-          if (!res.ok) return { data: { session: null } };
-          const user = await res.json();
-          return { data: { session: { user } } };
-        } catch (e) {
-          console.error('Auth session error:', e);
-          return { data: { session: null } };
-        }
-      }
+// Simple auth check
+async function checkAuth() {
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
+  });
+  if (!res.ok) return location.href = 'login.html';
+  const user = await res.json();
+  currentUser = user;
 
-      async authSignOut() {
-        try {
-          await fetch(`${this.url}/auth/v1/logout`, { method: 'POST', headers: this.headers, credentials: 'include' });
-        } catch (e) {
-          console.error('Logout error:', e);
-        }
-      }
+  const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${user.id}&select=*`, {
+    headers: { 'apikey': SUPABASE_KEY }
+  });
+  const [profile] = await profileRes.json();
+  if (!profile || profile.role !== 'mentor') return location.href = 'login.html';
 
-      async authUpdateUser(updates) {
-        try {
-          await fetch(`${this.url}/auth/v1/user`, { method: 'PUT', headers: this.headers, body: JSON.stringify(updates), credentials: 'include' });
-        } catch (e) {
-          console.error('Update user error:', e);
-        }
-      }
+  // Fill UI
+  document.getElementById('mentorName').textContent = profile.username || profile.email;
+  document.getElementById('welcomeName').textContent = profile.username || 'Mentor';
+  document.getElementById('topName').textContent = profile.username || 'Mentor';
+  document.getElementById('topEmail').textContent = profile.email;
+  document.getElementById('avatarInitials').textContent = (profile.username || 'M').slice(0,2).toUpperCase();
+  document.getElementById('profileUsername').value = profile.username || '';
+  document.getElementById('profileEmail').value = profile.email;
+  if (profile.avatar_url) document.getElementById('profilePreview').src = profile.avatar_url;
+}
 
-      async from(table) {
-        return {
-          select: (cols = '*') => ({
-            eq: (field, value) => ({
-              single: async () => {
-                try {
-                  const res = await fetch(`${this.url}/rest/v1/${table}?select=${cols}&${field}=eq.${value}`, { headers: this.headers });
-                  const data = await res.json();
-                  return { data: data[0] || null };
-                } catch (e) {
-                  console.error('Select error:', e);
-                  return { data: null };
-                }
-              },
-              order: (field, opts) => ({
-                limit: async (num) => {
-                  try {
-                    const order = opts.ascending ? 'asc' : 'desc';
-                    const res = await fetch(`${this.url}/rest/v1/${table}?select=*&order=${field}.${order}&limit=${num}`, { headers: this.headers });
-                    return { data: await res.json() };
-                  } catch (e) {
-                    console.error('Order/limit error:', e);
-                    return { data: [] };
-                  }
-                }
-              })
-            }),
-            update: (data) => ({
-              eq: (field, value) => ({
-                async then() {
-                  try {
-                    await fetch(`${this.url}/rest/v1/${table}?${field}=eq.${value}`, {
-                      method: 'PATCH',
-                      headers: this.headers,
-                      body: JSON.stringify(data)
-                    });
-                    return { error: null };
-                  } catch (e) {
-                    console.error('Update error:', e);
-                    return { error: e };
-                  }
-                }
-              })
-            }),
-            insert: async (data) => {
-              try {
-                await fetch(`${this.url}/rest/v1/${table}`, {
-                  method: 'POST',
-                  headers: this.headers,
-                  body: JSON.stringify(data)
-                });
-                return { error: null };
-              } catch (e) {
-                console.error('Insert error:', e);
-                return { error: e };
-              }
-            }
-          })
-        };
-      }
+// Tab switching
+document.querySelectorAll('[data-tab]').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#overview,#lessons,#chat,#profile').forEach(div => div.style.display = 'none');
+    document.getElementById(btn.dataset.tab).style.display = 'block';
+  };
+});
 
-      storage = {
-        from: (bucket) => ({
-          upload: async (path, file, opts) => {
-            try {
-              const formData = new FormData();
-              formData.append('file', file);
-              const res = await fetch(`${this.url}/storage/v1/object/${bucket}/${path}`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${this.key}` },
-                body: formData
-              });
-              return { data: await res.json(), error: res.ok ? null : { message: 'Upload failed' } };
-            } catch (e) {
-              console.error('Storage upload error:', e);
-              return { error: e };
-            }
-          },
-          getPublicUrl: (path) => ({ data: { publicUrl: `${this.url}/storage/v1/object/public/${path}` } })
-        })
-      };
-    }
+// Logout
+document.getElementById('btnLogout').onclick = () => {
+  fetch(`${SUPABASE_URL}/auth/v1/logout`, { method: 'POST', headers: { 'apikey': SUPABASE_KEY } });
+  location.href = 'login.html';
+};
 
-    const supabase = new InlineSupabase(SUPABASE_URL, SUPABASE_ANON_KEY);
-    window.supabase = supabase;
+// Profile save
+document.getElementById('saveProfile').onclick = async () => {
+  const username = document.getElementById('profileUsername').value.trim();
+  const email = document.getElementById('profileEmail').value.trim();
+  const password = document.getElementById('profilePassword').value;
 
-    // App state
-    let currentUser = null;
-    let currentMentor = null;
-    let activeRoom = 'general';
-    let assignedClients = [];
+  await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${currentUser.id}`, {
+    method: 'PATCH',
+    headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ username, email })
+  });
 
-    // Helpers
-    const $ = sel => document.querySelector(sel);
-    const $$ = sel => Array.from(document.querySelectorAll(sel));
-    function toast(msg) { console.log('TOAST:', msg); alert(msg); }
-    function escapeHtml(str = '') { return String(str).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'); }
-
-    // Tab wiring (sidebar and top tabs)
-    $$('.nav button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tab = btn.getAttribute('data-tab');
-        $$('.nav button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const map = { 'overview': 'overviewTab', 'lessons': 'lessonsTab', 'meetings': 'meetingsTab', 'chatTab': 'chatTabContent', 'profileTab': 'profileTabContent' };
-        const show = map[tab];
-        $$('#mainTabs .tab').forEach(t => t.classList.remove('active'));
-        $$('#mainTabs .tab').forEach(t => { if (t.dataset.show === show) t.classList.add('active'); });
-        $$('.tab-content').forEach(c => c.classList.add('hidden'));
-        const el = document.getElementById(show);
-        if (el) el.classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        if (tab === 'chatTab') buildConversations();
-        if (tab === 'overview') loadStats();
-      });
+  if (password) {
+    await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
     });
+  }
 
-    $$('#mainTabs .tab').forEach(t => {
-      t.addEventListener('click', () => {
-        $$('#mainTabs .tab').forEach(x => x.classList.remove('active'));
-        t.classList.add('active');
-        $$('.tab-content').forEach(c => c.classList.add('hidden'));
-        const id = t.dataset.show;
-        const el = document.getElementById(id);
-        if (el) el.classList.remove('hidden');
-      });
-    });
+  document.getElementById('profileMsg').textContent = 'Saved!';
+  checkAuth();
+};
 
-    // Auth & Boot
-    async function boot() {
-      try {
-        const { data: { session } } = await supabase.authGetSession();
-        if (!session || !session.user) {
-          toast('Please log in to access the mentor console.');
-          window.location.href = 'login.html';
-          return;
-        }
-        currentUser = session.user;
+// Photo upload
+document.getElementById('photoUpload').onchange = async (e) => {
+  const file = e.target.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
 
-        const { data: profile } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
-        if (!profile || profile.role !== 'mentor') {
-          toast('Access denied - mentor role required.');
-          window.location.href = 'login.html';
-          return;
-        }
-        currentMentor = profile;
-        fillUIWithMentor();
-        await loadAssignedClients();
-        await loadUploads();
-        await loadStats();
-        await loadMeetings();
-        buildConversations();
-        selectConversation('general');
-        setupRealtimeMessages();
-        loadTradingView();
-      } catch (err) {
-        console.error(err);
-        toast('Boot error - check console');
-      }
-    }
+  await fetch(`${SUPABASE_URL}/storage/v1/object/avatars/mentor-${currentUser.id}`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY },
+    body: formData
+  });
 
-    function fillUIWithMentor() {
-      $('#mentorName').textContent = currentMentor.username || currentMentor.email.split('@')[0];
-      $('#mentorEmail').textContent = currentMentor.email;
-      $('#topName').textContent = currentMentor.username || 'Mentor';
-      $('#topEmail').textContent = currentMentor.email;
-      $('#avatarInitials').textContent = (currentMentor.username || 'M').slice(0,2).toUpperCase();
-      $('#profileUsername').value = currentMentor.username || '';
-      $('#profileEmail').value = currentMentor.email;
-      if (currentMentor.avatar_url) $('#profilePreview').src = currentMentor.avatar_url;
-    }
+  const url = `${SUPABASE_URL}/storage/v1/object/public/avatars/mentor-${currentUser.id}?t=${Date.now()}`;
+  document.getElementById('profilePreview').src = url;
 
-    // Load assigned clients
-    async function loadAssignedClients() {
-      try {
-        // Assuming assignments table; fallback to all clients for demo
-        const { data } = await supabase.from('profiles').select('id, username, email').eq('role', 'client');
-        assignedClients = data || [];
-        buildConversations();
-      } catch (e) {
-        console.error('loadAssignedClients err', e);
-        assignedClients = []; // Demo fallback
-        buildConversations();
-      }
-    }
+  await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${currentUser.id}`, {
+    method: 'PATCH',
+    headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ avatar_url: url })
+  });
+};
 
-    // Build conversations
-    function buildConversations() {
-      const convContainer = $('#conversationList');
-      convContainer.innerHTML = '';
-      const general = document.createElement('div');
-      general.className = 'conversation active';
-      general.dataset.room = 'general';
-      general.textContent = 'General Room';
-      convContainer.appendChild(general);
-      assignedClients.forEach(c => {
-        const d = document.createElement('div');
-        d.className = 'conversation';
-        d.dataset.room = `dm_${c.id}`;
-        d.innerHTML = `${escapeHtml(c.username || c.email)} <div style="font-size:12px;color:var(--muted)">${escapeHtml(c.email)}</div>`;
-        d.addEventListener('click', () => selectConversation(`dm_${c.id}`, c.username || c.email));
-        convContainer.appendChild(d);
-      });
-    }
+// TradingView
+new TradingView.widget({
+  "container_id": "tradingview",
+  "width": "100%",
+  "height": 420,
+  "symbol": "BINANCE:BTCUSDT",
+  "interval": "60",
+  "timezone": "Etc/UTC",
+  "theme": "light",
+  "style": "1",
+  "locale": "en",
+  "toolbar_bg": "#f9f6f2",
+  "enable_publishing": false,
+  "allow_symbol_change": true
+});
 
-    // Chat functions
-    function selectConversation(room, title = 'Chat') {
-      activeRoom = room;
-      $$('.conversation').forEach(el => el.classList.toggle('active', el.dataset.room === room));
-      $('#chatTitle').textContent = room === 'general' ? 'General Room' : title;
-      $('#chatSubtitle').textContent = room === 'general' ? 'Public conversations' : 'Private chat';
-      loadMessagesForRoom(room);
-    }
+document.getElementById('fullscreenChart').onclick = () => {
+  document.getElementById('tradingview').requestFullscreen();
+};
 
-    async function loadMessagesForRoom(room) {
-      $('#chatWindow').innerHTML = '<div style="color:var(--muted)">Loading messages...</div>';
-      try {
-        const { data } = await supabase.from('messages').select('*').eq('room', room).order('created_at', { ascending: true });
-        $('#chatWindow').innerHTML = '';
-        (data || []).forEach(m => appendMessageToWindow(m));
-        $('#chatWindow').scrollTop = $('#chatWindow').scrollHeight;
-      } catch (e) {
-        console.error('loadMessages err', e);
-        $('#chatWindow').innerHTML = '<div style="color:red">Error loading messages</div>';
-      }
-    }
-
-    function appendMessageToWindow(m) {
-      const div = document.createElement('div');
-      const isSent = m.sender_id === currentUser.id;
-      div.className = 'msg ' + (isSent ? 'sent' : 'recv');
-      const ts = new Date(m.created_at).toLocaleString();
-      div.innerHTML = `<div style="font-size:0.95rem">${escapeHtml(m.message)}</div><div style="font-size:11px; opacity:0.7; margin-top:6px">${escapeHtml(m.sender_label || 'User')} • ${ts}</div>`;
-      $('#chatWindow').appendChild(div);
-    }
-
-    $('#sendForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const text = $('#messageInput').value.trim();
-      if (!text) return;
-      const payload = {
-        room: activeRoom,
-        sender_id: currentUser.id,
-        sender_label: currentMentor.username,
-        message: text,
-        created_at: new Date().toISOString()
-      };
-      try {
-        await supabase.from('messages').insert([payload]);
-        $('#messageInput').value = '';
-        appendMessageToWindow(payload);
-        $('#chatWindow').scrollTop = $('#chatWindow').scrollHeight;
-      } catch (e) {
-        toast('Send failed');
-      }
-    });
-
-    // Realtime (simplified polling for now - full websocket if needed later)
-    function setupRealtimeMessages() {
-      // Poll every 5s for new messages
-      setInterval(() => {
-        if (activeRoom) loadMessagesForRoom(activeRoom);
-      }, 5000);
-    }
-
-    // Upload lessons
-    $('#uploadForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const title = $('#uploadTitle').value.trim();
-      const url = $('#uploadFile').value.trim();
-      if (!title || !url) return $('#uploadMsg').textContent = 'Provide title and URL';
-      try {
-        await supabase.from('uploads').insert([{ mentor_id: currentUser.id, title, url, created_at: new Date().toISOString() }]);
-        $('#uploadMsg').textContent = 'Uploaded ✓';
-        $('#uploadTitle').value = ''; $('#uploadFile').value = '';
-        loadUploads();
-      } catch (e) {
-        $('#uploadMsg').textContent = 'Upload failed';
-      }
-    });
-
-    $('#btnSample').addEventListener('click', () => {
-      $('#uploadTitle').value = 'Sample Lesson: Candlestick Patterns';
-      $('#uploadFile').value = 'https://example.com/sample.pdf';
-    });
-
-    async function loadUploads() {
-      try {
-        const { data } = await supabase.from('uploads').select('*').eq('mentor_id', currentUser.id).order('created_at', { ascending: false }).limit(8);
-        const ul = $('#uploadsList');
-        ul.innerHTML = '';
-        if (!data || data.length === 0) {
-          ul.innerHTML = '<li style="color:var(--muted)">No uploads yet</li>';
-          return;
-        }
-        data.forEach(u => {
-          const li = document.createElement('li');
-          li.innerHTML = `<a href="${u.url}" target="_blank" style="color:var(--gold-dark);text-decoration:none;font-weight:700">${escapeHtml(u.title)}</a><div style="font-size:12px;color:var(--muted)">${new Date(u.created_at).toLocaleString()}</div>`;
-          ul.appendChild(li);
-        });
-      } catch (e) {
-        $('#uploadsList').innerHTML = '<li style="color:var(--muted)">Load error</li>';
-      }
-    }
-
-    // Stats
-    async function loadStats() {
-      try {
-        const { data: clients } = await supabase.from('profiles').select('id').eq('role', 'client');
-        $('#statClients').textContent = clients ? clients.length : 0;
-        $('#statLessons').textContent = 0; // Placeholder
-        $('#statEarnings').textContent = 'KES 0'; // Placeholder
-      } catch (e) {
-        console.error('loadStats err', e);
-      }
-    }
-
-    // Meetings (placeholder - add full logic later)
-    $('#btnSchedule').addEventListener('click', () => {
-      toast('Meeting scheduled (full integration coming)');
-    });
-
-    async function loadMeetings() {
-      $('#meetingsList').textContent = 'No upcoming meetings';
-    }
-
-    // Profile save
-    $('#profileForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const username = $('#profileUsername').value.trim();
-      const email = $('#profileEmail').value.trim();
-      const password = $('#profilePassword').value;
-      if (!username || !email) return $('#profileMsg').textContent = 'Fill name and email';
-      try {
-        await supabase.from('profiles').update({ username, email }).eq('id', currentUser.id);
-        if (password) await supabase.authUpdateUser({ password });
-        currentMentor.username = username;
-        currentMentor.email = email;
-        fillUIWithMentor();
-        $('#profileMsg').textContent = 'Saved ✓';
-      } catch (e) {
-        $('#profileMsg').textContent = 'Save failed';
-      }
-    });
-
-    // Photo upload
-    $('#photoUpload').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      try {
-        const { data, error } = await supabase.storage.from('avatars').upload(`mentor-${currentUser.id}`, file, { upsert: true });
-        if (!error) {
-          const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(`mentor-${currentUser.id}`);
-          $('#profilePreview').src = publicUrl + '?' + Date.now();
-          await supabase.from('profiles').update({ avatar_url: publicUrl }).eq('id', currentUser.id);
-        }
-      } catch (e) {
-        toast('Photo upload failed');
-      }
-    });
-
-    // Buttons
-    $('#btnLogout').addEventListener('click', async () => {
-      await supabase.authSignOut();
-      window.location.href = 'login.html';
-    });
-
-    $('#btnRefresh').addEventListener('click', async () => {
-      await loadAssignedClients();
-      await loadUploads();
-      await loadStats();
-      toast('Refreshed');
-    });
-
-    $('#btnClearChat').addEventListener('click', () => {
-      if (confirm('Clear chat view?')) $('#chatWindow').innerHTML = '';
-    });
-
-    // TradingView
-    function loadTradingView() {
-      if (typeof TradingView === 'undefined') return toast('TradingView loading...');
-      new TradingView.widget({
-        "width": "100%",
-        "height": 400,
-        "symbol": "BINANCE:BTCUSDT",
-        "interval": "60",
-        "timezone": "Etc/UTC",
-        "theme": "Light",
-        "style": "1",
-        "locale": "en",
-        "toolbar_bg": "#f9f6f2",
-        "enable_publishing": false,
-        "container_id": "tv_embed"
-      });
-    }
-
-    $('#btnFullScreenTV').addEventListener('click', () => {
-      const elem = $('#tvContainer');
-      if (!document.fullscreenElement) {
-        elem.requestFullscreen?.();
-      } else {
-        document.exitFullscreen?.();
-      }
-    });
-
-    // Boot the app
-    boot();
-  </script>
+// Start
+checkAuth();
+</script>
 </body>
 </html>
