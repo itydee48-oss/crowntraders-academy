@@ -44,16 +44,43 @@
   <div id="msg" class="msg"></div>
 </div>
 
-<!-- WORKING SUPABASE JS (UMD) -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-
 <script>
-  // Supabase is now globally available as `supabase`
-  const supabase = window.supabase.createClient(
-    'https://eygjxxdgxzatchqgwvep.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg'
-  );
+  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
+  const headers = {
+    'apikey': ANON_KEY,
+    'Authorization': `Bearer ${ANON_KEY}`,
+    'Content-Type': 'application/json'
+  };
+
+  // Signup
+  document.getElementById('showRegister').onclick = async (e) => {
+    e.preventDefault();
+    const email = prompt('Enter your email:');
+    const password = prompt('Choose a password (6+ characters):');
+    if (email && password && password.length >= 6) {
+      const msg = document.getElementById('msg');
+      msg.textContent = 'Creating account...';
+      try {
+        const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          msg.textContent = 'Account created! Check your email (including spam) for the confirmation link. Click it, then log in.';
+        } else {
+          msg.textContent = 'Signup error: ' + (data.error_description || data.message || 'Try again');
+        }
+      } catch (err) {
+        document.getElementById('msg').textContent = 'Network error. Check connection.';
+      }
+    }
+  };
+
+  // Login
   document.getElementById('loginForm').onsubmit = async (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value.trim();
@@ -61,40 +88,40 @@
     const msg = document.getElementById('msg');
     msg.textContent = 'Logging in...';
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      msg.textContent = error.message;
-      return;
-    }
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', data.user.id)
-      .maybeSingle();
-
-    if (profile?.role === 'mentor') {
-      location.href = 'mentor-dashboard.html';
-    } else {
-      // Auto-create profile if missing
-      await supabase.from('profiles').upsert({
-        id: data.user.id,
-        email: data.user.email,
-        role: 'client'
+    try {
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ email, password })
       });
-      location.href = 'client-dashboard.html';
-    }
-  };
 
-  document.getElementById('showRegister').onclick = async (e) => {
-    e.preventDefault();
-    const email = prompt('Enter your email:');
-    const password = prompt('Choose a password (6+ characters):');
-    if (email && password && password.length >= 6) {
-      const { error } = await supabase.auth.signUp({ email, password });
-      if (error) alert('Error: ' + error.message);
-      else alert('Account created! Check your email (including spam) → click the confirmation link → then log in.');
+      if (!res.ok) {
+        const err = await res.json();
+        msg.textContent = err.error_description || 'Invalid email or password';
+        return;
+      }
+
+      const { access_token, user } = await res.json();
+
+      // Get profile
+      const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?select=role&id=eq.${user.id}`, {
+        headers: { 'apikey': ANON_KEY }
+      });
+      const [profile] = await profileRes.json();
+
+      if (profile && profile.role === 'mentor') {
+        location.href = 'mentor-dashboard.html';
+      } else {
+        // Auto-create profile if missing
+        await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
+          method: 'POST',
+          headers: { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: user.id, email: user.email, role: 'client' })
+        });
+        location.href = 'client-dashboard.html';
+      }
+    } catch (err) {
+      msg.textContent = 'Network error. Check connection.';
     }
   };
 </script>
