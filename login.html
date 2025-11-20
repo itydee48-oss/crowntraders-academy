@@ -35,25 +35,74 @@
     if (!email) return;
 
     msg.textContent = 'Sending magic link...';
+    msg.style.color = '#2e2e2e';
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: location.href.replace('login.html', 'mentor-dashboard.html') }
-    });
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { 
+          emailRedirectTo: `${window.location.origin}/mentor-dashboard.html`
+        }
+      });
 
-    if (error) {
+      if (error) {
+        msg.style.color = 'red';
+        msg.textContent = error.message;
+      } else {
+        msg.style.color = 'green';
+        msg.textContent = 'Magic link sent! Check your inbox (and spam). Click the link → you\'re in.';
+      }
+    } catch (error) {
       msg.style.color = 'red';
-      msg.textContent = error.message;
-    } else {
-      msg.style.color = 'green';
-      msg.textContent = 'Magic link sent! Check your inbox (and spam). Click the link → you’re in.';
+      msg.textContent = 'Failed to send magic link. Please try again.';
     }
   }
 
-  // Auto-login if coming back from magic link
-  supabase.auth.onAuthStateChange((event, session) => {
+  // Check if user is already logged in
+  async function checkAuth() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      // Check if user is a mentor
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+
+      if (profile && profile.role === 'mentor') {
+        window.location.href = 'mentor-dashboard.html';
+      }
+    }
+  }
+
+  // Auto-redirect if coming back from magic link
+  supabase.auth.onAuthStateChange(async (event, session) => {
     if (event === 'SIGNED_IN' && session) {
-      location.href = 'mentor-dashboard.html';
+      // Verify user is a mentor before redirecting
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+
+      if (profile && profile.role === 'mentor') {
+        window.location.href = 'mentor-dashboard.html';
+      } else {
+        // If not a mentor, sign them out and show message
+        await supabase.auth.signOut();
+        document.getElementById('msg').style.color = 'red';
+        document.getElementById('msg').textContent = 'Access denied. Mentor access only.';
+      }
+    }
+  });
+
+  // Check auth on page load
+  checkAuth();
+
+  // Allow pressing Enter to send magic link
+  document.getElementById('email').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      sendMagicLink();
     }
   });
 </script>
