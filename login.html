@@ -44,13 +44,12 @@
   <div id="msg" class="msg"></div>
 </div>
 
-<!-- OFFICIAL SUPABASE JS — LOADS FIRST -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<!-- WORKING SUPABASE JS (UMD) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 
 <script>
-  // Now Supabase is globally available
-  const { createClient } = Supabase;
-  const supabase = createClient(
+  // Supabase is now globally available as `supabase`
+  const supabase = window.supabase.createClient(
     'https://eygjxxdgxzatchqgwvep.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg'
   );
@@ -75,16 +74,11 @@
       .eq('id', data.user.id)
       .maybeSingle();
 
-    const role = profile?.role;
-
-    if (role === 'mentor') {
+    if (profile?.role === 'mentor') {
       location.href = 'mentor-dashboard.html';
-    } else if (role === 'client') {
-      location.href = 'client-dashboard.html';
     } else {
-      msg.textContent = 'Role not set. Creating profile...';
-      // Auto-create profile with default client role
-      await supabase.from('profiles').insert({
+      // Auto-create profile if missing
+      await supabase.from('profiles').upsert({
         id: data.user.id,
         email: data.user.email,
         role: 'client'
@@ -99,11 +93,8 @@
     const password = prompt('Choose a password (6+ characters):');
     if (email && password && password.length >= 6) {
       const { error } = await supabase.auth.signUp({ email, password });
-      if (error) {
-        alert('Error: ' + error.message);
-      } else {
-        alert('Account created! Check your email (including spam) for the confirmation link. Click it, then log in.');
-      }
+      if (error) alert('Error: ' + error.message);
+      else alert('Account created! Check your email (including spam) → click the confirmation link → then log in.');
     }
   };
 </script>
