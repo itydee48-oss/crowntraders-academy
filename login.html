@@ -24,9 +24,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// REPLACE THIS WITH YOUR NEW ANON KEY FROM SUPABASE DASHBOARD
-const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-const SUPABASE_KEY = 'PASTE_YOUR_NEW_ANON_KEY_HERE'; // ← GET THIS FROM SUPABASE DASHBOARD
+// NEW SUPABASE CREDENTIALS
+const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxza2pzaGJjbmlpbHpseXhlY3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2MzcwMjksImV4cCI6MjA3OTIxMzAyOX0.PxvhBTZ2Bv4hnwxTrFA0E_zucNxMYrVwDSuRGniDBnc';
 
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -66,7 +66,7 @@ async function sendMagicLink() {
   }
 }
 
-// Check auth on page load
+// Check if user is already logged in
 supabaseClient.auth.getSession().then(({ data: { session } }) => {
   if (session) {
     window.location.href = 'mentor-dashboard.html';
@@ -75,6 +75,7 @@ supabaseClient.auth.getSession().then(({ data: { session } }) => {
 
 // Auto-redirect if coming back from magic link
 supabaseClient.auth.onAuthStateChange((event, session) => {
+  console.log('Auth state changed:', event);
   if (event === 'SIGNED_IN' && session) {
     window.location.href = 'mentor-dashboard.html';
   }
