@@ -22,17 +22,14 @@
   <div id="msg" class="msg"></div>
 </div>
 
-<!-- Use the exact same Supabase CDN as your dashboard -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Initialize Supabase with the exact same method as your dashboard
-const { createClient } = supabase;
-const supabaseClient = createClient(
-  'https://eygjxxdgxzatchqgwvep.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg'
-);
+// REPLACE THIS WITH YOUR NEW ANON KEY FROM SUPABASE DASHBOARD
+const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+const SUPABASE_KEY = 'PASTE_YOUR_NEW_ANON_KEY_HERE'; // ← GET THIS FROM SUPABASE DASHBOARD
 
-console.log('Supabase initialized:', supabaseClient);
+const { createClient } = supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function sendMagicLink() {
   const email = document.getElementById('email').value.trim();
@@ -57,6 +54,7 @@ async function sendMagicLink() {
     if (error) {
       msg.style.color = 'red';
       msg.textContent = 'Error: ' + error.message;
+      console.error('Supabase error:', error);
     } else {
       msg.style.color = 'green';
       msg.textContent = 'Magic link sent! Check your inbox (and spam). Click the link → you\'re in.';
@@ -68,48 +66,19 @@ async function sendMagicLink() {
   }
 }
 
-// Check if user is already logged in
-async function checkAuth() {
-  try {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (session) {
-      const { data: profile } = await supabaseClient
-        .from('profiles')
-        .select('role')
-        .eq('id', session.user.id)
-        .single();
-
-      if (profile && profile.role === 'mentor') {
-        window.location.href = 'mentor-dashboard.html';
-      }
-    }
-  } catch (error) {
-    console.error('Auth check error:', error);
-  }
-}
-
-// Auto-redirect if coming back from magic link
-supabaseClient.auth.onAuthStateChange(async (event, session) => {
-  console.log('Auth state changed:', event);
-  if (event === 'SIGNED_IN' && session) {
-    const { data: profile } = await supabaseClient
-      .from('profiles')
-      .select('role')
-      .eq('id', session.user.id)
-      .single();
-
-    if (profile && profile.role === 'mentor') {
-      window.location.href = 'mentor-dashboard.html';
-    } else {
-      await supabaseClient.auth.signOut();
-      document.getElementById('msg').style.color = 'red';
-      document.getElementById('msg').textContent = 'Access denied. Mentor access only.';
-    }
+// Check auth on page load
+supabaseClient.auth.getSession().then(({ data: { session } }) => {
+  if (session) {
+    window.location.href = 'mentor-dashboard.html';
   }
 });
 
-// Check auth on page load
-checkAuth();
+// Auto-redirect if coming back from magic link
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_IN' && session) {
+    window.location.href = 'mentor-dashboard.html';
+  }
+});
 
 // Allow pressing Enter to send magic link
 document.getElementById('email').addEventListener('keypress', function(e) {
