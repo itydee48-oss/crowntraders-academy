@@ -46,7 +46,7 @@
 
 <script>
   const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
   document.getElementById('loginForm').onsubmit = async (e) => {
     e.preventDefault();
@@ -58,7 +58,11 @@
     try {
       const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
         method: 'POST',
-        headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json' },
+        headers: { 
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ email, password })
       });
 
@@ -68,7 +72,10 @@
 
       // Get profile to know role
       const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${user.id}&select=role`, {
-        headers: { apikey: SUPABASE_KEY }
+        headers: { 
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        }
       });
       const [profile] = await profileRes.json() || [{}];
 
@@ -76,7 +83,7 @@
       if (profile.role === 'mentor') {
         location.href = 'mentor-dashboard.html';
       } else if (profile.role === 'client') {
-        location.href = 'client-dashboard.html';  // we'll build this next
+        location.href = 'client-dashboard.html';
       } else {
         msg.textContent = 'Role not recognized. Contact admin.';
       }
@@ -86,24 +93,52 @@
   };
 
   // Quick register (creates client by default)
-  document.getElementById('showRegister').onclick = (e) => {
+  document.getElementById('showRegister').onclick = async (e) => {
     e.preventDefault();
     const email = prompt('Enter your email:');
     const pass = prompt('Choose a password:');
-    if (email && pass) {
-      fetch(`${SUPABASE_URL}/auth/v1/signup`, {
-        method: 'POST',
-        headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: pass })
-      })
-      .then(r => r.json())
-      .then(data => {
+    if (email && pass && pass.length >= 6) {
+      const msg = document.getElementById('msg');
+      msg.textContent = 'Creating account...';
+      try {
+        const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+          method: 'POST',
+          headers: { 
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password: pass })
+        });
+
+        const data = await res.json();
         if (data.user) {
-          alert('Account created! Check your email to confirm, then log in.');
+          msg.textContent = 'Account created! Check your email to confirm, then log in.';
+          // Auto-create profile with client role
+          setTimeout(async () => {
+            await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
+              method: 'POST',
+              headers: { 
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+              },
+              body: JSON.stringify({ 
+                id: data.user.id, 
+                email, 
+                role: 'client' 
+              })
+            });
+          }, 1000);
         } else {
-          alert('Error: ' + JSON.stringify(data));
+          msg.textContent = 'Error: ' + (data.error_description || 'Signup failed');
         }
-      });
+      } catch (err) {
+        msg.textContent = 'Error: ' + (err.message || 'Signup failed');
+      }
+    } else {
+      alert('Password must be at least 6 characters.');
     }
   };
 </script>
