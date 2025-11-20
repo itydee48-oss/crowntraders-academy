@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crown Trade — Create Mentor Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body{background:linear-gradient(135deg,#F9F6F2,#fff);font-family:Montserrat,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;color:#2e2e2e;}
+    .box{background:rgba(255,255,255,0.95);padding:60px 50px;border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,0.1);border:1px solid rgba(200,169,126,0.4);text-align:center;max-width:460px;width:100%;}
+    h1{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#C8A97E;margin-bottom:10px;}
+    input{width:100%;padding:18px;margin:12px 0;border-radius:14px;border:1px solid #ddd;font-size:1.1rem;}
+    button{background:#C8A97E;color:white;border:none;padding:18px 40px;border-radius:14px;font-weight:700;font-size:1.2rem;cursor:pointer;margin-top:20px;width:100%;}
+    .msg{margin-top:20px;font-weight:600;}
+    .success{color:#1a8917;}
+    .error{color:#d32f2f;}
+  </style>
+</head>
+<body>
+<div class="box">
+  <h1>Crown Trade</h1>
+  <p>Create Your Mentor Account</p>
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="text" id="username" placeholder="Username (e.g. AlexTheKing)" required>
+  <input type="password" id="password" placeholder="Password (6+ chars)" required>
+  <button id="create">Create Mentor Account</button>
+  <div id="msg" class="msg"></div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
+  const headers = { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}`, 'Content-Type': 'application/json' };
+
+  document.getElementById('create').onclick = async () => {
+    const email = document.getElementById('email').value.trim();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const msg = document.getElementById('msg');
+
+    if (!email || !username || password.length < 6) {
+      msg.className = 'error'; msg.textContent = 'Fill all fields, password 6+ chars';
+      return;
+    }
+
+    msg.textContent = 'Creating mentor account...';
+
+    try {
+      // 1. Create user (no email confirmation)
+      const signupRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
+        method: 'POST',
+        headers: { ...headers, 'Authorization': `Bearer ${'SERVICE_ROLE_KEY_GOES_HERE'.replace('SERVICE_ROLE_KEY_GOES_HERE', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjM4NTI4MiwiZXhwIjoyMDc3OTYxMjgyfQ.3p1b9b8e8e8e8e8e8e8e8e8e8e8e8e8e8e8e8e8e8e8')}` },
+        body: JSON.stringify({
+          email, password,
+          email_confirm: true,
+          user_metadata: { username }
+        })
+      });
+
+      if (!signupRes.ok) throw await signupRes.json();
+
+      const { user } = await signupRes.json();
+
+      // 2. Create profile with role = mentor
+      await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ id: user.id, email, username, role: 'mentor' })
+      });
+
+      msg.className = 'success';
+      msg.innerHTML = `MENTOR ACCOUNT CREATED!<br>Email: <strong>${email}</strong><br>Password: <strong>${password}</strong><br><br>Go to <a href="login.html" style="color:#C8A97E;font-weight:700;">login.html</a> and sign in now.`;
+    } catch (err) {
+      msg.className = 'error';
+      msg.textContent = 'Failed. Did you replace the SERVICE_ROLE_KEY? Or use this link instead: https://app.supabase.com/project/eygjxxdgxzatchqgwvep/auth/users → Add user manually (2 clicks)';
+    }
+  };
+</script>
+</body>
+</html>
