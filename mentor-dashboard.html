@@ -107,6 +107,19 @@
 
 <script src="https://s3.tradingview.com/tv.js"></script>
 <script>
+// ADD THIS AT THE TOP OF YOUR MENTOR DASHBOARD SCRIPT
+const supabase = Supabase.createClient(
+  'https://eygjxxdgxzatchqgwvep.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg'
+);
+
+async function init() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return location.href = 'login.html';
+
+  const { user } = session;
+  // rest of your existing code...
+  <script>
   const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
