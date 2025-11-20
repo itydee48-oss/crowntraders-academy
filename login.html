@@ -18,57 +18,25 @@
   <h1>Crown Trade</h1>
   <p>Enter your email — we send you a magic login link (no password)</p>
   <input type="email" id="email" placeholder="your@email.com" required>
-  <button id="loginBtn">Send Magic Link</button>
+  <button onclick="sendMagicLink()">Send Magic Link</button>
   <div id="msg" class="msg"></div>
 </div>
 
+<!-- Use the exact same Supabase CDN as your dashboard -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Wait for Supabase to load
-let supabase;
+// Initialize Supabase with the exact same method as your dashboard
+const { createClient } = supabase;
+const supabaseClient = createClient(
+  'https://eygjxxdgxzatchqgwvep.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg'
+);
 
-function initSupabase() {
-  // Check if Supabase is available
-  if (typeof window.supabase !== 'undefined' || typeof window.createClient !== 'undefined') {
-    supabase = window.supabase.createClient(
-      'https://eygjxxdgxzatchqgwvep.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg'
-    );
-    console.log('Supabase initialized successfully');
-    return true;
-  } else {
-    console.error('Supabase not loaded yet');
-    return false;
-  }
-}
-
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', function() {
-  // Try to initialize Supabase
-  setTimeout(() => {
-    if (initSupabase()) {
-      checkAuth();
-    } else {
-      document.getElementById('msg').textContent = 'Error loading authentication. Please refresh the page.';
-      document.getElementById('msg').style.color = 'red';
-    }
-  }, 1000);
-
-  // Add event listener to button
-  document.getElementById('loginBtn').addEventListener('click', sendMagicLink);
-});
+console.log('Supabase initialized:', supabaseClient);
 
 async function sendMagicLink() {
-  // Check if Supabase is initialized
-  if (!supabase) {
-    document.getElementById('msg').textContent = 'Authentication not ready. Please wait...';
-    document.getElementById('msg').style.color = 'red';
-    return;
-  }
-
   const email = document.getElementById('email').value.trim();
   const msg = document.getElementById('msg');
-  
   if (!email) {
     msg.textContent = 'Please enter your email address';
     msg.style.color = 'red';
@@ -79,16 +47,16 @@ async function sendMagicLink() {
   msg.style.color = '#2e2e2e';
 
   try {
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabaseClient.auth.signInWithOtp({
       email,
       options: { 
-        emailRedirectTo: `${window.location.origin}/mentor-dashboard.html`
+        emailRedirectTo: window.location.origin + '/mentor-dashboard.html'
       }
     });
 
     if (error) {
       msg.style.color = 'red';
-      msg.textContent = error.message;
+      msg.textContent = 'Error: ' + error.message;
     } else {
       msg.style.color = 'green';
       msg.textContent = 'Magic link sent! Check your inbox (and spam). Click the link → you\'re in.';
@@ -102,19 +70,16 @@ async function sendMagicLink() {
 
 // Check if user is already logged in
 async function checkAuth() {
-  if (!supabase) return;
-  
   try {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
     if (session) {
-      // Check if user is a mentor
-      const { data: profile, error } = await supabase
+      const { data: profile } = await supabaseClient
         .from('profiles')
         .select('role')
         .eq('id', session.user.id)
         .single();
 
-      if (!error && profile && profile.role === 'mentor') {
+      if (profile && profile.role === 'mentor') {
         window.location.href = 'mentor-dashboard.html';
       }
     }
@@ -124,27 +89,27 @@ async function checkAuth() {
 }
 
 // Auto-redirect if coming back from magic link
-if (supabase) {
-  supabase.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_IN' && session) {
-      // Verify user is a mentor before redirecting
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', session.user.id)
-        .single();
+supabaseClient.auth.onAuthStateChange(async (event, session) => {
+  console.log('Auth state changed:', event);
+  if (event === 'SIGNED_IN' && session) {
+    const { data: profile } = await supabaseClient
+      .from('profiles')
+      .select('role')
+      .eq('id', session.user.id)
+      .single();
 
-      if (profile && profile.role === 'mentor') {
-        window.location.href = 'mentor-dashboard.html';
-      } else {
-        // If not a mentor, sign them out and show message
-        await supabase.auth.signOut();
-        document.getElementById('msg').style.color = 'red';
-        document.getElementById('msg').textContent = 'Access denied. Mentor access only.';
-      }
+    if (profile && profile.role === 'mentor') {
+      window.location.href = 'mentor-dashboard.html';
+    } else {
+      await supabaseClient.auth.signOut();
+      document.getElementById('msg').style.color = 'red';
+      document.getElementById('msg').textContent = 'Access denied. Mentor access only.';
     }
-  });
-}
+  }
+});
+
+// Check auth on page load
+checkAuth();
 
 // Allow pressing Enter to send magic link
 document.getElementById('email').addEventListener('keypress', function(e) {
