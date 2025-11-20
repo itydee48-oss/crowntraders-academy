@@ -1,256 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crown Trade Academy — Mentor Console</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    :root{--nude-light:#F9F6F2;--gold:#C8A97E;--gold-dark:#B89463;--charcoal:#2e2e2e;--muted:#7A7A7A;}
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Montserrat',sans-serif;background:linear-gradient(180deg,var(--nude-light),#fff);color:var(--charcoal);min-height:100vh;}
-    .app{display:grid;grid-template-columns:260px 1fr;gap:24px;padding:22px;height:100vh;}
-    .sidebar{background:rgba(255,255,255,0.6);border:1px solid rgba(212,200,188,0.6);padding:22px;border-radius:10px;position:sticky;top:22px;height:fit-content;}
-    .brand{font-family:'Cormorant Garamond',serif;color:var(--gold-dark);font-size:1.8rem;margin-bottom:20px;}
-    .nav button{background:transparent;border:none;padding:12px 16px;width:100%;text-align:left;border-radius:8px;cursor:pointer;font-weight:600;transition:0.3s;}
+    :root{--nude:#F9F6F2;--gold:#C8A97E;--gold-dark:#B89463;--charcoal:#2e2e2e;--muted:#777;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Montserrat',sans-serif;background:linear-gradient(135deg,var(--nude),#fff);color:var(--charcoal);min-height:100vh;}
+    .app{display:grid;grid-template-columns:280px 1fr;gap:24px;padding:24px;height:100vh;}
+    .sidebar{background:rgba(255,255,255,0.92);border:1px solid rgba(200,169,126,0.4);border-radius:16px;padding:30px;box-shadow:0 20px 60px rgba(0,0,0,0.06);}
+    .brand{font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--gold-dark);margin-bottom:8px;}
+    .mentor-info{margin:20px 0;font-size:0.95rem;color:var(--muted);}
+    .nav button{width:100%;padding:14px 18px;margin:8px 0;border:none;border-radius:12px;background:transparent;color:var(--charcoal);font-weight:600;text-align:left;cursor:pointer;transition:0.3s;}
     .nav button:hover,.nav button.active{background:var(--gold);color:white;}
-    .btn{background:var(--gold);color:white;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:700;}
-    .btn.ghost{background:transparent;border:1px solid #ddd;color:var(--charcoal);}
-    .main{background:rgba(255,255,255,0.9);border:1px solid rgba(212,200,188,0.6);border-radius:10px;padding:20px;overflow:auto;}
-    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
-    .title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--gold-dark);}
-    .avatar{width:50px;height:50px;border-radius:50%;background:var(--gold);color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1.4rem;}
-    .tab{padding:10px 16px;border-radius:8px;background:transparent;border:1px solid #eee;cursor:pointer;margin-right:8px;}
-    .tab.active{background:var(--gold);color:white;}
-    .content-grid{display:grid;grid-template-columns:1fr 450px;gap:20px;}
-    .card{background:white;border:1px solid #eee;padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,0.05);}
-    .chat{height:520px;display:flex;flex-direction:column;background:white;border-radius:12px;overflow:hidden;}
-    .chat-window{flex:1;padding:16px;overflow-y:auto;background:#fdfaf7;}
-    .msg{max-width:80%;padding:10px 14px;border-radius:18px;margin-bottom:10px;clear:both;}
+    .main{background:rgba(255,255,255,0.95);border-radius:16px;padding:30px;overflow:auto;border:1px solid rgba(200,169,126,0.3);}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;}
+    .title{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold-dark);}
+    .avatar{width:56px;height:56px;border-radius:50%;background:var(--gold);color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1.6rem;}
+    .card{background:white;padding:24px;border-radius:14px;margin-bottom:20px;box-shadow:0 10px 30px rgba(0,0,0,0.05);border:1px solid #eee;}
+    .client-list{max-height:60vh;overflow-y:auto;}
+    .client-item{display:flex;align-items:center;padding:12px;border-radius:10px;cursor:pointer;transition:0.2s;margin:6px 0;}
+    .client-item:hover,.client-item.active{background:var(--gold);color:white;}
+    .client-item img{width:40px;height:40px;border-radius:50%;margin-right:12px;object-fit:cover;}
+    .chat{height:100%;display:flex;flex-direction:column;background:white;border-radius:14px;overflow:hidden;}
+    .chat-header{padding:16px;background:var(--gold);color:white;font-weight:600;}
+    .chat-window{flex:1;padding:20px;overflow-y:auto;background:#fdfaf7;}
+    .msg{max-width:78%;padding:12px 16px;border-radius:18px;margin:8px 0;clear:both;}
     .msg.sent{background:var(--gold);color:white;margin-left:auto;}
     .msg.recv{background:#f0f0f0;color:var(--charcoal);}
-    .chat-form{display:flex;padding:12px;background:white;border-top:1px solid #eee;}
-    .chat-form input{flex:1;padding:12px;border-radius:8px;border:1px solid #ddd;margin-right:8px;}
-    #profilePreview{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid var(--gold);}
-    @media(max-width:1000px){.app{grid-template-columns:1fr;}.content-grid{grid-template-columns:1fr;}}
+    .chat-form{display:flex;padding:16px;background:white;border-top:1px solid #eee;}
+    .chat-form input{flex:1;padding:14px;border-radius:12px;border:1px solid #ddd;margin-right:10px;}
+    .btn{background:var(--gold);color:white;border:none;padding:14px 20px;border-radius:12px;cursor:pointer;font-weight:700;}
+    #tradingview{height:460px;border-radius:12px;overflow:hidden;margin-top:20px;}
+    @media(max-width:1000px){.app{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
 
 <div class="app">
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="brand">Crown Trade</div>
-    <div style="margin-bottom:20px;color:var(--muted);font-size:0.9rem;">
-      <div id="mentorName">Loading...</div>
-      <div id="mentorEmail">—</div>
+    <div class="mentor-info">
+      <div id="mentorName" style="font-weight:700;">Loading...</div>
+      <div id="mentorEmail" style="color:var(--muted);font-size:0.9rem;">—</div>
     </div>
     <nav class="nav">
-      <button data-tab="overview" class="active">Overview</button>
+      <button data-tab="clients" class="active">Clients</button>
       <button data-tab="lessons">Lessons</button>
-      <button data-tab="chat">Chat</button>
       <button data-tab="profile">Profile</button>
     </nav>
-    <div style="margin-top:auto;padding-top:20px;">
-      <button class="btn ghost" style="width:100%;margin-bottom:8px;" id="btnRefresh">Refresh</button>
-      <button class="btn ghost" style="width:100%;" id="btnLogout">Logout</button>
-    </div>
+    <button class="btn" style="margin-top:30px;width:100%;" id="btnLogout">Logout</button>
   </aside>
 
+  <!-- Main -->
   <main class="main">
     <div class="topbar">
       <div class="title">Mentor Console</div>
-      <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;gap:14px;">
         <div class="avatar" id="avatarInitials">M</div>
-        <div><div id="topName">Mentor</div><small id="topEmail">—</small></div>
+        <div><div id="topName" style="font-weight:700;">Mentor</div><small id="topEmail">—</small></div>
       </div>
     </div>
 
-    <div style="margin-bottom:20px;">
-      <button class="tab active" data-tab="overview">Dashboard</button>
-      <button class="tab" data-tab="lessons">Lessons</button>
-      <button class="tab" data-tab="chat">Chat</button>
-      <button class="tab" data-tab="profile">Profile</button>
-    </div>
-
-    <div class="content-grid">
-      <div>
-        <div id="overview" style="display:block;">
-          <div class="card"><h2>Welcome back, <span id="welcomeName">Mentor</span></h2></div>
-          <div class="card">All systems operational. Your empire is growing.</div>
+    <!-- Clients Tab -->
+    <div id="clients" style="display:block;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;height:calc(100% - 100px);">
+        <div class="card client-list" id="clientList">
+          <h3 style="margin-bottom:16px;color:var(--gold-dark);">Your Shared Clients</h3>
+          <div style="color:#888;">Loading clients...</div>
         </div>
-
-        <div id="lessons" style="display:none;">
-          <div class="card">
-            <h2>Upload Lesson</h2>
-            <input placeholder="Lesson title" id="lessonTitle" style="width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ddd;">
-            <input placeholder="File URL" id="lessonUrl" style="width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ddd;">
-            <button class="btn" id="uploadLesson">Upload Lesson</button>
-            <div id="lessonMsg" style="margin-top:10px;color:var(--gold);"></div>
-          </div>
-        </div>
-
-        <div id="profile" style="display:none;">
-          <div class="card" style="text-align:center;">
-            <img id="profilePreview" src="https://i.imgur.com/8QjW9jF.jpeg" alt="Profile">
-            <br><br>
-            <input type="file" id="photoUpload" accept="image/*" style="display:none;">
-            <button class="btn ghost" onclick="document.getElementById('photoUpload').click()">Change Photo</button>
-            <br><br>
-            <input placeholder="Username" id="profileUsername" style="width:100%;padding:12px;margin:10px 0;border-radius:8px;">
-            <input placeholder="Email" id="profileEmail" style="width:100%;padding:12px;margin:10px 0;border-radius:8px;">
-            <input type="password" placeholder="New password (optional)" id="profilePassword" style="width:100%;padding:12px;margin:10px 0;border-radius:8px;">
-            <button class="btn" id="saveProfile">Save Changes</button>
-            <div id="profileMsg" style="margin-top:10px;color:var(--gold);"></div>
-          </div>
-        </div>
-      </div>
-
-      <aside>
-        <div class="card chat">
-          <div style="padding:16px;border-bottom:1px solid #eee;">
-            <strong>Live Chat</strong>
-          </div>
-          <div class="chat-window" id="chatWindow">
-            <div class="msg recv">Welcome to Crown Trade Academy!</div>
-          </div>
+        <div class="chat">
+          <div class="chat-header" id="chatHeader">Select a client to start chatting</div>
+          <div class="chat-window" id="chatWindow"></div>
           <form class="chat-form" id="chatForm">
-            <input id="messageInput" placeholder="Type a message..." autocomplete="off">
-            <button type="submit" class="btn">Send</button>
+            <input type="text" id="messageInput" placeholder="Type your message..." disabled>
+            <button type="submit" class="btn" disabled>Send</button>
           </form>
         </div>
+      </div>
+      <div id="tradingview"></div>
+    </div>
 
-        <div class="card" style="margin-top:20px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-            <strong>Live Chart</strong>
-            <button class="btn ghost" id="fullscreenChart">Fullscreen</button>
-          </div>
-          <div id="tradingview" style="height:420px;border-radius:8px;overflow:hidden;"></div>
-        </div>
-      </aside>
+    <!-- Lessons & Profile tabs (same as before) -->
+    <div id="lessons" class="card" style="display:none;">
+      <h2>Upload Lesson</h2>
+      <input placeholder="Title" id="lessonTitle" style="width:100%;padding:14px;margin:10px 0;border-radius:12px;border:1px solid #ddd;">
+      <input placeholder="File URL" id="lessonUrl" style="width:100%;padding:14px;margin:10px 0;border-radius:12px;border:1px solid #ddd;">
+      <button class="btn" id="uploadLesson">Upload</button>
+    </div>
+
+    <div id="profile" class="card" style="display:none;text-align:center;">
+      <img id="profilePreview" src="https://i.imgur.com/8QjW9jF.jpeg" width="120" style="border-radius:50%;border:5px solid var(--gold);">
+      <br><br>
+      <input type="file" id="photoUpload" accept="image/*" style="display:none;">
+      <button class="btn" onclick="document.getElementById('photoUpload').click()">Change Photo</button>
+      <br><br>
+      <input placeholder="Username" id="profileUsername" style="width:100%;padding:14px;border-radius:12px;">
+      <input placeholder="Email" id="profileEmail" style="width:100%;padding:14px;border-radius:12px;margin-top:10px;">
+      <button class="btn" id="saveProfile" style="margin-top:20px;">Save Profile</button>
     </div>
   </main>
 </div>
 
-<!-- TradingView -->
 <script src="https://s3.tradingview.com/tv.js"></script>
-
 <script>
-// YOUR SUPABASE (DIRECT FETCH - NO CDN, NO ERRORS)
-const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
+  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
-let currentUser = null;
+  let currentUser = null;
+  let currentClientId = null;
 
-// Simple auth check
-async function checkAuth() {
-  const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
-  });
-  if (!res.ok) return location.href = 'login.html';
-  const user = await res.json();
-  currentUser = user;
+  async function init() {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }});
+    if (!res.ok) return location.href = 'login.html';
+    currentUser = await res.json();
 
-  const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${user.id}&select=*`, {
-    headers: { 'apikey': SUPABASE_KEY }
-  });
-  const [profile] = await profileRes.json();
-  if (!profile || profile.role !== 'mentor') return location.href = 'login.html';
+    const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${currentUser.id}&select=*`, { headers: { apikey: SUPABASE_KEY }});
+    const [profile] = await profileRes.json();
+    if (!profile || profile.role !== 'mentor') return location.href = 'login.html';
 
-  // Fill UI
-  document.getElementById('mentorName').textContent = profile.username || profile.email;
-  document.getElementById('welcomeName').textContent = profile.username || 'Mentor';
-  document.getElementById('topName').textContent = profile.username || 'Mentor';
-  document.getElementById('topEmail').textContent = profile.email;
-  document.getElementById('avatarInitials').textContent = (profile.username || 'M').slice(0,2).toUpperCase();
-  document.getElementById('profileUsername').value = profile.username || '';
-  document.getElementById('profileEmail').value = profile.email;
-  if (profile.avatar_url) document.getElementById('profilePreview').src = profile.avatar_url;
-}
+    document.getElementById('mentorName').textContent = profile.username || profile.email;
+    document.getElementById('topName').textContent = profile.username || 'Mentor';
+    document.getElementById('topEmail').textContent = profile.email;
+    document.getElementById('avatarInitials').textContent = (profile.username || 'M').slice(0,2).toUpperCase();
+    document.getElementById('profileUsername').value = profile.username || '';
+    document.getElementById('profileEmail').value = profile.email;
+    if (profile.avatar_url) document.getElementById('profilePreview').src = profile.avatar_url;
 
-// Tab switching
-document.querySelectorAll('[data-tab]').forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('#overview,#lessons,#chat,#profile').forEach(div => div.style.display = 'none');
-    document.getElementById(btn.dataset.tab).style.display = 'block';
-  };
-});
-
-// Logout
-document.getElementById('btnLogout').onclick = () => {
-  fetch(`${SUPABASE_URL}/auth/v1/logout`, { method: 'POST', headers: { 'apikey': SUPABASE_KEY } });
-  location.href = 'login.html';
-};
-
-// Profile save
-document.getElementById('saveProfile').onclick = async () => {
-  const username = document.getElementById('profileUsername').value.trim();
-  const email = document.getElementById('profileEmail').value.trim();
-  const password = document.getElementById('profilePassword').value;
-
-  await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${currentUser.id}`, {
-    method: 'PATCH',
-    headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-    body: JSON.stringify({ username, email })
-  });
-
-  if (password) {
-    await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-      method: 'PUT',
-      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password })
-    });
+    loadClients();
+    loadTradingView();
   }
 
-  document.getElementById('profileMsg').textContent = 'Saved!';
-  checkAuth();
-};
+  async function loadClients() {
+    const assignRes = await fetch(`${SUPABASE_URL}/rest/v1/mentor_assignments?mentor_id=eq.${currentUser.id}&select=client_id`, { headers: { apikey: SUPABASE_KEY }});
+    const assignments = await assignRes.json();
+    const clientIds = assignments.map(a => a.client_id).join(',');
 
-// Photo upload
-document.getElementById('photoUpload').onchange = async (e) => {
-  const file = e.target.files[0];
-  const formData = new FormData();
-  formData.append('file', file);
+    if (!clientIds) {
+      document.getElementById('clientList').innerHTML = '<div>No clients assigned yet.</div>';
+      return;
+    }
 
-  await fetch(`${SUPABASE_URL}/storage/v1/object/avatars/mentor-${currentUser.id}`, {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY },
-    body: formData
+    const clientsRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=in.(${clientIds})&select=id,username,email,avatar_url`, { headers: { apikey: SUPABASE_KEY }});
+    const clients = await clientsRes.json();
+
+    document.getElementById('clientList').innerHTML = clients.map(c => `
+      <div class="client-item" onclick="openChat('${c.id}', '${c.username || c.email}')">
+        ${c.avatar_url ? `<img src="${c.avatar_url}">` : '<div style="width:40px;height:40px;background:#ddd;border-radius:50%;margin-right:12px;"></div>'}
+        <div><strong>${c.username || c.email}</strong></div>
+      </div>
+    `).join('');
+  }
+
+  window.openChat = async (clientId, name) => {
+    currentClientId = clientId;
+    document.querySelectorAll('.client-item').forEach(el => el.classList.remove('active'));
+    event.target.closest('.client-item').classList.add('active');
+    document.getElementById('chatHeader').textContent = `Chat with ${name}`;
+    document.getElementById('messageInput').disabled = false;
+    document.querySelector('#chatForm button').disabled = false;
+    document.getElementById('chatWindow').innerHTML = '';
+    loadMessages();
+  };
+
+  async function loadMessages() {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/messages?or=(and(sender_id=eq.${currentUser.id},receiver_id=eq.${currentClientId}),and(sender_id=eq.${currentClientId},receiver_id=eq.${currentUser.id}))&order=created_at.asc`, { headers: { apikey: SUPABASE_KEY }});
+    const msgs = await res.json();
+    document.getElementById('chatWindow').innerHTML = msgs.map(m => `
+      <div class="msg ${m.sender_id === currentUser.id ? 'sent' : 'recv'}">${m.message}</div>
+    `).join('');
+    document.getElementById('chatWindow').scrollTop = document.getElementById('chatWindow').scrollHeight;
+  }
+
+  document.getElementById('chatForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const input = document.getElementById('messageInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
+      method: 'POST',
+      headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ sender_id: currentUser.id, receiver_id: currentClientId, message: msg })
+    });
+    input.value = '';
+    loadMessages();
+  };
+
+  // Tab switching
+  document.querySelectorAll('.nav button').forEach(b => b.onclick = () => {
+    document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    document.querySelectorAll('#clients,#lessons,#profile').forEach(d => d.style.display = 'none');
+    document.getElementById(b.dataset.tab).style.display = 'block';
   });
 
-  const url = `${SUPABASE_URL}/storage/v1/object/public/avatars/mentor-${currentUser.id}?t=${Date.now()}`;
-  document.getElementById('profilePreview').src = url;
+  document.getElementById('btnLogout').onclick = () => { location.href = 'login.html'; };
 
-  await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${currentUser.id}`, {
-    method: 'PATCH',
-    headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ avatar_url: url })
-  });
-};
+  function loadTradingView() {
+    new TradingView.widget({ container_id: "tradingview", width: "100%", height: 460, symbol: "BINANCE:BTCUSDT", interval: "60", theme: "light" });
+  }
 
-// TradingView
-new TradingView.widget({
-  "container_id": "tradingview",
-  "width": "100%",
-  "height": 420,
-  "symbol": "BINANCE:BTCUSDT",
-  "interval": "60",
-  "timezone": "Etc/UTC",
-  "theme": "light",
-  "style": "1",
-  "locale": "en",
-  "toolbar_bg": "#f9f6f2",
-  "enable_publishing": false,
-  "allow_symbol_change": true
-});
-
-document.getElementById('fullscreenChart').onclick = () => {
-  document.getElementById('tradingview').requestFullscreen();
-};
-
-// Start
-checkAuth();
+  init();
+  setInterval(() => { if (currentClientId) loadMessages(); }, 4000);
 </script>
 </body>
 </html>
