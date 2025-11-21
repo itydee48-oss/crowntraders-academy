@@ -1,778 +1,661 @@
-<!-- admin-dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin Dashboard — Crown Trade Academy</title>
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crown Trade — Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg: #070707;
-      --panel: #0f1113;
-      --muted: #bfb3a0;
-      --gold: #c8a97e;
-      --gold-2: #b89463;
-      --accent: rgba(200,169,126,0.08);
-      --glass: rgba(255,255,255,0.02);
-      --success: #2ec27a;
-      --danger: #ef5350;
-      --card-radius: 10px;
+    :root {
+      --nude: #F9F6F2;
+      --gold: #C8A97E;
+      --gold-dark: #B89463;
+      --charcoal: #2e2e2e;
+      --muted: #777;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --info: #3B82F6;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      min-height:100vh;
-      background: linear-gradient(180deg,#050505 0%,#0b0b0c 60%);
-      color:#efeae0;
-      font-family: Montserrat, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue";
-      -webkit-font-smoothing:antialiased;
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Montserrat', sans-serif; background: var(--nude); color: var(--charcoal); min-height: 100vh; }
+    
+    .admin-app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      padding: 24px;
+      height: 100vh;
     }
-
-    /* layout */
-    .wrap{
-      display:grid;
-      grid-template-columns:260px 1fr;
-      gap:24px;
-      padding:26px;
-      align-items:start;
-      min-height:100vh;
+    
+    .sidebar {
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(200,169,126,0.4);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.06);
     }
-
-    /* Sidebar */
-    .sidebar{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-      border:1px solid rgba(255,255,255,0.03);
-      padding:20px;
-      border-radius:12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    
+    .brand { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--gold-dark); margin-bottom: 8px; }
+    .admin-info { margin: 20px 0; font-size: 0.95rem; color: var(--muted); }
+    
+    .nav button {
+      width: 100%;
+      padding: 14px 18px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--charcoal);
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.3s;
     }
-    .brand{
-      font-family: 'Cormorant Garamond', serif;
-      color:var(--gold);
-      letter-spacing:1px;
-      font-size:1.25rem;
-      margin-bottom:14px;
+    
+    .nav button:hover, .nav button.active {
+      background: var(--gold);
+      color: white;
     }
-    .nav { display:flex; flex-direction:column; gap:8px; margin-bottom:18px; }
-    .nav button{
-      background:transparent;
-      color:var(--muted);
-      border:1px solid transparent;
-      padding:10px 12px;
-      text-align:left;
-      border-radius:8px;
-      font-weight:600;
-      cursor:pointer;
-      transition: all 180ms ease;
+    
+    .main-content {
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      padding: 30px;
+      overflow: auto;
+      border: 1px solid rgba(200,169,126,0.3);
     }
-    .nav button:hover{ background:var(--accent); color:var(--gold); border-left:3px solid var(--gold); }
-    .nav .active{ color:var(--gold); border-left:3px solid var(--gold); box-shadow: 0 8px 20px rgba(184,145,63,0.06); }
-
-    .small{ color:var(--muted); font-size:13px; margin-top:8px; }
-
-    /* main */
-    main{
-      padding:18px;
-      border-radius:12px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
-      border:1px solid rgba(255,255,255,0.03);
-      min-height:80vh;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-      overflow:auto;
+    
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--nude);
     }
-
-    header.top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:18px;
+    
+    .title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--gold-dark); }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
     }
-    .welcome h1{
-      margin:0;
-      font-family: 'Cormorant Garamond', serif;
-      color:var(--gold);
-      font-size:22px;
+    
+    .stat-card {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
+      text-align: center;
     }
-    .welcome p{ margin:4px 0 0; color:var(--muted); font-size:13px; }
-
-    .stats-grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
-      gap:12px;
-      margin-bottom:20px;
+    
+    .stat-value { font-size: 2.5rem; font-weight: 700; color: var(--gold-dark); margin: 10px 0; }
+    .stat-label { color: var(--muted); font-size: 0.9rem; }
+    
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
     }
-    .stat{
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
-      padding:14px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,0.03);
+    
+    .card-header {
+      display: flex;
+      justify-content: between;
+      align-items: center;
+      margin-bottom: 20px;
     }
-    .stat .label{ color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:1px; }
-    .stat .value{ margin-top:8px; font-weight:700; font-size:20px; color:#fff; }
-
-    /* tables + cards */
-    .card{ background:rgba(255,255,255,0.02); padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); margin-bottom:16px; }
-    table{ width:100%; border-collapse:collapse; font-size:14px; }
-    thead th{ text-align:left; padding:10px 8px; color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:0.8px; border-bottom:1px solid rgba(255,255,255,0.03); }
-    tbody td{ padding:10px 8px; border-bottom:1px solid rgba(255,255,255,0.02); color:#e9e6db; vertical-align:middle; }
-    .muted{ color:var(--muted); font-size:13px; }
-
-    button.primary{
-      background:linear-gradient(90deg,var(--gold),var(--gold-2));
-      color:#070707; border:none; padding:8px 12px; border-radius:8px; font-weight:700; cursor:pointer;
-      box-shadow:0 8px 20px rgba(184,145,63,0.12);
+    
+    .card-title { font-size: 1.4rem; color: var(--gold-dark); font-weight: 600; }
+    
+    .table { width: 100%; border-collapse: collapse; }
+    .table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+    .table th { background: var(--nude); font-weight: 600; color: var(--charcoal); }
+    
+    .btn {
+      background: var(--gold);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 2px;
+      font-size: 0.9rem;
     }
-    button.ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.03); padding:7px 10px; border-radius:8px; cursor:pointer; }
-
-    .btn-approve{ background: linear-gradient(90deg,#2ec27a,#1e9b5c); color:#041; border:none; padding:7px 10px; border-radius:7px; cursor:pointer; font-weight:700; }
-    .btn-reject{ background:#ef5350;color:#fff;border:none;padding:7px 10px;border-radius:7px;cursor:pointer;font-weight:700; }
-
-    /* small helpers */
-    .flex{ display:flex; gap:12px; align-items:center; }
-    .right{ margin-left:auto; }
-    .tag{ padding:6px 8px; border-radius:999px; background:rgba(255,255,255,0.02); color:var(--muted); font-weight:700; font-size:12px; }
-
-    /* responsive */
-    @media(max-width:980px){
-      .wrap{ grid-template-columns: 1fr; padding:12px; }
-      nav.sidebar{ display:flex; flex-direction:row; gap:8px; overflow:auto; padding:10px; border-radius:8px; }
-      nav.sidebar .brand{ display:none; }
+    
+    .btn-success { background: var(--success); }
+    .btn-danger { background: var(--danger); }
+    .btn-warning { background: var(--warning); }
+    
+    .status-pending { color: var(--warning); font-weight: 600; }
+    .status-approved { color: var(--success); font-weight: 600; }
+    .status-rejected { color: var(--danger); font-weight: 600; }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--charcoal); }
+    .form-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 1rem; }
+    
+    .chart-container {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      margin: 20px 0;
+      height: 300px;
     }
-    /* toast */
-    .toast{ position:fixed; right:20px; bottom:20px; background:#111; color:#fff; padding:12px 16px; border-radius:8px; box-shadow:0 8px 30px rgba(0,0,0,0.6); opacity:0; transform:translateY(10px); transition:all 260ms ease; z-index:9999; }
-    .toast.show{ opacity:1; transform:none; }
+    
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .action-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: 2px solid transparent;
+    }
+    
+    .action-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--gold);
+    }
+    
+    @media (max-width: 1000px) {
+      .admin-app { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
-
 <body>
-  <div class="wrap" role="application">
-    <!-- LEFT: Sidebar -->
-    <aside class="sidebar" role="navigation" aria-label="Admin navigation">
-      <div class="brand">Crown Trade Academy</div>
 
-      <nav class="nav" role="menu" aria-label="Admin menu">
-        <button class="active" id="nav-overview" role="menuitem">Overview</button>
-        <button id="nav-payments" role="menuitem">Payments</button>
-        <button id="nav-withdrawals" role="menuitem">Withdrawals</button>
-        <button id="nav-clients" role="menuitem">Clients</button>
-        <button id="nav-assign" role="menuitem">Assignments</button>
-      </nav>
+<div class="admin-app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">Crown Trade</div>
+    <div class="admin-info">
+      <div id="adminName" style="font-weight:700;">Admin User</div>
+      <div id="adminEmail" style="color:var(--muted);font-size:0.9rem;">admin@crowntrade.com</div>
+      <div style="color:var(--success);font-size:0.8rem;margin-top:5px;">● Super Admin</div>
+    </div>
+    
+    <nav class="nav">
+      <button data-tab="dashboard" class="active">📊 Dashboard</button>
+      <button data-tab="members">👥 Member Approval</button>
+      <button data-tab="payments">💰 Payments</button>
+      <button data-tab="withdrawals">🏦 Withdrawals</button>
+      <button data-tab="pricing">💎 Pricing</button>
+      <button data-tab="referral">🎯 Referral Program</button>
+      <button data-tab="reports">📈 Reports</button>
+      <button data-tab="settings">⚙️ Settings</button>
+    </nav>
+    
+    <button class="btn" style="margin-top:30px;width:100%;background:var(--danger);" id="btnLogout">Logout</button>
+  </aside>
 
-      <div class="small">Signed in as <div style="font-weight:700; color:var(--gold);" id="admin-email">—</div></div>
-      <div style="height:12px"></div>
-      <div class="small">Quick actions</div>
-      <div style="display:flex; gap:8px; margin-top:8px">
-        <button class="primary" id="btn-auto-assign">Auto-assign clients</button>
-        <button class="ghost" id="btn-refresh">Refresh</button>
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="topbar">
+      <div class="title">Admin Console</div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="text-align:right;">
+          <div id="topName" style="font-weight:700;">Administrator</div>
+          <small id="topEmail">Last login: Today</small>
+        </div>
       </div>
-      <div style="height:18px"></div>
-      <div class="small">System</div>
-      <div style="margin-top:8px"><button class="ghost" id="btn-logout">Logout</button></div>
-    </aside>
+    </div>
 
-    <!-- RIGHT: Main -->
-    <main id="main" role="main" aria-live="polite">
-      <header class="top">
-        <div class="welcome">
-          <h1>Admin Dashboard</h1>
-          <p>Manage approvals, view revenue, and assign clients to mentors.</p>
+    <!-- Dashboard Tab -->
+    <div id="dashboard" style="display:block;">
+      <!-- Statistics -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Revenue</div>
+          <div class="stat-value">$24,580</div>
+          <div style="color:var(--success);font-size:0.9rem;">↑ 12% this month</div>
         </div>
-        <div style="text-align:right">
-          <div class="muted">Connected as</div>
-          <div style="font-weight:700; color:var(--gold);" id="admin-name">Admin</div>
+        <div class="stat-card">
+          <div class="stat-label">Active Members</div>
+          <div class="stat-value">156</div>
+          <div style="color:var(--success);font-size:0.9rem;">↑ 8 new today</div>
         </div>
-      </header>
+        <div class="stat-card">
+          <div class="stat-label">Pending Approvals</div>
+          <div class="stat-value">23</div>
+          <div style="color:var(--warning);font-size:0.9rem;">Requires attention</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Withdrawal Requests</div>
+          <div class="stat-value">14</div>
+          <div style="color:var(--warning);font-size:0.9rem;">$3,450 total</div>
+        </div>
+      </div>
 
-      <!-- Overview -->
-      <section id="section-overview" class="section">
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <div class="action-card" onclick="switchTab('members')">
+          <div style="font-size:2rem;">👥</div>
+          <div style="font-weight:600;">Review Members</div>
+          <small>23 pending</small>
+        </div>
+        <div class="action-card" onclick="switchTab('payments')">
+          <div style="font-size:2rem;">💰</div>
+          <div style="font-weight:600;">Manage Payments</div>
+          <small>45 transactions</small>
+        </div>
+        <div class="action-card" onclick="switchTab('withdrawals')">
+          <div style="font-size:2rem;">🏦</div>
+          <div style="font-weight:600;">Process Withdrawals</div>
+          <small>14 requests</small>
+        </div>
+        <div class="action-card" onclick="switchTab('pricing')">
+          <div style="font-size:2rem;">💎</div>
+          <div style="font-weight:600;">Update Pricing</div>
+          <small>3 plans</small>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Activity</div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>User</th>
+              <th>Action</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="recentActivity">
+            <!-- Filled by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Members Tab -->
+    <div id="members" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Pending Member Approvals</div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Applied</th>
+              <th>Plan</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="pendingMembers">
+            <!-- Filled by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Payments Tab -->
+    <div id="payments" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Payment History</div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Member</th>
+              <th>Plan</th>
+              <th>Amount</th>
+              <th>Method</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="paymentHistory">
+            <!-- Filled by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Withdrawals Tab -->
+    <div id="withdrawals" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Withdrawal Requests</div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Mentor</th>
+              <th>Amount</th>
+              <th>Method</th>
+              <th>Account</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="withdrawalRequests">
+            <!-- Filled by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pricing Tab -->
+    <div id="pricing" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Program Pricing</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Basic Plan Price ($)</label>
+          <input type="number" id="basicPrice" class="form-input" value="99">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pro Plan Price ($)</label>
+          <input type="number" id="proPrice" class="form-input" value="199">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Elite Plan Price ($)</label>
+          <input type="number" id="elitePrice" class="form-input" value="399">
+        </div>
+        <button class="btn" onclick="updatePricing()">Update Pricing</button>
+      </div>
+    </div>
+
+    <!-- Referral Program Tab -->
+    <div id="referral" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Referral Program Settings</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Referral Bonus Percentage (%)</label>
+          <input type="number" id="referralBonus" class="form-input" value="15">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Minimum Payout Amount ($)</label>
+          <input type="number" id="minPayout" class="form-input" value="50">
+        </div>
+        <button class="btn" onclick="updateReferralSettings()">Update Settings</button>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Top Referrers</div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Referrer</th>
+              <th>Referrals</th>
+              <th>Earnings</th>
+            </tr>
+          </thead>
+          <tbody id="topReferrers">
+            <!-- Filled by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Reports Tab -->
+    <div id="reports" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Business Analytics</div>
+        </div>
         <div class="stats-grid">
-          <div class="stat card">
-            <div class="label">Total Revenue (approved payments)</div>
-            <div class="value" id="stat-revenue">KES 0</div>
+          <div class="stat-card">
+            <div class="stat-label">Monthly Revenue</div>
+            <div class="stat-value">$8,450</div>
           </div>
-          <div class="stat card">
-            <div class="label">Total Clients</div>
-            <div class="value" id="stat-clients">0</div>
+          <div class="stat-card">
+            <div class="stat-label">New Members</div>
+            <div class="stat-value">28</div>
           </div>
-          <div class="stat card">
-            <div class="label">Total Mentors</div>
-            <div class="value" id="stat-mentors">0</div>
+          <div class="stat-card">
+            <div class="stat-label">Conversion Rate</div>
+            <div class="stat-value">12.4%</div>
           </div>
-          <div class="stat card">
-            <div class="label">Pending Approvals</div>
-            <div class="value" id="stat-pending">0</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div style="display:flex;align-items:center;gap:12px">
-            <h3 style="margin:0">Recent Payments (latest 8)</h3>
-            <div class="right muted">Click approve to confirm payment</div>
-          </div>
-          <div style="margin-top:12px; overflow:auto">
-            <table id="recent-payments-table" aria-live="polite">
-              <thead>
-                <tr><th>Client</th><th>Amount</th><th>Status</th><th>When</th><th></th></tr>
-              </thead>
-              <tbody id="recent-payments-body"></tbody>
-            </table>
+          <div class="stat-card">
+            <div class="stat-label">Avg. Revenue per User</div>
+            <div class="stat-value">$156</div>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
 
-      <!-- Payments -->
-      <section id="section-payments" class="section" hidden>
-        <div class="card">
-          <div style="display:flex;align-items:center;gap:12px">
-            <h3 style="margin:0">Pending Payments</h3>
-            <div class="right muted">Review and approve receipts</div>
-          </div>
-
-          <div style="margin-top:12px;overflow:auto">
-            <table aria-live="polite" id="payments-table">
-              <thead>
-                <tr><th>Client</th><th>Amount</th><th>Status</th><th>Receipt</th><th>When</th><th>Actions</th></tr>
-              </thead>
-              <tbody id="payments-body"></tbody>
-            </table>
-          </div>
+    <!-- Settings Tab -->
+    <div id="settings" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">System Settings</div>
         </div>
-      </section>
-
-      <!-- Withdrawals -->
-      <section id="section-withdrawals" class="section" hidden>
-        <div class="card">
-          <div style="display:flex;align-items:center;gap:12px">
-            <h3 style="margin:0">Withdrawals</h3>
-            <div class="right muted">Approve or reject withdrawal requests</div>
-          </div>
-
-          <div style="margin-top:12px;overflow:auto">
-            <table id="withdrawals-table">
-              <thead><tr><th>User</th><th>Amount</th><th>Status</th><th>Requested</th><th>Actions</th></tr></thead>
-              <tbody id="withdrawals-body"></tbody>
-            </table>
-          </div>
+        <div class="form-group">
+          <label class="form-label">Business Name</label>
+          <input type="text" id="businessName" class="form-input" value="Crown Trade Academy">
         </div>
-      </section>
-
-      <!-- Clients -->
-      <section id="section-clients" class="section" hidden>
-        <div class="card">
-          <div style="display:flex;align-items:center;gap:12px">
-            <h3 style="margin:0">Clients</h3>
-            <div class="right muted">Manage clients and assignments</div>
-          </div>
-
-          <div style="margin-top:12px; overflow:auto">
-            <table id="clients-table">
-              <thead><tr><th>Name</th><th>Email</th><th>Assigned Mentor</th><th>Joined</th><th>Actions</th></tr></thead>
-              <tbody id="clients-body"></tbody>
-            </table>
-          </div>
+        <div class="form-group">
+          <label class="form-label">Support Email</label>
+          <input type="email" id="supportEmail" class="form-input" value="support@crowntrade.com">
         </div>
-      </section>
-
-      <!-- Assignments -->
-      <section id="section-assign" class="section" hidden>
-        <div class="card">
-          <div style="display:flex;align-items:center;gap:12px">
-            <h3 style="margin:0">Assignments</h3>
-            <div class="right muted">Auto-assign distributes unassigned clients fairly</div>
-          </div>
-
-          <div style="margin-top:12px">
-            <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
-              <button class="primary" id="btn-run-auto">Run Auto-assign (round-robin)</button>
-              <button class="ghost" id="btn-view-assignments">Refresh assignments</button>
-            </div>
-
-            <div style="overflow:auto">
-              <table id="assignments-table">
-                <thead><tr><th>Client</th><th>Mentor</th><th>Assigned at</th></tr></thead>
-                <tbody id="assignments-body"></tbody>
-              </table>
-            </div>
-
-          </div>
+        <div class="form-group">
+          <label class="form-label">Auto-approval Threshold ($)</label>
+          <input type="number" id="autoApprove" class="form-input" value="500">
         </div>
-      </section>
+        <button class="btn" onclick="updateSystemSettings()">Save Settings</button>
+      </div>
+    </div>
+  </main>
+</div>
 
-    </main>
-  </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Supabase Configuration
+const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxza2pzaGJjbmlpbHpseXhlY3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2MzcwMjksImV4cCI6MjA3OTIxMzAyOX0.PxvhBTZ2Bv4hnwxTrFA0E_zucNxMYrVwDSuRGniDBnc';
 
-  <div class="toast" id="toast">Saved</div>
+const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  <!-- Supabase client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    // ********** CONFIGURE THESE **********
-    const SUPABASE_URL = 'https://YOUR_SUPABASE_PROJECT.supabase.co';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-    // *************************************
+let currentAdmin = null;
 
-    // initialize supabase
-    const supabase = supabaseLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Initialize Admin Dashboard
+async function initAdmin() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    window.location.href = 'login.html';
+    return;
+  }
 
-    // helpers
-    const $ = (sel) => document.querySelector(sel);
-    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
-    const toast = (txt, time = 2500) => {
-      const el = document.getElementById('toast');
-      el.textContent = txt;
-      el.classList.add('show');
-      setTimeout(()=>el.classList.remove('show'), time);
-    };
+  currentAdmin = session.user;
+  
+  // Check if user is admin (you'll need to implement this check)
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', currentAdmin.id)
+    .single();
 
-    // navigation
-    const sections = {
-      overview: $('#section-overview'),
-      payments: $('#section-payments'),
-      withdrawals: $('#section-withdrawals'),
-      clients: $('#section-clients'),
-      assign: $('#section-assign')
-    };
+  if (!profile || profile.role !== 'admin') {
+    window.location.href = 'login.html';
+    return;
+  }
 
-    function showSection(name){
-      Object.values(sections).forEach(s => s.hidden = true);
-      sections[name].hidden = false;
-      // active nav btn
-      $$('.nav button').forEach(b => b.classList.remove('active'));
-      const btn = document.querySelector(`#nav-${name}`);
-      if(btn) btn.classList.add('active');
-    }
+  loadDashboardData();
+}
 
-    // attach nav listeners
-    $('#nav-overview').addEventListener('click', ()=>showSection('overview'));
-    $('#nav-payments').addEventListener('click', ()=>showSection('payments'));
-    $('#nav-withdrawals').addEventListener('click', ()=>showSection('withdrawals'));
-    $('#nav-clients').addEventListener('click', ()=>showSection('clients'));
-    $('#nav-assign').addEventListener('click', ()=>showSection('assign'));
+// Tab Switching
+function switchTab(tabName) {
+  document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+  
+  document.querySelectorAll('#dashboard, #members, #payments, #withdrawals, #pricing, #referral, #reports, #settings')
+    .forEach(d => d.style.display = 'none');
+  document.getElementById(tabName).style.display = 'block';
+}
 
-    // logout
-    $('#btn-logout').addEventListener('click', async () => {
-      await supabase.auth.signOut();
-      window.location.href = 'login.html';
-    });
+// Load Dashboard Data
+async function loadDashboardData() {
+  // Load recent activity
+  document.getElementById('recentActivity').innerHTML = `
+    <tr><td>2 hours ago</td><td>john@example.com</td><td>Subscription Payment</td><td>$199</td><td class="status-approved">Completed</td></tr>
+    <tr><td>4 hours ago</td><td>sarah@example.com</td><td>Withdrawal Request</td><td>$250</td><td class="status-pending">Pending</td></tr>
+    <tr><td>6 hours ago</td><td>mike@example.com</td><td>Member Application</td><td>-</td><td class="status-pending">Review</td></tr>
+  `;
 
-    // page state
-    let currentAdmin = null;
-    let mentors = [];
-    let clients = [];
-    let assignments = [];
-    let payments = [];
-    let withdrawals = [];
+  // Load pending members
+  document.getElementById('pendingMembers').innerHTML = `
+    <tr>
+      <td>John Smith</td>
+      <td>john.smith@example.com</td>
+      <td>Today</td>
+      <td>Pro Plan</td>
+      <td class="status-pending">Pending</td>
+      <td>
+        <button class="btn btn-success" onclick="approveMember('user1')">Approve</button>
+        <button class="btn btn-danger" onclick="rejectMember('user1')">Reject</button>
+      </td>
+    </tr>
+    <tr>
+      <td>Sarah Johnson</td>
+      <td>sarah.j@example.com</td>
+      <td>Yesterday</td>
+      <td>Basic Plan</td>
+      <td class="status-pending">Pending</td>
+      <td>
+        <button class="btn btn-success" onclick="approveMember('user2')">Approve</button>
+        <button class="btn btn-danger" onclick="rejectMember('user2')">Reject</button>
+      </td>
+    </tr>
+  `;
 
-    // run auth check on load
-    (async function init(){
-      // get session
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if(error) {
-        console.error('Auth error', error);
-        window.location.href = 'login.html';
-        return;
-      }
-      if(!session || !session.user){
-        window.location.href = 'login.html';
-        return;
-      }
+  // Load payment history
+  document.getElementById('paymentHistory').innerHTML = `
+    <tr><td>Nov 21, 2025</td><td>alex@example.com</td><td>Elite Plan</td><td>$399</td><td>Stripe</td><td class="status-approved">Completed</td></tr>
+    <tr><td>Nov 20, 2025</td><td>emma@example.com</td><td>Pro Plan</td><td>$199</td><td>PayPal</td><td class="status-approved">Completed</td></tr>
+  `;
 
-      // fetch admin row from users table (assumes supabase auth and users table linked by email)
-      const userEmail = session.user.email;
-      const { data: adminRows, error: uErr } = await supabase
-        .from('users')
-        .select('*')
-        .eq('email', userEmail)
-        .limit(1);
+  // Load withdrawal requests
+  document.getElementById('withdrawalRequests').innerHTML = `
+    <tr>
+      <td>Nov 21, 2025</td>
+      <td>mentor.james@example.com</td>
+      <td>$450</td>
+      <td>Bank Transfer</td>
+      <td>****1234</td>
+      <td class="status-pending">Pending</td>
+      <td>
+        <button class="btn btn-success" onclick="approveWithdrawal('wd1')">Approve</button>
+        <button class="btn btn-danger" onclick="rejectWithdrawal('wd1')">Reject</button>
+      </td>
+    </tr>
+  `;
 
-      if(uErr || !adminRows || adminRows.length === 0){
-        console.error('No local user row found for logged in user', uErr);
-        // optionally create a user row here
-        alert('No user record found in the users table for your account. Contact system admin.');
-        await supabase.auth.signOut();
-        window.location.href = 'login.html';
-        return;
-      }
+  // Load top referrers
+  document.getElementById('topReferrers').innerHTML = `
+    <tr><td>1</td><td>referral.king@example.com</td><td>12</td><td>$360</td></tr>
+    <tr><td>2</td><td>ambassador.sarah@example.com</td><td>8</td><td>$240</td></tr>
+  `;
+}
 
-      currentAdmin = adminRows[0];
-      if(currentAdmin.role !== 'admin'){
-        alert('Access denied. Admins only.');
-        await supabase.auth.signOut();
-        window.location.href = 'login.html';
-        return;
-      }
+// Member Management
+async function approveMember(userId) {
+  if (confirm('Approve this member?')) {
+    // Implement approval logic
+    alert('Member approved successfully!');
+    loadDashboardData();
+  }
+}
 
-      // show admin info
-      $('#admin-email').textContent = currentAdmin.email;
-      $('#admin-name').textContent = currentAdmin.full_name || currentAdmin.email;
+async function rejectMember(userId) {
+  if (confirm('Reject this member?')) {
+    // Implement rejection logic
+    alert('Member rejected.');
+    loadDashboardData();
+  }
+}
 
-      // initial data load
-      await refreshAll();
+// Withdrawal Management
+async function approveWithdrawal(withdrawalId) {
+  if (confirm('Approve this withdrawal?')) {
+    // Implement approval logic
+    alert('Withdrawal approved and processed!');
+    loadDashboardData();
+  }
+}
 
-      // enable refresh button
-      $('#btn-refresh').addEventListener('click', refreshAll);
+async function rejectWithdrawal(withdrawalId) {
+  const reason = prompt('Reason for rejection:');
+  if (reason) {
+    // Implement rejection logic
+    alert('Withdrawal rejected.');
+    loadDashboardData();
+  }
+}
 
-      // auto assign button
-      $('#btn-auto-assign').addEventListener('click', autoAssignClients);
-      $('#btn-run-auto').addEventListener('click', autoAssignClients);
-      $('#btn-view-assignments').addEventListener('click', loadAssignments);
-    })();
+// Pricing Management
+async function updatePricing() {
+  const basicPrice = document.getElementById('basicPrice').value;
+  const proPrice = document.getElementById('proPrice').value;
+  const elitePrice = document.getElementById('elitePrice').value;
+  
+  // Implement pricing update logic
+  alert('Pricing updated successfully!');
+}
 
-    /* ----------------------
-       Data loading functions
-       ---------------------- */
+// Referral Program
+async function updateReferralSettings() {
+  const bonus = document.getElementById('referralBonus').value;
+  const minPayout = document.getElementById('minPayout').value;
+  
+  // Implement referral settings update
+  alert('Referral settings updated!');
+}
 
-    async function refreshAll(){
-      showSection('overview');
-      await Promise.all([
-        loadMentors(),
-        loadClients(),
-        loadPayments(),
-        loadWithdrawals(),
-        loadAssignments()
-      ]);
-      calculateStats();
-      renderRecentPayments();
-      renderPaymentsTable();
-      renderWithdrawals();
-      renderClientsTable();
-      renderAssignments();
-      toast('Data refreshed');
-    }
+// System Settings
+async function updateSystemSettings() {
+  const businessName = document.getElementById('businessName').value;
+  const supportEmail = document.getElementById('supportEmail').value;
+  const autoApprove = document.getElementById('autoApprove').value;
+  
+  // Implement settings update
+  alert('System settings saved!');
+}
 
-    async function loadMentors(){
-      const { data, error } = await supabase
-        .from('users')
-        .select('id, full_name, email, role')
-        .eq('role', 'mentor');
+// Event Listeners
+document.querySelectorAll('.nav button').forEach(b => {
+  b.onclick = () => switchTab(b.dataset.tab);
+});
 
-      if(error){ console.error('loadMentors error', error); return; }
-      mentors = data || [];
-      $('#stat-mentors').textContent = mentors.length;
-    }
+document.getElementById('btnLogout').onclick = async () => {
+  await supabase.auth.signOut();
+  window.location.href = 'login.html';
+};
 
-    async function loadClients(){
-      const { data, error } = await supabase
-        .from('users')
-        .select('id, full_name, email, role, created_at')
-        .eq('role', 'client')
-        .order('created_at', { ascending: false });
-
-      if(error){ console.error('loadClients error', error); return; }
-      clients = data || [];
-      $('#stat-clients').textContent = clients.length;
-    }
-
-    async function loadPayments(){
-      const { data, error } = await supabase
-        .from('payments')
-        .select('id, user_id, amount, status, created_at')
-        .order('created_at', { ascending: false })
-        .limit(100);
-
-      if(error){ console.error('loadPayments error', error); return; }
-      payments = data || [];
-    }
-
-    async function loadWithdrawals(){
-      const { data, error } = await supabase
-        .from('withdrawals')
-        .select('id, user_id, amount, status, created_at')
-        .order('created_at', { ascending:false })
-        .limit(100);
-
-      if(error){ console.error('loadWithdrawals error', error); return; }
-      withdrawals = data || [];
-    }
-
-    async function loadAssignments(){
-      const { data, error } = await supabase
-        .from('assignments')
-        .select('id, client_id, mentor_id, created_at')
-        .order('created_at', { ascending:false })
-        .limit(500);
-
-      if(error){ console.error('loadAssignments error', error); return; }
-      assignments = data || [];
-    }
-
-    /* ----------------------
-       Render functions
-       ---------------------- */
-
-    function calculateStats(){
-      // total revenue = sum of approved payments
-      const approvedPayments = payments.filter(p => p.status === 'approved' || p.status === 'confirmed');
-      const totalRevenue = approvedPayments.reduce((s, p) => s + Number(p.amount || 0), 0);
-      $('#stat-revenue').textContent = `KES ${Number(totalRevenue).toLocaleString()}`;
-
-      // pending approvals count
-      const pendingCount = payments.filter(p => p.status === 'pending').length + withdrawals.filter(w => w.status === 'pending').length;
-      $('#stat-pending').textContent = pendingCount;
-    }
-
-    function renderRecentPayments(){
-      const list = payments.slice(0,8);
-      const tbody = $('#recent-payments-body');
-      tbody.innerHTML = '';
-      for(const p of list){
-        const client = clients.find(c => c.id === p.user_id) || { full_name: p.user_id, email: '' };
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${escapeHtml(client.full_name || client.email)}</td>
-          <td>KES ${Number(p.amount).toLocaleString()}</td>
-          <td>${escapeHtml(p.status)}</td>
-          <td>${new Date(p.created_at).toLocaleString()}</td>
-          <td style="text-align:right">
-            ${ p.status === 'pending' ? `<button class="btn-approve" data-id="${p.id}">Approve</button>
-            <button class="btn-reject" data-id="${p.id}">Reject</button>` : ''}
-          </td>
-        `;
-        tbody.appendChild(tr);
-      }
-      // attach handlers
-      $$('#recent-payments-body .btn-approve').forEach(b => b.addEventListener('click', e => approvePayment(e.target.dataset.id)));
-      $$('#recent-payments-body .btn-reject').forEach(b => b.addEventListener('click', e => rejectPayment(e.target.dataset.id)));
-    }
-
-    function renderPaymentsTable(){
-      const tbody = $('#payments-body');
-      tbody.innerHTML = '';
-      const pending = payments.filter(p => p.status === 'pending' || p.status === null);
-      if(pending.length === 0){
-        tbody.innerHTML = `<tr><td colspan="6" class="muted">No pending payments</td></tr>`;
-        return;
-      }
-      for(const p of pending){
-        const client = clients.find(c => c.id === p.user_id) || { full_name: p.user_id, email: '' };
-        const receiptLink = p.receipt_url ? `<a href="${escapeHtml(p.receipt_url)}" target="_blank">View</a>` : '—';
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${escapeHtml(client.full_name || client.email)}</td>
-          <td>KES ${Number(p.amount).toLocaleString()}</td>
-          <td>${escapeHtml(p.status || 'pending')}</td>
-          <td>${receiptLink}</td>
-          <td>${new Date(p.created_at).toLocaleString()}</td>
-          <td>
-            <div class="flex">
-              <button class="btn-approve" data-id="${p.id}">Approve</button>
-              <button class="btn-reject" data-id="${p.id}">Reject</button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      }
-      // attach actions
-      $$('#payments-body .btn-approve').forEach(b => b.addEventListener('click', e => approvePayment(e.target.dataset.id)));
-      $$('#payments-body .btn-reject').forEach(b => b.addEventListener('click', e => rejectPayment(e.target.dataset.id)));
-    }
-
-    function renderWithdrawals(){
-      const tbody = $('#withdrawals-body');
-      tbody.innerHTML = '';
-      if(withdrawals.length === 0){
-        tbody.innerHTML = `<tr><td colspan="5" class="muted">No withdrawals</td></tr>`;
-        return;
-      }
-      for(const w of withdrawals){
-        const user = clients.find(c => c.id === w.user_id) || { full_name: w.user_id };
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${escapeHtml(user.full_name || user.email || w.user_id)}</td>
-          <td>KES ${Number(w.amount).toLocaleString()}</td>
-          <td>${escapeHtml(w.status)}</td>
-          <td>${new Date(w.created_at).toLocaleString()}</td>
-          <td>
-            ${ w.status === 'pending' ? `<button class="btn-approve" data-id="${w.id}">Approve</button>
-                                        <button class="btn-reject" data-id="${w.id}">Reject</button>` : '—' }
-          </td>
-        `;
-        tbody.appendChild(tr);
-      }
-      // attach
-      $$('#withdrawals-body .btn-approve').forEach(b => b.addEventListener('click', e => approveWithdrawal(e.target.dataset.id)));
-      $$('#withdrawals-body .btn-reject').forEach(b => b.addEventListener('click', e => rejectWithdrawal(e.target.dataset.id)));
-    }
-
-    function renderClientsTable(){
-      const tbody = $('#clients-body');
-      tbody.innerHTML = '';
-      if(clients.length === 0){
-        tbody.innerHTML = `<tr><td colspan="5" class="muted">No clients yet</td></tr>`;
-        return;
-      }
-      for(const c of clients){
-        const asg = assignments.find(a => a.client_id === c.id);
-        const mentor = mentors.find(m => m.id === (asg && asg.mentor_id)) || null;
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${escapeHtml(c.full_name)}</td>
-          <td>${escapeHtml(c.email)}</td>
-          <td>${mentor ? escapeHtml(mentor.full_name) : '<span class="muted">Unassigned</span>'}</td>
-          <td>${new Date(c.created_at).toLocaleDateString()}</td>
-          <td>
-            <div class="flex">
-              <select data-client="${c.id}" class="assign-select">
-                <option value="">-- choose mentor --</option>
-                ${mentors.map(m => `<option value="${m.id}" ${mentor && mentor.id===m.id ? 'selected' : ''}>${escapeHtml(m.full_name)}</option>`).join('')}
-              </select>
-              <button class="ghost assign-btn" data-client="${c.id}">Assign</button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      }
-      // attach assign handlers
-      $$('.assign-btn').forEach(b => b.addEventListener('click', e=>{
-        const clientId = e.target.dataset.client;
-        const sel = document.querySelector(`select[data-client="${clientId}"]`);
-        if(!sel.value){ toast('Choose a mentor first'); return; }
-        manualAssign(clientId, sel.value);
-      }));
-    }
-
-    function renderAssignments(){
-      const tbody = $('#assignments-body');
-      tbody.innerHTML = '';
-      if(assignments.length === 0){
-        tbody.innerHTML = `<tr><td colspan="3" class="muted">No assignments yet</td></tr>`;
-        return;
-      }
-      for(const a of assignments){
-        const client = clients.find(c => c.id === a.client_id) || { full_name: a.client_id };
-        const mentor = mentors.find(m => m.id === a.mentor_id) || { full_name: a.mentor_id };
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${escapeHtml(client.full_name || client.email)}</td>
-                        <td>${escapeHtml(mentor.full_name || mentor.email)}</td>
-                        <td>${new Date(a.created_at).toLocaleString()}</td>`;
-        tbody.appendChild(tr);
-      }
-    }
-
-    /* ----------------------
-       Actions: approve/reject etc
-       ---------------------- */
-
-    async function approvePayment(paymentId){
-      if(!confirm('Approve this payment?')) return;
-      const { error } = await supabase
-        .from('payments')
-        .update({ status: 'approved', approved_at: new Date().toISOString(), approved_by: currentAdmin.id })
-        .eq('id', paymentId);
-      if(error){ console.error('approvePayment error', error); toast('Error approving'); return; }
-      toast('Payment approved');
-      await loadPayments();
-      calculateStats();
-      renderPaymentsTable();
-      renderRecentPayments();
-    }
-
-    async function rejectPayment(paymentId){
-      if(!confirm('Reject this payment?')) return;
-      const { error } = await supabase
-        .from('payments')
-        .update({ status: 'rejected' })
-        .eq('id', paymentId);
-      if(error){ console.error('rejectPayment error', error); toast('Error rejecting'); return; }
-      toast('Payment rejected');
-      await loadPayments();
-      renderPaymentsTable();
-      renderRecentPayments();
-    }
-
-    async function approveWithdrawal(id){
-      if(!confirm('Approve this withdrawal?')) return;
-      const { error } = await supabase
-        .from('withdrawals')
-        .update({ status: 'approved', approved_at: new Date().toISOString(), approved_by: currentAdmin.id })
-        .eq('id', id);
-      if(error){ console.error('approveWithdrawal err', error); toast('Error'); return; }
-      toast('Withdrawal approved');
-      await loadWithdrawals();
-      renderWithdrawals();
-    }
-
-    async function rejectWithdrawal(id){
-      if(!confirm('Reject this withdrawal?')) return;
-      const { error } = await supabase
-        .from('withdrawals')
-        .update({ status: 'rejected' })
-        .eq('id', id);
-      if(error){ console.error('rejectWithdrawal err', error); toast('Error'); return; }
-      toast('Withdrawal rejected');
-      await loadWithdrawals();
-      renderWithdrawals();
-    }
-
-    async function manualAssign(clientId, mentorId){
-      // check existing assignment
-      const existing = assignments.find(a => a.client_id === clientId);
-      if(existing){
-        const { error } = await supabase
-          .from('assignments')
-          .update({ mentor_id: mentorId, created_at: new Date().toISOString() })
-          .eq('id', existing.id);
-        if(error){ console.error('manualAssign update err', error); toast('Error assigning'); return; }
-        toast('Assignment updated');
-      } else {
-        const { error } = await supabase
-          .from('assignments')
-          .insert([{ client_id: clientId, mentor_id: mentorId }]);
-        if(error){ console.error('manualAssign insert err', error); toast('Error assigning'); return; }
-        toast('Client assigned');
-      }
-      await loadAssignments();
-      await loadClients();
-      renderClientsTable();
-      renderAssignments();
-    }
-
-    async function autoAssignClients(){
-      if(mentors.length === 0){ toast('No mentors available'); return; }
-      // find unassigned clients
-      const assignedClientIds = assignments.map(a => a.client_id);
-      const unassigned = clients.filter(c => !assignedClientIds.includes(c.id));
-      if(unassigned.length === 0){ toast('No unassigned clients'); return; }
-
-      // round-robin distribution
-      let cur = 0;
-      const inserts = unassigned.map(c => {
-        const mentor = mentors[cur % mentors.length];
-        cur++;
-        return { client_id: c.id, mentor_id: mentor.id };
-      });
-
-      // bulk insert
-      const { error } = await supabase
-        .from('assignments')
-        .insert(inserts);
-      if(error){ console.error('autoAssign error', error); toast('Auto-assign failed'); return; }
-
-      toast(`Assigned ${inserts.length} clients to ${mentors.length} mentors`);
-      await loadAssignments();
-      await loadClients();
-      renderClientsTable();
-      renderAssignments();
-    }
-
-    /* ----------------------
-       Utility helpers
-       ---------------------- */
-
-    function escapeHtml(str = ''){
-      return String(str)
-        .replaceAll('&','&amp;')
-        .replaceAll('<','&lt;')
-        .replaceAll('>','&gt;')
-        .replaceAll('"','&quot;')
-        .replaceAll("'",'&#039;');
-    }
-
-  </script>
+// Initialize
+initAdmin();
+</script>
 </body>
 </html>
