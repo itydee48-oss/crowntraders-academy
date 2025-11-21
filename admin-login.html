@@ -1,110 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Login - Crown Trade Academy</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crown Trade — Admin Login</title>
   <style>
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: #f9f6f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      color: #3a3a3a;
-    }
-    .login-container {
-      background: #fff;
-      padding: 2rem 3rem;
-      border: 1px solid #d4c8bc;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      border-radius: 6px;
-      width: 320px;
-    }
-    h2 {
-      font-family: 'Cormorant Garamond', serif;
-      margin-bottom: 1.5rem;
-      text-align: center;
-      color: #b89463;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.3rem;
-      font-weight: 600;
-    }
-    input[type="text"], input[type="password"] {
-      width: 100%;
-      padding: 0.6rem 0.8rem;
-      margin-bottom: 1.2rem;
-      border: 1px solid #c4b5a3;
-      border-radius: 3px;
-      font-size: 1rem;
-    }
-    button {
-      width: 100%;
-      padding: 0.7rem;
-      background: #b89463;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      border-radius: 3px;
-      transition: background 0.3s ease;
-      font-size: 1.1rem;
-    }
-    button:hover {
-      background: #c8a97e;
-    }
-    .error {
-      color: red;
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      text-align: center;
-    }
+    body{background:#F9F6F2;font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;color:#2e2e2e;}
+    .box{background:white;padding:60px 50px;border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,0.1);text-align:center;width:420px;}
+    h1{font-size:2.8rem;color:#C8A97E;margin-bottom:10px;font-family:serif;}
+    .admin-badge{background:#EF4444;color:white;padding:4px 12px;border-radius:20px;font-size:0.8rem;margin-bottom:20px;display:inline-block;}
+    input{width:100%;padding:18px;margin:15px 0;border-radius:14px;border:1px solid #ddd;font-size:1.1rem;}
+    button{background:#EF4444;color:white;border:none;padding:18px;border-radius:14px;font-weight:bold;font-size:1.2rem;cursor:pointer;width:100%;}
+    .msg{margin-top:20px;font-weight:600;}
   </style>
 </head>
 <body>
-
-  <div class="login-container">
-    <h2>Mentor Admin Login</h2>
-    <form id="loginForm">
-      <label for="username">Username</label>
-      <input type="text" id="username" required />
-      <label for="password">Password</label>
-      <input type="password" id="password" required />
-      <div class="error" id="errorMsg" style="display:none;"></div>
-      <button type="submit">Login</button>
-    </form>
+<div class="box">
+  <h1>Crown Trade</h1>
+  <div class="admin-badge">ADMIN ACCESS</div>
+  <p>Enter admin email for magic link authentication</p>
+  <input type="email" id="email" placeholder="admin@crowntrade.com" required>
+  <button onclick="sendAdminMagicLink()">Send Admin Magic Link</button>
+  <div id="msg" class="msg"></div>
+  <div style="margin-top:20px;font-size:0.9rem;color:#666;">
+    <a href="login.html" style="color:#C8A97E;">← Back to User Login</a>
   </div>
+</div>
 
-  <script>
-    // Simple demo login for 4 mentors (replace with real auth)
-    const mentors = {
-      mentor1: "password1",
-      mentor2: "password2",
-      mentor3: "password3",
-      mentor4: "password4"
-    };
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxza2pzaGJjbmlpbHpseXhlY3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2MzcwMjksImV4cCI6MjA3OTIxMzAyOX0.PxvhBTZ2Bv4hnwxTrFA0E_zucNxMYrVwDSuRGniDBnc';
 
-    const loginForm = document.getElementById('loginForm');
-    const errorMsg = document.getElementById('errorMsg');
+const { createClient } = supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    loginForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
+async function sendAdminMagicLink() {
+  const email = document.getElementById('email').value.trim();
+  const msg = document.getElementById('msg');
+  
+  if (!email) {
+    msg.textContent = 'Please enter admin email address';
+    msg.style.color = 'red';
+    return;
+  }
 
-      if (mentors[username] && mentors[username] === password) {
-        // Save mentor name to localStorage and redirect
-        localStorage.setItem('mentorUsername', username);
-        window.location.href = 'admin-dashboard.html';
-      } else {
-        errorMsg.textContent = 'Invalid username or password';
-        errorMsg.style.display = 'block';
+  msg.textContent = 'Sending admin magic link...';
+  msg.style.color = '#2e2e2e';
+
+  try {
+    const { error } = await supabaseClient.auth.signInWithOtp({
+      email,
+      options: { 
+        emailRedirectTo: window.location.origin + '/admin-dashboard.html'
       }
     });
-  </script>
+
+    if (error) {
+      msg.style.color = 'red';
+      msg.textContent = 'Error: ' + error.message;
+    } else {
+      msg.style.color = 'green';
+      msg.textContent = 'Admin magic link sent! Check your email.';
+    }
+  } catch (error) {
+    msg.styleColor = 'red';
+    msg.textContent = 'Failed to send magic link. Please try again.';
+  }
+}
+
+// Check if user is already logged in and is admin
+supabaseClient.auth.getSession().then(async ({ data: { session } }) => {
+  if (session) {
+    const { data: adminProfile } = await supabaseClient
+      .from('admin_profiles')
+      .select('id')
+      .eq('id', session.user.id)
+      .single();
+    
+    if (adminProfile) {
+      window.location.href = 'admin-dashboard.html';
+    }
+  }
+});
+
+// Auto-redirect admin users
+supabaseClient.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'SIGNED_IN' && session) {
+    const { data: adminProfile } = await supabaseClient
+      .from('admin_profiles')
+      .select('id')
+      .eq('id', session.user.id)
+      .single();
+    
+    if (adminProfile) {
+      window.location.href = 'admin-dashboard.html';
+    } else {
+      await supabaseClient.auth.signOut();
+      document.getElementById('msg').style.color = 'red';
+      document.getElementById('msg').textContent = 'Access denied. Admin access only.';
+    }
+  }
+});
+
+// Enter key support
+document.getElementById('email').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    sendAdminMagicLink();
+  }
+});
+</script>
 </body>
 </html>
