@@ -26,7 +26,8 @@
 <script>
 // NEW SUPABASE CREDENTIALS
 const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxza2pzaGJjbmlpbHpseXhlY3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2MzcwMjksImV4cCI6MjA3OTIxMzAyOX0.PxvhBTZ2Bv4hnwxTrFA0E_zucNxMYrVwDSuRGniDBnc'
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxza2pzaGJjbmlpbHpseXhlY3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2MzcwMjksImV4cCI6MjA3OTIxMzAyOX0.PxvhBTZ2Bv4hnwxTrFA0E_zucNxMYrVwDSuRGniDBnc';
+
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -46,7 +47,8 @@ async function sendMagicLink() {
     const { error } = await supabaseClient.auth.signInWithOtp({
       email,
       options: { 
-        emailRedirectTo: window.location.origin + '/mentor-dashboard.html'
+        // Fixed: Using absolute GitHub Pages URL
+        emailRedirectTo: 'https://itydee48-oss.github.io/mentor-dashboard.html'
       }
     });
 
