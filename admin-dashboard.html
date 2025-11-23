@@ -551,6 +551,121 @@ function showNotification(message, type = 'success') {
   }, 3000);
 }
 
+// Sidebar Navigation - FIXED
+function setupSidebarNavigation() {
+  const sidebarButtons = document.querySelectorAll('.nav button');
+  
+  sidebarButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Remove active class from all buttons
+      document.querySelectorAll('.nav button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Add active class to clicked button
+      this.classList.add('active');
+      
+      // Hide all tabs
+      document.querySelectorAll('#dashboard, #members, #payments, #withdrawals, #pricing, #referral, #reports, #settings')
+        .forEach(tab => {
+          tab.style.display = 'none';
+        });
+      
+      // Show the selected tab
+      const tabId = this.getAttribute('data-tab');
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) {
+        targetTab.style.display = 'block';
+        
+        // Load data for the selected tab
+        switch(tabId) {
+          case 'dashboard':
+            loadDashboardData();
+            break;
+          case 'members':
+            loadPendingMembers();
+            loadApprovedMembers();
+            break;
+          case 'payments':
+            loadPaymentHistory();
+            break;
+          case 'withdrawals':
+            loadWithdrawalRequests();
+            break;
+          case 'pricing':
+            loadPricing();
+            break;
+          case 'referral':
+            loadReferralSettings();
+            loadTopReferrers();
+            break;
+          case 'reports':
+            loadReports();
+            break;
+          case 'settings':
+            loadSystemSettings();
+            break;
+        }
+      }
+    });
+  });
+}
+
+// Quick action tab switching
+function switchTab(tabName) {
+  // Update sidebar buttons
+  document.querySelectorAll('.nav button').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-tab') === tabName) {
+      btn.classList.add('active');
+    }
+  });
+  
+  // Hide all tabs
+  document.querySelectorAll('#dashboard, #members, #payments, #withdrawals, #pricing, #referral, #reports, #settings')
+    .forEach(tab => {
+      tab.style.display = 'none';
+    });
+  
+  // Show selected tab
+  const targetTab = document.getElementById(tabName);
+  if (targetTab) {
+    targetTab.style.display = 'block';
+    
+    // Load data for the selected tab
+    switch(tabName) {
+      case 'dashboard':
+        loadDashboardData();
+        break;
+      case 'members':
+        loadPendingMembers();
+        loadApprovedMembers();
+        break;
+      case 'payments':
+        loadPaymentHistory();
+        break;
+      case 'withdrawals':
+        loadWithdrawalRequests();
+        break;
+      case 'pricing':
+        loadPricing();
+        break;
+      case 'referral':
+        loadReferralSettings();
+        loadTopReferrers();
+        break;
+      case 'reports':
+        loadReports();
+        break;
+      case 'settings':
+        loadSystemSettings();
+        break;
+    }
+  }
+}
+
 // Initialize Admin Dashboard
 async function initAdmin() {
   const { data: { session } } = await supabase.auth.getSession();
@@ -579,29 +694,11 @@ async function initAdmin() {
   document.getElementById('topName').textContent = adminProfile.username || 'Administrator';
   document.getElementById('topEmail').textContent = `Last login: ${new Date().toLocaleString()}`;
   
+  // Setup sidebar navigation
+  setupSidebarNavigation();
+  
   await loadDashboardData();
   showNotification('Admin dashboard loaded successfully!');
-}
-
-// Tab Switching
-function switchTab(tabName) {
-  document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
-  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-  
-  document.querySelectorAll('#dashboard, #members, #payments, #withdrawals, #pricing, #referral, #reports, #settings')
-    .forEach(d => d.style.display = 'none');
-  document.getElementById(tabName).style.display = 'block';
-  
-  // Load data for the selected tab
-  switch(tabName) {
-    case 'members': loadPendingMembers(); loadApprovedMembers(); break;
-    case 'payments': loadPaymentHistory(); break;
-    case 'withdrawals': loadWithdrawalRequests(); break;
-    case 'pricing': loadPricing(); break;
-    case 'referral': loadReferralSettings(); loadTopReferrers(); break;
-    case 'reports': loadReports(); break;
-    case 'settings': loadSystemSettings(); break;
-  }
 }
 
 // Load Dashboard Data
@@ -1163,16 +1260,12 @@ async function updateSystemSettings() {
 }
 
 // Event Listeners
-document.querySelectorAll('.nav button').forEach(b => {
-  b.onclick = () => switchTab(b.dataset.tab);
-});
-
-document.getElementById('btnLogout').onclick = async () => {
+document.getElementById('btnLogout').addEventListener('click', async () => {
   if (confirm('Are you sure you want to logout?')) {
     await supabase.auth.signOut();
     window.location.href = 'admin-login.html';
   }
-};
+});
 
 // Auto-refresh data every 30 seconds
 setInterval(() => {
