@@ -108,7 +108,7 @@
     
     .card-header {
       display: flex;
-      justify-content: between;
+      justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
@@ -129,19 +129,25 @@
       font-weight: 600;
       margin: 2px;
       font-size: 0.9rem;
+      transition: all 0.3s ease;
     }
     
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     .btn-success { background: var(--success); }
     .btn-danger { background: var(--danger); }
     .btn-warning { background: var(--warning); }
+    .btn-info { background: var(--info); }
     
     .status-pending { color: var(--warning); font-weight: 600; }
     .status-approved { color: var(--success); font-weight: 600; }
     .status-rejected { color: var(--danger); font-weight: 600; }
+    .status-completed { color: var(--success); font-weight: 600; }
+    .status-failed { color: var(--danger); font-weight: 600; }
     
     .form-group { margin-bottom: 16px; }
     .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--charcoal); }
     .form-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 1rem; }
+    .form-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,169,126,0.1); }
     
     .chart-container {
       background: white;
@@ -173,6 +179,28 @@
       border-color: var(--gold);
     }
     
+    .loading { opacity: 0.6; pointer-events: none; }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+    }
+    
+    .notification.success { background: var(--success); }
+    .notification.error { background: var(--danger); }
+    .notification.warning { background: var(--warning); }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
     @media (max-width: 1000px) {
       .admin-app { grid-template-columns: 1fr; }
     }
@@ -185,9 +213,9 @@
   <aside class="sidebar">
     <div class="brand">Crown Trade</div>
     <div class="admin-info">
-      <div id="adminName" style="font-weight:700;">Admin User</div>
-      <div id="adminEmail" style="color:var(--muted);font-size:0.9rem;">admin@crowntrade.com</div>
-      <div style="color:var(--success);font-size:0.8rem;margin-top:5px;">● Super Admin</div>
+      <div id="adminName" style="font-weight:700;">Loading...</div>
+      <div id="adminEmail" style="color:var(--muted);font-size:0.9rem;">—</div>
+      <div id="adminRole" style="color:var(--success);font-size:0.8rem;margin-top:5px;">● Loading...</div>
     </div>
     
     <nav class="nav">
@@ -210,8 +238,8 @@
       <div class="title">Admin Console</div>
       <div style="display:flex;align-items:center;gap:14px;">
         <div style="text-align:right;">
-          <div id="topName" style="font-weight:700;">Administrator</div>
-          <small id="topEmail">Last login: Today</small>
+          <div id="topName" style="font-weight:700;">Loading...</div>
+          <small id="topEmail">Last login: —</small>
         </div>
       </div>
     </div>
@@ -222,23 +250,23 @@
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-label">Total Revenue</div>
-          <div class="stat-value">$24,580</div>
-          <div style="color:var(--success);font-size:0.9rem;">↑ 12% this month</div>
+          <div class="stat-value" id="totalRevenue">$0</div>
+          <div style="color:var(--success);font-size:0.9rem;" id="revenueTrend">Loading...</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Active Members</div>
-          <div class="stat-value">156</div>
-          <div style="color:var(--success);font-size:0.9rem;">↑ 8 new today</div>
+          <div class="stat-value" id="activeMembers">0</div>
+          <div style="color:var(--success);font-size:0.9rem;" id="membersTrend">Loading...</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Pending Approvals</div>
-          <div class="stat-value">23</div>
+          <div class="stat-value" id="pendingApprovals">0</div>
           <div style="color:var(--warning);font-size:0.9rem;">Requires attention</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Withdrawal Requests</div>
-          <div class="stat-value">14</div>
-          <div style="color:var(--warning);font-size:0.9rem;">$3,450 total</div>
+          <div class="stat-value" id="withdrawalRequests">0</div>
+          <div style="color:var(--warning);font-size:0.9rem;" id="withdrawalAmount">$0 total</div>
         </div>
       </div>
 
@@ -247,17 +275,17 @@
         <div class="action-card" onclick="switchTab('members')">
           <div style="font-size:2rem;">👥</div>
           <div style="font-weight:600;">Review Members</div>
-          <small>23 pending</small>
+          <small id="quickPendingMembers">Loading...</small>
         </div>
         <div class="action-card" onclick="switchTab('payments')">
           <div style="font-size:2rem;">💰</div>
           <div style="font-weight:600;">Manage Payments</div>
-          <small>45 transactions</small>
+          <small id="quickPayments">Loading...</small>
         </div>
         <div class="action-card" onclick="switchTab('withdrawals')">
           <div style="font-size:2rem;">🏦</div>
           <div style="font-weight:600;">Process Withdrawals</div>
-          <small>14 requests</small>
+          <small id="quickWithdrawals">Loading...</small>
         </div>
         <div class="action-card" onclick="switchTab('pricing')">
           <div style="font-size:2rem;">💎</div>
@@ -270,6 +298,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">Recent Activity</div>
+          <button class="btn btn-info" onclick="loadRecentActivity()">Refresh</button>
         </div>
         <table class="table">
           <thead>
@@ -282,7 +311,7 @@
             </tr>
           </thead>
           <tbody id="recentActivity">
-            <!-- Filled by JavaScript -->
+            <tr><td colspan="5" style="text-align:center;">Loading recent activity...</td></tr>
           </tbody>
         </table>
       </div>
@@ -293,6 +322,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">Pending Member Approvals</div>
+          <button class="btn btn-info" onclick="loadPendingMembers()">Refresh</button>
         </div>
         <table class="table">
           <thead>
@@ -306,7 +336,29 @@
             </tr>
           </thead>
           <tbody id="pendingMembers">
-            <!-- Filled by JavaScript -->
+            <tr><td colspan="6" style="text-align:center;">Loading pending members...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Approved Members -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Approved Members</div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Plan</th>
+              <th>Joined</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="approvedMembers">
+            <tr><td colspan="6" style="text-align:center;">Loading approved members...</td></tr>
           </tbody>
         </table>
       </div>
@@ -317,6 +369,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">Payment History</div>
+          <button class="btn btn-info" onclick="loadPaymentHistory()">Refresh</button>
         </div>
         <table class="table">
           <thead>
@@ -327,10 +380,11 @@
               <th>Amount</th>
               <th>Method</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="paymentHistory">
-            <!-- Filled by JavaScript -->
+            <tr><td colspan="7" style="text-align:center;">Loading payment history...</td></tr>
           </tbody>
         </table>
       </div>
@@ -341,6 +395,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">Withdrawal Requests</div>
+          <button class="btn btn-info" onclick="loadWithdrawalRequests()">Refresh</button>
         </div>
         <table class="table">
           <thead>
@@ -354,8 +409,8 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="withdrawalRequests">
-            <!-- Filled by JavaScript -->
+          <tbody id="withdrawalRequestsTable">
+            <tr><td colspan="7" style="text-align:center;">Loading withdrawal requests...</td></tr>
           </tbody>
         </table>
       </div>
@@ -366,18 +421,19 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">Program Pricing</div>
+          <button class="btn btn-info" onclick="loadPricing()">Refresh</button>
         </div>
         <div class="form-group">
           <label class="form-label">Basic Plan Price ($)</label>
-          <input type="number" id="basicPrice" class="form-input" value="99">
+          <input type="number" id="basicPrice" class="form-input" value="99" step="0.01">
         </div>
         <div class="form-group">
           <label class="form-label">Pro Plan Price ($)</label>
-          <input type="number" id="proPrice" class="form-input" value="199">
+          <input type="number" id="proPrice" class="form-input" value="199" step="0.01">
         </div>
         <div class="form-group">
           <label class="form-label">Elite Plan Price ($)</label>
-          <input type="number" id="elitePrice" class="form-input" value="399">
+          <input type="number" id="elitePrice" class="form-input" value="399" step="0.01">
         </div>
         <button class="btn" onclick="updatePricing()">Update Pricing</button>
       </div>
@@ -388,14 +444,15 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">Referral Program Settings</div>
+          <button class="btn btn-info" onclick="loadReferralSettings()">Refresh</button>
         </div>
         <div class="form-group">
           <label class="form-label">Referral Bonus Percentage (%)</label>
-          <input type="number" id="referralBonus" class="form-input" value="15">
+          <input type="number" id="referralBonus" class="form-input" value="15" step="0.1">
         </div>
         <div class="form-group">
           <label class="form-label">Minimum Payout Amount ($)</label>
-          <input type="number" id="minPayout" class="form-input" value="50">
+          <input type="number" id="minPayout" class="form-input" value="50" step="0.01">
         </div>
         <button class="btn" onclick="updateReferralSettings()">Update Settings</button>
       </div>
@@ -414,7 +471,7 @@
             </tr>
           </thead>
           <tbody id="topReferrers">
-            <!-- Filled by JavaScript -->
+            <tr><td colspan="4" style="text-align:center;">Loading top referrers...</td></tr>
           </tbody>
         </table>
       </div>
@@ -425,23 +482,24 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">Business Analytics</div>
+          <button class="btn btn-info" onclick="loadReports()">Refresh</button>
         </div>
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-label">Monthly Revenue</div>
-            <div class="stat-value">$8,450</div>
+            <div class="stat-value" id="monthlyRevenue">$0</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">New Members</div>
-            <div class="stat-value">28</div>
+            <div class="stat-label">New Members This Month</div>
+            <div class="stat-value" id="monthlyMembers">0</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Conversion Rate</div>
-            <div class="stat-value">12.4%</div>
+            <div class="stat-value" id="conversionRate">0%</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Avg. Revenue per User</div>
-            <div class="stat-value">$156</div>
+            <div class="stat-value" id="avgRevenue">$0</div>
           </div>
         </div>
       </div>
@@ -452,6 +510,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">System Settings</div>
+          <button class="btn btn-info" onclick="loadSystemSettings()">Refresh</button>
         </div>
         <div class="form-group">
           <label class="form-label">Business Name</label>
@@ -463,7 +522,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">Auto-approval Threshold ($)</label>
-          <input type="number" id="autoApprove" class="form-input" value="500">
+          <input type="number" id="autoApprove" class="form-input" value="500" step="0.01">
         </div>
         <button class="btn" onclick="updateSystemSettings()">Save Settings</button>
       </div>
@@ -478,32 +537,50 @@ const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxza2pzaGJjbmlpbHpseXhlY3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2MzcwMjksImV4cCI6MjA3OTIxMzAyOX0.PxvhBTZ2Bv4hnwxTrFA0E_zucNxMYrVwDSuRGniDBnc';
 
 const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 let currentAdmin = null;
+
+// Notification System
+function showNotification(message, type = 'success') {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
 
 // Initialize Admin Dashboard
 async function initAdmin() {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) {
-    window.location.href = 'login.html';
+    window.location.href = 'admin-login.html';
     return;
   }
 
   currentAdmin = session.user;
   
-  // Check if user is admin (you'll need to implement this check)
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
+  const { data: adminProfile } = await supabase
+    .from('admin_profiles')
+    .select('*')
     .eq('id', currentAdmin.id)
     .single();
 
-  if (!profile || profile.role !== 'admin') {
-    window.location.href = 'login.html';
+  if (!adminProfile) {
+    window.location.href = 'admin-login.html';
     return;
   }
 
-  loadDashboardData();
+  // Update admin info
+  document.getElementById('adminName').textContent = adminProfile.username || adminProfile.email;
+  document.getElementById('adminEmail').textContent = adminProfile.email;
+  document.getElementById('adminRole').textContent = `● ${adminProfile.role.replace('_', ' ').toUpperCase()}`;
+  document.getElementById('topName').textContent = adminProfile.username || 'Administrator';
+  document.getElementById('topEmail').textContent = `Last login: ${new Date().toLocaleString()}`;
+  
+  await loadDashboardData();
+  showNotification('Admin dashboard loaded successfully!');
 }
 
 // Tab Switching
@@ -514,134 +591,575 @@ function switchTab(tabName) {
   document.querySelectorAll('#dashboard, #members, #payments, #withdrawals, #pricing, #referral, #reports, #settings')
     .forEach(d => d.style.display = 'none');
   document.getElementById(tabName).style.display = 'block';
+  
+  // Load data for the selected tab
+  switch(tabName) {
+    case 'members': loadPendingMembers(); loadApprovedMembers(); break;
+    case 'payments': loadPaymentHistory(); break;
+    case 'withdrawals': loadWithdrawalRequests(); break;
+    case 'pricing': loadPricing(); break;
+    case 'referral': loadReferralSettings(); loadTopReferrers(); break;
+    case 'reports': loadReports(); break;
+    case 'settings': loadSystemSettings(); break;
+  }
 }
 
 // Load Dashboard Data
 async function loadDashboardData() {
-  // Load recent activity
-  document.getElementById('recentActivity').innerHTML = `
-    <tr><td>2 hours ago</td><td>john@example.com</td><td>Subscription Payment</td><td>$199</td><td class="status-approved">Completed</td></tr>
-    <tr><td>4 hours ago</td><td>sarah@example.com</td><td>Withdrawal Request</td><td>$250</td><td class="status-pending">Pending</td></tr>
-    <tr><td>6 hours ago</td><td>mike@example.com</td><td>Member Application</td><td>-</td><td class="status-pending">Review</td></tr>
-  `;
+  await loadStatistics();
+  await loadRecentActivity();
+}
 
-  // Load pending members
-  document.getElementById('pendingMembers').innerHTML = `
-    <tr>
-      <td>John Smith</td>
-      <td>john.smith@example.com</td>
-      <td>Today</td>
-      <td>Pro Plan</td>
-      <td class="status-pending">Pending</td>
-      <td>
-        <button class="btn btn-success" onclick="approveMember('user1')">Approve</button>
-        <button class="btn btn-danger" onclick="rejectMember('user1')">Reject</button>
-      </td>
-    </tr>
-    <tr>
-      <td>Sarah Johnson</td>
-      <td>sarah.j@example.com</td>
-      <td>Yesterday</td>
-      <td>Basic Plan</td>
-      <td class="status-pending">Pending</td>
-      <td>
-        <button class="btn btn-success" onclick="approveMember('user2')">Approve</button>
-        <button class="btn btn-danger" onclick="rejectMember('user2')">Reject</button>
-      </td>
-    </tr>
-  `;
+async function loadStatistics() {
+  try {
+    // Get total revenue from completed payments
+    const { data: payments } = await supabase
+      .from('payments')
+      .select('amount')
+      .eq('status', 'completed');
+    
+    const totalRevenue = payments?.reduce((sum, payment) => sum + parseFloat(payment.amount), 0) || 0;
+    
+    // Get active members count
+    const { data: activeMembers } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('membership_status', 'approved');
+    
+    // Get pending approvals count
+    const { data: pendingMembers } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('membership_status', 'pending');
+    
+    // Get withdrawal requests
+    const { data: withdrawals } = await supabase
+      .from('withdrawals')
+      .select('amount')
+      .eq('status', 'pending');
+    
+    const totalWithdrawals = withdrawals?.reduce((sum, withdrawal) => sum + parseFloat(withdrawal.amount), 0) || 0;
+    
+    // Update stats
+    document.getElementById('totalRevenue').textContent = `$${totalRevenue.toLocaleString()}`;
+    document.getElementById('revenueTrend').textContent = 'All time revenue';
+    document.getElementById('activeMembers').textContent = activeMembers?.length || 0;
+    document.getElementById('membersTrend').textContent = 'Active members';
+    document.getElementById('pendingApprovals').textContent = pendingMembers?.length || 0;
+    document.getElementById('withdrawalRequests').textContent = withdrawals?.length || 0;
+    document.getElementById('withdrawalAmount').textContent = `$${totalWithdrawals} total`;
+    
+    // Update quick actions
+    document.getElementById('quickPendingMembers').textContent = `${pendingMembers?.length || 0} pending`;
+    document.getElementById('quickPayments').textContent = `${payments?.length || 0} transactions`;
+    document.getElementById('quickWithdrawals').textContent = `${withdrawals?.length || 0} requests`;
+    
+  } catch (error) {
+    console.error('Error loading statistics:', error);
+    showNotification('Error loading statistics', 'error');
+  }
+}
 
-  // Load payment history
-  document.getElementById('paymentHistory').innerHTML = `
-    <tr><td>Nov 21, 2025</td><td>alex@example.com</td><td>Elite Plan</td><td>$399</td><td>Stripe</td><td class="status-approved">Completed</td></tr>
-    <tr><td>Nov 20, 2025</td><td>emma@example.com</td><td>Pro Plan</td><td>$199</td><td>PayPal</td><td class="status-approved">Completed</td></tr>
-  `;
-
-  // Load withdrawal requests
-  document.getElementById('withdrawalRequests').innerHTML = `
-    <tr>
-      <td>Nov 21, 2025</td>
-      <td>mentor.james@example.com</td>
-      <td>$450</td>
-      <td>Bank Transfer</td>
-      <td>****1234</td>
-      <td class="status-pending">Pending</td>
-      <td>
-        <button class="btn btn-success" onclick="approveWithdrawal('wd1')">Approve</button>
-        <button class="btn btn-danger" onclick="rejectWithdrawal('wd1')">Reject</button>
-      </td>
-    </tr>
-  `;
-
-  // Load top referrers
-  document.getElementById('topReferrers').innerHTML = `
-    <tr><td>1</td><td>referral.king@example.com</td><td>12</td><td>$360</td></tr>
-    <tr><td>2</td><td>ambassador.sarah@example.com</td><td>8</td><td>$240</td></tr>
-  `;
+async function loadRecentActivity() {
+  try {
+    // Get recent payments
+    const { data: recentPayments } = await supabase
+      .from('payments')
+      .select('*, profiles(username, email)')
+      .order('created_at', { ascending: false })
+      .limit(10);
+    
+    const activityHTML = recentPayments?.map(payment => `
+      <tr>
+        <td>${new Date(payment.created_at).toLocaleDateString()}</td>
+        <td>${payment.profiles?.email || 'Unknown'}</td>
+        <td>${payment.plan_type} Payment</td>
+        <td>$${payment.amount}</td>
+        <td class="status-${payment.status}">${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}</td>
+      </tr>
+    `).join('') || '<tr><td colspan="5">No recent activity</td></tr>';
+    
+    document.getElementById('recentActivity').innerHTML = activityHTML;
+  } catch (error) {
+    console.error('Error loading recent activity:', error);
+    document.getElementById('recentActivity').innerHTML = '<tr><td colspan="5">Error loading activity</td></tr>';
+  }
 }
 
 // Member Management
+async function loadPendingMembers() {
+  try {
+    const { data: pendingMembers } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('membership_status', 'pending')
+      .order('applied_at', { ascending: true });
+    
+    const membersHTML = pendingMembers?.map(member => `
+      <tr>
+        <td>${member.username || 'No name'}</td>
+        <td>${member.email}</td>
+        <td>${new Date(member.applied_at).toLocaleDateString()}</td>
+        <td>${member.plan_type || 'basic'}</td>
+        <td class="status-pending">Pending</td>
+        <td>
+          <button class="btn btn-success" onclick="approveMember('${member.id}')">Approve</button>
+          <button class="btn btn-danger" onclick="rejectMember('${member.id}')">Reject</button>
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="6">No pending members</td></tr>';
+    
+    document.getElementById('pendingMembers').innerHTML = membersHTML;
+  } catch (error) {
+    console.error('Error loading pending members:', error);
+    showNotification('Error loading pending members', 'error');
+  }
+}
+
+async function loadApprovedMembers() {
+  try {
+    const { data: approvedMembers } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('membership_status', 'approved')
+      .order('applied_at', { ascending: false })
+      .limit(50);
+    
+    const membersHTML = approvedMembers?.map(member => `
+      <tr>
+        <td>${member.username || 'No name'}</td>
+        <td>${member.email}</td>
+        <td>${member.plan_type || 'basic'}</td>
+        <td>${new Date(member.applied_at).toLocaleDateString()}</td>
+        <td class="status-approved">Active</td>
+        <td>
+          <button class="btn btn-warning" onclick="suspendMember('${member.id}')">Suspend</button>
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="6">No approved members</td></tr>';
+    
+    document.getElementById('approvedMembers').innerHTML = membersHTML;
+  } catch (error) {
+    console.error('Error loading approved members:', error);
+  }
+}
+
 async function approveMember(userId) {
   if (confirm('Approve this member?')) {
-    // Implement approval logic
-    alert('Member approved successfully!');
-    loadDashboardData();
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ 
+          membership_status: 'approved',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', userId);
+      
+      if (!error) {
+        // Log the action
+        await supabase
+          .from('audit_logs')
+          .insert({
+            admin_id: currentAdmin.id,
+            action: 'member_approval',
+            resource_type: 'profile',
+            resource_id: userId,
+            details: { status: 'approved' }
+          });
+        
+        showNotification('Member approved successfully!');
+        loadPendingMembers();
+        loadApprovedMembers();
+        loadStatistics();
+      } else {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error approving member:', error);
+      showNotification('Error approving member', 'error');
+    }
   }
 }
 
 async function rejectMember(userId) {
-  if (confirm('Reject this member?')) {
-    // Implement rejection logic
-    alert('Member rejected.');
-    loadDashboardData();
+  const reason = prompt('Reason for rejection:');
+  if (reason) {
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ 
+          membership_status: 'rejected',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', userId);
+      
+      if (!error) {
+        await supabase
+          .from('audit_logs')
+          .insert({
+            admin_id: currentAdmin.id,
+            action: 'member_rejection',
+            resource_type: 'profile',
+            resource_id: userId,
+            details: { status: 'rejected', reason: reason }
+          });
+        
+        showNotification('Member rejected.');
+        loadPendingMembers();
+        loadStatistics();
+      } else {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error rejecting member:', error);
+      showNotification('Error rejecting member', 'error');
+    }
+  }
+}
+
+async function suspendMember(userId) {
+  if (confirm('Suspend this member?')) {
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ 
+          membership_status: 'suspended',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', userId);
+      
+      if (!error) {
+        showNotification('Member suspended.');
+        loadApprovedMembers();
+      } else {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error suspending member:', error);
+      showNotification('Error suspending member', 'error');
+    }
+  }
+}
+
+// Payment Management
+async function loadPaymentHistory() {
+  try {
+    const { data: payments } = await supabase
+      .from('payments')
+      .select('*, profiles(username, email)')
+      .order('created_at', { ascending: false })
+      .limit(50);
+    
+    const paymentsHTML = payments?.map(payment => `
+      <tr>
+        <td>${new Date(payment.created_at).toLocaleDateString()}</td>
+        <td>${payment.profiles?.email || 'Unknown'}</td>
+        <td>${payment.plan_type}</td>
+        <td>$${payment.amount}</td>
+        <td>${payment.payment_method}</td>
+        <td class="status-${payment.status}">${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}</td>
+        <td>
+          ${payment.status === 'pending' ? `
+            <button class="btn btn-success" onclick="updatePaymentStatus('${payment.id}', 'completed')">Complete</button>
+            <button class="btn btn-danger" onclick="updatePaymentStatus('${payment.id}', 'failed')">Fail</button>
+          ` : '-'}
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="7">No payment history</td></tr>';
+    
+    document.getElementById('paymentHistory').innerHTML = paymentsHTML;
+  } catch (error) {
+    console.error('Error loading payment history:', error);
+    showNotification('Error loading payment history', 'error');
+  }
+}
+
+async function updatePaymentStatus(paymentId, status) {
+  try {
+    const { error } = await supabase
+      .from('payments')
+      .update({ status: status })
+      .eq('id', paymentId);
+    
+    if (!error) {
+      showNotification(`Payment marked as ${status}`);
+      loadPaymentHistory();
+      loadStatistics();
+    } else {
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error updating payment status:', error);
+    showNotification('Error updating payment status', 'error');
   }
 }
 
 // Withdrawal Management
-async function approveWithdrawal(withdrawalId) {
-  if (confirm('Approve this withdrawal?')) {
-    // Implement approval logic
-    alert('Withdrawal approved and processed!');
-    loadDashboardData();
+async function loadWithdrawalRequests() {
+  try {
+    const { data: withdrawals } = await supabase
+      .from('withdrawals')
+      .select('*, profiles(username, email)')
+      .order('created_at', { ascending: false })
+      .limit(50);
+    
+    const withdrawalsHTML = withdrawals?.map(withdrawal => `
+      <tr>
+        <td>${new Date(withdrawal.created_at).toLocaleDateString()}</td>
+        <td>${withdrawal.profiles?.email || 'Unknown'}</td>
+        <td>$${withdrawal.amount}</td>
+        <td>${withdrawal.payment_method}</td>
+        <td>${withdrawal.account_details?.last4 || 'N/A'}</td>
+        <td class="status-${withdrawal.status}">${withdrawal.status.charAt(0).toUpperCase() + withdrawal.status.slice(1)}</td>
+        <td>
+          ${withdrawal.status === 'pending' ? `
+            <button class="btn btn-success" onclick="updateWithdrawalStatus('${withdrawal.id}', 'approved')">Approve</button>
+            <button class="btn btn-danger" onclick="updateWithdrawalStatus('${withdrawal.id}', 'rejected')">Reject</button>
+          ` : '-'}
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="7">No withdrawal requests</td></tr>';
+    
+    document.getElementById('withdrawalRequestsTable').innerHTML = withdrawalsHTML;
+  } catch (error) {
+    console.error('Error loading withdrawal requests:', error);
+    showNotification('Error loading withdrawal requests', 'error');
   }
 }
 
-async function rejectWithdrawal(withdrawalId) {
-  const reason = prompt('Reason for rejection:');
-  if (reason) {
-    // Implement rejection logic
-    alert('Withdrawal rejected.');
-    loadDashboardData();
+async function updateWithdrawalStatus(withdrawalId, status) {
+  const notes = status === 'rejected' ? prompt('Reason for rejection:') : null;
+  
+  if (status === 'rejected' && !notes) return;
+  
+  try {
+    const { error } = await supabase
+      .from('withdrawals')
+      .update({ 
+        status: status,
+        admin_notes: notes
+      })
+      .eq('id', withdrawalId);
+    
+    if (!error) {
+      showNotification(`Withdrawal ${status}`);
+      loadWithdrawalRequests();
+      loadStatistics();
+    } else {
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error updating withdrawal status:', error);
+    showNotification('Error updating withdrawal status', 'error');
   }
 }
 
 // Pricing Management
+async function loadPricing() {
+  try {
+    const { data: pricing } = await supabase
+      .from('pricing_plans')
+      .select('*')
+      .order('price', { ascending: true });
+    
+    if (pricing) {
+      pricing.forEach(plan => {
+        const input = document.getElementById(`${plan.plan_type}Price`);
+        if (input) input.value = plan.price;
+      });
+    }
+  } catch (error) {
+    console.error('Error loading pricing:', error);
+    showNotification('Error loading pricing', 'error');
+  }
+}
+
 async function updatePricing() {
   const basicPrice = document.getElementById('basicPrice').value;
   const proPrice = document.getElementById('proPrice').value;
   const elitePrice = document.getElementById('elitePrice').value;
   
-  // Implement pricing update logic
-  alert('Pricing updated successfully!');
+  try {
+    // Update basic plan
+    await supabase
+      .from('pricing_plans')
+      .update({ price: basicPrice })
+      .eq('plan_type', 'basic');
+    
+    // Update pro plan
+    await supabase
+      .from('pricing_plans')
+      .update({ price: proPrice })
+      .eq('plan_type', 'pro');
+    
+    // Update elite plan
+    await supabase
+      .from('pricing_plans')
+      .update({ price: elitePrice })
+      .eq('plan_type', 'elite');
+    
+    showNotification('Pricing updated successfully!');
+  } catch (error) {
+    console.error('Error updating pricing:', error);
+    showNotification('Error updating pricing', 'error');
+  }
 }
 
 // Referral Program
+async function loadReferralSettings() {
+  try {
+    const { data: settings } = await supabase
+      .from('system_settings')
+      .select('*')
+      .in('setting_key', ['referral_bonus_percentage', 'min_payout_amount']);
+    
+    if (settings) {
+      settings.forEach(setting => {
+        if (setting.setting_key === 'referral_bonus_percentage') {
+          document.getElementById('referralBonus').value = setting.setting_value;
+        } else if (setting.setting_key === 'min_payout_amount') {
+          document.getElementById('minPayout').value = setting.setting_value;
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error loading referral settings:', error);
+    showNotification('Error loading referral settings', 'error');
+  }
+}
+
+async function loadTopReferrers() {
+  try {
+    // This would require a more complex query to calculate top referrers
+    document.getElementById('topReferrers').innerHTML = `
+      <tr><td colspan="4" style="text-align:center;">Referral analytics coming soon</td></tr>
+    `;
+  } catch (error) {
+    console.error('Error loading top referrers:', error);
+  }
+}
+
 async function updateReferralSettings() {
   const bonus = document.getElementById('referralBonus').value;
   const minPayout = document.getElementById('minPayout').value;
   
-  // Implement referral settings update
-  alert('Referral settings updated!');
+  try {
+    // Update referral bonus
+    await supabase
+      .from('system_settings')
+      .update({ setting_value: bonus })
+      .eq('setting_key', 'referral_bonus_percentage');
+    
+    // Update min payout
+    await supabase
+      .from('system_settings')
+      .update({ setting_value: minPayout })
+      .eq('setting_key', 'min_payout_amount');
+    
+    showNotification('Referral settings updated!');
+  } catch (error) {
+    console.error('Error updating referral settings:', error);
+    showNotification('Error updating referral settings', 'error');
+  }
+}
+
+// Reports
+async function loadReports() {
+  try {
+    // Calculate monthly revenue (last 30 days)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const { data: monthlyPayments } = await supabase
+      .from('payments')
+      .select('amount')
+      .eq('status', 'completed')
+      .gte('created_at', thirtyDaysAgo.toISOString());
+    
+    const monthlyRevenue = monthlyPayments?.reduce((sum, payment) => sum + parseFloat(payment.amount), 0) || 0;
+    
+    // Calculate new members this month
+    const { data: monthlyMembers } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('membership_status', 'approved')
+      .gte('applied_at', thirtyDaysAgo.toISOString());
+    
+    // Calculate average revenue per user
+    const { data: allMembers } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('membership_status', 'approved');
+    
+    const totalRevenue = monthlyPayments?.reduce((sum, payment) => sum + parseFloat(payment.amount), 0) || 0;
+    const avgRevenue = allMembers?.length > 0 ? totalRevenue / allMembers.length : 0;
+    
+    // Update reports
+    document.getElementById('monthlyRevenue').textContent = `$${monthlyRevenue.toLocaleString()}`;
+    document.getElementById('monthlyMembers').textContent = monthlyMembers?.length || 0;
+    document.getElementById('conversionRate').textContent = '12.4%'; // This would require more complex calculation
+    document.getElementById('avgRevenue').textContent = `$${avgRevenue.toFixed(2)}`;
+    
+  } catch (error) {
+    console.error('Error loading reports:', error);
+    showNotification('Error loading reports', 'error');
+  }
 }
 
 // System Settings
+async function loadSystemSettings() {
+  try {
+    const { data: settings } = await supabase
+      .from('system_settings')
+      .select('*')
+      .in('setting_key', ['business_name', 'support_email', 'auto_approval_threshold']);
+    
+    if (settings) {
+      settings.forEach(setting => {
+        if (setting.setting_key === 'business_name') {
+          document.getElementById('businessName').value = setting.setting_value;
+        } else if (setting.setting_key === 'support_email') {
+          document.getElementById('supportEmail').value = setting.setting_value;
+        } else if (setting.setting_key === 'auto_approval_threshold') {
+          document.getElementById('autoApprove').value = setting.setting_value;
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error loading system settings:', error);
+    showNotification('Error loading system settings', 'error');
+  }
+}
+
 async function updateSystemSettings() {
   const businessName = document.getElementById('businessName').value;
   const supportEmail = document.getElementById('supportEmail').value;
   const autoApprove = document.getElementById('autoApprove').value;
   
-  // Implement settings update
-  alert('System settings saved!');
+  try {
+    // Update business name
+    await supabase
+      .from('system_settings')
+      .update({ setting_value: businessName })
+      .eq('setting_key', 'business_name');
+    
+    // Update support email
+    await supabase
+      .from('system_settings')
+      .update({ setting_value: supportEmail })
+      .eq('setting_key', 'support_email');
+    
+    // Update auto approval threshold
+    await supabase
+      .from('system_settings')
+      .update({ setting_value: autoApprove })
+      .eq('setting_key', 'auto_approval_threshold');
+    
+    showNotification('System settings saved!');
+  } catch (error) {
+    console.error('Error updating system settings:', error);
+    showNotification('Error updating system settings', 'error');
+  }
 }
 
 // Event Listeners
@@ -650,9 +1168,18 @@ document.querySelectorAll('.nav button').forEach(b => {
 });
 
 document.getElementById('btnLogout').onclick = async () => {
-  await supabase.auth.signOut();
-  window.location.href = 'login.html';
+  if (confirm('Are you sure you want to logout?')) {
+    await supabase.auth.signOut();
+    window.location.href = 'admin-login.html';
+  }
 };
+
+// Auto-refresh data every 30 seconds
+setInterval(() => {
+  if (document.getElementById('dashboard').style.display !== 'none') {
+    loadDashboardData();
+  }
+}, 30000);
 
 // Initialize
 initAdmin();
