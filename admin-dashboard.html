@@ -536,7 +536,32 @@
 const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxza2pzaGJjbmlpbHpseXhlY3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2MzcwMjksImV4cCI6MjA3OTIxMzAyOX0.PxvhBTZ2Bv4hnwxTrFA0E_zucNxMYrVwDSuRGniDBnc';
 
-const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Wait for Supabase to load
+let supabase;
+
+function initSupabase() {
+  if (typeof window.supabase !== 'undefined') {
+    const { createClient } = window.supabase;
+    supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    console.log('Supabase initialized successfully');
+    return true;
+  } else {
+    console.error('Supabase not loaded yet');
+    return false;
+  }
+}
+
+// Initialize Supabase when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => {
+    if (initSupabase()) {
+      initAdmin();
+    } else {
+      document.getElementById('adminName').textContent = 'Error: Supabase not loaded';
+      showNotification('Failed to load authentication. Please refresh the page.', 'error');
+    }
+  }, 1000);
+});
 let currentAdmin = null;
 
 // Notification System
