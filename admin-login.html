@@ -12,12 +12,19 @@
     input{width:100%;padding:18px;margin:15px 0;border-radius:14px;border:1px solid #ddd;font-size:1.1rem;}
     button{background:#EF4444;color:white;border:none;padding:18px;border-radius:14px;font-weight:bold;font-size:1.2rem;cursor:pointer;width:100%;}
     .msg{margin-top:20px;font-weight:600;}
+    .warning{background:#FEF3CD;border:1px solid #F59E0B;color:#92400E;padding:15px;border-radius:10px;margin:20px 0;}
   </style>
 </head>
 <body>
 <div class="box">
   <h1>Crown Trade</h1>
   <div class="admin-badge">ADMIN ACCESS</div>
+  
+  <!-- Show error if coming from expired link -->
+  <div id="errorMessage" class="warning" style="display:none;">
+    <strong>Link Expired:</strong> Your magic link has expired. Please request a new one.
+  </div>
+  
   <p>Enter admin email for magic link authentication</p>
   <input type="email" id="email" placeholder="admin@crowntrade.com" required>
   <button onclick="sendAdminMagicLink()">Send Admin Magic Link</button>
@@ -34,6 +41,18 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Check for expired link error on page load
+document.addEventListener('DOMContentLoaded', function() {
+  const urlParams = new URLSearchParams(window.location.hash.substring(1));
+  const error = urlParams.get('error');
+  
+  if (error === 'otp_expired') {
+    document.getElementById('errorMessage').style.display = 'block';
+    // Clear the URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+});
 
 async function sendAdminMagicLink() {
   const email = document.getElementById('email').value.trim();
@@ -52,7 +71,8 @@ async function sendAdminMagicLink() {
     const { error } = await supabaseClient.auth.signInWithOtp({
       email,
       options: { 
-        emailRedirectTo: window.location.origin + '/admin-dashboard.html'
+        emailRedirectTo: window.location.origin + '/admin-dashboard.html',
+        shouldCreateUser: false // Important: Don't create new users for admin login
       }
     });
 
@@ -61,10 +81,10 @@ async function sendAdminMagicLink() {
       msg.textContent = 'Error: ' + error.message;
     } else {
       msg.style.color = 'green';
-      msg.textContent = 'Admin magic link sent! Check your email.';
+      msg.textContent = 'Admin magic link sent! Check your email immediately. Links expire quickly.';
     }
   } catch (error) {
-    msg.styleColor = 'red';
+    msg.style.color = 'red';
     msg.textContent = 'Failed to send magic link. Please try again.';
   }
 }
