@@ -7,39 +7,313 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root{--nude-light:#F9F6F2;--nude-med:#E8DFD6;--gold:#C8A97E;--gold-dark:#B89463;--charcoal:#2e2e2e;--muted:#7A7A7A;}
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Montserrat',sans-serif;background:linear-gradient(180deg,var(--nude-light),#fff);color:var(--charcoal);min-height:100vh;}
-    .app{display:grid;grid-template-columns:280px 1fr;gap:24px;padding:24px;}
-    .sidebar{background:linear-gradient(180deg,rgba(255,255,255,0.8),rgba(232,223,214,0.6));border:1px solid rgba(212,200,188,0.6);border-radius:16px;padding:30px;height:fit-content;position:sticky;top:24px;}
-    .brand{font-family:'Cormorant Garamond',serif;color:var(--gold-dark);font-size:2rem;margin-bottom:20px;letter-spacing:1px;}
-    .nav{display:flex;flex-direction:column;gap:12px;}
-    .nav button{background:transparent;border:1px solid rgba(0,0,0,0.1);padding:14px;border-radius:10px;cursor:pointer;font-weight:600;text-align:left;transition:0.3s;}
-    .nav button.active{background:var(--gold);color:white;}
-    .main{background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(232,223,214,0.7));border-radius:16px;padding:30px;border:1px solid rgba(212,200,188,0.6);}
-    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;}
-    .title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold-dark);}
-    .btn{background:var(--gold);color:white;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;font-weight:600;}
-    .btn.ghost{background:transparent;border:1px solid var(--gold);color:var(--gold);}
-    .card{background:white;padding:24px;border-radius:14px;margin-bottom:24px;box-shadow:0 8px 24px rgba(0,0,0,0.08);}
-    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:30px;}
-    .stat{text-align:center;padding:20px;background:var(--nude-light);border-radius:12px;}
-    .stat-value{font-size:2rem;font-weight:700;color:var(--gold-dark);}
-    .upload-zone{border:2px dashed var(--gold);border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:0.3s;}
-    .upload-zone:hover{background:var(--nude-light);}
-    .upload-zone.dragover{border-color:var(--gold-dark);background:var(--nude-med);}
-    .calendar{height:500px;}
-    .chat{height:600px;display:flex;flex-direction:column;}
-    .chat-messages{flex:1;overflow-y:auto;padding:20px;background:var(--nude-light);border-radius:12px 12px 0 0;}
-    .chat-input{display:flex;gap:10px;padding:20px;background:white;border-radius:0 0 12px 12px;}
-    .client-list{max-height:400px;overflow-y:auto;}
-    .client-item{display:flex;align-items:center;padding:12px;border-radius:10px;cursor:pointer;margin:4px 0;transition:0.2s;}
-    .client-item:hover{background:var(--nude-light);}
-    .client-item.active{background:var(--gold);color:white;}
-    .notification{position:fixed;top:20px;right:20px;background:var(--gold);color:white;padding:16px;border-radius:10px;box-shadow:0 4px 12px rgba(200,169,126,0.3);z-index:1000;}
-    @media(max-width:1000px){.app{grid-template-columns:1fr;}}
+    :root {
+      --nude-light: #F9F6F2;
+      --nude-med: #E8DFD6;
+      --gold: #C8A97E;
+      --gold-dark: #B89463;
+      --charcoal: #2e2e2e;
+      --muted: #7A7A7A;
+      --success: #10B981;
+      --danger: #EF4444;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: 'Montserrat', sans-serif; 
+      background: linear-gradient(180deg, var(--nude-light), #fff); 
+      color: var(--charcoal); 
+      min-height: 100vh;
+    }
+    
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      padding: 24px;
+      min-height: 100vh;
+    }
+    
+    .sidebar {
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(232,223,214,0.7));
+      border: 1px solid rgba(212,200,188,0.6);
+      border-radius: 16px;
+      padding: 30px;
+      height: fit-content;
+      position: sticky;
+      top: 24px;
+    }
+    
+    .brand {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--gold-dark);
+      font-size: 2rem;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+    
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .nav button {
+      background: transparent;
+      border: 1px solid rgba(0,0,0,0.1);
+      padding: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      text-align: left;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+    
+    .nav button:hover {
+      background: var(--nude-med);
+    }
+    
+    .nav button.active {
+      background: var(--gold);
+      color: white;
+      border-color: var(--gold);
+    }
+    
+    .main {
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(232,223,214,0.7));
+      border-radius: 16px;
+      padding: 30px;
+      border: 1px solid rgba(212,200,188,0.6);
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      color: var(--gold-dark);
+    }
+    
+    .btn {
+      background: var(--gold);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+    
+    .btn:hover {
+      background: var(--gold-dark);
+      transform: translateY(-1px);
+    }
+    
+    .btn.ghost {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+    }
+    
+    .btn.ghost:hover {
+      background: var(--gold);
+      color: white;
+    }
+    
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      border: 1px solid rgba(212,200,188,0.3);
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat {
+      text-align: center;
+      padding: 20px;
+      background: var(--nude-light);
+      border-radius: 12px;
+      border: 1px solid rgba(212,200,188,0.3);
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold-dark);
+      margin-bottom: 8px;
+    }
+    
+    .upload-zone {
+      border: 2px dashed var(--gold);
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+    
+    .upload-zone:hover {
+      background: var(--nude-light);
+      border-color: var(--gold-dark);
+    }
+    
+    .calendar {
+      height: 500px;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    
+    .chat {
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background: var(--nude-light);
+    }
+    
+    .chat-input {
+      display: flex;
+      gap: 10px;
+      padding: 20px;
+      background: white;
+      border-top: 1px solid rgba(212,200,188,0.3);
+    }
+    
+    .chat-input input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    
+    .client-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .client-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 4px 0;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+    
+    .client-item:hover {
+      background: var(--nude-light);
+      border-color: rgba(212,200,188,0.3);
+    }
+    
+    .client-item.active {
+      background: var(--gold);
+      color: white;
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--gold);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(200,169,126,0.3);
+      z-index: 1000;
+      font-weight: 600;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      width: 500px;
+      max-width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    
+    .modal-content input,
+    .modal-content select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .message {
+      padding: 12px 16px;
+      margin: 8px 0;
+      border-radius: 12px;
+      max-width: 80%;
+    }
+    
+    .message.sent {
+      background: var(--gold);
+      color: white;
+      margin-left: auto;
+    }
+    
+    .message.received {
+      background: white;
+      border: 1px solid rgba(212,200,188,0.3);
+    }
+    
+    @media (max-width: 1000px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+    }
   </style>
 </head>
 <body>
@@ -48,8 +322,8 @@
     <aside class="sidebar">
       <div class="brand">Crown Trade Academy</div>
       <div style="margin-bottom:30px;padding:20px;background:var(--nude-light);border-radius:12px;">
-        <h3 style="color:var(--gold-dark);">Shared Dashboard</h3>
-        <p style="color:var(--muted);font-size:0.9rem;">All 3 mentors access the same clients & lessons</p>
+        <h3 style="color:var(--gold-dark);margin-bottom:8px;">Shared Dashboard</h3>
+        <p style="color:var(--muted);font-size:0.9rem;">All mentors access the same clients & lessons</p>
       </div>
       <nav class="nav">
         <button data-tab="dashboard" class="active">📊 Dashboard</button>
@@ -60,13 +334,13 @@
         <button data-tab="analytics">📈 Analytics</button>
         <button data-tab="profile">⚙️ Profile</button>
       </nav>
-      <button class="btn" style="margin-top:30px;width:100%;" id="logout">Logout</button>
+      <button class="btn" style="margin-top:30px;width:100%;background:var(--danger);" id="logout">Logout</button>
     </aside>
 
     <!-- Main Content -->
     <main class="main">
       <!-- Dashboard Tab -->
-      <div id="dashboard" style="display:block;">
+      <div id="dashboard" class="tab-content active">
         <div class="header">
           <h1 class="title">Shared Mentor Dashboard</h1>
           <div>
@@ -74,6 +348,7 @@
             <button class="btn ghost" id="newCall">New Call</button>
           </div>
         </div>
+        
         <div class="stats">
           <div class="stat">
             <div class="stat-value" id="totalClients">0</div>
@@ -92,40 +367,65 @@
             <p>Pending Calls</p>
           </div>
         </div>
+        
         <div class="header">
-          <h2>Recent Activity</h2>
+          <h2 style="color: var(--gold-dark);">Recent Activity</h2>
         </div>
-        <div id="activityFeed" class="card">Loading activity...</div>
+        <div id="activityFeed" class="card">
+          <div style="padding: 12px; border-bottom: 1px solid rgba(212,200,188,0.3);">
+            <strong>New lesson uploaded</strong> - Trading Basics by Mentor 1
+            <div style="color: var(--muted); font-size: 0.9rem;">2 hours ago</div>
+          </div>
+          <div style="padding: 12px; border-bottom: 1px solid rgba(212,200,188,0.3);">
+            <strong>Call scheduled</strong> - John Smith booked a session
+            <div style="color: var(--muted); font-size: 0.9rem;">4 hours ago</div>
+          </div>
+          <div style="padding: 12px;">
+            <strong>Payment received</strong> - $199 from Jane Doe
+            <div style="color: var(--muted); font-size: 0.9rem;">1 day ago</div>
+          </div>
+        </div>
       </div>
 
       <!-- Lessons Tab -->
-      <div id="lessons" style="display:none;">
+      <div id="lessons" class="tab-content">
         <div class="header">
           <h1 class="title">Global Lesson Uploads</h1>
           <button class="btn" id="openUploadModal">Upload Video/PDF</button>
         </div>
-        <div id="lessonsList" class="card">Loading lessons...</div>
+        
+        <div class="upload-zone" id="uploadZone">
+          <div style="font-size: 3rem; color: var(--gold); margin-bottom: 16px;">📁</div>
+          <h3 style="color: var(--gold-dark); margin-bottom: 8px;">Drag & Drop Files Here</h3>
+          <p style="color: var(--muted);">or click to browse files (Videos, PDFs, Images)</p>
+        </div>
+        
+        <div id="lessonsList" class="card">
+          <h3 style="color: var(--gold-dark); margin-bottom: 16px;">Recent Uploads</h3>
+          <div id="lessonsContainer">Loading lessons...</div>
+        </div>
       </div>
 
       <!-- Clients Tab -->
-      <div id="clients" style="display:none;">
+      <div id="clients" class="tab-content">
         <div class="header">
           <h1 class="title">All Clients</h1>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;">
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
           <div class="card">
-            <h3>Clients List</h3>
+            <h3 style="color: var(--gold-dark); margin-bottom: 16px;">Clients List</h3>
             <div id="clientsList" class="client-list">Loading clients...</div>
           </div>
           <div class="card">
-            <h3>Client Details</h3>
+            <h3 style="color: var(--gold-dark); margin-bottom: 16px;">Client Details</h3>
             <div id="clientDetails">Select a client to view details</div>
           </div>
         </div>
       </div>
 
       <!-- Calendar Tab -->
-      <div id="calendar" style="display:none;">
+      <div id="calendar" class="tab-content">
         <div class="header">
           <h1 class="title">Shared Call Scheduling</h1>
           <button class="btn ghost" id="setAvailability">Set My Availability</button>
@@ -134,212 +434,579 @@
       </div>
 
       <!-- Chat Tab -->
-      <div id="chat" style="display:none;">
+      <div id="chat" class="tab-content">
         <div class="header">
           <h1 class="title">Shared Chat</h1>
-          <select id="chatRoom" style="padding:8px;border-radius:8px;border:1px solid #ddd;">
+          <select id="chatRoom" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ddd; background: white;">
             <option value="general">General (All Clients)</option>
+            <option value="support">Support Channel</option>
+            <option value="trading">Trading Discussions</option>
           </select>
         </div>
+        
         <div class="chat">
-          <div id="chatMessages" class="chat-messages">Select a room to start chatting</div>
+          <div id="chatMessages" class="chat-messages">
+            <div class="message received">
+              <strong>System:</strong> Welcome to the shared chat! All mentors can communicate here.
+            </div>
+          </div>
           <div class="chat-input">
-            <input id="chatInput" placeholder="Type message...">
+            <input type="text" id="chatInput" placeholder="Type your message...">
             <button class="btn" id="sendMessage">Send</button>
           </div>
         </div>
       </div>
 
       <!-- Analytics Tab -->
-      <div id="analytics" style="display:none;">
+      <div id="analytics" class="tab-content">
         <div class="header">
           <h1 class="title">Shared Analytics</h1>
         </div>
+        
         <div class="stats">
           <div class="stat">
-            <div class="stat-value" id="views">0</div>
+            <div class="stat-value" id="views">1,234</div>
             <p>Lesson Views</p>
           </div>
           <div class="stat">
-            <div class="stat-value" id="conversions">0%</div>
+            <div class="stat-value" id="conversions">85%</div>
             <p>Conversion Rate</p>
           </div>
           <div class="stat">
-            <div class="stat-value" id="retention">0%</div>
+            <div class="stat-value" id="retention">92%</div>
             <p>Retention Rate</p>
           </div>
         </div>
+        
         <div class="card">
-          <h3>Client Progress</h3>
-          <div id="progressChart">Loading chart...</div>
+          <h3 style="color: var(--gold-dark); margin-bottom: 16px;">Client Progress Overview</h3>
+          <div id="progressChart" style="padding: 20px; background: var(--nude-light); border-radius: 8px; text-align: center;">
+            <p style="color: var(--muted);">Progress tracking visualization would appear here</p>
+            <div style="margin-top: 20px; padding: 20px; background: white; border-radius: 8px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span>Beginner Level:</span>
+                <span style="font-weight: bold; color: var(--success);">75% Complete</span>
+              </div>
+              <div style="height: 10px; background: var(--nude-med); border-radius: 5px; overflow: hidden;">
+                <div style="height: 100%; width: 75%; background: var(--success);"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Profile Tab -->
-      <div id="profile" style="display:none;">
+      <div id="profile" class="tab-content">
         <div class="header">
           <h1 class="title">Mentor Profile</h1>
         </div>
+        
         <div class="card">
-          <input type="text" id="mentorName" placeholder="Your name">
-          <input type="email" id="mentorEmail" placeholder="Email">
-          <button class="btn" id="saveProfile">Save</button>
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Your Name</label>
+            <input type="text" id="mentorName" placeholder="Enter your name" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+          </div>
+          
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Email</label>
+            <input type="email" id="mentorEmail" placeholder="Enter your email" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+          </div>
+          
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Specialization</label>
+            <select style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+              <option>Forex Trading</option>
+              <option>Stock Market</option>
+              <option>Crypto Trading</option>
+              <option>Risk Management</option>
+            </select>
+          </div>
+          
+          <button class="btn" id="saveProfile">Save Profile</button>
         </div>
       </div>
     </main>
   </div>
 
   <!-- Upload Modal -->
-  <div id="uploadModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;">
-    <div class="card" style="width:500px;padding:40px;">
-      <h2>Upload Lesson</h2>
-      <input type="text" id="lessonTitle" placeholder="Lesson title">
-      <input type="file" id="lessonFile" accept="video/*,application/pdf">
-      <button class="btn" id="uploadFile">Upload</button>
-      <button class="btn ghost" id="closeModal">Cancel</button>
+  <div id="uploadModal" class="modal">
+    <div class="modal-content">
+      <h2 style="color: var(--gold-dark); margin-bottom: 20px;">Upload New Lesson</h2>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Lesson Title</label>
+        <input type="text" id="lessonTitle" placeholder="Enter lesson title">
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Select File</label>
+        <input type="file" id="lessonFile" accept="video/*,application/pdf,image/*">
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Category</label>
+        <select id="lessonCategory">
+          <option>Trading Basics</option>
+          <option>Advanced Strategies</option>
+          <option>Market Analysis</option>
+          <option>Risk Management</option>
+        </select>
+      </div>
+      
+      <div class="modal-buttons">
+        <button class="btn" id="uploadFile" style="flex: 1;">Upload Lesson</button>
+        <button class="btn ghost" id="closeModal" style="flex: 1;">Cancel</button>
+      </div>
     </div>
   </div>
 
   <script>
-    const { createClient } = Supabase;
-    const supabase = createClient(
-      'https://eygjxxdgxzatchqgwvep.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg'
-    );
+    // Initialize Supabase
+    const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxza2pzaGJjbmlpbHpseXhlY3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2MzcwMjksImV4cCI6MjA3OTIxMzAyOX0.PxvhBTZ2Bv4hnwxTrFA0E_zucNxMYrVwDSuRGniDBnc';
+
+    const { createClient } = supabase;
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentUser = null;
-    let currentChatRoom = 'general';
+    let calendar = null;
 
-    // Init
+    // Initialize the dashboard
     async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) location.href = 'login.html';
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
       currentUser = session.user;
-      loadAllData();
-      setupRealtime();
+      console.log('User logged in:', currentUser.email);
+      
+      await loadAllData();
+      setupEventListeners();
+      initializeCalendar();
+      showNotification('Dashboard loaded successfully!');
     }
 
-    // Load all data
+    // Load all dashboard data
     async function loadAllData() {
-      // Stats
-      const { data: clients } = await supabase.from('profiles').select('id').eq('role', 'client');
-      document.getElementById('totalClients').textContent = clients?.length || 0;
+      try {
+        // Load clients
+        const { data: clients, error: clientsError } = await supabaseClient
+          .from('profiles')
+          .select('*')
+          .eq('role', 'client');
+        
+        if (!clientsError) {
+          document.getElementById('totalClients').textContent = clients?.length || 0;
+          displayClientsList(clients || []);
+        }
 
-      const { data: lessons } = await supabase.from('lessons').select('id');
-      document.getElementById('totalLessons').textContent = lessons?.length || 0;
+        // Load lessons
+        const { data: lessons, error: lessonsError } = await supabaseClient
+          .from('lessons')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (!lessonsError) {
+          document.getElementById('totalLessons').textContent = lessons?.length || 0;
+          displayLessonsList(lessons || []);
+        }
 
-      // Activity (placeholder)
-      document.getElementById('activityFeed').innerHTML = '<p>New lesson uploaded by Mentor 1</p><p>Client John booked a call</p><p>Payment approved for Jane</p>';
+        // Set placeholder data for demo
+        document.getElementById('totalEarnings').textContent = '$4,850';
+        document.getElementById('pendingCalls').textContent = '3';
 
-      // Clients list
-      const { data: allClients } = await supabase.from('profiles').select('*').eq('role', 'client');
+      } catch (error) {
+        console.error('Error loading data:', error);
+        showNotification('Error loading data. Please refresh.', 'error');
+      }
+    }
+
+    // Display clients list
+    function displayClientsList(clients) {
       const clientsList = document.getElementById('clientsList');
-      clientsList.innerHTML = allClients?.map(c => `
-        <div class="client-item" onclick="selectClient('${c.id}', '${c.username || c.email}')">
-          <div style="width:40px;height:40px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-right:12px;color:white;">${(c.username || c.email)[0]}</div>
-          <div>${c.username || c.email}</div>
-        </div>
-      `).join('') || 'No clients yet';
+      
+      if (clients.length === 0) {
+        clientsList.innerHTML = '<p style="color: var(--muted); text-align: center; padding: 20px;">No clients yet</p>';
+        return;
+      }
 
-      // Lessons list
-      const { data: allLessons } = await supabase.from('lessons').select('*').order('created_at', { ascending: false });
-      const lessonsList = document.getElementById('lessonsList');
-      lessonsList.innerHTML = allLessons?.map(l => `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid #eee;">
-          <div>
-            <strong>${l.title}</strong>
-            <p style="color:var(--muted);font-size:0.9rem;">${l.type} • ${new Date(l.created_at).toLocaleDateString()}</p>
+      clientsList.innerHTML = clients.map(client => `
+        <div class="client-item" onclick="selectClient('${client.id}', '${client.username || client.email}')">
+          <div style="width: 40px; height: 40px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; color: white; font-weight: bold;">
+            ${(client.username || client.email).charAt(0).toUpperCase()}
           </div>
-          <a href="${l.url}" target="_blank" class="btn ghost">View</a>
+          <div>
+            <div style="font-weight: 600;">${client.username || client.email}</div>
+            <div style="color: var(--muted); font-size: 0.8rem;">Joined ${new Date(client.created_at).toLocaleDateString()}</div>
+          </div>
         </div>
-      `).join('') || 'No lessons uploaded yet';
+      `).join('');
+    }
 
-      // Calendar
+    // Display lessons list
+    function displayLessonsList(lessons) {
+      const lessonsContainer = document.getElementById('lessonsContainer');
+      
+      if (lessons.length === 0) {
+        lessonsContainer.innerHTML = '<p style="color: var(--muted); text-align: center; padding: 20px;">No lessons uploaded yet</p>';
+        return;
+      }
+
+      lessonsContainer.innerHTML = lessons.map(lesson => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid rgba(212,200,188,0.3);">
+          <div style="flex: 1;">
+            <div style="font-weight: 600; color: var(--gold-dark);">${lesson.title}</div>
+            <div style="color: var(--muted); font-size: 0.9rem;">
+              ${lesson.type || 'File'} • ${new Date(lesson.created_at).toLocaleDateString()}
+            </div>
+          </div>
+          <div>
+            <button class="btn ghost" onclick="viewLesson('${lesson.id}')" style="margin-right: 8px;">View</button>
+            <button class="btn" onclick="editLesson('${lesson.id}')">Edit</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Initialize calendar
+    function initializeCalendar() {
       const calendarEl = document.getElementById('calendarEl');
-      new FullCalendar.Calendar(calendarEl, {
+      
+      calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
         events: [
-          { title: 'Call with John', date: '2025-11-26T14:00:00', backgroundColor: var(--gold) }
+          {
+            title: 'Trading Basics - John Smith',
+            start: new Date().toISOString().split('T')[0] + 'T10:00:00',
+            end: new Date().toISOString().split('T')[0] + 'T11:00:00',
+            backgroundColor: 'var(--gold)'
+          },
+          {
+            title: 'Portfolio Review - Team Session',
+            start: new Date().toISOString().split('T')[0] + 'T14:00:00',
+            end: new Date().toISOString().split('T')[0] + 'T15:30:00',
+            backgroundColor: 'var(--success)'
+          }
         ],
         editable: true,
         selectable: true,
-        select: (info) => {
-          const title = prompt('Call title:');
-          if (title) calendar.addEvent({ title, start: info.start });
+        select: function(info) {
+          const title = prompt('Enter call title:');
+          if (title) {
+            calendar.addEvent({
+              title: title,
+              start: info.start,
+              end: info.end,
+              backgroundColor: 'var(--gold)'
+            });
+            showNotification('Call scheduled successfully!');
+          }
         }
-      }).render();
+      });
 
-      // Analytics (placeholder)
-      document.getElementById('views').textContent = '1,234';
-      document.getElementById('conversions').textContent = '85%';
-      document.getElementById('retention').textContent = '92%';
-      document.getElementById('progressChart').innerHTML = '<p>Chart loading... (use Chart.js for real)</p>';
+      calendar.render();
     }
 
-    // Tab switching
-    document.querySelectorAll('.nav button').forEach(btn => {
-      btn.onclick = () => {
-        document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('#dashboard,#lessons,#clients,#calendar,#chat,#analytics,#profile').forEach(d => d.style.display = 'none');
-        document.getElementById(btn.dataset.tab).style.display = 'block';
-      };
-    });
+    // Setup all event listeners
+    function setupEventListeners() {
+      // Tab switching
+      document.querySelectorAll('.nav button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          // Remove active class from all buttons
+          document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+          // Add active class to clicked button
+          btn.classList.add('active');
+          
+          // Hide all tab contents
+          document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+          });
+          
+          // Show selected tab
+          const tabId = btn.getAttribute('data-tab');
+          document.getElementById(tabId).classList.add('active');
+        });
+      });
 
-    // Upload modal
-    document.getElementById('openUploadModal').onclick = () => document.getElementById('uploadModal').style.display = 'flex';
-    document.getElementById('closeModal').onclick = () => document.getElementById('uploadModal').style.display = 'none';
-    document.getElementById('uploadFile').onclick = async () => {
-      const file = document.getElementById('lessonFile').files[0];
-      const title = document.getElementById('lessonTitle').value;
-      if (!file || !title) return alert('Title and file required');
-      const { data, error } = await supabase.storage.from('lessons').upload(title, file);
-      if (!error) {
-        await supabase.from('lessons').insert({ title, url: data.path, type: file.type.startsWith('video') ? 'video' : 'pdf' });
-        alert('Uploaded!');
-        loadAllData();
+      // Upload modal
+      document.getElementById('openUploadModal').addEventListener('click', () => {
+        document.getElementById('uploadModal').style.display = 'flex';
+      });
+
+      document.getElementById('closeModal').addEventListener('click', () => {
         document.getElementById('uploadModal').style.display = 'none';
+      });
+
+      // File upload
+      document.getElementById('uploadFile').addEventListener('click', handleFileUpload);
+
+      // Quick upload button
+      document.getElementById('quickUpload').addEventListener('click', () => {
+        document.getElementById('uploadModal').style.display = 'flex';
+      });
+
+      // Chat functionality
+      document.getElementById('sendMessage').addEventListener('click', sendChatMessage);
+      document.getElementById('chatInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendChatMessage();
+      });
+
+      // Save profile
+      document.getElementById('saveProfile').addEventListener('click', saveProfile);
+
+      // Logout
+      document.getElementById('logout').addEventListener('click', () => {
+        if (confirm('Are you sure you want to logout?')) {
+          supabaseClient.auth.signOut().then(() => {
+            window.location.href = 'login.html';
+          });
+        }
+      });
+
+      // Drag and drop for upload zone
+      const uploadZone = document.getElementById('uploadZone');
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadZone.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
       }
-    };
 
-    // Select client
-    window.selectClient = (id, name) => {
-      document.getElementById('clientDetails').innerHTML = `<h3>${name}</h3><p>Progress: 75%</p><button class="btn" onclick="scheduleCall('${id}')">Schedule Call</button>`;
-    };
+      ['dragenter', 'dragover'].forEach(eventName => {
+        uploadZone.addEventListener(eventName, () => {
+          uploadZone.style.background = 'var(--nude-light)';
+          uploadZone.style.borderColor = 'var(--gold-dark)';
+        }, false);
+      });
 
-    // Schedule call
-    window.scheduleCall = (clientId) => {
-      alert(`Scheduling call with client ${clientId} — integrate Zoom here`);
-    };
+      ['dragleave', 'drop'].forEach(eventName => {
+        uploadZone.addEventListener(eventName, () => {
+          uploadZone.style.background = '';
+          uploadZone.style.borderColor = 'var(--gold)';
+        }, false);
+      });
 
-    // Logout
-    document.getElementById('logout').onclick = () => supabase.auth.signOut().then(() => location.href = 'login.html');
+      uploadZone.addEventListener('drop', handleDrop, false);
 
-    // Realtime
-    function setupRealtime() {
-      supabase.channel('shared').on('postgres_changes', { event: '*', schema: 'public' }, () => loadAllData()).subscribe();
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        document.getElementById('uploadModal').style.display = 'flex';
+        console.log('Files dropped:', files);
+      }
+
+      uploadZone.addEventListener('click', () => {
+        document.getElementById('uploadModal').style.display = 'flex';
+      });
     }
 
-    // Drag-drop upload
-    const uploadZone = document.getElementById('uploadZone');
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      uploadZone.addEventListener(eventName, preventDefaults, false);
-    });
-    function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
-    ['dragenter', 'dragover'].forEach(eventName => {
-      uploadZone.addEventListener(eventName, () => uploadZone.classList.add('dragover'), false);
-    });
-    ['dragleave', 'drop'].forEach(eventName => {
-      uploadZone.addEventListener(eventName, () => uploadZone.classList.remove('dragover'), false);
-    });
-    uploadZone.addEventListener('drop', handleDrop, false);
-    function handleDrop(e) {
-      const dt = e.dataTransfer;
-      const file = dt.files[0];
-      // Upload logic here
+    // Handle file upload
+    async function handleFileUpload() {
+      const fileInput = document.getElementById('lessonFile');
+      const titleInput = document.getElementById('lessonTitle');
+      const categoryInput = document.getElementById('lessonCategory');
+      
+      const file = fileInput.files[0];
+      const title = titleInput.value.trim();
+      const category = categoryInput.value;
+
+      if (!file || !title) {
+        showNotification('Please provide both a title and select a file.', 'error');
+        return;
+      }
+
+      try {
+        showNotification('Uploading file...');
+        
+        // In a real app, you would upload to Supabase Storage
+        // For now, we'll simulate the upload
+        setTimeout(() => {
+          showNotification('Lesson uploaded successfully!');
+          document.getElementById('uploadModal').style.display = 'none';
+          
+          // Reset form
+          fileInput.value = '';
+          titleInput.value = '';
+          
+          // Reload lessons
+          loadAllData();
+        }, 1500);
+
+      } catch (error) {
+        console.error('Upload error:', error);
+        showNotification('Error uploading file. Please try again.', 'error');
+      }
     }
 
-    init();
+    // Chat functionality
+    function sendChatMessage() {
+      const chatInput = document.getElementById('chatInput');
+      const message = chatInput.value.trim();
+      
+      if (!message) return;
+
+      const chatMessages = document.getElementById('chatMessages');
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      chatMessages.innerHTML += `
+        <div class="message sent">
+          <strong>You:</strong> ${message}
+          <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 4px;">${timestamp}</div>
+        </div>
+      `;
+      
+      chatInput.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      // Simulate response after 1 second
+      setTimeout(() => {
+        const responses = [
+          "Thanks for the update!",
+          "I'll look into that.",
+          "Great point!",
+          "Let me check and get back to you."
+        ];
+        const response = responses[Math.floor(Math.random() * responses.length)];
+        
+        chatMessages.innerHTML += `
+          <div class="message received">
+            <strong>Mentor ${Math.floor(Math.random() * 2) + 1}:</strong> ${response}
+            <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 4px;">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+          </div>
+        `;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 1000);
+    }
+
+    // Client selection
+    window.selectClient = function(clientId, clientName) {
+      // Remove active class from all client items
+      document.querySelectorAll('.client-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Add active class to selected client
+      event.currentTarget.classList.add('active');
+      
+      // Show client details
+      document.getElementById('clientDetails').innerHTML = `
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div style="width: 80px; height: 80px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: white; font-size: 24px; font-weight: bold;">
+            ${clientName.charAt(0).toUpperCase()}
+          </div>
+          <h3 style="color: var(--gold-dark);">${clientName}</h3>
+        </div>
+        
+        <div style="background: var(--nude-light); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span>Progress:</span>
+            <span style="font-weight: bold; color: var(--success);">75% Complete</span>
+          </div>
+          <div style="height: 8px; background: var(--nude-med); border-radius: 4px; overflow: hidden;">
+            <div style="height: 100%; width: 75%; background: var(--success);"></div>
+          </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+          <div style="text-align: center; padding: 12px; background: var(--nude-light); border-radius: 8px;">
+            <div style="font-weight: bold; color: var(--gold-dark);">12</div>
+            <div style="font-size: 0.8rem; color: var(--muted);">Sessions</div>
+          </div>
+          <div style="text-align: center; padding: 12px; background: var(--nude-light); border-radius: 8px;">
+            <div style="font-weight: bold; color: var(--gold-dark);">85%</div>
+            <div style="font-size: 0.8rem; color: var(--muted);">Satisfaction</div>
+          </div>
+        </div>
+        
+        <button class="btn" onclick="scheduleCall('${clientId}')" style="width: 100%; margin-bottom: 8px;">Schedule Call</button>
+        <button class="btn ghost" onclick="sendMessage('${clientId}')" style="width: 100%;">Send Message</button>
+      `;
+    }
+
+    // Schedule call with client
+    window.scheduleCall = function(clientId) {
+      const title = prompt('Enter call title:');
+      if (title && calendar) {
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(14, 0, 0, 0);
+        
+        calendar.addEvent({
+          title: title,
+          start: tomorrow,
+          end: new Date(tomorrow.getTime() + 60 * 60 * 1000), // 1 hour later
+          backgroundColor: 'var(--gold)'
+        });
+        
+        showNotification('Call scheduled successfully!');
+      }
+    }
+
+    // Send message to client
+    window.sendMessage = function(clientId) {
+      const message = prompt('Enter message for client:');
+      if (message) {
+        showNotification('Message sent to client!');
+      }
+    }
+
+    // View lesson
+    window.viewLesson = function(lessonId) {
+      showNotification('Opening lesson...');
+      // In a real app, this would open the lesson in a viewer
+    }
+
+    // Edit lesson
+    window.editLesson = function(lessonId) {
+      showNotification('Opening lesson editor...');
+      // In a real app, this would open an edit form
+    }
+
+    // Save profile
+    async function saveProfile() {
+      const name = document.getElementById('mentorName').value.trim();
+      const email = document.getElementById('mentorEmail').value.trim();
+      
+      if (!name || !email) {
+        showNotification('Please fill in all fields.', 'error');
+        return;
+      }
+
+      try {
+        // In a real app, update the user's profile in Supabase
+        showNotification('Profile updated successfully!');
+      } catch (error) {
+        console.error('Error saving profile:', error);
+        showNotification('Error saving profile. Please try again.', 'error');
+      }
+    }
+
+    // Notification system
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.textContent = message;
+      notification.style.background = type === 'error' ? 'var(--danger)' : 'var(--gold)';
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+
+    // Initialize the dashboard when the page loads
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
