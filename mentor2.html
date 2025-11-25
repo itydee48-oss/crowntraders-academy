@@ -1,64 +1,77 @@
-<!-- FILE: mentor2.html -->
-</div>
-<div class="text-right muted text-sm">Next call: 2025-11-14</div>
-</div>
-</div>
-<div class="p-3 border rounded-md">
-<div class="flex items-center justify-between">
-<div>
-<div class="font-medium">Client: Laila</div>
-<div class="muted text-sm">Plan: Starter</div>
-</div>
-<div class="text-right muted text-sm">Next call: 2025-11-16</div>
-</div>
-</div>
-</div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crown Trade Academy — Register</title>
+  <!-- Same styles as signup page -->
+</head>
+<body>
+  <div class="signup-container">
+    <div class="signup-form">
+      <div class="brand">Crown Trade</div>
+      <div class="brand-subtitle">Join Our Program - $400</div>
+      
+      <div id="referralBonus" style="display: none; background: var(--success); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
+        <i class="fas fa-gift"></i> <strong>Referral Bonus Active!</strong> Your friend will earn $250 when you complete registration.
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-input" id="fullName" placeholder="Enter your full name">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="email" placeholder="Enter your email">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" class="form-input" id="phone" placeholder="Enter your phone number">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" id="password" placeholder="Create a password">
+      </div>
+      
+      <div id="referralSection" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Referral Code</label>
+          <input type="text" class="form-input" id="referralCode" readonly>
+        </div>
+      </div>
+      
+      <button class="btn success" id="registerBtn" style="width: 100%;">
+        <i class="fas fa-credit-card"></i> Complete Registration - $400
+      </button>
+      
+      <div style="text-align: center; margin-top: 20px; color: var(--muted); font-size: 0.9rem;">
+        By registering, you agree to our Terms of Service and Privacy Policy
+      </div>
+    </div>
+  </div>
 
+  <script>
+    // Check for referral code in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    
+    if (refCode) {
+      document.getElementById('referralBonus').style.display = 'block';
+      document.getElementById('referralSection').style.display = 'block';
+      document.getElementById('referralCode').value = refCode;
+      
+      // Store referral code for later use
+      localStorage.setItem('referral_code', refCode);
+    }
 
-<div class="card">
-<h3 class="font-semibold">Upcoming Calls</h3>
-<ul class="mt-2 space-y-2 muted text-sm">
-<li>2025-11-14 · 11:00 — Kefa — Topic: Position sizing</li>
-<li>2025-11-16 · 17:00 — Laila — Topic: Mindset</li>
-</ul>
-</div>
-
-
-</section>
-
-
-<aside class="lg:col-span-4 space-y-6">
-<div class="card">
-<h4 class="font-semibold">Earnings</h4>
-<div class="mt-2">
-<div class="text-xs muted">Generated (total)</div>
-<div class="text-2xl font-bold">$980</div>
-<div class="text-xs muted mt-1">Your share this month: <span class="font-medium">$1,130.12</span></div>
-</div>
-</div>
-
-
-<div class="card">
-<h4 class="font-semibold">Metrics</h4>
-<div class="mt-2 muted text-sm">Sessions this month: <span class="font-medium">11</span></div>
-<div class="mt-2 muted text-sm">Avg rating: <span class="font-medium">4.6</span></div>
-</div>
-
-
-<div class="card">
-<h4 class="font-semibold">Quick Links</h4>
-<div class="mt-2 grid grid-cols-1 gap-2">
-<button class="py-2 rounded-md border">Book session</button>
-<button class="py-2 rounded-md border">Add client</button>
-<button class="py-2 rounded-md border">Request payout</button>
-</div>
-</div>
-</aside>
-</main>
-
-
-<footer class="mt-8 text-center muted text-sm">Brian • Mentor • Mentorship Platform</footer>
-</div>
+    // Registration logic would handle:
+    // 1. User account creation
+    // 2. $400 payment processing
+    // 3. Referral tracking and commission assignment
+    // 4. Redirect to appropriate dashboard
+  </script>
 </body>
 </html>
