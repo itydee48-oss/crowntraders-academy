@@ -560,36 +560,55 @@
     </div>
   </div>
 // ==================== AUTHENTICATION CHECK ====================
-const mentorUser = localStorage.getItem('mentorUser');
-if (!mentorUser) {
-    window.location.href = 'login.html';
-    throw new Error('Not authenticated');
+// Simple, direct authentication check without redirect loops
+function checkAuthentication() {
+    const mentorUser = localStorage.getItem('mentorUser');
+    if (!mentorUser) {
+        console.log('No user found, redirecting to login...');
+        window.location.href = 'login.html';
+        return null;
+    }
+    
+    try {
+        const user = JSON.parse(mentorUser);
+        console.log('User authenticated:', user.name);
+        return user;
+    } catch (error) {
+        console.error('Error parsing user data:', error);
+        localStorage.removeItem('mentorUser');
+        window.location.href = 'login.html';
+        return null;
+    }
 }
 
-const user = JSON.parse(mentorUser);
-console.log('Welcome back,', user.name);
+// Get current user
+const currentUser = checkAuthentication();
+if (!currentUser) {
+    // Stop execution if not authenticated
+    throw new Error('Authentication failed');
+}
 
 // Update UI with user info
 function updateUserInterface() {
     // Update welcome message
     const welcomeElement = document.querySelector('.welcome h1');
     if (welcomeElement) {
-        welcomeElement.textContent = `Welcome back, ${user.name}!`;
+        welcomeElement.textContent = `Welcome back, ${currentUser.name}!`;
     }
     
     // Update user info in header
     const userInfoElement = document.querySelector('.user-info div');
     if (userInfoElement) {
         userInfoElement.innerHTML = `
-            <div style="font-weight: bold;">${user.name}</div>
-            <div style="color: #666; font-size: 0.9rem;">Mentor • ${user.email}</div>
+            <div style="font-weight: bold;">${currentUser.name}</div>
+            <div style="color: #666; font-size: 0.9rem;">Mentor • ${currentUser.email}</div>
         `;
     }
     
     // Update avatar with user initial
     const avatarElement = document.querySelector('.avatar');
     if (avatarElement) {
-        avatarElement.textContent = user.name.charAt(0).toUpperCase();
+        avatarElement.textContent = currentUser.name.charAt(0).toUpperCase();
     }
 }
 
@@ -597,7 +616,8 @@ function updateUserInterface() {
 function setupLogout() {
     const logoutBtn = document.getElementById('logout');
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
             if (confirm('Are you sure you want to logout?')) {
                 // Clear all auth data
                 localStorage.removeItem('mentorUser');
@@ -608,40 +628,62 @@ function setupLogout() {
     }
 }
 
-// Auto-logout after 24 hours for security
-function setupAutoLogout() {
-    const loginTime = new Date(user.loginTime);
+// Session timeout check (optional - 24 hours)
+function checkSessionTimeout() {
+    const loginTime = new Date(currentUser.loginTime);
     const now = new Date();
     const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
     
     if (hoursSinceLogin > 24) {
+        console.log('Session expired, logging out...');
         localStorage.removeItem('mentorUser');
         window.location.href = 'login.html';
+        return false;
     }
+    return true;
 }
 
-// Initialize authentication
+// Initialize authentication when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initializing dashboard for:', currentUser.name);
+    
+    // Update UI
     updateUserInterface();
+    
+    // Setup logout
     setupLogout();
-    setupAutoLogout();
+    
+    // Check session (optional)
+    if (!checkSessionTimeout()) {
+        return;
+    }
+    
+    // Initialize dashboard components
+    initDashboard();
     
     // Show welcome notification
     setTimeout(() => {
-        showNotification(`Welcome back, ${user.name}!`);
-    }, 1000);
+        showNotification(`Welcome back, ${currentUser.name}! Dashboard ready.`);
+    }, 500);
 });
+
+// Your existing dashboard initialization function
+async function initDashboard() {
+    console.log('Loading dashboard data...');
+    try {
+        await loadAllData();
+        setupEventListeners();
+        initializeCalendar();
+        console.log('Dashboard initialized successfully');
+    } catch (error) {
+        console.error('Error initializing dashboard:', error);
+        showNotification('Error loading dashboard data', 'error');
+    }
+}
 // ==================== END AUTHENTICATION ====================
 
-// Your existing dashboard code continues below...
-// Make sure to replace your existing init function with this:
-async function init() {
-    // Authentication is already handled above
-    await loadAllData();
-    setupEventListeners();
-    initializeCalendar();
-    showNotification('Dashboard loaded successfully!');
-}
+// Your existing dashboard functions continue below...
+// Make sure your existing functions like loadAllData, setupEventListeners, etc. are defined here
   <script>
     // Initialize Supabase
     const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
