@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <style>
     :root{--nude-light:#F9F6F2;--nude-med:#E8DFD6;--gold:#C8A97E;--gold-dark:#B89463;--charcoal:#2e2e2e;--muted:#7A7A7A;}
     *{box-sizing:border-box;margin:0;padding:0}
@@ -29,6 +29,7 @@
     .stat-value{font-size:2rem;font-weight:700;color:var(--gold-dark);}
     .upload-zone{border:2px dashed var(--gold);border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:0.3s;}
     .upload-zone:hover{background:var(--nude-light);}
+    .upload-zone.dragover{border-color:var(--gold-dark);background:var(--nude-med);}
     .calendar{height:500px;}
     .chat{height:600px;display:flex;flex-direction:column;}
     .chat-messages{flex:1;overflow-y:auto;padding:20px;background:var(--nude-light);border-radius:12px 12px 0 0;}
@@ -37,7 +38,7 @@
     .client-item{display:flex;align-items:center;padding:12px;border-radius:10px;cursor:pointer;margin:4px 0;transition:0.2s;}
     .client-item:hover{background:var(--nude-light);}
     .client-item.active{background:var(--gold);color:white;}
-    .notification{position:fixed;top:20px;right:20px;background:var(--gold);color:white;padding:16px;border-radius:10px;box-shadow:0 4px 12px rgba(200,169,126,0.3);}
+    .notification{position:fixed;top:20px;right:20px;background:var(--gold);color:white;padding:16px;border-radius:10px;box-shadow:0 4px 12px rgba(200,169,126,0.3);z-index:1000;}
     @media(max-width:1000px){.app{grid-template-columns:1fr;}}
   </style>
 </head>
@@ -45,17 +46,17 @@
   <div class="app">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="brand">Crown Trade</div>
+      <div class="brand">Crown Trade Academy</div>
       <div style="margin-bottom:30px;padding:20px;background:var(--nude-light);border-radius:12px;">
         <h3 style="color:var(--gold-dark);">Shared Dashboard</h3>
-        <p style="color:var(--muted);font-size:0.9rem;">All mentors access the same clients & lessons</p>
+        <p style="color:var(--muted);font-size:0.9rem;">All 3 mentors access the same clients & lessons</p>
       </div>
       <nav class="nav">
         <button data-tab="dashboard" class="active">📊 Dashboard</button>
-        <button data-tab="lessons">📚 Lessons</button>
+        <button data-tab="lessons">📚 Upload Lessons</button>
         <button data-tab="clients">👥 Clients</button>
-        <button data-tab="calendar">📅 Calendar</button>
-        <button data-tab="chat">💬 Chat</button>
+        <button data-tab="calendar">📅 Schedule Calls</button>
+        <button data-tab="chat">💬 Shared Chat</button>
         <button data-tab="analytics">📈 Analytics</button>
         <button data-tab="profile">⚙️ Profile</button>
       </nav>
@@ -70,7 +71,7 @@
           <h1 class="title">Shared Mentor Dashboard</h1>
           <div>
             <button class="btn ghost" id="quickUpload">Quick Upload</button>
-            <button class="btn ghost" id="newCall">Schedule Call</button>
+            <button class="btn ghost" id="newCall">New Call</button>
           </div>
         </div>
         <div class="stats">
@@ -94,14 +95,14 @@
         <div class="header">
           <h2>Recent Activity</h2>
         </div>
-        <div id="activityFeed" class="card">Loading...</div>
+        <div id="activityFeed" class="card">Loading activity...</div>
       </div>
 
       <!-- Lessons Tab -->
       <div id="lessons" style="display:none;">
         <div class="header">
-          <h1 class="title">Global Lessons</h1>
-          <button class="btn" id="uploadLesson">Upload New Lesson</button>
+          <h1 class="title">Global Lesson Uploads</h1>
+          <button class="btn" id="openUploadModal">Upload Video/PDF</button>
         </div>
         <div id="lessonsList" class="card">Loading lessons...</div>
       </div>
@@ -118,7 +119,7 @@
           </div>
           <div class="card">
             <h3>Client Details</h3>
-            <div id="clientDetails">Select a client</div>
+            <div id="clientDetails">Select a client to view details</div>
           </div>
         </div>
       </div>
@@ -126,7 +127,7 @@
       <!-- Calendar Tab -->
       <div id="calendar" style="display:none;">
         <div class="header">
-          <h1 class="title">Shared Calendar</h1>
+          <h1 class="title">Shared Call Scheduling</h1>
           <button class="btn ghost" id="setAvailability">Set My Availability</button>
         </div>
         <div id="calendarEl" class="calendar"></div>
@@ -136,9 +137,12 @@
       <div id="chat" style="display:none;">
         <div class="header">
           <h1 class="title">Shared Chat</h1>
+          <select id="chatRoom" style="padding:8px;border-radius:8px;border:1px solid #ddd;">
+            <option value="general">General (All Clients)</option>
+          </select>
         </div>
         <div class="chat">
-          <div id="chatMessages" class="chat-messages">Select a chat</div>
+          <div id="chatMessages" class="chat-messages">Select a room to start chatting</div>
           <div class="chat-input">
             <input id="chatInput" placeholder="Type message...">
             <button class="btn" id="sendMessage">Send</button>
@@ -167,7 +171,7 @@
         </div>
         <div class="card">
           <h3>Client Progress</h3>
-          <div id="progressChart">Loading...</div>
+          <div id="progressChart">Loading chart...</div>
         </div>
       </div>
 
@@ -185,42 +189,91 @@
     </main>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Upload Modal -->
+  <div id="uploadModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;">
+    <div class="card" style="width:500px;padding:40px;">
+      <h2>Upload Lesson</h2>
+      <input type="text" id="lessonTitle" placeholder="Lesson title">
+      <input type="file" id="lessonFile" accept="video/*,application/pdf">
+      <button class="btn" id="uploadFile">Upload</button>
+      <button class="btn ghost" id="closeModal">Cancel</button>
+    </div>
+  </div>
+
   <script>
-    const supabase = Supabase.createClient(
+    const { createClient } = Supabase;
+    const supabase = createClient(
       'https://eygjxxdgxzatchqgwvep.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg'
     );
 
     let currentUser = null;
+    let currentChatRoom = 'general';
 
+    // Init
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) location.href = 'login.html';
       currentUser = session.user;
-      loadDashboard();
+      loadAllData();
       setupRealtime();
     }
 
-    async function loadDashboard() {
-      // Load stats
+    // Load all data
+    async function loadAllData() {
+      // Stats
       const { data: clients } = await supabase.from('profiles').select('id').eq('role', 'client');
       document.getElementById('totalClients').textContent = clients?.length || 0;
 
       const { data: lessons } = await supabase.from('lessons').select('id');
       document.getElementById('totalLessons').textContent = lessons?.length || 0;
 
-      // Activity feed
-      const { data: activity } = await supabase.from('activity_log').select('*').limit(10);
-      document.getElementById('activityFeed').innerHTML = activity?.map(a => `<p>${a.event} - ${a.timestamp}</p>`).join('') || 'No activity';
+      // Activity (placeholder)
+      document.getElementById('activityFeed').innerHTML = '<p>New lesson uploaded by Mentor 1</p><p>Client John booked a call</p><p>Payment approved for Jane</p>';
+
+      // Clients list
+      const { data: allClients } = await supabase.from('profiles').select('*').eq('role', 'client');
+      const clientsList = document.getElementById('clientsList');
+      clientsList.innerHTML = allClients?.map(c => `
+        <div class="client-item" onclick="selectClient('${c.id}', '${c.username || c.email}')">
+          <div style="width:40px;height:40px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-right:12px;color:white;">${(c.username || c.email)[0]}</div>
+          <div>${c.username || c.email}</div>
+        </div>
+      `).join('') || 'No clients yet';
+
+      // Lessons list
+      const { data: allLessons } = await supabase.from('lessons').select('*').order('created_at', { ascending: false });
+      const lessonsList = document.getElementById('lessonsList');
+      lessonsList.innerHTML = allLessons?.map(l => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid #eee;">
+          <div>
+            <strong>${l.title}</strong>
+            <p style="color:var(--muted);font-size:0.9rem;">${l.type} • ${new Date(l.created_at).toLocaleDateString()}</p>
+          </div>
+          <a href="${l.url}" target="_blank" class="btn ghost">View</a>
+        </div>
+      `).join('') || 'No lessons uploaded yet';
 
       // Calendar
       const calendarEl = document.getElementById('calendarEl');
-      const calendar = new FullCalendar.Calendar(calendarEl, {
+      new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
-        events: '/api/appointments'  // Fetch from Supabase
-      });
-      calendar.render();
+        events: [
+          { title: 'Call with John', date: '2025-11-26T14:00:00', backgroundColor: var(--gold) }
+        ],
+        editable: true,
+        selectable: true,
+        select: (info) => {
+          const title = prompt('Call title:');
+          if (title) calendar.addEvent({ title, start: info.start });
+        }
+      }).render();
+
+      // Analytics (placeholder)
+      document.getElementById('views').textContent = '1,234';
+      document.getElementById('conversions').textContent = '85%';
+      document.getElementById('retention').textContent = '92%';
+      document.getElementById('progressChart').innerHTML = '<p>Chart loading... (use Chart.js for real)</p>';
     }
 
     // Tab switching
@@ -233,16 +286,57 @@
       };
     });
 
+    // Upload modal
+    document.getElementById('openUploadModal').onclick = () => document.getElementById('uploadModal').style.display = 'flex';
+    document.getElementById('closeModal').onclick = () => document.getElementById('uploadModal').style.display = 'none';
+    document.getElementById('uploadFile').onclick = async () => {
+      const file = document.getElementById('lessonFile').files[0];
+      const title = document.getElementById('lessonTitle').value;
+      if (!file || !title) return alert('Title and file required');
+      const { data, error } = await supabase.storage.from('lessons').upload(title, file);
+      if (!error) {
+        await supabase.from('lessons').insert({ title, url: data.path, type: file.type.startsWith('video') ? 'video' : 'pdf' });
+        alert('Uploaded!');
+        loadAllData();
+        document.getElementById('uploadModal').style.display = 'none';
+      }
+    };
+
+    // Select client
+    window.selectClient = (id, name) => {
+      document.getElementById('clientDetails').innerHTML = `<h3>${name}</h3><p>Progress: 75%</p><button class="btn" onclick="scheduleCall('${id}')">Schedule Call</button>`;
+    };
+
+    // Schedule call
+    window.scheduleCall = (clientId) => {
+      alert(`Scheduling call with client ${clientId} — integrate Zoom here`);
+    };
+
     // Logout
     document.getElementById('logout').onclick = () => supabase.auth.signOut().then(() => location.href = 'login.html');
 
     // Realtime
     function setupRealtime() {
-      supabase.channel('dashboard')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, payload => {
-          loadChat();
-        })
-        .subscribe();
+      supabase.channel('shared').on('postgres_changes', { event: '*', schema: 'public' }, () => loadAllData()).subscribe();
+    }
+
+    // Drag-drop upload
+    const uploadZone = document.getElementById('uploadZone');
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      uploadZone.addEventListener(eventName, preventDefaults, false);
+    });
+    function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+    ['dragenter', 'dragover'].forEach(eventName => {
+      uploadZone.addEventListener(eventName, () => uploadZone.classList.add('dragover'), false);
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+      uploadZone.addEventListener(eventName, () => uploadZone.classList.remove('dragover'), false);
+    });
+    uploadZone.addEventListener('drop', handleDrop, false);
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const file = dt.files[0];
+      // Upload logic here
     }
 
     init();
