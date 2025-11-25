@@ -720,7 +720,72 @@
     }
     
     .notification.warning {
-      background: var(--warning);
+      background: #F59E0B;
+    }
+    
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+    
+    .modal.active .modal-content {
+      transform: translateY(0);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--nude-med);
+    }
+    
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      color: var(--gold-dark);
+      font-weight: 700;
+    }
+    
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--muted);
+      transition: color 0.3s ease;
+    }
+    
+    .close-modal:hover {
+      color: var(--danger);
     }
     
     @media (max-width: 1200px) {
@@ -852,10 +917,10 @@
                 <strong>Platform:</strong> Zoom Meeting
               </div>
               <div class="meeting-actions">
-                <button class="btn success">
+                <button class="btn success join-meeting-btn" data-meeting="Trading Basics Session">
                   <i class="fas fa-video"></i> Join Meeting
                 </button>
-                <button class="btn ghost">
+                <button class="btn ghost reschedule-btn" data-meeting="Trading Basics Session">
                   <i class="fas fa-clock"></i> Reschedule
                 </button>
               </div>
@@ -871,10 +936,10 @@
                 <strong>Platform:</strong> Google Meet
               </div>
               <div class="meeting-actions">
-                <button class="btn">
+                <button class="btn join-meeting-btn" data-meeting="Portfolio Review">
                   <i class="fas fa-video"></i> Join Meeting
                 </button>
-                <button class="btn ghost">
+                <button class="btn ghost reschedule-btn" data-meeting="Portfolio Review">
                   <i class="fas fa-clock"></i> Reschedule
                 </button>
               </div>
@@ -894,7 +959,7 @@
             <button class="btn ghost" data-tab="chat">
               <i class="fas fa-comment-medical"></i> Send Message
             </button>
-            <button class="btn success">
+            <button class="btn success" id="goLiveBtn">
               <i class="fas fa-broadcast-tower"></i> Go Live
             </button>
           </div>
@@ -921,17 +986,17 @@
           
           <div class="form-group">
             <label class="form-label">Content Title</label>
-            <input type="text" class="form-input" placeholder="Enter a descriptive title for your content...">
+            <input type="text" class="form-input" id="contentTitle" placeholder="Enter a descriptive title for your content...">
           </div>
           
           <div class="form-group">
             <label class="form-label">Description</label>
-            <textarea class="form-textarea" placeholder="Describe what this content covers..."></textarea>
+            <textarea class="form-textarea" id="contentDescription" placeholder="Describe what this content covers..."></textarea>
           </div>
           
           <div class="form-group">
             <label class="form-label">Category</label>
-            <select class="form-select">
+            <select class="form-select" id="contentCategory">
               <option>Trading Basics</option>
               <option>Advanced Strategies</option>
               <option>Market Analysis</option>
@@ -940,7 +1005,7 @@
             </select>
           </div>
           
-          <button class="btn success" style="width: 100%;">
+          <button class="btn success" style="width: 100%;" id="publishContentBtn">
             <i class="fas fa-paper-plane"></i> Publish Content
           </button>
         </div>
@@ -959,10 +1024,10 @@
                 </div>
               </div>
               <div>
-                <button class="btn ghost" style="margin-right: 8px;">
+                <button class="btn ghost edit-content-btn" style="margin-right: 8px;">
                   <i class="fas fa-edit"></i> Edit
                 </button>
-                <button class="btn danger">
+                <button class="btn danger delete-content-btn">
                   <i class="fas fa-trash"></i> Delete
                 </button>
               </div>
@@ -979,10 +1044,10 @@
                 </div>
               </div>
               <div>
-                <button class="btn ghost" style="margin-right: 8px;">
+                <button class="btn ghost edit-content-btn" style="margin-right: 8px;">
                   <i class="fas fa-edit"></i> Edit
                 </button>
-                <button class="btn danger">
+                <button class="btn danger delete-content-btn">
                   <i class="fas fa-trash"></i> Delete
                 </button>
               </div>
@@ -995,7 +1060,7 @@
       <div id="schedule" class="tab-content">
         <div class="header">
           <h1 class="title">Schedule Meetings</h1>
-          <button class="btn ghost">
+          <button class="btn ghost" id="availabilitySettingsBtn">
             <i class="fas fa-sliders-h"></i> Availability Settings
           </button>
         </div>
@@ -1006,12 +1071,12 @@
           <div class="schedule-form">
             <div class="form-group">
               <label class="form-label">Meeting Title</label>
-              <input type="text" class="form-input" placeholder="e.g., Portfolio Review, Trading Session">
+              <input type="text" class="form-input" id="meetingTitle" placeholder="e.g., Portfolio Review, Trading Session">
             </div>
             
             <div class="form-group">
               <label class="form-label">Client</label>
-              <select class="form-select">
+              <select class="form-select" id="meetingClient">
                 <option>Select a client</option>
                 <option>John Smith</option>
                 <option>Sarah Johnson</option>
@@ -1023,17 +1088,17 @@
             
             <div class="form-group">
               <label class="form-label">Date</label>
-              <input type="date" class="form-input">
+              <input type="date" class="form-input" id="meetingDate">
             </div>
             
             <div class="form-group">
               <label class="form-label">Time</label>
-              <input type="time" class="form-input">
+              <input type="time" class="form-input" id="meetingTime">
             </div>
             
             <div class="form-group">
               <label class="form-label">Duration</label>
-              <select class="form-select">
+              <select class="form-select" id="meetingDuration">
                 <option>30 minutes</option>
                 <option>1 hour</option>
                 <option>1.5 hours</option>
@@ -1043,7 +1108,7 @@
             
             <div class="form-group">
               <label class="form-label">Platform</label>
-              <select class="form-select">
+              <select class="form-select" id="meetingPlatform">
                 <option>Zoom</option>
                 <option>Google Meet</option>
                 <option>Microsoft Teams</option>
@@ -1054,10 +1119,10 @@
           
           <div class="form-group">
             <label class="form-label">Meeting Description</label>
-            <textarea class="form-textarea" placeholder="What will this meeting cover? Any specific topics or goals?"></textarea>
+            <textarea class="form-textarea" id="meetingDescription" placeholder="What will this meeting cover? Any specific topics or goals?"></textarea>
           </div>
           
-          <button class="btn success" style="width: 100%;">
+          <button class="btn success" style="width: 100%;" id="scheduleMeetingBtn">
             <i class="fas fa-calendar-plus"></i> Schedule Meeting
           </button>
         </div>
@@ -1075,13 +1140,13 @@
                 <strong>Platform:</strong> Zoom • Duration: 1 hour
               </div>
               <div class="meeting-actions">
-                <button class="btn ghost">
+                <button class="btn ghost edit-meeting-btn">
                   <i class="fas fa-edit"></i> Edit
                 </button>
-                <button class="btn ghost">
+                <button class="btn ghost send-reminder-btn">
                   <i class="fas fa-bell"></i> Send Reminder
                 </button>
-                <button class="btn danger">
+                <button class="btn danger cancel-meeting-btn">
                   <i class="fas fa-times"></i> Cancel
                 </button>
               </div>
@@ -1094,7 +1159,7 @@
       <div id="chat" class="tab-content">
         <div class="header">
           <h1 class="title">Client Communications</h1>
-          <select class="form-select" style="width: auto;">
+          <select class="form-select" id="chatFilter" style="width: auto;">
             <option>General (All Clients)</option>
             <option>Premium Clients</option>
             <option>New Clients</option>
@@ -1103,7 +1168,7 @@
         
         <div class="chat-container">
           <div class="clients-list">
-            <div class="client-item active">
+            <div class="client-item active" data-client="John Smith">
               <div class="client-avatar">J</div>
               <div class="client-details">
                 <div class="client-name">John Smith</div>
@@ -1115,7 +1180,7 @@
               </div>
             </div>
             
-            <div class="client-item">
+            <div class="client-item" data-client="Sarah Johnson">
               <div class="client-avatar">S</div>
               <div class="client-details">
                 <div class="client-name">Sarah Johnson</div>
@@ -1127,7 +1192,7 @@
               </div>
             </div>
             
-            <div class="client-item">
+            <div class="client-item" data-client="Michael Brown">
               <div class="client-avatar">M</div>
               <div class="client-details">
                 <div class="client-name">Michael Brown</div>
@@ -1142,10 +1207,10 @@
           
           <div class="chat-window">
             <div class="chat-header">
-              <i class="fas fa-user"></i> John Smith
+              <i class="fas fa-user"></i> <span id="activeClientName">John Smith</span>
             </div>
             
-            <div class="chat-messages">
+            <div class="chat-messages" id="chatMessages">
               <div class="message received">
                 <div class="message-sender">John Smith</div>
                 Hi, I'm having trouble understanding the risk management concepts from yesterday's lesson. Could you explain the 2% rule again?
@@ -1166,8 +1231,8 @@
             </div>
             
             <div class="chat-input">
-              <input type="text" placeholder="Type your message...">
-              <button class="btn">
+              <input type="text" id="chatInput" placeholder="Type your message...">
+              <button class="btn" id="sendMessageBtn">
                 <i class="fas fa-paper-plane"></i> Send
               </button>
             </div>
@@ -1179,7 +1244,7 @@
       <div id="clients" class="tab-content">
         <div class="header">
           <h1 class="title">Client Management</h1>
-          <button class="btn">
+          <button class="btn" id="addClientBtn">
             <i class="fas fa-user-plus"></i> Add New Client
           </button>
         </div>
@@ -1188,7 +1253,7 @@
           <div class="card">
             <h2 class="section-title">All Clients</h2>
             <div class="client-list">
-              <div class="client-item active">
+              <div class="client-item active" data-client="John Smith">
                 <div class="client-avatar">J</div>
                 <div class="client-details">
                   <div class="client-name">John Smith</div>
@@ -1200,7 +1265,7 @@
                 </div>
               </div>
               
-              <div class="client-item">
+              <div class="client-item" data-client="Sarah Johnson">
                 <div class="client-avatar">S</div>
                 <div class="client-details">
                   <div class="client-name">Sarah Johnson</div>
@@ -1212,7 +1277,7 @@
                 </div>
               </div>
               
-              <div class="client-item">
+              <div class="client-item" data-client="Michael Brown">
                 <div class="client-avatar">M</div>
                 <div class="client-details">
                   <div class="client-name">Michael Brown</div>
@@ -1229,9 +1294,9 @@
           <div class="card">
             <h2 class="section-title">Client Details</h2>
             <div style="text-align: center; margin-bottom: 24px;">
-              <div class="user-avatar" style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto 16px;">J</div>
-              <h3 style="color: var(--gold-dark); margin-bottom: 8px;">John Smith</h3>
-              <p style="color: var(--muted);">john.smith@email.com</p>
+              <div class="user-avatar" id="clientDetailAvatar" style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto 16px;">J</div>
+              <h3 id="clientDetailName" style="color: var(--gold-dark); margin-bottom: 8px;">John Smith</h3>
+              <p id="clientDetailEmail" style="color: var(--muted);">john.smith@email.com</p>
             </div>
             
             <div style="background: var(--nude-light); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
@@ -1255,10 +1320,10 @@
               </div>
             </div>
             
-            <button class="btn" style="width: 100%; margin-bottom: 10px;">
+            <button class="btn" id="scheduleClientSessionBtn" style="width: 100%; margin-bottom: 10px;">
               <i class="fas fa-calendar-plus"></i> Schedule Session
             </button>
-            <button class="btn ghost" style="width: 100%;">
+            <button class="btn ghost" id="sendClientMessageBtn" style="width: 100%;">
               <i class="fas fa-envelope"></i> Send Message
             </button>
           </div>
@@ -1269,7 +1334,7 @@
       <div id="analytics" class="tab-content">
         <div class="header">
           <h1 class="title">Performance Analytics</h1>
-          <button class="btn ghost">
+          <button class="btn ghost" id="exportReportBtn">
             <i class="fas fa-download"></i> Export Report
           </button>
         </div>
@@ -1378,6 +1443,90 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- Modals -->
+  <div class="modal" id="availabilityModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Availability Settings</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Working Hours</label>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <input type="time" class="form-input" value="09:00">
+          <span>to</span>
+          <input type="time" class="form-input" value="17:00">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Days Available</label>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox" checked> Monday
+          </label>
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox" checked> Tuesday
+          </label>
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox" checked> Wednesday
+          </label>
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox" checked> Thursday
+          </label>
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox" checked> Friday
+          </label>
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox"> Saturday
+          </label>
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox"> Sunday
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Session Duration (minutes)</label>
+        <select class="form-select">
+          <option>30</option>
+          <option selected>60</option>
+          <option>90</option>
+          <option>120</option>
+        </select>
+      </div>
+      <button class="btn success" style="width: 100%;">Save Settings</button>
+    </div>
+  </div>
+
+  <div class="modal" id="addClientModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Add New Client</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-input" placeholder="Enter client's full name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" placeholder="Enter client's email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input type="tel" class="form-input" placeholder="Enter client's phone number">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Experience Level</label>
+        <select class="form-select">
+          <option>Beginner</option>
+          <option>Intermediate</option>
+          <option>Advanced</option>
+        </select>
+      </div>
+      <button class="btn success" style="width: 100%;">Add Client</button>
+    </div>
   </div>
 
   <script>
@@ -1501,14 +1650,156 @@
         });
       }
       
+      // Go Live button
+      const goLiveBtn = document.getElementById('goLiveBtn');
+      if (goLiveBtn) {
+        goLiveBtn.addEventListener('click', function() {
+          showNotification('Starting live session... Clients will be notified.', 'success');
+          // In a real app, this would connect to a live streaming service
+          setTimeout(() => {
+            showNotification('Live session started successfully!', 'success');
+          }, 1500);
+        });
+      }
+      
+      // Publish content button
+      const publishContentBtn = document.getElementById('publishContentBtn');
+      if (publishContentBtn) {
+        publishContentBtn.addEventListener('click', function() {
+          const title = document.getElementById('contentTitle').value;
+          const description = document.getElementById('contentDescription').value;
+          const category = document.getElementById('contentCategory').value;
+          
+          if (!title || !description) {
+            showNotification('Please fill in all required fields', 'error');
+            return;
+          }
+          
+          showNotification(`"${title}" published successfully!`, 'success');
+          
+          // Reset form
+          document.getElementById('contentTitle').value = '';
+          document.getElementById('contentDescription').value = '';
+        });
+      }
+      
+      // Edit content buttons
+      const editContentBtns = document.querySelectorAll('.edit-content-btn');
+      editContentBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const fileName = this.closest('.file-item').querySelector('.file-name').textContent;
+          showNotification(`Editing "${fileName}"`, 'success');
+        });
+      });
+      
+      // Delete content buttons
+      const deleteContentBtns = document.querySelectorAll('.delete-content-btn');
+      deleteContentBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const fileName = this.closest('.file-item').querySelector('.file-name').textContent;
+          if (confirm(`Are you sure you want to delete "${fileName}"?`)) {
+            showNotification(`"${fileName}" deleted successfully`, 'success');
+            this.closest('.file-item').remove();
+          }
+        });
+      });
+      
+      // Schedule meeting button
+      const scheduleMeetingBtn = document.getElementById('scheduleMeetingBtn');
+      if (scheduleMeetingBtn) {
+        scheduleMeetingBtn.addEventListener('click', function() {
+          const title = document.getElementById('meetingTitle').value;
+          const client = document.getElementById('meetingClient').value;
+          const date = document.getElementById('meetingDate').value;
+          const time = document.getElementById('meetingTime').value;
+          
+          if (!title || client === 'Select a client' || !date || !time) {
+            showNotification('Please fill in all required fields', 'error');
+            return;
+          }
+          
+          showNotification(`Meeting "${title}" scheduled with ${client}`, 'success');
+          
+          // Reset form
+          document.getElementById('meetingTitle').value = '';
+          document.getElementById('meetingClient').selectedIndex = 0;
+          document.getElementById('meetingDate').value = '';
+          document.getElementById('meetingTime').value = '';
+          document.getElementById('meetingDescription').value = '';
+        });
+      }
+      
+      // Availability settings button
+      const availabilitySettingsBtn = document.getElementById('availabilitySettingsBtn');
+      if (availabilitySettingsBtn) {
+        availabilitySettingsBtn.addEventListener('click', function() {
+          document.getElementById('availabilityModal').classList.add('active');
+        });
+      }
+      
+      // Edit meeting button
+      const editMeetingBtn = document.querySelector('.edit-meeting-btn');
+      if (editMeetingBtn) {
+        editMeetingBtn.addEventListener('click', function() {
+          const meetingTitle = this.closest('.meeting-item').querySelector('.meeting-title').textContent;
+          showNotification(`Editing "${meetingTitle}"`, 'success');
+        });
+      }
+      
+      // Send reminder button
+      const sendReminderBtn = document.querySelector('.send-reminder-btn');
+      if (sendReminderBtn) {
+        sendReminderBtn.addEventListener('click', function() {
+          const meetingTitle = this.closest('.meeting-item').querySelector('.meeting-title').textContent;
+          showNotification(`Reminder sent for "${meetingTitle}"`, 'success');
+        });
+      }
+      
+      // Cancel meeting button
+      const cancelMeetingBtn = document.querySelector('.cancel-meeting-btn');
+      if (cancelMeetingBtn) {
+        cancelMeetingBtn.addEventListener('click', function() {
+          const meetingTitle = this.closest('.meeting-item').querySelector('.meeting-title').textContent;
+          if (confirm(`Are you sure you want to cancel "${meetingTitle}"?`)) {
+            showNotification(`"${meetingTitle}" cancelled`, 'success');
+            this.closest('.meeting-item').remove();
+          }
+        });
+      }
+      
+      // Join meeting buttons
+      const joinMeetingBtns = document.querySelectorAll('.join-meeting-btn');
+      joinMeetingBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const meetingTitle = this.getAttribute('data-meeting');
+          showNotification(`Joining "${meetingTitle}"...`, 'success');
+          // In a real app, this would redirect to the meeting platform
+        });
+      });
+      
+      // Reschedule buttons
+      const rescheduleBtns = document.querySelectorAll('.reschedule-btn');
+      rescheduleBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const meetingTitle = this.getAttribute('data-meeting');
+          showNotification(`Rescheduling "${meetingTitle}"`, 'success');
+          // Switch to schedule tab
+          document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+          
+          document.querySelector('.nav-item[data-tab="schedule"]').classList.add('active');
+          document.getElementById('schedule').classList.add('active');
+        });
+      });
+      
       // Chat send button
-      const chatSendBtn = document.querySelector('.chat-input .btn');
-      if (chatSendBtn) {
-        chatSendBtn.addEventListener('click', sendChatMessage);
+      const sendMessageBtn = document.getElementById('sendMessageBtn');
+      if (sendMessageBtn) {
+        sendMessageBtn.addEventListener('click', sendChatMessage);
       }
       
       // Chat input enter key
-      const chatInput = document.querySelector('.chat-input input');
+      const chatInput = document.getElementById('chatInput');
       if (chatInput) {
         chatInput.addEventListener('keypress', function(e) {
           if (e.key === 'Enter') {
@@ -1516,11 +1807,127 @@
           }
         });
       }
+      
+      // Client selection in chat
+      const chatClientItems = document.querySelectorAll('.clients-list .client-item');
+      chatClientItems.forEach(item => {
+        item.addEventListener('click', function() {
+          chatClientItems.forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+          
+          const clientName = this.getAttribute('data-client');
+          document.getElementById('activeClientName').textContent = clientName;
+          
+          // Clear chat messages
+          document.getElementById('chatMessages').innerHTML = `
+            <div class="message received">
+              <div class="message-sender">${clientName}</div>
+              Hi there! I'm looking forward to our next session.
+              <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+            </div>
+          `;
+        });
+      });
+      
+      // Client selection in management
+      const clientItems = document.querySelectorAll('#clients .client-item');
+      clientItems.forEach(item => {
+        item.addEventListener('click', function() {
+          clientItems.forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+          
+          const clientName = this.getAttribute('data-client');
+          const clientEmail = this.querySelector('.client-email').textContent;
+          const clientInitial = clientName.charAt(0);
+          
+          document.getElementById('clientDetailName').textContent = clientName;
+          document.getElementById('clientDetailEmail').textContent = clientEmail;
+          document.getElementById('clientDetailAvatar').textContent = clientInitial;
+        });
+      });
+      
+      // Add client button
+      const addClientBtn = document.getElementById('addClientBtn');
+      if (addClientBtn) {
+        addClientBtn.addEventListener('click', function() {
+          document.getElementById('addClientModal').classList.add('active');
+        });
+      }
+      
+      // Schedule client session button
+      const scheduleClientSessionBtn = document.getElementById('scheduleClientSessionBtn');
+      if (scheduleClientSessionBtn) {
+        scheduleClientSessionBtn.addEventListener('click', function() {
+          const clientName = document.getElementById('clientDetailName').textContent;
+          showNotification(`Scheduling session with ${clientName}`, 'success');
+          
+          // Switch to schedule tab
+          document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+          
+          document.querySelector('.nav-item[data-tab="schedule"]').classList.add('active');
+          document.getElementById('schedule').classList.add('active');
+        });
+      }
+      
+      // Send client message button
+      const sendClientMessageBtn = document.getElementById('sendClientMessageBtn');
+      if (sendClientMessageBtn) {
+        sendClientMessageBtn.addEventListener('click', function() {
+          const clientName = document.getElementById('clientDetailName').textContent;
+          showNotification(`Opening chat with ${clientName}`, 'success');
+          
+          // Switch to chat tab
+          document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+          
+          document.querySelector('.nav-item[data-tab="chat"]').classList.add('active');
+          document.getElementById('chat').classList.add('active');
+          
+          // Select the client in the chat list
+          const chatClientItems = document.querySelectorAll('.clients-list .client-item');
+          chatClientItems.forEach(item => {
+            if (item.getAttribute('data-client') === clientName) {
+              item.click();
+            }
+          });
+        });
+      }
+      
+      // Export report button
+      const exportReportBtn = document.getElementById('exportReportBtn');
+      if (exportReportBtn) {
+        exportReportBtn.addEventListener('click', function() {
+          showNotification('Exporting analytics report...', 'success');
+          // In a real app, this would generate and download a report
+          setTimeout(() => {
+            showNotification('Report exported successfully!', 'success');
+          }, 2000);
+        });
+      }
+      
+      // Close modal buttons
+      const closeModalBtns = document.querySelectorAll('.close-modal');
+      closeModalBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          this.closest('.modal').classList.remove('active');
+        });
+      });
+      
+      // Close modals when clicking outside
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        modal.addEventListener('click', function(e) {
+          if (e.target === this) {
+            this.classList.remove('active');
+          }
+        });
+      });
     }
     
     // Send chat message
     function sendChatMessage() {
-      const chatInput = document.querySelector('.chat-input input');
+      const chatInput = document.getElementById('chatInput');
       const message = chatInput.value.trim();
       
       if (!message) return;
@@ -1541,17 +1948,19 @@
       
       // Simulate response after 1-2 seconds
       setTimeout(() => {
+        const clientName = document.getElementById('activeClientName').textContent;
         const responses = [
           "Thanks for the information!",
           "I'll review that and get back to you.",
           "That makes sense, thank you for explaining.",
-          "Can we schedule a call to discuss this further?"
+          "Can we schedule a call to discuss this further?",
+          "I appreciate your help with this."
         ];
         const response = responses[Math.floor(Math.random() * responses.length)];
         
         chatMessages.innerHTML += `
           <div class="message received">
-            <div class="message-sender">John Smith</div>
+            <div class="message-sender">${clientName}</div>
             ${response}
             <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
           </div>
@@ -1581,16 +1990,6 @@
         notification.remove();
       }, 4000);
     }
-    
-    // Client selection
-    window.selectClient = function(clientName) {
-      const clientItems = document.querySelectorAll('.client-item');
-      clientItems.forEach(item => item.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-      
-      // In a real app, you would load client details here
-      showNotification(`Now viewing ${clientName}'s profile`, 'success');
-    };
   </script>
 </body>
 </html>
