@@ -6,6 +6,7 @@
   <title>Crown Trade Academy — Client Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --nude-light: #F9F6F2;
@@ -250,14 +251,6 @@
       background: #059669;
     }
     
-    .btn.danger {
-      background: var(--danger);
-    }
-    
-    .btn.danger:hover {
-      background: #DC2626;
-    }
-    
     .card {
       background: white;
       padding: 28px;
@@ -313,20 +306,6 @@
       font-weight: 600;
     }
     
-    .stat-trend {
-      font-size: 0.85rem;
-      margin-top: 8px;
-      font-weight: 600;
-    }
-    
-    .trend-up {
-      color: var(--success);
-    }
-    
-    .trend-down {
-      color: var(--danger);
-    }
-    
     .tab-content {
       display: none;
     }
@@ -341,351 +320,29 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
-    .section-title {
-      font-size: 1.5rem;
-      color: var(--gold-dark);
-      margin-bottom: 20px;
-      font-weight: 700;
-      font-family: 'Cormorant Garamond', serif;
-    }
-    
-    .progress-bar {
-      height: 8px;
-      background: white;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: 8px;
-    }
-    
-    .progress-fill {
-      height: 100%;
-      background: var(--success);
-      transition: width 0.5s ease;
-    }
-    
-    .course-card {
-      background: var(--nude-light);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 16px;
-      border-left: 4px solid var(--gold);
-      transition: all 0.3s ease;
-    }
-    
-    .course-card:hover {
-      transform: translateX(5px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    
-    .course-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    
-    .course-title {
-      font-weight: 700;
-      color: var(--gold-dark);
-      font-size: 1.1rem;
-    }
-    
-    .course-progress {
-      color: var(--muted);
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-    
-    .course-details {
-      color: var(--charcoal);
-      margin-bottom: 8px;
-    }
-    
-    .course-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 12px;
-    }
-    
-    .content-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-    }
-    
-    .content-card {
-      background: var(--nude-light);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(212,200,188,0.3);
-    }
-    
-    .content-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
-    
-    .content-thumbnail {
-      height: 160px;
-      background: var(--gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 3rem;
-    }
-    
-    .content-info {
-      padding: 20px;
-    }
-    
-    .content-title {
-      font-weight: 700;
-      color: var(--gold-dark);
-      margin-bottom: 8px;
-      font-size: 1.1rem;
-    }
-    
-    .content-meta {
-      color: var(--muted);
-      font-size: 0.85rem;
-      margin-bottom: 12px;
-    }
-    
-    .content-description {
-      color: var(--charcoal);
-      font-size: 0.9rem;
-      margin-bottom: 16px;
-    }
-    
-    .meetings-list {
-      margin-top: 20px;
-    }
-    
-    .meeting-item {
-      background: var(--nude-light);
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      border-left: 4px solid var(--gold);
-      transition: all 0.3s ease;
-    }
-    
-    .meeting-item:hover {
-      transform: translateX(5px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    
-    .meeting-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    
-    .meeting-title {
-      font-weight: 700;
-      color: var(--gold-dark);
-      font-size: 1.1rem;
-    }
-    
-    .meeting-time {
-      color: var(--muted);
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-    
-    .meeting-details {
-      color: var(--charcoal);
-      margin-bottom: 8px;
-    }
-    
-    .meeting-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 12px;
-    }
-    
-    .chat-container {
-      display: grid;
-      grid-template-columns: 300px 1fr;
-      gap: 24px;
-      height: 500px;
-    }
-    
-    .mentor-info {
-      background: var(--nude-light);
-      border-radius: 14px;
-      padding: 20px;
-      border: 1px solid rgba(212,200,188,0.3);
-      text-align: center;
-    }
-    
-    .mentor-avatar {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 1.8rem;
-      margin: 0 auto 16px;
-      box-shadow: 0 4px 12px rgba(200,169,126,0.3);
-    }
-    
-    .mentor-name {
-      font-weight: 700;
-      color: var(--gold-dark);
-      margin-bottom: 8px;
-      font-size: 1.2rem;
-    }
-    
-    .mentor-role {
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-    
-    .mentor-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    
-    .mentor-stat {
-      text-align: center;
-      padding: 12px;
-      background: white;
-      border-radius: 10px;
-    }
-    
-    .mentor-stat-value {
-      font-weight: bold;
-      color: var(--gold-dark);
-      font-size: 1.2rem;
-      margin-bottom: 4px;
-    }
-    
-    .mentor-stat-label {
-      color: var(--muted);
-      font-size: 0.8rem;
-    }
-    
-    .chat-window {
-      background: white;
-      border-radius: 14px;
-      display: flex;
-      flex-direction: column;
-      border: 1px solid rgba(212,200,188,0.3);
-      overflow: hidden;
-    }
-    
-    .chat-header {
-      background: var(--gold);
-      color: white;
-      padding: 18px 24px;
-      font-weight: 600;
-    }
-    
-    .chat-messages {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      background: var(--nude-light);
-    }
-    
-    .message {
-      max-width: 75%;
-      padding: 14px 18px;
-      border-radius: 18px;
-      margin-bottom: 16px;
-      line-height: 1.5;
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
       position: relative;
     }
     
-    .message.sent {
-      background: var(--gold);
-      color: white;
-      margin-left: auto;
-      border-bottom-right-radius: 6px;
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+      margin-left: -10px;
+      margin-top: -10px;
     }
     
-    .message.received {
-      background: white;
-      border: 1px solid rgba(212,200,188,0.3);
-      border-bottom-left-radius: 6px;
-    }
-    
-    .message-sender {
-      font-weight: 600;
-      margin-bottom: 4px;
-      font-size: 0.9rem;
-    }
-    
-    .message-time {
-      font-size: 0.75rem;
-      opacity: 0.7;
-      margin-top: 6px;
-      text-align: right;
-    }
-    
-    .chat-input {
-      display: flex;
-      padding: 20px;
-      background: white;
-      border-top: 1px solid rgba(212,200,188,0.3);
-      gap: 12px;
-    }
-    
-    .chat-input input {
-      flex: 1;
-      padding: 14px 18px;
-      border: 1px solid rgba(212,200,188,0.5);
-      border-radius: 12px;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-    }
-    
-    .chat-input input:focus {
-      outline: none;
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(200,169,126,0.1);
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    .form-label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--charcoal);
-    }
-    
-    .form-input, .form-select, .form-textarea {
-      width: 100%;
-      padding: 14px 16px;
-      border: 1px solid rgba(212,200,188,0.5);
-      border-radius: 10px;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-      font-family: 'Montserrat', sans-serif;
-    }
-    
-    .form-input:focus, .form-select:focus, .form-textarea:focus {
-      outline: none;
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(200,169,126,0.1);
-    }
-    
-    .form-textarea {
-      resize: vertical;
-      min-height: 120px;
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
     
     .notification {
@@ -719,1317 +376,692 @@
       background: var(--danger);
     }
     
-    .notification.warning {
-      background: #F59E0B;
-    }
-    
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-    }
-    
-    .modal.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .modal-content {
-      background: white;
-      border-radius: 16px;
-      padding: 30px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      transform: translateY(20px);
-      transition: transform 0.3s ease;
-    }
-    
-    .modal.active .modal-content {
-      transform: translateY(0);
-    }
-    
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid var(--nude-med);
-    }
-    
-    .modal-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.8rem;
-      color: var(--gold-dark);
-      font-weight: 700;
-    }
-    
-    .close-modal {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--muted);
-      transition: color 0.3s ease;
-    }
-    
-    .close-modal:hover {
-      color: var(--danger);
-    }
-    
-    .performance-chart {
+    .session-item {
       background: var(--nude-light);
-      border-radius: 12px;
       padding: 20px;
-      margin-bottom: 24px;
-    }
-    
-    .chart-placeholder {
-      height: 200px;
-      background: white;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--muted);
-      font-style: italic;
-    }
-    
-    .trade-history {
-      margin-top: 20px;
-    }
-    
-    .trade-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px;
-      border: 1px solid rgba(212,200,188,0.3);
-      border-radius: 10px;
-      margin-bottom: 12px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      border-left: 4px solid var(--gold);
       transition: all 0.3s ease;
     }
     
-    .trade-item:hover {
-      border-color: var(--gold);
-      background: var(--nude-light);
+    .session-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
     
-    .trade-info {
-      flex: 1;
+    .session-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
     }
     
-    .trade-pair {
-      font-weight: 600;
-      color: var(--charcoal);
-      margin-bottom: 4px;
-    }
-    
-    .trade-meta {
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-    
-    .trade-result {
-      font-weight: bold;
+    .session-title {
+      font-weight: 700;
+      color: var(--gold-dark);
       font-size: 1.1rem;
     }
     
-    .trade-profit {
-      color: var(--success);
+    .session-time {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 600;
     }
     
-    .trade-loss {
-      color: var(--danger);
+    .session-details {
+      color: var(--charcoal);
+      margin-bottom: 8px;
     }
     
-    @media (max-width: 1200px) {
-      .app { grid-template-columns: 1fr; }
-      .sidebar { position: static; margin-bottom: 24px; }
-      .chat-container { grid-template-columns: 1fr; height: 600px; }
-      .content-grid { grid-template-columns: 1fr; }
+    .session-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
     }
     
-    @media (max-width: 768px) {
-      .app { padding: 16px; gap: 16px; }
-      .main { padding: 20px; }
-      .stats { grid-template-columns: 1fr 1fr; }
-      .header { flex-direction: column; align-items: flex-start; gap: 16px; }
-      .header-actions { width: 100%; justify-content: space-between; }
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--nude-light) 0%, #ffffff 100%);
+    }
+    
+    .login-form {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid rgba(212,200,188,0.6);
+    }
+    
+    .login-title {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--gold-dark);
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(212,200,188,0.5);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(200,169,126,0.1);
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="brand">Crown Trade</div>
-      <div class="brand-subtitle">Client Portal</div>
-      
-      <div class="user-info">
-        <div class="user-avatar" id="userAvatar">J</div>
-        <div class="user-details">
-          <div class="user-name" id="userName">John Smith</div>
-          <div class="user-role">Trading Student</div>
+  <div id="app">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+      <div class="login-form">
+        <h1 class="login-title">Crown Trade Academy</h1>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" id="loginEmail" placeholder="Enter your email" value="client@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password" value="password123">
+        </div>
+        <button class="btn" style="width: 100%; margin-bottom: 16px;" id="loginBtn">
+          <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+        <div style="text-align: center; color: var(--muted); font-size: 0.9rem;">
+          Demo: Use client@example.com / password123
         </div>
       </div>
-      
-      <nav class="nav">
-        <a href="#" class="nav-item active" data-tab="dashboard">
-          <i class="fas fa-chart-line"></i> Dashboard
-        </a>
-        <a href="#" class="nav-item" data-tab="learning">
-          <i class="fas fa-graduation-cap"></i> Learning Center
-        </a>
-        <a href="#" class="nav-item" data-tab="schedule">
-          <i class="fas fa-calendar-alt"></i> My Schedule
-        </a>
-        <a href="#" class="nav-item" data-tab="chat">
-          <i class="fas fa-comments"></i> Mentor Chat
-        </a>
-        <a href="#" class="nav-item" data-tab="performance">
-          <i class="fas fa-chart-bar"></i> Performance
-        </a>
-        <a href="#" class="nav-item" data-tab="resources">
-          <i class="fas fa-tools"></i> Trading Tools
-        </a>
-      </nav>
-      
-      <button class="logout-btn" id="logoutBtn">
-        <i class="fas fa-sign-out-alt"></i> Logout
-      </button>
-    </aside>
+    </div>
 
-    <!-- Main Content -->
-    <main class="main">
-      <!-- Dashboard Tab -->
-      <div id="dashboard" class="tab-content active">
-        <div class="header">
-          <h1 class="title">Trading Dashboard</h1>
-          <div class="header-actions">
-            <button class="btn ghost" id="quickTradeBtn">
-              <i class="fas fa-chart-line"></i> Quick Trade
-            </button>
-            <button class="btn" id="bookSessionBtn">
-              <i class="fas fa-plus"></i> Book Session
-            </button>
+    <!-- Dashboard Screen -->
+    <div id="dashboardScreen" class="app" style="display: none;">
+      <aside class="sidebar">
+        <div class="brand">Crown Trade</div>
+        <div class="brand-subtitle">Client Portal</div>
+        
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">C</div>
+          <div class="user-details">
+            <div class="user-name" id="userName">Loading...</div>
+            <div class="user-role">Trading Student</div>
           </div>
         </div>
         
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-icon">
-              <i class="fas fa-percentage"></i>
-            </div>
-            <div class="stat-value" id="successRate">72%</div>
-            <div class="stat-label">Success Rate</div>
-            <div class="stat-trend trend-up">
-              <i class="fas fa-arrow-up"></i> 8% this month
-            </div>
-          </div>
-          <div class="stat">
-            <div class="stat-icon">
-              <i class="fas fa-dollar-sign"></i>
-            </div>
-            <div class="stat-value" id="totalProfit">$2,450</div>
-            <div class="stat-label">Total Profit</div>
-            <div class="stat-trend trend-up">
-              <i class="fas fa-arrow-up"></i> 12% this week
-            </div>
-          </div>
-          <div class="stat">
-            <div class="stat-icon">
-              <i class="fas fa-book"></i>
-            </div>
-            <div class="stat-value" id="completedLessons">8/12</div>
-            <div class="stat-label">Lessons Completed</div>
-            <div class="stat-trend trend-up">
-              <i class="fas fa-arrow-up"></i> 2 new this week
-            </div>
-          </div>
-          <div class="stat">
-            <div class="stat-icon">
-              <i class="fas fa-calendar-check"></i>
-            </div>
-            <div class="stat-value" id="upcomingSessions">3</div>
-            <div class="stat-label">Upcoming Sessions</div>
-            <div class="stat-trend trend-up">
-              <i class="fas fa-arrow-up"></i> 1 tomorrow
-            </div>
-          </div>
-        </div>
+        <nav class="nav">
+          <a href="#" class="nav-item active" data-tab="dashboard">
+            <i class="fas fa-chart-line"></i> Dashboard
+          </a>
+          <a href="#" class="nav-item" data-tab="sessions">
+            <i class="fas fa-calendar-alt"></i> My Sessions
+          </a>
+          <a href="#" class="nav-item" data-tab="progress">
+            <i class="fas fa-graduation-cap"></i> Learning Progress
+          </a>
+          <a href="#" class="nav-item" data-tab="chat">
+            <i class="fas fa-comments"></i> Mentor Chat
+          </a>
+        </nav>
         
-        <div class="card">
-          <h2 class="section-title">My Learning Progress</h2>
-          <div class="course-card">
-            <div class="course-header">
-              <div class="course-title">Forex Trading Fundamentals</div>
-              <div class="course-progress">85% Complete</div>
-            </div>
-            <div class="course-details">
-              Master the basics of currency trading, market analysis, and risk management.
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 85%"></div>
-            </div>
-            <div class="course-actions">
-              <button class="btn success">
-                <i class="fas fa-play"></i> Continue
-              </button>
-              <button class="btn ghost">
-                <i class="fas fa-redo"></i> Review
+        <button class="logout-btn" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </aside>
+
+      <main class="main">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+          <div class="header">
+            <h1 class="title">Trading Dashboard</h1>
+            <div class="header-actions">
+              <button class="btn" id="bookSessionBtn">
+                <i class="fas fa-plus"></i> Book Session
               </button>
             </div>
           </div>
           
-          <div class="course-card">
-            <div class="course-header">
-              <div class="course-title">Advanced Technical Analysis</div>
-              <div class="course-progress">45% Complete</div>
-            </div>
-            <div class="course-details">
-              Learn advanced chart patterns, indicators, and trading strategies.
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 45%"></div>
-            </div>
-            <div class="course-actions">
-              <button class="btn success">
-                <i class="fas fa-play"></i> Continue
-              </button>
-              <button class="btn ghost">
-                <i class="fas fa-redo"></i> Review
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <div class="card">
-          <h2 class="section-title">Today's Schedule</h2>
-          <div class="meetings-list" id="todaysMeetings">
-            <!-- Meetings will be populated by JavaScript -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Learning Center Tab -->
-      <div id="learning" class="tab-content">
-        <div class="header">
-          <h1 class="title">Learning Center</h1>
-          <div class="header-actions">
-            <button class="btn ghost" id="suggestContentBtn">
-              <i class="fas fa-lightbulb"></i> Request Content
-            </button>
-          </div>
-        </div>
-        
-        <div class="card">
-          <h2 class="section-title">My Courses</h2>
-          <div class="course-card">
-            <div class="course-header">
-              <div class="course-title">Forex Trading Fundamentals</div>
-              <div class="course-progress">85% Complete</div>
-            </div>
-            <div class="course-details">
-              <strong>Next Lesson:</strong> Risk Management Strategies<br>
-              <strong>Estimated Time:</strong> 45 minutes
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 85%"></div>
-            </div>
-            <div class="course-actions">
-              <button class="btn success">
-                <i class="fas fa-play"></i> Continue Course
-              </button>
-              <button class="btn ghost">
-                <i class="fas fa-list"></i> View All Lessons
-              </button>
-            </div>
-          </div>
-          
-          <div class="course-card">
-            <div class="course-header">
-              <div class="course-title">Advanced Technical Analysis</div>
-              <div class="course-progress">45% Complete</div>
-            </div>
-            <div class="course-details">
-              <strong>Next Lesson:</strong> Fibonacci Retracement<br>
-              <strong>Estimated Time:</strong> 60 minutes
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 45%"></div>
-            </div>
-            <div class="course-actions">
-              <button class="btn success">
-                <i class="fas fa-play"></i> Continue Course
-              </button>
-              <button class="btn ghost">
-                <i class="fas fa-list"></i> View All Lessons
-              </button>
-            </div>
-          </div>
-          
-          <div class="course-card">
-            <div class="course-header">
-              <div class="course-title">Trading Psychology</div>
-              <div class="course-progress">15% Complete</div>
-            </div>
-            <div class="course-details">
-              <strong>Next Lesson:</strong> Emotional Control in Trading<br>
-              <strong>Estimated Time:</strong> 30 minutes
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 15%"></div>
-            </div>
-            <div class="course-actions">
-              <button class="btn success">
-                <i class="fas fa-play"></i> Start Course
-              </button>
-              <button class="btn ghost">
-                <i class="fas fa-list"></i> View All Lessons
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <div class="card">
-          <h2 class="section-title">Recommended Content</h2>
-          <div class="content-grid" id="recommendedContent">
-            <!-- Content will be populated by JavaScript -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Schedule Tab -->
-      <div id="schedule" class="tab-content">
-        <div class="header">
-          <h1 class="title">My Schedule</h1>
-          <button class="btn" id="bookNewSessionBtn">
-            <i class="fas fa-calendar-plus"></i> Book New Session
-          </button>
-        </div>
-        
-        <div class="card">
-          <h2 class="section-title">Upcoming Sessions</h2>
-          <div class="meetings-list" id="upcomingSessionsList">
-            <!-- Sessions will be populated by JavaScript -->
-          </div>
-        </div>
-        
-        <div class="card">
-          <h2 class="section-title">Session History</h2>
-          <div class="meetings-list" id="sessionHistory">
-            <!-- Session history will be populated by JavaScript -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Chat Tab -->
-      <div id="chat" class="tab-content">
-        <div class="header">
-          <h1 class="title">Mentor Communications</h1>
-          <button class="btn ghost" id="emergencyHelpBtn">
-            <i class="fas fa-life-ring"></i> Emergency Help
-          </button>
-        </div>
-        
-        <div class="chat-container">
-          <div class="mentor-info">
-            <div class="mentor-avatar">M</div>
-            <div class="mentor-name">Michael Johnson</div>
-            <div class="mentor-role">Senior Trading Mentor</div>
-            
-            <div class="mentor-stats">
-              <div class="mentor-stat">
-                <div class="mentor-stat-value">4.9/5</div>
-                <div class="mentor-stat-label">Rating</div>
-              </div>
-              <div class="mentor-stat">
-                <div class="mentor-stat-value">98%</div>
-                <div class="mentor-stat-label">Response Rate</div>
-              </div>
-            </div>
-            
-            <div class="mentor-details">
-              <p style="font-size: 0.9rem; color: var(--charcoal); margin-bottom: 16px;">
-                Specializes in Forex and cryptocurrency trading with 10+ years experience.
-              </p>
-            </div>
-            
-            <button class="btn" style="width: 100%; margin-bottom: 10px;">
-              <i class="fas fa-calendar-plus"></i> Book Session
-            </button>
-            <button class="btn ghost" style="width: 100%;">
-              <i class="fas fa-video"></i> Video Call
-            </button>
-          </div>
-          
-          <div class="chat-window">
-            <div class="chat-header">
-              <i class="fas fa-user"></i> Michael Johnson
-            </div>
-            
-            <div class="chat-messages" id="chatMessages">
-              <div class="message received">
-                <div class="message-sender">Michael Johnson</div>
-                Hi John! How's your trading practice going? I noticed you completed the risk management module.
-                <div class="message-time">10:15 AM</div>
-              </div>
-              
-              <div class="message sent">
-                <div class="message-sender">You</div>
-                It's going well! I'm trying to apply the 2% rule to my demo account. Could you review my last few trades?
-                <div class="message-time">10:18 AM</div>
-              </div>
-              
-              <div class="message received">
-                <div class="message-sender">Michael Johnson</div>
-                Of course! Send me your trading journal and we can schedule a quick review session. You're making great progress!
-                <div class="message-time">10:20 AM</div>
-              </div>
-            </div>
-            
-            <div class="chat-input">
-              <input type="text" id="chatInput" placeholder="Type your message...">
-              <button class="btn" id="sendMessageBtn">
-                <i class="fas fa-paper-plane"></i> Send
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Performance Tab -->
-      <div id="performance" class="tab-content">
-        <div class="header">
-          <h1 class="title">Trading Performance</h1>
-          <button class="btn ghost" id="exportPerformanceBtn">
-            <i class="fas fa-download"></i> Export Report
-          </button>
-        </div>
-        
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-icon">
-              <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="stat-value" id="winRate">72%</div>
-            <div class="stat-label">Win Rate</div>
-            <div class="stat-trend trend-up">
-              <i class="fas fa-arrow-up"></i> 5% this month
-            </div>
-          </div>
-          <div class="stat">
-            <div class="stat-icon">
-              <i class="fas fa-dollar-sign"></i>
-            </div>
-            <div class="stat-value" id="totalProfit">$2,450</div>
-            <div class="stat-label">Total Profit</div>
-            <div class="stat-trend trend-up">
-              <i class="fas fa-arrow-up"></i> $320 this week
-            </div>
-          </div>
-          <div class="stat">
-            <div class="stat-icon">
-              <i class="fas fa-exchange-alt"></i>
-            </div>
-            <div class="stat-value" id="totalTrades">84</div>
-            <div class="stat-label">Total Trades</div>
-            <div class="stat-trend trend-up">
-              <i class="fas fa-arrow-up"></i> 12 this week
-            </div>
-          </div>
-          <div class="stat">
-            <div class="stat-icon">
-              <i class="fas fa-balance-scale"></i>
-            </div>
-            <div class="stat-value" id="avgWinLoss">1.8</div>
-            <div class="stat-label">Avg Win/Loss Ratio</div>
-            <div class="stat-trend trend-up">
-              <i class="fas fa-arrow-up"></i> 0.2 from last month
-            </div>
-          </div>
-        </div>
-        
-        <div class="card">
-          <h2 class="section-title">Performance Overview</h2>
-          <div class="performance-chart">
-            <div class="chart-placeholder">
-              Trading Performance Chart (Would show equity curve and metrics)
-            </div>
-          </div>
-        </div>
-        
-        <div class="card">
-          <h2 class="section-title">Recent Trading Activity</h2>
-          <div class="trade-history" id="tradeHistory">
-            <!-- Trade history will be populated by JavaScript -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Resources Tab -->
-      <div id="resources" class="tab-content">
-        <div class="header">
-          <h1 class="title">Trading Tools & Resources</h1>
-          <button class="btn ghost" id="refreshToolsBtn">
-            <i class="fas fa-sync-alt"></i> Refresh Data
-          </button>
-        </div>
-        
-        <div class="card">
-          <h2 class="section-title">Market Overview</h2>
           <div class="stats">
             <div class="stat">
               <div class="stat-icon">
-                <i class="fas fa-chart-line"></i>
+                <i class="fas fa-percentage"></i>
               </div>
-              <div class="stat-value">+0.8%</div>
-              <div class="stat-label">S&P 500</div>
-              <div class="stat-trend trend-up">
-                <i class="fas fa-arrow-up"></i> Today
-              </div>
+              <div class="stat-value" id="successRate">0%</div>
+              <div class="stat-label">Success Rate</div>
             </div>
             <div class="stat">
               <div class="stat-icon">
-                <i class="fab fa-bitcoin"></i>
+                <i class="fas fa-dollar-sign"></i>
               </div>
-              <div class="stat-value">+2.3%</div>
-              <div class="stat-label">Bitcoin</div>
-              <div class="stat-trend trend-up">
-                <i class="fas fa-arrow-up"></i> Today
-              </div>
+              <div class="stat-value" id="totalProfit">$0</div>
+              <div class="stat-label">Total Profit</div>
             </div>
             <div class="stat">
               <div class="stat-icon">
-                <i class="fas fa-euro-sign"></i>
+                <i class="fas fa-book"></i>
               </div>
-              <div class="stat-value">-0.4%</div>
-              <div class="stat-label">EUR/USD</div>
-              <div class="stat-trend trend-down">
-                <i class="fas fa-arrow-down"></i> Today
-              </div>
+              <div class="stat-value" id="completedLessons">0</div>
+              <div class="stat-label">Lessons Completed</div>
             </div>
             <div class="stat">
               <div class="stat-icon">
-                <i class="fas fa-oil-can"></i>
+                <i class="fas fa-calendar-check"></i>
               </div>
-              <div class="stat-value">+1.2%</div>
-              <div class="stat-label">Oil</div>
-              <div class="stat-trend trend-up">
-                <i class="fas fa-arrow-up"></i> Today
-              </div>
+              <div class="stat-value" id="upcomingSessions">0</div>
+              <div class="stat-label">Upcoming Sessions</div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h2 style="color: var(--gold-dark); margin-bottom: 20px; font-family: 'Cormorant Garamond', serif;">Recent Sessions</h2>
+            <div id="recentSessions">
+              <p style="text-align: center; color: var(--muted);">Loading sessions...</p>
             </div>
           </div>
         </div>
-        
-        <div class="card">
-          <h2 class="section-title">Trading Calculators</h2>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div class="form-group">
-              <label class="form-label">Position Size Calculator</label>
-              <input type="number" class="form-input" placeholder="Account Balance">
-              <input type="number" class="form-input" placeholder="Risk %" style="margin-top: 10px;">
-              <input type="number" class="form-input" placeholder="Stop Loss Pips" style="margin-top: 10px;">
-              <button class="btn" style="width: 100%; margin-top: 15px;">
-                Calculate Position Size
-              </button>
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">Risk/Reward Calculator</label>
-              <input type="number" class="form-input" placeholder="Entry Price">
-              <input type="number" class="form-input" placeholder="Stop Loss" style="margin-top: 10px;">
-              <input type="number" class="form-input" placeholder="Take Profit" style="margin-top: 10px;">
-              <button class="btn" style="width: 100%; margin-top: 15px;">
-                Calculate R/R Ratio
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <div class="card">
-          <h2 class="section-title">Trading Journal</h2>
-          <div class="form-group">
-            <label class="form-label">Today's Trading Notes</label>
-            <textarea class="form-textarea" placeholder="Record your thoughts, observations, and lessons learned from today's trading..."></textarea>
-          </div>
-          <button class="btn success" style="width: 100%;">
-            <i class="fas fa-save"></i> Save Journal Entry
-          </button>
-        </div>
-      </div>
-    </main>
-  </div>
 
-  <!-- Modals -->
-  <div class="modal" id="bookSessionModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Book a Session</h2>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Session Type</label>
-        <select class="form-select" id="sessionType">
-          <option>Portfolio Review</option>
-          <option>Strategy Discussion</option>
-          <option>Trade Analysis</option>
-          <option>Market Outlook</option>
-          <option>General Q&A</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Preferred Date</label>
-        <input type="date" class="form-input" id="sessionDate">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Preferred Time</label>
-        <input type="time" class="form-input" id="sessionTime">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Additional Notes</label>
-        <textarea class="form-textarea" id="sessionNotes" placeholder="What would you like to focus on during this session?"></textarea>
-      </div>
-      <button class="btn success" style="width: 100%;" id="confirmBookingBtn">Book Session</button>
+        <!-- Sessions Tab -->
+        <div id="sessions" class="tab-content">
+          <div class="header">
+            <h1 class="title">My Sessions</h1>
+            <button class="btn" id="newSessionBtn">
+              <i class="fas fa-calendar-plus"></i> Book New Session
+            </button>
+          </div>
+          
+          <div class="card">
+            <h2 style="color: var(--gold-dark); margin-bottom: 20px; font-family: 'Cormorant Garamond', serif;">Upcoming Sessions</h2>
+            <div id="upcomingSessionsList">
+              <p style="text-align: center; color: var(--muted);">Loading upcoming sessions...</p>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h2 style="color: var(--gold-dark); margin-bottom: 20px; font-family: 'Cormorant Garamond', serif;">Session History</h2>
+            <div id="sessionHistory">
+              <p style="text-align: center; color: var(--muted);">Loading session history...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Tab -->
+        <div id="progress" class="tab-content">
+          <div class="header">
+            <h1 class="title">Learning Progress</h1>
+            <button class="btn ghost">
+              <i class="fas fa-download"></i> Export Progress
+            </button>
+          </div>
+          
+          <div class="card">
+            <h2 style="color: var(--gold-dark); margin-bottom: 20px; font-family: 'Cormorant Garamond', serif;">Course Progress</h2>
+            <div style="background: var(--nude-light); padding: 30px; border-radius: 12px; text-align: center;">
+              <i class="fas fa-graduation-cap" style="font-size: 3rem; color: var(--gold); margin-bottom: 16px;"></i>
+              <p style="color: var(--muted);">Your learning progress will appear here</p>
+              <button class="btn" style="margin-top: 16px;">
+                <i class="fas fa-play"></i> Start Learning
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Tab -->
+        <div id="chat" class="tab-content">
+          <div class="header">
+            <h1 class="title">Mentor Communications</h1>
+            <button class="btn ghost" id="emergencyHelpBtn">
+              <i class="fas fa-life-ring"></i> Emergency Help
+            </button>
+          </div>
+          
+          <div class="card">
+            <h2 style="color: var(--gold-dark); margin-bottom: 20px; font-family: 'Cormorant Garamond', serif;">Messages</h2>
+            <div style="background: var(--nude-light); padding: 30px; border-radius: 12px; text-align: center;">
+              <i class="fas fa-comments" style="font-size: 3rem; color: var(--gold); margin-bottom: 16px;"></i>
+              <p style="color: var(--muted);">Chat with your mentor will appear here</p>
+              <button class="btn" style="margin-top: 16px;">
+                <i class="fas fa-envelope"></i> Start Conversation
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
 
   <script>
-    // Client Application State
-    const clientState = {
-      user: {
-        name: 'John Smith',
-        email: 'john.smith@email.com',
-        role: 'Trading Student',
-        joinDate: '2023-08-15',
-        mentor: 'Michael Johnson'
-      },
-      courses: [
-        {
-          id: 1,
-          title: 'Forex Trading Fundamentals',
-          progress: 85,
-          nextLesson: 'Risk Management Strategies',
-          estimatedTime: '45 minutes',
-          totalLessons: 12,
-          completedLessons: 8
-        },
-        {
-          id: 2,
-          title: 'Advanced Technical Analysis',
-          progress: 45,
-          nextLesson: 'Fibonacci Retracement',
-          estimatedTime: '60 minutes',
-          totalLessons: 10,
-          completedLessons: 4
-        },
-        {
-          id: 3,
-          title: 'Trading Psychology',
-          progress: 15,
-          nextLesson: 'Emotional Control in Trading',
-          estimatedTime: '30 minutes',
-          totalLessons: 8,
-          completedLessons: 1
-        }
-      ],
-      content: [
-        {
-          id: 1,
-          title: 'Market Analysis: Weekly Outlook',
-          description: 'Current market trends and potential trading opportunities for the week ahead.',
-          type: 'video',
-          duration: '25 minutes',
-          category: 'Market Analysis',
-          isNew: true
-        },
-        {
-          id: 2,
-          title: 'Risk Management Checklist',
-          description: 'A comprehensive checklist to ensure proper risk management in every trade.',
-          type: 'pdf',
-          pages: 5,
-          category: 'Risk Management',
-          isNew: false
-        },
-        {
-          id: 3,
-          title: 'Trading Journal Template',
-          description: 'Customizable template to track and analyze your trading performance.',
-          type: 'template',
-          category: 'Tools',
-          isNew: true
-        }
-      ],
-      sessions: [
-        {
-          id: 1,
-          title: 'Portfolio Review',
-          date: new Date(new Date().setHours(14, 0, 0, 0)),
-          duration: '1 hour',
-          status: 'upcoming',
-          type: 'portfolio-review'
-        },
-        {
-          id: 2,
-          title: 'Strategy Discussion',
-          date: new Date(new Date().setDate(new Date().getDate() + 2)),
-          duration: '45 minutes',
-          status: 'upcoming',
-          type: 'strategy'
-        },
-        {
-          id: 3,
-          title: 'Trade Analysis',
-          date: new Date(new Date().setDate(new Date().getDate() - 3)),
-          duration: '30 minutes',
-          status: 'completed',
-          type: 'analysis'
-        }
-      ],
-      performance: {
-        winRate: 72,
-        totalProfit: 2450,
-        totalTrades: 84,
-        avgWinLoss: 1.8,
-        weeklyChange: 320,
-        monthlyChange: 5
-      },
-      trades: [
-        {
-          id: 1,
-          pair: 'EUR/USD',
-          type: 'Buy',
-          entry: 1.0850,
-          exit: 1.0920,
-          result: 70,
-          profit: 245,
-          date: new Date()
-        },
-        {
-          id: 2,
-          pair: 'GBP/JPY',
-          type: 'Sell',
-          entry: 158.20,
-          exit: 157.45,
-          result: 75,
-          profit: 180,
-          date: new Date(new Date().setDate(new Date().getDate() - 1))
-        },
-        {
-          id: 3,
-          pair: 'USD/CAD',
-          type: 'Buy',
-          entry: 1.3520,
-          exit: 1.3485,
-          result: -35,
-          profit: -120,
-          date: new Date(new Date().setDate(new Date().getDate() - 2))
-        }
-      ],
-      messages: [
-        {
-          sender: 'Michael Johnson',
-          text: "Hi John! How's your trading practice going? I noticed you completed the risk management module.",
-          time: new Date(new Date().setHours(10, 15, 0, 0)),
-          type: 'received'
-        },
-        {
-          sender: 'You',
-          text: "It's going well! I'm trying to apply the 2% rule to my demo account. Could you review my last few trades?",
-          time: new Date(new Date().setHours(10, 18, 0, 0)),
-          type: 'sent'
-        },
-        {
-          sender: 'Michael Johnson',
-          text: "Of course! Send me your trading journal and we can schedule a quick review session. You're making great progress!",
-          time: new Date(new Date().setHours(10, 20, 0, 0)),
-          type: 'received'
-        }
-      ]
+    // Supabase Configuration - REPLACE WITH YOUR ACTUAL CREDENTIALS
+    const SUPABASE_URL = 'https://your-project.supabase.co';
+    const SUPABASE_ANON_KEY = 'your-anon-key';
+    
+    // Initialize Supabase
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // Application State
+    const state = {
+      user: null,
+      profile: null,
+      sessions: [],
+      mentor: null
     };
 
     // Initialize the application
     document.addEventListener('DOMContentLoaded', function() {
-      // Set user information
-      document.getElementById('userName').textContent = clientState.user.name;
-      document.getElementById('userAvatar').textContent = clientState.user.name.charAt(0).toUpperCase();
-      
-      // Initialize all components
-      initializeNavigation();
-      initializeDashboard();
-      initializeLearningCenter();
-      initializeSchedule();
-      initializeChat();
-      initializePerformance();
-      initializeResources();
-      setupEventListeners();
-      
-      // Show welcome notification
-      setTimeout(() => {
-        showNotification(`Welcome back, ${clientState.user.name}! Ready for today's trading?`, 'success');
-      }, 500);
+      initializeApp();
     });
 
-    // Initialize Navigation
-    function initializeNavigation() {
-      const navItems = document.querySelectorAll('.nav-item');
-      const tabContents = document.querySelectorAll('.tab-content');
+    async function initializeApp() {
+      await checkAuthStatus();
+      setupEventListeners();
+    }
+
+    // Check authentication status
+    async function checkAuthStatus() {
+      const { data: { session } } = await supabase.auth.getSession();
       
-      navItems.forEach(item => {
+      if (session) {
+        state.user = session.user;
+        await loadUserProfile();
+        showDashboard();
+      }
+      
+      // Listen for auth changes
+      supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+          state.user = session.user;
+          await loadUserProfile();
+          showDashboard();
+        } else if (event === 'SIGNED_OUT') {
+          state.user = null;
+          state.profile = null;
+          showLogin();
+        }
+      });
+    }
+
+    // Load user profile
+    async function loadUserProfile() {
+      if (!state.user) return;
+      
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', state.user.id)
+        .single();
+      
+      if (error) {
+        console.error('Error loading profile:', error);
+        showNotification('Error loading profile', 'error');
+        return;
+      }
+      
+      state.profile = profile;
+      updateUserInfo();
+      
+      // Load dashboard data
+      await loadDashboardData();
+    }
+
+    // Update UI with user info
+    function updateUserInfo() {
+      if (state.profile) {
+        document.getElementById('userName').textContent = state.profile.full_name || state.user.email;
+        document.getElementById('userAvatar').textContent = (state.profile.full_name || state.user.email).charAt(0).toUpperCase();
+      }
+    }
+
+    // Load all dashboard data
+    async function loadDashboardData() {
+      await Promise.all([
+        loadSessions(),
+        loadMentorInfo()
+      ]);
+      
+      updateDashboardUI();
+    }
+
+    // Load sessions for this client
+    async function loadSessions() {
+      const { data: sessions, error } = await supabase
+        .from('sessions')
+        .select(`
+          *,
+          mentors:mentor_id (
+            profiles (
+              full_name
+            )
+          )
+        `)
+        .eq('client_id', state.user.id)
+        .order('scheduled_time', { ascending: false });
+      
+      if (error) {
+        console.error('Error loading sessions:', error);
+        return;
+      }
+      
+      state.sessions = sessions || [];
+    }
+
+    // Load mentor info
+    async function loadMentorInfo() {
+      // Get a random mentor for demo purposes
+      const { data: mentors, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('role', 'mentor')
+        .limit(1);
+      
+      if (error || !mentors || mentors.length === 0) {
+        console.error('Error loading mentor info:', error);
+        return;
+      }
+      
+      state.mentor = mentors[0];
+    }
+
+    // Update dashboard UI with loaded data
+    function updateDashboardUI() {
+      // Update stats
+      const upcomingSessions = state.sessions.filter(session => 
+        new Date(session.scheduled_time) > new Date() && session.status === 'scheduled'
+      );
+      
+      const completedSessions = state.sessions.filter(session => 
+        session.status === 'completed'
+      );
+      
+      document.getElementById('successRate').textContent = '72%';
+      document.getElementById('totalProfit').textContent = '$1,250';
+      document.getElementById('completedLessons').textContent = '8';
+      document.getElementById('upcomingSessions').textContent = upcomingSessions.length;
+      
+      // Update recent sessions
+      updateRecentSessions();
+      
+      // Update sessions lists
+      updateSessionsLists();
+    }
+
+    // Update recent sessions display
+    function updateRecentSessions() {
+      const container = document.getElementById('recentSessions');
+      const recentSessions = state.sessions.slice(0, 3); // Show last 3 sessions
+      
+      if (recentSessions.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--muted);">No recent sessions</p>';
+        return;
+      }
+      
+      container.innerHTML = recentSessions.map(session => `
+        <div class="session-item">
+          <div class="session-header">
+            <div class="session-title">${session.title}</div>
+            <div class="session-time">${new Date(session.scheduled_time).toLocaleDateString()}</div>
+          </div>
+          <div class="session-details">
+            <strong>With:</strong> ${session.mentors.profiles.full_name}<br>
+            <strong>Status:</strong> ${session.status} • <strong>Duration:</strong> ${session.duration} minutes
+          </div>
+          ${session.status === 'scheduled' ? `
+            <div class="session-actions">
+              <button class="btn success" onclick="joinSession('${session.id}')">
+                <i class="fas fa-video"></i> Join Session
+              </button>
+              <button class="btn ghost" onclick="rescheduleSession('${session.id}')">
+                <i class="fas fa-clock"></i> Reschedule
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    // Update sessions lists
+    function updateSessionsLists() {
+      updateUpcomingSessions();
+      updateSessionHistory();
+    }
+
+    // Update upcoming sessions
+    function updateUpcomingSessions() {
+      const container = document.getElementById('upcomingSessionsList');
+      const upcomingSessions = state.sessions.filter(session => 
+        new Date(session.scheduled_time) > new Date() && session.status === 'scheduled'
+      );
+      
+      if (upcomingSessions.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--muted);">No upcoming sessions scheduled</p>';
+        return;
+      }
+      
+      container.innerHTML = upcomingSessions.map(session => `
+        <div class="session-item">
+          <div class="session-header">
+            <div class="session-title">${session.title}</div>
+            <div class="session-time">
+              ${new Date(session.scheduled_time).toLocaleDateString()} • 
+              ${new Date(session.scheduled_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
+          </div>
+          <div class="session-details">
+            <strong>With:</strong> ${session.mentors.profiles.full_name}<br>
+            <strong>Duration:</strong> ${session.duration} minutes • 
+            <strong>Platform:</strong> ${session.meeting_platform || 'Not specified'}
+          </div>
+          <div class="session-actions">
+            <button class="btn success" onclick="joinSession('${session.id}')">
+              <i class="fas fa-video"></i> Join Session
+            </button>
+            <button class="btn ghost" onclick="rescheduleSession('${session.id}')">
+              <i class="fas fa-clock"></i> Reschedule
+            </button>
+            <button class="btn danger" onclick="cancelSession('${session.id}')">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Update session history
+    function updateSessionHistory() {
+      const container = document.getElementById('sessionHistory');
+      const pastSessions = state.sessions.filter(session => 
+        new Date(session.scheduled_time) <= new Date() || session.status === 'completed'
+      );
+      
+      if (pastSessions.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--muted);">No session history available</p>';
+        return;
+      }
+      
+      container.innerHTML = pastSessions.map(session => `
+        <div class="session-item">
+          <div class="session-header">
+            <div class="session-title">${session.title}</div>
+            <div class="session-time">${new Date(session.scheduled_time).toLocaleDateString()}</div>
+          </div>
+          <div class="session-details">
+            <strong>With:</strong> ${session.mentors.profiles.full_name}<br>
+            <strong>Duration:</strong> ${session.duration} minutes • 
+            <strong>Status:</strong> ${session.status}
+            ${session.rating ? `• <strong>Rating:</strong> ${'★'.repeat(session.rating)}` : ''}
+          </div>
+          ${session.feedback ? `
+            <div style="margin-top: 8px; padding: 12px; background: white; border-radius: 8px;">
+              <strong>Mentor Feedback:</strong> ${session.feedback}
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Login
+      document.getElementById('loginBtn').addEventListener('click', handleLogin);
+      document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') handleLogin();
+      });
+      
+      // Logout
+      document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+      
+      // Navigation
+      document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', function(e) {
           e.preventDefault();
+          document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
           
-          // Remove active class from all items
-          navItems.forEach(nav => nav.classList.remove('active'));
-          tabContents.forEach(tab => tab.classList.remove('active'));
-          
-          // Add active class to clicked item
           this.classList.add('active');
-          
-          // Show corresponding tab
           const tabId = this.getAttribute('data-tab');
           document.getElementById(tabId).classList.add('active');
         });
       });
+      
+      // Book session buttons
+      document.getElementById('bookSessionBtn').addEventListener('click', bookNewSession);
+      document.getElementById('newSessionBtn').addEventListener('click', bookNewSession);
+      
+      // Emergency help
+      document.getElementById('emergencyHelpBtn').addEventListener('click', requestEmergencyHelp);
     }
 
-    // Initialize Dashboard
-    function initializeDashboard() {
-      // Update stats
-      document.getElementById('successRate').textContent = clientState.performance.winRate + '%';
-      document.getElementById('totalProfit').textContent = '$' + clientState.performance.totalProfit.toLocaleString();
-      document.getElementById('completedLessons').textContent = 
-        clientState.courses.reduce((total, course) => total + course.completedLessons, 0) + 
-        '/' + 
-        clientState.courses.reduce((total, course) => total + course.totalLessons, 0);
+    // Handle login
+    async function handleLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
       
-      // Calculate today's sessions
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      if (!email || !password) {
+        showNotification('Please enter both email and password', 'error');
+        return;
+      }
       
-      const todaysSessions = clientState.sessions.filter(session => {
-        const sessionDate = new Date(session.date);
-        sessionDate.setHours(0, 0, 0, 0);
-        return sessionDate.getTime() === today.getTime() && session.status === 'upcoming';
-      });
+      const loginBtn = document.getElementById('loginBtn');
+      loginBtn.classList.add('loading');
+      loginBtn.disabled = true;
       
-      document.getElementById('upcomingSessions').textContent = todaysSessions.length;
-      
-      // Display today's sessions
-      const todaysMeetingsContainer = document.getElementById('todaysMeetings');
-      todaysMeetingsContainer.innerHTML = '';
-      
-      if (todaysSessions.length === 0) {
-        todaysMeetingsContainer.innerHTML = '<p style="text-align: center; color: var(--muted);">No sessions scheduled for today</p>';
-      } else {
-        todaysSessions.forEach(session => {
-          const sessionTime = new Date(session.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          
-          const sessionElement = document.createElement('div');
-          sessionElement.className = 'meeting-item';
-          sessionElement.innerHTML = `
-            <div class="meeting-header">
-              <div class="meeting-title">${session.title}</div>
-              <div class="meeting-time">${sessionTime} - ${session.duration}</div>
-            </div>
-            <div class="meeting-details">
-              <strong>With:</strong> ${clientState.user.mentor}<br>
-              <strong>Type:</strong> ${session.type.replace('-', ' ').toUpperCase()}
-            </div>
-            <div class="meeting-actions">
-              <button class="btn join-session-btn" data-session="${session.id}">
-                <i class="fas fa-video"></i> Join Session
-              </button>
-              <button class="btn ghost reschedule-session-btn" data-session="${session.id}">
-                <i class="fas fa-clock"></i> Reschedule
-              </button>
-            </div>
-          `;
-          todaysMeetingsContainer.appendChild(sessionElement);
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
         });
+        
+        if (error) throw error;
+        
+        showNotification('Login successful!', 'success');
+        
+      } catch (error) {
+        showNotification(error.message, 'error');
+      } finally {
+        loginBtn.classList.remove('loading');
+        loginBtn.disabled = false;
       }
     }
 
-    // Initialize Learning Center
-    function initializeLearningCenter() {
-      // Display recommended content
-      const recommendedContentContainer = document.getElementById('recommendedContent');
-      recommendedContentContainer.innerHTML = '';
-      
-      clientState.content.forEach(item => {
-        const icon = item.type === 'video' ? 'fas fa-play-circle' : 
-                    item.type === 'pdf' ? 'fas fa-file-pdf' : 'fas fa-tools';
-        
-        const meta = item.type === 'video' ? `Video • ${item.duration}` :
-                    item.type === 'pdf' ? `PDF • ${item.pages} pages` :
-                    `Template • ${item.category}`;
-        
-        const contentElement = document.createElement('div');
-        contentElement.className = 'content-card';
-        contentElement.innerHTML = `
-          <div class="content-thumbnail">
-            <i class="${icon}"></i>
-          </div>
-          <div class="content-info">
-            <div class="content-title">${item.title} ${item.isNew ? '<span style="color: var(--success); font-size: 0.7rem;">NEW</span>' : ''}</div>
-            <div class="content-meta">${meta}</div>
-            <div class="content-description">${item.description}</div>
-            <button class="btn" style="width: 100%;">
-              <i class="fas fa-eye"></i> View ${item.type === 'video' ? 'Video' : 'Resource'}
-            </button>
-          </div>
-        `;
-        recommendedContentContainer.appendChild(contentElement);
-      });
-    }
-
-    // Initialize Schedule
-    function initializeSchedule() {
-      // Display upcoming sessions
-      const upcomingSessionsContainer = document.getElementById('upcomingSessionsList');
-      upcomingSessionsContainer.innerHTML = '';
-      
-      const upcomingSessions = clientState.sessions.filter(session => session.status === 'upcoming');
-      
-      if (upcomingSessions.length === 0) {
-        upcomingSessionsContainer.innerHTML = '<p style="text-align: center; color: var(--muted);">No upcoming sessions scheduled</p>';
-      } else {
-        upcomingSessions.forEach(session => {
-          const sessionDate = new Date(session.date);
-          const sessionElement = document.createElement('div');
-          sessionElement.className = 'meeting-item';
-          sessionElement.innerHTML = `
-            <div class="meeting-header">
-              <div class="meeting-title">${session.title}</div>
-              <div class="meeting-time">${sessionDate.toLocaleDateString()} • ${sessionDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-            </div>
-            <div class="meeting-details">
-              <strong>With:</strong> ${clientState.user.mentor}<br>
-              <strong>Duration:</strong> ${session.duration} • <strong>Type:</strong> ${session.type.replace('-', ' ').toUpperCase()}
-            </div>
-            <div class="meeting-actions">
-              <button class="btn join-session-btn" data-session="${session.id}">
-                <i class="fas fa-video"></i> Join Session
-              </button>
-              <button class="btn ghost reschedule-session-btn" data-session="${session.id}">
-                <i class="fas fa-clock"></i> Reschedule
-              </button>
-              <button class="btn danger cancel-session-btn" data-session="${session.id}">
-                <i class="fas fa-times"></i> Cancel
-              </button>
-            </div>
-          `;
-          upcomingSessionsContainer.appendChild(sessionElement);
-        });
-      }
-      
-      // Display session history
-      const sessionHistoryContainer = document.getElementById('sessionHistory');
-      sessionHistoryContainer.innerHTML = '';
-      
-      const completedSessions = clientState.sessions.filter(session => session.status === 'completed');
-      
-      if (completedSessions.length === 0) {
-        sessionHistoryContainer.innerHTML = '<p style="text-align: center; color: var(--muted);">No session history available</p>';
-      } else {
-        completedSessions.forEach(session => {
-          const sessionDate = new Date(session.date);
-          const sessionElement = document.createElement('div');
-          sessionElement.className = 'meeting-item';
-          sessionElement.innerHTML = `
-            <div class="meeting-header">
-              <div class="meeting-title">${session.title}</div>
-              <div class="meeting-time">${sessionDate.toLocaleDateString()} • ${sessionDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-            </div>
-            <div class="meeting-details">
-              <strong>With:</strong> ${clientState.user.mentor}<br>
-              <strong>Duration:</strong> ${session.duration} • <strong>Status:</strong> Completed
-            </div>
-            <div class="meeting-actions">
-              <button class="btn ghost view-notes-btn" data-session="${session.id}">
-                <i class="fas fa-sticky-note"></i> View Notes
-              </button>
-              <button class="btn ghost">
-                <i class="fas fa-redo"></i> Book Similar
-              </button>
-            </div>
-          `;
-          sessionHistoryContainer.appendChild(sessionElement);
-        });
+    // Handle logout
+    async function handleLogout() {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        showNotification('Error logging out', 'error');
       }
     }
 
-    // Initialize Chat
-    function initializeChat() {
-      // Display chat messages
-      const chatMessagesContainer = document.getElementById('chatMessages');
-      chatMessagesContainer.innerHTML = '';
-      
-      clientState.messages.forEach(message => {
-        const messageElement = document.createElement('div');
-        messageElement.className = `message ${message.type}`;
-        messageElement.innerHTML = `
-          <div class="message-sender">${message.sender}</div>
-          ${message.text}
-          <div class="message-time">${message.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-        `;
-        chatMessagesContainer.appendChild(messageElement);
-      });
-      
-      // Scroll to bottom of chat
-      chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    // Show/hide screens
+    function showLogin() {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('dashboardScreen').style.display = 'none';
     }
 
-    // Initialize Performance
-    function initializePerformance() {
-      // Update performance stats
-      document.getElementById('winRate').textContent = clientState.performance.winRate + '%';
-      document.getElementById('totalProfit').textContent = '$' + clientState.performance.totalProfit.toLocaleString();
-      document.getElementById('totalTrades').textContent = clientState.performance.totalTrades;
-      document.getElementById('avgWinLoss').textContent = clientState.performance.avgWinLoss;
-      
-      // Display trade history
-      const tradeHistoryContainer = document.getElementById('tradeHistory');
-      tradeHistoryContainer.innerHTML = '';
-      
-      clientState.trades.forEach(trade => {
-        const tradeElement = document.createElement('div');
-        tradeElement.className = 'trade-item';
-        tradeElement.innerHTML = `
-          <div class="trade-info">
-            <div class="trade-pair">${trade.pair} • ${trade.type}</div>
-            <div class="trade-meta">${trade.date.toLocaleDateString()} • Entry: ${trade.entry} • Exit: ${trade.exit}</div>
-          </div>
-          <div class="trade-result ${trade.profit > 0 ? 'trade-profit' : 'trade-loss'}">
-            ${trade.profit > 0 ? '+' : ''}${trade.profit} pips
-          </div>
-        `;
-        tradeHistoryContainer.appendChild(tradeElement);
-      });
+    function showDashboard() {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboardScreen').style.display = 'grid';
     }
 
-    // Initialize Resources
-    function initializeResources() {
-      // Resources are mostly static, no initialization needed
+    // Action functions
+    function joinSession(sessionId) {
+      showNotification('Joining session...', 'success');
     }
 
-    // Setup Event Listeners
-    function setupEventListeners() {
-      // Logout button
-      document.getElementById('logoutBtn').addEventListener('click', function() {
-        if (confirm('Are you sure you want to logout?')) {
-          showNotification('You have been logged out successfully', 'success');
-          setTimeout(() => {
-            // Redirect to login page
-            window.location.href = 'login.html';
-          }, 1500);
-        }
-      });
+    function rescheduleSession(sessionId) {
+      showNotification('Rescheduling session...', 'success');
+    }
+
+    function cancelSession(sessionId) {
+      if (confirm('Are you sure you want to cancel this session?')) {
+        showNotification('Session cancelled', 'success');
+      }
+    }
+
+    async function bookNewSession() {
+      if (!state.mentor) {
+        showNotification('No mentor available at the moment', 'error');
+        return;
+      }
       
-      // Quick trade button
-      document.getElementById('quickTradeBtn').addEventListener('click', function() {
-        showNotification('Opening trading platform...', 'success');
-        // In a real app, this would open a trading interface
-      });
+      const meetingTitle = prompt('What would you like to discuss in this session?');
+      if (!meetingTitle) return;
       
-      // Book session button
-      document.getElementById('bookSessionBtn').addEventListener('click', function() {
-        document.getElementById('bookSessionModal').classList.add('active');
-      });
+      // Schedule for 2 days from now at 2 PM
+      const sessionDate = new Date();
+      sessionDate.setDate(sessionDate.getDate() + 2);
+      sessionDate.setHours(14, 0, 0, 0);
       
-      // Book new session button
-      document.getElementById('bookNewSessionBtn').addEventListener('click', function() {
-        document.getElementById('bookSessionModal').classList.add('active');
-      });
-      
-      // Confirm booking button
-      document.getElementById('confirmBookingBtn').addEventListener('click', function() {
-        const sessionType = document.getElementById('sessionType').value;
-        const sessionDate = document.getElementById('sessionDate').value;
-        const sessionTime = document.getElementById('sessionTime').value;
-        const sessionNotes = document.getElementById('sessionNotes').value;
-        
-        if (!sessionDate || !sessionTime) {
-          showNotification('Please select a date and time for your session', 'error');
-          return;
-        }
-        
-        // Create new session
-        const newSession = {
-          id: clientState.sessions.length + 1,
-          title: sessionType,
-          date: new Date(`${sessionDate}T${sessionTime}`),
-          duration: '1 hour',
-          status: 'upcoming',
-          type: sessionType.toLowerCase().replace(' ', '-')
-        };
-        
-        clientState.sessions.push(newSession);
-        
-        // Update UI
-        initializeDashboard();
-        initializeSchedule();
-        
-        // Reset form and close modal
-        document.getElementById('sessionDate').value = '';
-        document.getElementById('sessionTime').value = '';
-        document.getElementById('sessionNotes').value = '';
-        document.getElementById('bookSessionModal').classList.remove('active');
-        
-        showNotification(`Session "${sessionType}" booked successfully!`, 'success');
-      });
-      
-      // Suggest content button
-      document.getElementById('suggestContentBtn').addEventListener('click', function() {
-        showNotification('Content request sent to your mentor', 'success');
-      });
-      
-      // Emergency help button
-      document.getElementById('emergencyHelpBtn').addEventListener('click', function() {
-        showNotification('Emergency request sent! Your mentor will contact you shortly.', 'warning');
-      });
-      
-      // Export performance button
-      document.getElementById('exportPerformanceBtn').addEventListener('click', function() {
-        showNotification('Exporting performance report...', 'success');
-        setTimeout(() => {
-          showNotification('Performance report exported successfully!', 'success');
-        }, 2000);
-      });
-      
-      // Refresh tools button
-      document.getElementById('refreshToolsBtn').addEventListener('click', function() {
-        showNotification('Market data refreshed', 'success');
-      });
-      
-      // Join session buttons
-      document.addEventListener('click', function(e) {
-        if (e.target.closest('.join-session-btn')) {
-          const sessionId = parseInt(e.target.closest('.join-session-btn').getAttribute('data-session'));
-          const session = clientState.sessions.find(s => s.id === sessionId);
-          showNotification(`Joining "${session.title}"...`, 'success');
-          // In a real app, this would connect to the video session
-        }
-      });
-      
-      // Reschedule session buttons
-      document.addEventListener('click', function(e) {
-        if (e.target.closest('.reschedule-session-btn')) {
-          const sessionId = parseInt(e.target.closest('.reschedule-session-btn').getAttribute('data-session'));
-          const session = clientState.sessions.find(s => s.id === sessionId);
-          showNotification(`Rescheduling "${session.title}"`, 'success');
-          document.getElementById('bookSessionModal').classList.add('active');
-        }
-      });
-      
-      // Cancel session buttons
-      document.addEventListener('click', function(e) {
-        if (e.target.closest('.cancel-session-btn')) {
-          const sessionId = parseInt(e.target.closest('.cancel-session-btn').getAttribute('data-session'));
-          const session = clientState.sessions.find(s => s.id === sessionId);
-          
-          if (confirm(`Are you sure you want to cancel "${session.title}"?`)) {
-            clientState.sessions = clientState.sessions.filter(s => s.id !== sessionId);
-            initializeDashboard();
-            initializeSchedule();
-            showNotification(`"${session.title}" cancelled`, 'success');
+      const { data, error } = await supabase
+        .from('sessions')
+        .insert([
+          {
+            mentor_id: state.mentor.id,
+            client_id: state.user.id,
+            title: meetingTitle,
+            scheduled_time: sessionDate.toISOString(),
+            duration: 60,
+            meeting_platform: 'Zoom',
+            status: 'scheduled'
           }
-        }
-      });
+        ])
+        .select();
       
-      // View notes buttons
-      document.addEventListener('click', function(e) {
-        if (e.target.closest('.view-notes-btn')) {
-          const sessionId = parseInt(e.target.closest('.view-notes-btn').getAttribute('data-session'));
-          const session = clientState.sessions.find(s => s.id === sessionId);
-          showNotification(`Showing notes for "${session.title}"`, 'success');
-        }
-      });
+      if (error) {
+        showNotification('Error scheduling session', 'error');
+        return;
+      }
       
-      // Chat send button
-      document.getElementById('sendMessageBtn').addEventListener('click', sendChatMessage);
-      
-      // Chat input enter key
-      document.getElementById('chatInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          sendChatMessage();
-        }
-      });
-      
-      // Close modal buttons
-      document.querySelectorAll('.close-modal').forEach(btn => {
-        btn.addEventListener('click', function() {
-          this.closest('.modal').classList.remove('active');
-        });
-      });
-      
-      // Close modals when clicking outside
-      document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('click', function(e) {
-          if (e.target === this) {
-            this.classList.remove('active');
-          }
-        });
-      });
+      // Reload sessions
+      await loadSessions();
+      updateDashboardUI();
+      showNotification('Session booked successfully!', 'success');
     }
 
-    // Send chat message
-    function sendChatMessage() {
-      const chatInput = document.getElementById('chatInput');
-      const message = chatInput.value.trim();
-      
-      if (!message) return;
-      
-      // Add message to state
-      clientState.messages.push({
-        sender: 'You',
-        text: message,
-        time: new Date(),
-        type: 'sent'
-      });
-      
-      // Update UI
-      initializeChat();
-      
-      chatInput.value = '';
-      chatInput.focus();
-      
-      // Simulate response after 1-3 seconds
-      setTimeout(() => {
-        const responses = [
-          "Thanks for the update! Let's discuss this in our next session.",
-          "Great question! I'll prepare some materials to explain this concept.",
-          "I can see you're making progress. Keep up the good work!",
-          "Let me review your trading journal and I'll get back to you with feedback.",
-          "That's an interesting observation. We should explore this further."
-        ];
-        const response = responses[Math.floor(Math.random() * responses.length)];
-        
-        clientState.messages.push({
-          sender: clientState.user.mentor,
-          text: response,
-          time: new Date(),
-          type: 'received'
-        });
-        
-        initializeChat();
-      }, 1000 + Math.random() * 2000);
+    function requestEmergencyHelp() {
+      showNotification('Emergency help requested! Your mentor will contact you shortly.', 'warning');
     }
 
-    // Utility Functions
+    // Utility function to show notifications
     function showNotification(message, type = 'success') {
       const notification = document.createElement('div');
       notification.className = `notification ${type}`;
@@ -2045,7 +1077,6 @@
       
       document.body.appendChild(notification);
       
-      // Remove notification after 4 seconds
       setTimeout(() => {
         notification.remove();
       }, 4000);
