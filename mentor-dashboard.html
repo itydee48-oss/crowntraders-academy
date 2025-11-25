@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crown Trade Academy — Shared Mentor Dashboard</title>
+  <title>Crown Trade Academy — Mentor Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
       --nude-light: #F9F6F2;
@@ -18,14 +16,21 @@
       --muted: #7A7A7A;
       --success: #10B981;
       --danger: #EF4444;
+      --info: #3B82F6;
     }
     
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+    
     body { 
       font-family: 'Montserrat', sans-serif; 
-      background: linear-gradient(180deg, var(--nude-light), #fff); 
+      background: linear-gradient(135deg, var(--nude-light) 0%, #ffffff 100%);
       color: var(--charcoal); 
       min-height: 100vh;
+      line-height: 1.6;
     }
     
     .app {
@@ -34,59 +39,154 @@
       gap: 24px;
       padding: 24px;
       min-height: 100vh;
+      max-width: 1600px;
+      margin: 0 auto;
     }
     
     .sidebar {
-      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(232,223,214,0.7));
+      background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(248,244,240,0.9) 100%);
       border: 1px solid rgba(212,200,188,0.6);
-      border-radius: 16px;
-      padding: 30px;
+      border-radius: 20px;
+      padding: 30px 20px;
       height: fit-content;
       position: sticky;
       top: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      backdrop-filter: blur(10px);
     }
     
     .brand {
       font-family: 'Cormorant Garamond', serif;
       color: var(--gold-dark);
-      font-size: 2rem;
-      margin-bottom: 20px;
-      letter-spacing: 1px;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+      text-align: center;
+      font-weight: 700;
+    }
+    
+    .brand-subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 400;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: var(--nude-light);
+      border-radius: 12px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(212,200,188,0.3);
+    }
+    
+    .user-avatar {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(200,169,126,0.3);
+    }
+    
+    .user-details {
+      flex: 1;
+    }
+    
+    .user-name {
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 4px;
+    }
+    
+    .user-role {
+      color: var(--muted);
+      font-size: 0.85rem;
     }
     
     .nav {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
+      margin-bottom: 30px;
     }
     
-    .nav button {
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
       background: transparent;
-      border: 1px solid rgba(0,0,0,0.1);
-      padding: 14px;
-      border-radius: 10px;
+      border: 1px solid transparent;
+      border-radius: 12px;
       cursor: pointer;
       font-weight: 600;
       text-align: left;
       transition: all 0.3s ease;
-      font-size: 14px;
+      font-size: 0.95rem;
+      color: var(--charcoal);
+      text-decoration: none;
     }
     
-    .nav button:hover {
-      background: var(--nude-med);
+    .nav-item:hover {
+      background: var(--nude-light);
+      border-color: rgba(212,200,188,0.3);
+      transform: translateX(5px);
     }
     
-    .nav button.active {
+    .nav-item.active {
       background: var(--gold);
       color: white;
       border-color: var(--gold);
+      box-shadow: 0 4px 12px rgba(200,169,126,0.3);
+    }
+    
+    .nav-item i {
+      width: 20px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+    
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      text-align: left;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      width: 100%;
+      margin-top: 20px;
+    }
+    
+    .logout-btn:hover {
+      background: #DC2626;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239,68,68,0.3);
     }
     
     .main {
-      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(232,223,214,0.7));
-      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(248,244,240,0.9) 100%);
+      border-radius: 20px;
       padding: 30px;
       border: 1px solid rgba(212,200,188,0.6);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      backdrop-filter: blur(10px);
     }
     
     .header {
@@ -94,12 +194,20 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--nude-med);
     }
     
     .title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.8rem;
+      font-size: 2.2rem;
       color: var(--gold-dark);
+      font-weight: 700;
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: 12px;
     }
     
     .btn {
@@ -107,16 +215,20 @@
       color: white;
       border: none;
       padding: 12px 20px;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.3s ease;
-      font-size: 14px;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
     
     .btn:hover {
       background: var(--gold-dark);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(200,169,126,0.3);
     }
     
     .btn.ghost {
@@ -130,13 +242,35 @@
       color: white;
     }
     
+    .btn.success {
+      background: var(--success);
+    }
+    
+    .btn.success:hover {
+      background: #059669;
+    }
+    
+    .btn.danger {
+      background: var(--danger);
+    }
+    
+    .btn.danger:hover {
+      background: #DC2626;
+    }
+    
     .card {
       background: white;
-      padding: 24px;
-      border-radius: 14px;
+      padding: 28px;
+      border-radius: 16px;
       margin-bottom: 24px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
       border: 1px solid rgba(212,200,188,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.1);
     }
     
     .stats {
@@ -148,71 +282,150 @@
     
     .stat {
       text-align: center;
-      padding: 20px;
-      background: var(--nude-light);
-      border-radius: 12px;
+      padding: 24px 20px;
+      background: linear-gradient(135deg, var(--nude-light) 0%, #ffffff 100%);
+      border-radius: 14px;
       border: 1px solid rgba(212,200,188,0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .stat:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    
+    .stat-icon {
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 12px;
     }
     
     .stat-value {
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: 700;
       color: var(--gold-dark);
       margin-bottom: 8px;
     }
     
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    
+    .stat-trend {
+      font-size: 0.85rem;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+    
+    .trend-up {
+      color: var(--success);
+    }
+    
+    .trend-down {
+      color: var(--danger);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--gold-dark);
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    
     .upload-zone {
       border: 2px dashed var(--gold);
-      border-radius: 12px;
-      padding: 40px;
+      border-radius: 14px;
+      padding: 50px 30px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
+      background: var(--nude-light);
     }
     
     .upload-zone:hover {
-      background: var(--nude-light);
+      background: rgba(200,169,126,0.05);
       border-color: var(--gold-dark);
     }
     
-    .calendar {
-      height: 500px;
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
+    .upload-icon {
+      font-size: 3.5rem;
+      color: var(--gold);
+      margin-bottom: 16px;
     }
     
-    .chat {
-      height: 600px;
+    .upload-text {
+      color: var(--gold-dark);
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .upload-subtext {
+      color: var(--muted);
+    }
+    
+    .file-list {
+      margin-top: 20px;
+    }
+    
+    .file-item {
       display: flex;
-      flex-direction: column;
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      border: 1px solid rgba(212,200,188,0.3);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
     }
     
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
+    .file-item:hover {
+      border-color: var(--gold);
       background: var(--nude-light);
     }
     
-    .chat-input {
+    .file-info {
       display: flex;
-      gap: 10px;
-      padding: 20px;
-      background: white;
-      border-top: 1px solid rgba(212,200,188,0.3);
+      align-items: center;
+      gap: 12px;
     }
     
-    .chat-input input {
+    .file-icon {
+      color: var(--gold);
+      font-size: 1.5rem;
+    }
+    
+    .file-details {
       flex: 1;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
+    }
+    
+    .file-name {
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 4px;
+    }
+    
+    .file-meta {
+      color: var(--muted);
+      font-size: 0.85rem;
     }
     
     .client-list {
@@ -223,11 +436,11 @@
     .client-item {
       display: flex;
       align-items: center;
-      padding: 12px;
-      border-radius: 10px;
+      padding: 16px;
+      border-radius: 12px;
       cursor: pointer;
-      margin: 4px 0;
-      transition: all 0.2s ease;
+      margin: 6px 0;
+      transition: all 0.3s ease;
       border: 1px solid transparent;
     }
     
@@ -239,80 +452,290 @@
     .client-item.active {
       background: var(--gold);
       color: white;
+      border-color: var(--gold);
     }
     
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
+    .client-avatar {
+      width: 44px;
+      height: 44px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 14px;
+      color: white;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    
+    .client-details {
+      flex: 1;
+    }
+    
+    .client-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .client-email {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    
+    .client-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    
+    .status-online {
+      background: var(--success);
+    }
+    
+    .status-offline {
+      background: var(--muted);
+    }
+    
+    .chat-container {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 24px;
+      height: 500px;
+    }
+    
+    .clients-list {
+      background: var(--nude-light);
+      border-radius: 14px;
+      padding: 20px;
+      overflow-y: auto;
+      border: 1px solid rgba(212,200,188,0.3);
+    }
+    
+    .chat-window {
+      background: white;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(212,200,188,0.3);
+      overflow: hidden;
+    }
+    
+    .chat-header {
       background: var(--gold);
       color: white;
-      padding: 16px 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(200,169,126,0.3);
-      z-index: 1000;
+      padding: 18px 24px;
       font-weight: 600;
     }
     
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .modal-content {
-      background: white;
-      padding: 40px;
-      border-radius: 16px;
-      width: 500px;
-      max-width: 90%;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    }
-    
-    .modal-content input,
-    .modal-content select {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-    
-    .modal-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: var(--nude-light);
     }
     
     .message {
-      padding: 12px 16px;
-      margin: 8px 0;
-      border-radius: 12px;
-      max-width: 80%;
+      max-width: 75%;
+      padding: 14px 18px;
+      border-radius: 18px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+      position: relative;
     }
     
     .message.sent {
       background: var(--gold);
       color: white;
       margin-left: auto;
+      border-bottom-right-radius: 6px;
     }
     
     .message.received {
       background: white;
       border: 1px solid rgba(212,200,188,0.3);
+      border-bottom-left-radius: 6px;
     }
     
-    @media (max-width: 1000px) {
+    .message-sender {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+    }
+    
+    .message-time {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin-top: 6px;
+      text-align: right;
+    }
+    
+    .chat-input {
+      display: flex;
+      padding: 20px;
+      background: white;
+      border-top: 1px solid rgba(212,200,188,0.3);
+      gap: 12px;
+    }
+    
+    .chat-input input {
+      flex: 1;
+      padding: 14px 18px;
+      border: 1px solid rgba(212,200,188,0.5);
+      border-radius: 12px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+    
+    .chat-input input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(200,169,126,0.1);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+    
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(212,200,188,0.5);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(200,169,126,0.1);
+    }
+    
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    
+    .schedule-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .meetings-list {
+      margin-top: 20px;
+    }
+    
+    .meeting-item {
+      background: var(--nude-light);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      border-left: 4px solid var(--gold);
+      transition: all 0.3s ease;
+    }
+    
+    .meeting-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .meeting-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .meeting-title {
+      font-weight: 700;
+      color: var(--gold-dark);
+      font-size: 1.1rem;
+    }
+    
+    .meeting-time {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    
+    .meeting-details {
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+    
+    .meeting-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    
+    .notification {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: var(--gold);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(200,169,126,0.3);
+      z-index: 1000;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 350px;
+      animation: slideInRight 0.5s ease;
+    }
+    
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .notification.success {
+      background: var(--success);
+    }
+    
+    .notification.error {
+      background: var(--danger);
+    }
+    
+    .notification.warning {
+      background: var(--warning);
+    }
+    
+    @media (max-width: 1200px) {
       .app { grid-template-columns: 1fr; }
-      .sidebar { position: static; }
+      .sidebar { position: static; margin-bottom: 24px; }
+      .chat-container { grid-template-columns: 1fr; height: 600px; }
+      .schedule-form { grid-template-columns: 1fr; }
+    }
+    
+    @media (max-width: 768px) {
+      .app { padding: 16px; gap: 16px; }
+      .main { padding: 20px; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .header { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .header-actions { width: 100%; justify-content: space-between; }
     }
   </style>
 </head>
@@ -320,21 +743,41 @@
   <div class="app">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="brand">Crown Trade Academy</div>
-      <div style="margin-bottom:30px;padding:20px;background:var(--nude-light);border-radius:12px;">
-        <h3 style="color:var(--gold-dark);margin-bottom:8px;">Shared Dashboard</h3>
-        <p style="color:var(--muted);font-size:0.9rem;">All mentors access the same clients & lessons</p>
+      <div class="brand">Crown Trade</div>
+      <div class="brand-subtitle">Academy Mentors</div>
+      
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">M</div>
+        <div class="user-details">
+          <div class="user-name" id="userName">Mentor User</div>
+          <div class="user-role">Senior Trading Mentor</div>
+        </div>
       </div>
+      
       <nav class="nav">
-        <button data-tab="dashboard" class="active">📊 Dashboard</button>
-        <button data-tab="lessons">📚 Upload Lessons</button>
-        <button data-tab="clients">👥 Clients</button>
-        <button data-tab="calendar">📅 Schedule Calls</button>
-        <button data-tab="chat">💬 Shared Chat</button>
-        <button data-tab="analytics">📈 Analytics</button>
-        <button data-tab="profile">⚙️ Profile</button>
+        <a href="#" class="nav-item active" data-tab="dashboard">
+          <i class="fas fa-chart-line"></i> Dashboard
+        </a>
+        <a href="#" class="nav-item" data-tab="content">
+          <i class="fas fa-video"></i> Content Management
+        </a>
+        <a href="#" class="nav-item" data-tab="schedule">
+          <i class="fas fa-calendar-alt"></i> Schedule Meetings
+        </a>
+        <a href="#" class="nav-item" data-tab="chat">
+          <i class="fas fa-comments"></i> Client Communications
+        </a>
+        <a href="#" class="nav-item" data-tab="clients">
+          <i class="fas fa-users"></i> Client Management
+        </a>
+        <a href="#" class="nav-item" data-tab="analytics">
+          <i class="fas fa-chart-bar"></i> Analytics
+        </a>
       </nav>
-      <button class="btn" style="margin-top:30px;width:100%;background:var(--danger);" id="logout">Logout</button>
+      
+      <button class="logout-btn" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
     </aside>
 
     <!-- Main Content -->
@@ -342,117 +785,482 @@
       <!-- Dashboard Tab -->
       <div id="dashboard" class="tab-content active">
         <div class="header">
-          <h1 class="title">Shared Mentor Dashboard</h1>
-          <div>
-            <button class="btn ghost" id="quickUpload">Quick Upload</button>
-            <button class="btn ghost" id="newCall">New Call</button>
+          <h1 class="title">Mentor Dashboard</h1>
+          <div class="header-actions">
+            <button class="btn ghost" id="quickUploadBtn">
+              <i class="fas fa-upload"></i> Quick Upload
+            </button>
+            <button class="btn" id="newMeetingBtn">
+              <i class="fas fa-plus"></i> New Meeting
+            </button>
           </div>
         </div>
         
         <div class="stats">
           <div class="stat">
-            <div class="stat-value" id="totalClients">0</div>
-            <p>Total Clients</p>
+            <div class="stat-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-value" id="totalClients">24</div>
+            <div class="stat-label">Active Clients</div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i> 12% this month
+            </div>
           </div>
           <div class="stat">
-            <div class="stat-value" id="totalLessons">0</div>
-            <p>Lessons Uploaded</p>
+            <div class="stat-icon">
+              <i class="fas fa-video"></i>
+            </div>
+            <div class="stat-value" id="totalLessons">15</div>
+            <div class="stat-label">Lessons Uploaded</div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i> 3 new this week
+            </div>
           </div>
           <div class="stat">
-            <div class="stat-value" id="totalEarnings">$0</div>
-            <p>Shared Earnings</p>
+            <div class="stat-icon">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="stat-value" id="totalEarnings">$4,850</div>
+            <div class="stat-label">Monthly Earnings</div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i> 8% from last month
+            </div>
           </div>
           <div class="stat">
-            <div class="stat-value" id="pendingCalls">0</div>
-            <p>Pending Calls</p>
+            <div class="stat-icon">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-value" id="pendingCalls">5</div>
+            <div class="stat-label">Scheduled Calls</div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i> 2 today
+            </div>
           </div>
         </div>
         
-        <div class="header">
-          <h2 style="color: var(--gold-dark);">Recent Activity</h2>
+        <div class="card">
+          <h2 class="section-title">Today's Schedule</h2>
+          <div class="meetings-list">
+            <div class="meeting-item">
+              <div class="meeting-header">
+                <div class="meeting-title">Trading Basics Session</div>
+                <div class="meeting-time">10:00 AM - 11:00 AM</div>
+              </div>
+              <div class="meeting-details">
+                <strong>With:</strong> John Smith<br>
+                <strong>Platform:</strong> Zoom Meeting
+              </div>
+              <div class="meeting-actions">
+                <button class="btn success">
+                  <i class="fas fa-video"></i> Join Meeting
+                </button>
+                <button class="btn ghost">
+                  <i class="fas fa-clock"></i> Reschedule
+                </button>
+              </div>
+            </div>
+            
+            <div class="meeting-item">
+              <div class="meeting-header">
+                <div class="meeting-title">Portfolio Review</div>
+                <div class="meeting-time">2:00 PM - 3:00 PM</div>
+              </div>
+              <div class="meeting-details">
+                <strong>With:</strong> Sarah Johnson<br>
+                <strong>Platform:</strong> Google Meet
+              </div>
+              <div class="meeting-actions">
+                <button class="btn">
+                  <i class="fas fa-video"></i> Join Meeting
+                </button>
+                <button class="btn ghost">
+                  <i class="fas fa-clock"></i> Reschedule
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div id="activityFeed" class="card">
-          <div style="padding: 12px; border-bottom: 1px solid rgba(212,200,188,0.3);">
-            <strong>New lesson uploaded</strong> - Trading Basics by Mentor 1
-            <div style="color: var(--muted); font-size: 0.9rem;">2 hours ago</div>
-          </div>
-          <div style="padding: 12px; border-bottom: 1px solid rgba(212,200,188,0.3);">
-            <strong>Call scheduled</strong> - John Smith booked a session
-            <div style="color: var(--muted); font-size: 0.9rem;">4 hours ago</div>
-          </div>
-          <div style="padding: 12px;">
-            <strong>Payment received</strong> - $199 from Jane Doe
-            <div style="color: var(--muted); font-size: 0.9rem;">1 day ago</div>
+        
+        <div class="card">
+          <h2 class="section-title">Quick Actions</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <button class="btn ghost" data-tab="content">
+              <i class="fas fa-upload"></i> Upload Content
+            </button>
+            <button class="btn ghost" data-tab="schedule">
+              <i class="fas fa-calendar-plus"></i> Schedule Call
+            </button>
+            <button class="btn ghost" data-tab="chat">
+              <i class="fas fa-comment-medical"></i> Send Message
+            </button>
+            <button class="btn success">
+              <i class="fas fa-broadcast-tower"></i> Go Live
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- Lessons Tab -->
-      <div id="lessons" class="tab-content">
+      <!-- Content Management Tab -->
+      <div id="content" class="tab-content">
         <div class="header">
-          <h1 class="title">Global Lesson Uploads</h1>
-          <button class="btn" id="openUploadModal">Upload Video/PDF</button>
+          <h1 class="title">Content Management</h1>
+          <button class="btn" id="uploadContentBtn">
+            <i class="fas fa-cloud-upload-alt"></i> Upload New Content
+          </button>
         </div>
         
-        <div class="upload-zone" id="uploadZone">
-          <div style="font-size: 3rem; color: var(--gold); margin-bottom: 16px;">📁</div>
-          <h3 style="color: var(--gold-dark); margin-bottom: 8px;">Drag & Drop Files Here</h3>
-          <p style="color: var(--muted);">or click to browse files (Videos, PDFs, Images)</p>
+        <div class="card">
+          <div class="upload-zone" id="uploadZone">
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="upload-text">Drag & Drop Files Here</div>
+            <div class="upload-subtext">or click to browse files (Videos, PDFs, Images)</div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Content Title</label>
+            <input type="text" class="form-input" placeholder="Enter a descriptive title for your content...">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-textarea" placeholder="Describe what this content covers..."></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-select">
+              <option>Trading Basics</option>
+              <option>Advanced Strategies</option>
+              <option>Market Analysis</option>
+              <option>Risk Management</option>
+              <option>Psychology & Mindset</option>
+            </select>
+          </div>
+          
+          <button class="btn success" style="width: 100%;">
+            <i class="fas fa-paper-plane"></i> Publish Content
+          </button>
         </div>
         
-        <div id="lessonsList" class="card">
-          <h3 style="color: var(--gold-dark); margin-bottom: 16px;">Recent Uploads</h3>
-          <div id="lessonsContainer">Loading lessons...</div>
+        <div class="card">
+          <h2 class="section-title">Recently Uploaded Content</h2>
+          <div class="file-list">
+            <div class="file-item">
+              <div class="file-info">
+                <div class="file-icon">
+                  <i class="fas fa-file-video"></i>
+                </div>
+                <div class="file-details">
+                  <div class="file-name">Introduction to Forex Trading</div>
+                  <div class="file-meta">Video • 45 minutes • Uploaded: Today, 10:30 AM</div>
+                </div>
+              </div>
+              <div>
+                <button class="btn ghost" style="margin-right: 8px;">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn danger">
+                  <i class="fas fa-trash"></i> Delete
+                </button>
+              </div>
+            </div>
+            
+            <div class="file-item">
+              <div class="file-info">
+                <div class="file-icon">
+                  <i class="fas fa-file-pdf"></i>
+                </div>
+                <div class="file-details">
+                  <div class="file-name">Risk Management Guide</div>
+                  <div class="file-meta">PDF • 12 pages • Uploaded: Yesterday, 3:15 PM</div>
+                </div>
+              </div>
+              <div>
+                <button class="btn ghost" style="margin-right: 8px;">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn danger">
+                  <i class="fas fa-trash"></i> Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schedule Meetings Tab -->
+      <div id="schedule" class="tab-content">
+        <div class="header">
+          <h1 class="title">Schedule Meetings</h1>
+          <button class="btn ghost">
+            <i class="fas fa-sliders-h"></i> Availability Settings
+          </button>
+        </div>
+        
+        <div class="card">
+          <h2 class="section-title">Schedule New Meeting</h2>
+          
+          <div class="schedule-form">
+            <div class="form-group">
+              <label class="form-label">Meeting Title</label>
+              <input type="text" class="form-input" placeholder="e.g., Portfolio Review, Trading Session">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Client</label>
+              <select class="form-select">
+                <option>Select a client</option>
+                <option>John Smith</option>
+                <option>Sarah Johnson</option>
+                <option>Michael Brown</option>
+                <option>Emily Davis</option>
+                <option>All Clients (Group Session)</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input type="date" class="form-input">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Time</label>
+              <input type="time" class="form-input">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Duration</label>
+              <select class="form-select">
+                <option>30 minutes</option>
+                <option>1 hour</option>
+                <option>1.5 hours</option>
+                <option>2 hours</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Platform</label>
+              <select class="form-select">
+                <option>Zoom</option>
+                <option>Google Meet</option>
+                <option>Microsoft Teams</option>
+                <option>Discord</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Meeting Description</label>
+            <textarea class="form-textarea" placeholder="What will this meeting cover? Any specific topics or goals?"></textarea>
+          </div>
+          
+          <button class="btn success" style="width: 100%;">
+            <i class="fas fa-calendar-plus"></i> Schedule Meeting
+          </button>
+        </div>
+        
+        <div class="card">
+          <h2 class="section-title">Upcoming Meetings</h2>
+          <div class="meetings-list">
+            <div class="meeting-item">
+              <div class="meeting-header">
+                <div class="meeting-title">Advanced Trading Strategies</div>
+                <div class="meeting-time">Tomorrow, 11:00 AM</div>
+              </div>
+              <div class="meeting-details">
+                <strong>With:</strong> Michael Brown<br>
+                <strong>Platform:</strong> Zoom • Duration: 1 hour
+              </div>
+              <div class="meeting-actions">
+                <button class="btn ghost">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn ghost">
+                  <i class="fas fa-bell"></i> Send Reminder
+                </button>
+                <button class="btn danger">
+                  <i class="fas fa-times"></i> Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Tab -->
+      <div id="chat" class="tab-content">
+        <div class="header">
+          <h1 class="title">Client Communications</h1>
+          <select class="form-select" style="width: auto;">
+            <option>General (All Clients)</option>
+            <option>Premium Clients</option>
+            <option>New Clients</option>
+          </select>
+        </div>
+        
+        <div class="chat-container">
+          <div class="clients-list">
+            <div class="client-item active">
+              <div class="client-avatar">J</div>
+              <div class="client-details">
+                <div class="client-name">John Smith</div>
+                <div class="client-email">john.smith@email.com</div>
+                <div class="client-status">
+                  <div class="status-dot status-online"></div>
+                  <span>Online</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="client-item">
+              <div class="client-avatar">S</div>
+              <div class="client-details">
+                <div class="client-name">Sarah Johnson</div>
+                <div class="client-email">sarah.j@email.com</div>
+                <div class="client-status">
+                  <div class="status-dot status-offline"></div>
+                  <span>Last seen: 2 hours ago</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="client-item">
+              <div class="client-avatar">M</div>
+              <div class="client-details">
+                <div class="client-name">Michael Brown</div>
+                <div class="client-email">m.brown@email.com</div>
+                <div class="client-status">
+                  <div class="status-dot status-online"></div>
+                  <span>Online</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="chat-window">
+            <div class="chat-header">
+              <i class="fas fa-user"></i> John Smith
+            </div>
+            
+            <div class="chat-messages">
+              <div class="message received">
+                <div class="message-sender">John Smith</div>
+                Hi, I'm having trouble understanding the risk management concepts from yesterday's lesson. Could you explain the 2% rule again?
+                <div class="message-time">10:15 AM</div>
+              </div>
+              
+              <div class="message sent">
+                <div class="message-sender">You</div>
+                Of course! The 2% rule means you should never risk more than 2% of your trading capital on a single trade. This helps protect your account from significant losses.
+                <div class="message-time">10:18 AM</div>
+              </div>
+              
+              <div class="message received">
+                <div class="message-sender">John Smith</div>
+                That makes more sense now. Can we schedule a quick call to go over my portfolio and how to apply this?
+                <div class="message-time">10:20 AM</div>
+              </div>
+            </div>
+            
+            <div class="chat-input">
+              <input type="text" placeholder="Type your message...">
+              <button class="btn">
+                <i class="fas fa-paper-plane"></i> Send
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Clients Tab -->
       <div id="clients" class="tab-content">
         <div class="header">
-          <h1 class="title">All Clients</h1>
+          <h1 class="title">Client Management</h1>
+          <button class="btn">
+            <i class="fas fa-user-plus"></i> Add New Client
+          </button>
         </div>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
           <div class="card">
-            <h3 style="color: var(--gold-dark); margin-bottom: 16px;">Clients List</h3>
-            <div id="clientsList" class="client-list">Loading clients...</div>
-          </div>
-          <div class="card">
-            <h3 style="color: var(--gold-dark); margin-bottom: 16px;">Client Details</h3>
-            <div id="clientDetails">Select a client to view details</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Calendar Tab -->
-      <div id="calendar" class="tab-content">
-        <div class="header">
-          <h1 class="title">Shared Call Scheduling</h1>
-          <button class="btn ghost" id="setAvailability">Set My Availability</button>
-        </div>
-        <div id="calendarEl" class="calendar"></div>
-      </div>
-
-      <!-- Chat Tab -->
-      <div id="chat" class="tab-content">
-        <div class="header">
-          <h1 class="title">Shared Chat</h1>
-          <select id="chatRoom" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ddd; background: white;">
-            <option value="general">General (All Clients)</option>
-            <option value="support">Support Channel</option>
-            <option value="trading">Trading Discussions</option>
-          </select>
-        </div>
-        
-        <div class="chat">
-          <div id="chatMessages" class="chat-messages">
-            <div class="message received">
-              <strong>System:</strong> Welcome to the shared chat! All mentors can communicate here.
+            <h2 class="section-title">All Clients</h2>
+            <div class="client-list">
+              <div class="client-item active">
+                <div class="client-avatar">J</div>
+                <div class="client-details">
+                  <div class="client-name">John Smith</div>
+                  <div class="client-email">john.smith@email.com</div>
+                  <div class="client-status">
+                    <div class="status-dot status-online"></div>
+                    <span>Member for 3 months</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="client-item">
+                <div class="client-avatar">S</div>
+                <div class="client-details">
+                  <div class="client-name">Sarah Johnson</div>
+                  <div class="client-email">sarah.j@email.com</div>
+                  <div class="client-status">
+                    <div class="status-dot status-online"></div>
+                    <span>Member for 1 month</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="client-item">
+                <div class="client-avatar">M</div>
+                <div class="client-details">
+                  <div class="client-name">Michael Brown</div>
+                  <div class="client-email">m.brown@email.com</div>
+                  <div class="client-status">
+                    <div class="status-dot status-offline"></div>
+                    <span>Member for 2 weeks</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="chat-input">
-            <input type="text" id="chatInput" placeholder="Type your message...">
-            <button class="btn" id="sendMessage">Send</button>
+          
+          <div class="card">
+            <h2 class="section-title">Client Details</h2>
+            <div style="text-align: center; margin-bottom: 24px;">
+              <div class="user-avatar" style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto 16px;">J</div>
+              <h3 style="color: var(--gold-dark); margin-bottom: 8px;">John Smith</h3>
+              <p style="color: var(--muted);">john.smith@email.com</p>
+            </div>
+            
+            <div style="background: var(--nude-light); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <span>Course Progress:</span>
+                <span style="font-weight: bold; color: var(--success);">75% Complete</span>
+              </div>
+              <div style="height: 8px; background: white; border-radius: 4px; overflow: hidden;">
+                <div style="height: 100%; width: 75%; background: var(--success);"></div>
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+              <div style="text-align: center; padding: 16px; background: var(--nude-light); border-radius: 10px;">
+                <div style="font-weight: bold; color: var(--gold-dark); font-size: 1.5rem;">12</div>
+                <div style="font-size: 0.85rem; color: var(--muted);">Sessions</div>
+              </div>
+              <div style="text-align: center; padding: 16px; background: var(--nude-light); border-radius: 10px;">
+                <div style="font-weight: bold; color: var(--gold-dark); font-size: 1.5rem;">85%</div>
+                <div style="font-size: 0.85rem; color: var(--muted);">Satisfaction</div>
+              </div>
+            </div>
+            
+            <button class="btn" style="width: 100%; margin-bottom: 10px;">
+              <i class="fas fa-calendar-plus"></i> Schedule Session
+            </button>
+            <button class="btn ghost" style="width: 100%;">
+              <i class="fas fa-envelope"></i> Send Message
+            </button>
           </div>
         </div>
       </div>
@@ -460,677 +1268,329 @@
       <!-- Analytics Tab -->
       <div id="analytics" class="tab-content">
         <div class="header">
-          <h1 class="title">Shared Analytics</h1>
+          <h1 class="title">Performance Analytics</h1>
+          <button class="btn ghost">
+            <i class="fas fa-download"></i> Export Report
+          </button>
         </div>
         
         <div class="stats">
           <div class="stat">
-            <div class="stat-value" id="views">1,234</div>
-            <p>Lesson Views</p>
+            <div class="stat-icon">
+              <i class="fas fa-eye"></i>
+            </div>
+            <div class="stat-value">1,234</div>
+            <div class="stat-label">Lesson Views</div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i> 18% this month
+            </div>
           </div>
           <div class="stat">
-            <div class="stat-value" id="conversions">85%</div>
-            <p>Conversion Rate</p>
+            <div class="stat-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-value">85%</div>
+            <div class="stat-label">Conversion Rate</div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i> 5% from last month
+            </div>
           </div>
           <div class="stat">
-            <div class="stat-value" id="retention">92%</div>
-            <p>Retention Rate</p>
+            <div class="stat-icon">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stat-value">92%</div>
+            <div class="stat-label">Retention Rate</div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i> 3% from last quarter
+            </div>
           </div>
-        </div>
-        
-        <div class="card">
-          <h3 style="color: var(--gold-dark); margin-bottom: 16px;">Client Progress Overview</h3>
-          <div id="progressChart" style="padding: 20px; background: var(--nude-light); border-radius: 8px; text-align: center;">
-            <p style="color: var(--muted);">Progress tracking visualization would appear here</p>
-            <div style="margin-top: 20px; padding: 20px; background: white; border-radius: 8px;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span>Beginner Level:</span>
-                <span style="font-weight: bold; color: var(--success);">75% Complete</span>
-              </div>
-              <div style="height: 10px; background: var(--nude-med); border-radius: 5px; overflow: hidden;">
-                <div style="height: 100%; width: 75%; background: var(--success);"></div>
-              </div>
+          <div class="stat">
+            <div class="stat-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-value">4.8/5</div>
+            <div class="stat-label">Satisfaction Score</div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i> 0.2 from last month
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Profile Tab -->
-      <div id="profile" class="tab-content">
-        <div class="header">
-          <h1 class="title">Mentor Profile</h1>
-        </div>
         
         <div class="card">
-          <div style="margin-bottom: 20px;">
-            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Your Name</label>
-            <input type="text" id="mentorName" placeholder="Enter your name" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+          <h2 class="section-title">Client Progress Overview</h2>
+          <div style="padding: 20px; background: var(--nude-light); border-radius: 12px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div>
+                <h4 style="color: var(--gold-dark); margin-bottom: 16px;">Course Completion</h4>
+                <div style="margin-bottom: 16px;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span>Beginner Level:</span>
+                    <span style="font-weight: bold; color: var(--success);">92% Complete</span>
+                  </div>
+                  <div style="height: 8px; background: white; border-radius: 4px; overflow: hidden;">
+                    <div style="height: 100%; width: 92%; background: var(--success);"></div>
+                  </div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span>Intermediate Level:</span>
+                    <span style="font-weight: bold; color: var(--info);">75% Complete</span>
+                  </div>
+                  <div style="height: 8px; background: white; border-radius: 4px; overflow: hidden;">
+                    <div style="height: 100%; width: 75%; background: var(--info);"></div>
+                  </div>
+                </div>
+                <div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span>Advanced Level:</span>
+                    <span style="font-weight: bold; color: var(--gold);">45% Complete</span>
+                  </div>
+                  <div style="height: 8px; background: white; border-radius: 4px; overflow: hidden;">
+                    <div style="height: 100%; width: 45%; background: var(--gold);"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 style="color: var(--gold-dark); margin-bottom: 16px;">Engagement Metrics</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div style="text-align: center; padding: 16px; background: white; border-radius: 10px;">
+                    <div style="font-weight: bold; color: var(--gold-dark); font-size: 1.5rem;">24</div>
+                    <div style="font-size: 0.85rem; color: var(--muted);">Active Clients</div>
+                  </div>
+                  <div style="text-align: center; padding: 16px; background: white; border-radius: 10px;">
+                    <div style="font-weight: bold; color: var(--gold-dark); font-size: 1.5rem;">18</div>
+                    <div style="font-size: 0.85rem; color: var(--muted);">Weekly Sessions</div>
+                  </div>
+                  <div style="text-align: center; padding: 16px; background: white; border-radius: 10px;">
+                    <div style="font-weight: bold; color: var(--gold-dark); font-size: 1.5rem;">12.4</div>
+                    <div style="font-size: 0.85rem; color: var(--muted);">Avg. Rating</div>
+                  </div>
+                  <div style="text-align: center; padding: 16px; background: white; border-radius: 10px;">
+                    <div style="font-weight: bold; color: var(--gold-dark); font-size: 1.5rem;">94%</div>
+                    <div style="font-size: 0.85rem; color: var(--muted);">Response Rate</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          
-          <div style="margin-bottom: 20px;">
-            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Email</label>
-            <input type="email" id="mentorEmail" placeholder="Enter your email" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
-          </div>
-          
-          <div style="margin-bottom: 20px;">
-            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Specialization</label>
-            <select style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
-              <option>Forex Trading</option>
-              <option>Stock Market</option>
-              <option>Crypto Trading</option>
-              <option>Risk Management</option>
-            </select>
-          </div>
-          
-          <button class="btn" id="saveProfile">Save Profile</button>
         </div>
       </div>
     </main>
   </div>
 
-  <!-- Upload Modal -->
-  <div id="uploadModal" class="modal">
-    <div class="modal-content">
-      <h2 style="color: var(--gold-dark); margin-bottom: 20px;">Upload New Lesson</h2>
-      
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Lesson Title</label>
-        <input type="text" id="lessonTitle" placeholder="Enter lesson title">
-      </div>
-      
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Select File</label>
-        <input type="file" id="lessonFile" accept="video/*,application/pdf,image/*">
-      </div>
-      
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Category</label>
-        <select id="lessonCategory">
-          <option>Trading Basics</option>
-          <option>Advanced Strategies</option>
-          <option>Market Analysis</option>
-          <option>Risk Management</option>
-        </select>
-      </div>
-      
-      <div class="modal-buttons">
-        <button class="btn" id="uploadFile" style="flex: 1;">Upload Lesson</button>
-        <button class="btn ghost" id="closeModal" style="flex: 1;">Cancel</button>
-      </div>
-    </div>
-  </div>
-// ==================== AUTHENTICATION CHECK ====================
-// Simple, direct authentication check without redirect loops
-function checkAuthentication() {
-    const mentorUser = localStorage.getItem('mentorUser');
-    if (!mentorUser) {
-        console.log('No user found, redirecting to login...');
-        window.location.href = 'login.html';
-        return null;
-    }
-    
-    try {
-        const user = JSON.parse(mentorUser);
-        console.log('User authenticated:', user.name);
-        return user;
-    } catch (error) {
-        console.error('Error parsing user data:', error);
-        localStorage.removeItem('mentorUser');
-        window.location.href = 'login.html';
-        return null;
-    }
-}
-
-// Get current user
-const currentUser = checkAuthentication();
-if (!currentUser) {
-    // Stop execution if not authenticated
-    throw new Error('Authentication failed');
-}
-
-// Update UI with user info
-function updateUserInterface() {
-    // Update welcome message
-    const welcomeElement = document.querySelector('.welcome h1');
-    if (welcomeElement) {
-        welcomeElement.textContent = `Welcome back, ${currentUser.name}!`;
-    }
-    
-    // Update user info in header
-    const userInfoElement = document.querySelector('.user-info div');
-    if (userInfoElement) {
-        userInfoElement.innerHTML = `
-            <div style="font-weight: bold;">${currentUser.name}</div>
-            <div style="color: #666; font-size: 0.9rem;">Mentor • ${currentUser.email}</div>
-        `;
-    }
-    
-    // Update avatar with user initial
-    const avatarElement = document.querySelector('.avatar');
-    if (avatarElement) {
-        avatarElement.textContent = currentUser.name.charAt(0).toUpperCase();
-    }
-}
-
-// Enhanced logout function
-function setupLogout() {
-    const logoutBtn = document.getElementById('logout');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (confirm('Are you sure you want to logout?')) {
-                // Clear all auth data
-                localStorage.removeItem('mentorUser');
-                // Redirect to login
-                window.location.href = 'login.html';
-            }
-        });
-    }
-}
-
-// Session timeout check (optional - 24 hours)
-function checkSessionTimeout() {
-    const loginTime = new Date(currentUser.loginTime);
-    const now = new Date();
-    const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
-    
-    if (hoursSinceLogin > 24) {
-        console.log('Session expired, logging out...');
-        localStorage.removeItem('mentorUser');
-        window.location.href = 'login.html';
-        return false;
-    }
-    return true;
-}
-
-// Initialize authentication when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Initializing dashboard for:', currentUser.name);
-    
-    // Update UI
-    updateUserInterface();
-    
-    // Setup logout
-    setupLogout();
-    
-    // Check session (optional)
-    if (!checkSessionTimeout()) {
-        return;
-    }
-    
-    // Initialize dashboard components
-    initDashboard();
-    
-    // Show welcome notification
-    setTimeout(() => {
-        showNotification(`Welcome back, ${currentUser.name}! Dashboard ready.`);
-    }, 500);
-});
-
-// Your existing dashboard initialization function
-async function initDashboard() {
-    console.log('Loading dashboard data...');
-    try {
-        await loadAllData();
-        setupEventListeners();
-        initializeCalendar();
-        console.log('Dashboard initialized successfully');
-    } catch (error) {
-        console.error('Error initializing dashboard:', error);
-        showNotification('Error loading dashboard data', 'error');
-    }
-}
-// ==================== END AUTHENTICATION ====================
-
-// Your existing dashboard functions continue below...
-// Make sure your existing functions like loadAllData, setupEventListeners, etc. are defined here
   <script>
-    // Initialize Supabase
-    const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxza2pzaGJjbmlpbHpseXhlY3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2MzcwMjksImV4cCI6MjA3OTIxMzAyOX0.PxvhBTZ2Bv4hnwxTrFA0E_zucNxMYrVwDSuRGniDBnc';
-
-    const { createClient } = supabase;
-    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    let currentUser = null;
-    let calendar = null;
-
-    // Initialize the dashboard
-    async function init() {
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      if (!session) {
-        window.location.href = 'login.html';
-        return;
+    // Simple authentication check
+    if (!localStorage.getItem('mentorLoggedIn')) {
+      window.location.href = 'login.html';
+    }
+    
+    // Get user data
+    const mentorName = localStorage.getItem('mentorName') || 'Mentor User';
+    const mentorEmail = localStorage.getItem('mentorEmail') || 'mentor@crowntrade.com';
+    
+    // Update UI with user info
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set user information
+      document.getElementById('userName').textContent = mentorName;
+      document.getElementById('userAvatar').textContent = mentorName.charAt(0).toUpperCase();
+      
+      // Update welcome message
+      const welcomeElement = document.querySelector('.title');
+      if (welcomeElement) {
+        welcomeElement.textContent = `Welcome, ${mentorName}`;
       }
       
-      currentUser = session.user;
-      console.log('User logged in:', currentUser.email);
+      // Setup navigation
+      setupNavigation();
       
-      await loadAllData();
+      // Setup event listeners
       setupEventListeners();
-      initializeCalendar();
-      showNotification('Dashboard loaded successfully!');
-    }
-
-    // Load all dashboard data
-    async function loadAllData() {
-      try {
-        // Load clients
-        const { data: clients, error: clientsError } = await supabaseClient
-          .from('profiles')
-          .select('*')
-          .eq('role', 'client');
-        
-        if (!clientsError) {
-          document.getElementById('totalClients').textContent = clients?.length || 0;
-          displayClientsList(clients || []);
-        }
-
-        // Load lessons
-        const { data: lessons, error: lessonsError } = await supabaseClient
-          .from('lessons')
-          .select('*')
-          .order('created_at', { ascending: false });
-        
-        if (!lessonsError) {
-          document.getElementById('totalLessons').textContent = lessons?.length || 0;
-          displayLessonsList(lessons || []);
-        }
-
-        // Set placeholder data for demo
-        document.getElementById('totalEarnings').textContent = '$4,850';
-        document.getElementById('pendingCalls').textContent = '3';
-
-      } catch (error) {
-        console.error('Error loading data:', error);
-        showNotification('Error loading data. Please refresh.', 'error');
-      }
-    }
-
-    // Display clients list
-    function displayClientsList(clients) {
-      const clientsList = document.getElementById('clientsList');
       
-      if (clients.length === 0) {
-        clientsList.innerHTML = '<p style="color: var(--muted); text-align: center; padding: 20px;">No clients yet</p>';
-        return;
-      }
-
-      clientsList.innerHTML = clients.map(client => `
-        <div class="client-item" onclick="selectClient('${client.id}', '${client.username || client.email}')">
-          <div style="width: 40px; height: 40px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; color: white; font-weight: bold;">
-            ${(client.username || client.email).charAt(0).toUpperCase()}
-          </div>
-          <div>
-            <div style="font-weight: 600;">${client.username || client.email}</div>
-            <div style="color: var(--muted); font-size: 0.8rem;">Joined ${new Date(client.created_at).toLocaleDateString()}</div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // Display lessons list
-    function displayLessonsList(lessons) {
-      const lessonsContainer = document.getElementById('lessonsContainer');
+      // Show welcome notification
+      setTimeout(() => {
+        showNotification(`Welcome back, ${mentorName}!`, 'success');
+      }, 500);
+    });
+    
+    // Setup navigation
+    function setupNavigation() {
+      const navItems = document.querySelectorAll('.nav-item');
+      const tabContents = document.querySelectorAll('.tab-content');
       
-      if (lessons.length === 0) {
-        lessonsContainer.innerHTML = '<p style="color: var(--muted); text-align: center; padding: 20px;">No lessons uploaded yet</p>';
-        return;
-      }
-
-      lessonsContainer.innerHTML = lessons.map(lesson => `
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid rgba(212,200,188,0.3);">
-          <div style="flex: 1;">
-            <div style="font-weight: 600; color: var(--gold-dark);">${lesson.title}</div>
-            <div style="color: var(--muted); font-size: 0.9rem;">
-              ${lesson.type || 'File'} • ${new Date(lesson.created_at).toLocaleDateString()}
-            </div>
-          </div>
-          <div>
-            <button class="btn ghost" onclick="viewLesson('${lesson.id}')" style="margin-right: 8px;">View</button>
-            <button class="btn" onclick="editLesson('${lesson.id}')">Edit</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // Initialize calendar
-    function initializeCalendar() {
-      const calendarEl = document.getElementById('calendarEl');
-      
-      calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'timeGridWeek',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        events: [
-          {
-            title: 'Trading Basics - John Smith',
-            start: new Date().toISOString().split('T')[0] + 'T10:00:00',
-            end: new Date().toISOString().split('T')[0] + 'T11:00:00',
-            backgroundColor: 'var(--gold)'
-          },
-          {
-            title: 'Portfolio Review - Team Session',
-            start: new Date().toISOString().split('T')[0] + 'T14:00:00',
-            end: new Date().toISOString().split('T')[0] + 'T15:30:00',
-            backgroundColor: 'var(--success)'
-          }
-        ],
-        editable: true,
-        selectable: true,
-        select: function(info) {
-          const title = prompt('Enter call title:');
-          if (title) {
-            calendar.addEvent({
-              title: title,
-              start: info.start,
-              end: info.end,
-              backgroundColor: 'var(--gold)'
-            });
-            showNotification('Call scheduled successfully!');
-          }
-        }
-      });
-
-      calendar.render();
-    }
-
-    // Setup all event listeners
-    function setupEventListeners() {
-      // Tab switching
-      document.querySelectorAll('.nav button').forEach(btn => {
-        btn.addEventListener('click', () => {
-          // Remove active class from all buttons
-          document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-          // Add active class to clicked button
-          btn.classList.add('active');
+      navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
           
-          // Hide all tab contents
-          document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.remove('active');
-          });
+          // Remove active class from all items
+          navItems.forEach(nav => nav.classList.remove('active'));
+          tabContents.forEach(tab => tab.classList.remove('active'));
           
-          // Show selected tab
-          const tabId = btn.getAttribute('data-tab');
+          // Add active class to clicked item
+          this.classList.add('active');
+          
+          // Show corresponding tab
+          const tabId = this.getAttribute('data-tab');
           document.getElementById(tabId).classList.add('active');
         });
       });
-
-      // Upload modal
-      document.getElementById('openUploadModal').addEventListener('click', () => {
-        document.getElementById('uploadModal').style.display = 'flex';
+      
+      // Quick action buttons
+      const quickActionButtons = document.querySelectorAll('.btn[data-tab]');
+      quickActionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          
+          // Remove active class from all items
+          navItems.forEach(nav => nav.classList.remove('active'));
+          tabContents.forEach(tab => tab.classList.remove('active'));
+          
+          // Add active class to corresponding nav item
+          document.querySelector(`.nav-item[data-tab="${tabId}"]`).classList.add('active');
+          
+          // Show corresponding tab
+          document.getElementById(tabId).classList.add('active');
+        });
       });
-
-      document.getElementById('closeModal').addEventListener('click', () => {
-        document.getElementById('uploadModal').style.display = 'none';
-      });
-
-      // File upload
-      document.getElementById('uploadFile').addEventListener('click', handleFileUpload);
-
-      // Quick upload button
-      document.getElementById('quickUpload').addEventListener('click', () => {
-        document.getElementById('uploadModal').style.display = 'flex';
-      });
-
-      // Chat functionality
-      document.getElementById('sendMessage').addEventListener('click', sendChatMessage);
-      document.getElementById('chatInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendChatMessage();
-      });
-
-      // Save profile
-      document.getElementById('saveProfile').addEventListener('click', saveProfile);
-
-      // Logout
-      document.getElementById('logout').addEventListener('click', () => {
+    }
+    
+    // Setup event listeners
+    function setupEventListeners() {
+      // Logout button
+      document.getElementById('logoutBtn').addEventListener('click', function() {
         if (confirm('Are you sure you want to logout?')) {
-          supabaseClient.auth.signOut().then(() => {
-            window.location.href = 'login.html';
-          });
+          localStorage.removeItem('mentorLoggedIn');
+          localStorage.removeItem('mentorName');
+          localStorage.removeItem('mentorEmail');
+          window.location.href = 'login.html';
         }
       });
-
-      // Drag and drop for upload zone
-      const uploadZone = document.getElementById('uploadZone');
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        uploadZone.addEventListener(eventName, preventDefaults, false);
-      });
-
-      function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-
-      ['dragenter', 'dragover'].forEach(eventName => {
-        uploadZone.addEventListener(eventName, () => {
-          uploadZone.style.background = 'var(--nude-light)';
-          uploadZone.style.borderColor = 'var(--gold-dark)';
-        }, false);
-      });
-
-      ['dragleave', 'drop'].forEach(eventName => {
-        uploadZone.addEventListener(eventName, () => {
-          uploadZone.style.background = '';
-          uploadZone.style.borderColor = 'var(--gold)';
-        }, false);
-      });
-
-      uploadZone.addEventListener('drop', handleDrop, false);
-
-      function handleDrop(e) {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        document.getElementById('uploadModal').style.display = 'flex';
-        console.log('Files dropped:', files);
-      }
-
-      uploadZone.addEventListener('click', () => {
-        document.getElementById('uploadModal').style.display = 'flex';
-      });
-    }
-
-    // Handle file upload
-    async function handleFileUpload() {
-      const fileInput = document.getElementById('lessonFile');
-      const titleInput = document.getElementById('lessonTitle');
-      const categoryInput = document.getElementById('lessonCategory');
       
-      const file = fileInput.files[0];
-      const title = titleInput.value.trim();
-      const category = categoryInput.value;
-
-      if (!file || !title) {
-        showNotification('Please provide both a title and select a file.', 'error');
-        return;
+      // Upload zone
+      const uploadZone = document.getElementById('uploadZone');
+      if (uploadZone) {
+        uploadZone.addEventListener('click', function() {
+          showNotification('Upload feature activated. Select files to upload.', 'success');
+        });
       }
-
-      try {
-        showNotification('Uploading file...');
-        
-        // In a real app, you would upload to Supabase Storage
-        // For now, we'll simulate the upload
-        setTimeout(() => {
-          showNotification('Lesson uploaded successfully!');
-          document.getElementById('uploadModal').style.display = 'none';
+      
+      // Quick upload button
+      const quickUploadBtn = document.getElementById('quickUploadBtn');
+      if (quickUploadBtn) {
+        quickUploadBtn.addEventListener('click', function() {
+          // Switch to content tab
+          document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
           
-          // Reset form
-          fileInput.value = '';
-          titleInput.value = '';
+          document.querySelector('.nav-item[data-tab="content"]').classList.add('active');
+          document.getElementById('content').classList.add('active');
+        });
+      }
+      
+      // New meeting button
+      const newMeetingBtn = document.getElementById('newMeetingBtn');
+      if (newMeetingBtn) {
+        newMeetingBtn.addEventListener('click', function() {
+          // Switch to schedule tab
+          document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
           
-          // Reload lessons
-          loadAllData();
-        }, 1500);
-
-      } catch (error) {
-        console.error('Upload error:', error);
-        showNotification('Error uploading file. Please try again.', 'error');
+          document.querySelector('.nav-item[data-tab="schedule"]').classList.add('active');
+          document.getElementById('schedule').classList.add('active');
+        });
+      }
+      
+      // Chat send button
+      const chatSendBtn = document.querySelector('.chat-input .btn');
+      if (chatSendBtn) {
+        chatSendBtn.addEventListener('click', sendChatMessage);
+      }
+      
+      // Chat input enter key
+      const chatInput = document.querySelector('.chat-input input');
+      if (chatInput) {
+        chatInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            sendChatMessage();
+          }
+        });
       }
     }
-
-    // Chat functionality
+    
+    // Send chat message
     function sendChatMessage() {
-      const chatInput = document.getElementById('chatInput');
+      const chatInput = document.querySelector('.chat-input input');
       const message = chatInput.value.trim();
       
       if (!message) return;
-
+      
       const chatMessages = document.getElementById('chatMessages');
       const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       
       chatMessages.innerHTML += `
         <div class="message sent">
-          <strong>You:</strong> ${message}
-          <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 4px;">${timestamp}</div>
+          <div class="message-sender">You</div>
+          ${message}
+          <div class="message-time">${timestamp}</div>
         </div>
       `;
       
       chatInput.value = '';
       chatMessages.scrollTop = chatMessages.scrollHeight;
       
-      // Simulate response after 1 second
+      // Simulate response after 1-2 seconds
       setTimeout(() => {
         const responses = [
-          "Thanks for the update!",
-          "I'll look into that.",
-          "Great point!",
-          "Let me check and get back to you."
+          "Thanks for the information!",
+          "I'll review that and get back to you.",
+          "That makes sense, thank you for explaining.",
+          "Can we schedule a call to discuss this further?"
         ];
         const response = responses[Math.floor(Math.random() * responses.length)];
         
         chatMessages.innerHTML += `
           <div class="message received">
-            <strong>Mentor ${Math.floor(Math.random() * 2) + 1}:</strong> ${response}
-            <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 4px;">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+            <div class="message-sender">John Smith</div>
+            ${response}
+            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
           </div>
         `;
         chatMessages.scrollTop = chatMessages.scrollHeight;
-      }, 1000);
+      }, 1000 + Math.random() * 1000);
     }
-
-    // Client selection
-    window.selectClient = function(clientId, clientName) {
-      // Remove active class from all client items
-      document.querySelectorAll('.client-item').forEach(item => {
-        item.classList.remove('active');
-      });
-      
-      // Add active class to selected client
-      event.currentTarget.classList.add('active');
-      
-      // Show client details
-      document.getElementById('clientDetails').innerHTML = `
-        <div style="text-align: center; margin-bottom: 20px;">
-          <div style="width: 80px; height: 80px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: white; font-size: 24px; font-weight: bold;">
-            ${clientName.charAt(0).toUpperCase()}
-          </div>
-          <h3 style="color: var(--gold-dark);">${clientName}</h3>
-        </div>
-        
-        <div style="background: var(--nude-light); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-            <span>Progress:</span>
-            <span style="font-weight: bold; color: var(--success);">75% Complete</span>
-          </div>
-          <div style="height: 8px; background: var(--nude-med); border-radius: 4px; overflow: hidden;">
-            <div style="height: 100%; width: 75%; background: var(--success);"></div>
-          </div>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
-          <div style="text-align: center; padding: 12px; background: var(--nude-light); border-radius: 8px;">
-            <div style="font-weight: bold; color: var(--gold-dark);">12</div>
-            <div style="font-size: 0.8rem; color: var(--muted);">Sessions</div>
-          </div>
-          <div style="text-align: center; padding: 12px; background: var(--nude-light); border-radius: 8px;">
-            <div style="font-weight: bold; color: var(--gold-dark);">85%</div>
-            <div style="font-size: 0.8rem; color: var(--muted);">Satisfaction</div>
-          </div>
-        </div>
-        
-        <button class="btn" onclick="scheduleCall('${clientId}')" style="width: 100%; margin-bottom: 8px;">Schedule Call</button>
-        <button class="btn ghost" onclick="sendMessage('${clientId}')" style="width: 100%;">Send Message</button>
-      `;
-    }
-
-    // Schedule call with client
-    window.scheduleCall = function(clientId) {
-      const title = prompt('Enter call title:');
-      if (title && calendar) {
-        const now = new Date();
-        const tomorrow = new Date(now);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(14, 0, 0, 0);
-        
-        calendar.addEvent({
-          title: title,
-          start: tomorrow,
-          end: new Date(tomorrow.getTime() + 60 * 60 * 1000), // 1 hour later
-          backgroundColor: 'var(--gold)'
-        });
-        
-        showNotification('Call scheduled successfully!');
-      }
-    }
-
-    // Send message to client
-    window.sendMessage = function(clientId) {
-      const message = prompt('Enter message for client:');
-      if (message) {
-        showNotification('Message sent to client!');
-      }
-    }
-
-    // View lesson
-    window.viewLesson = function(lessonId) {
-      showNotification('Opening lesson...');
-      // In a real app, this would open the lesson in a viewer
-    }
-
-    // Edit lesson
-    window.editLesson = function(lessonId) {
-      showNotification('Opening lesson editor...');
-      // In a real app, this would open an edit form
-    }
-
-    // Save profile
-    async function saveProfile() {
-      const name = document.getElementById('mentorName').value.trim();
-      const email = document.getElementById('mentorEmail').value.trim();
-      
-      if (!name || !email) {
-        showNotification('Please fill in all fields.', 'error');
-        return;
-      }
-
-      try {
-        // In a real app, update the user's profile in Supabase
-        showNotification('Profile updated successfully!');
-      } catch (error) {
-        console.error('Error saving profile:', error);
-        showNotification('Error saving profile. Please try again.', 'error');
-      }
-    }
-
-    // Notification system
+    
+    // Show notification
     function showNotification(message, type = 'success') {
       const notification = document.createElement('div');
-      notification.className = 'notification';
-      notification.textContent = message;
-      notification.style.background = type === 'error' ? 'var(--danger)' : 'var(--gold)';
+      notification.className = `notification ${type}`;
+      
+      let icon = 'fas fa-check-circle';
+      if (type === 'error') icon = 'fas fa-exclamation-triangle';
+      if (type === 'warning') icon = 'fas fa-exclamation-circle';
+      
+      notification.innerHTML = `
+        <i class="${icon}"></i>
+        <span>${message}</span>
+      `;
       
       document.body.appendChild(notification);
       
+      // Remove notification after 4 seconds
       setTimeout(() => {
         notification.remove();
-      }, 3000);
+      }, 4000);
     }
-
-    // Initialize the dashboard when the page loads
-    document.addEventListener('DOMContentLoaded', init);
+    
+    // Client selection
+    window.selectClient = function(clientName) {
+      const clientItems = document.querySelectorAll('.client-item');
+      clientItems.forEach(item => item.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      
+      // In a real app, you would load client details here
+      showNotification(`Now viewing ${clientName}'s profile`, 'success');
+    };
   </script>
 </body>
 </html>
