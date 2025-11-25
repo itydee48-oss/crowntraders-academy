@@ -155,6 +155,11 @@
   </div>
 
   <script>
+    // Check if already logged in - if yes, redirect to dashboard
+    if (localStorage.getItem('mentorUser')) {
+      window.location.href = 'mentor-dashboard.html';
+    }
+
     let failedAttempts = 0;
     const maxAttempts = 3;
     let lockoutTime = 0;
@@ -257,23 +262,11 @@
         
         // Clear password field
         document.getElementById('password').value = '';
-        
-        // Shake animation for error
-        loginButton.style.animation = 'shake 0.5s';
-        setTimeout(() => {
-          loginButton.style.animation = '';
-        }, 500);
       }
     });
 
     // Auto-fill demo credentials for easy testing
     document.addEventListener('DOMContentLoaded', function() {
-      // Check if already logged in
-      if (localStorage.getItem('mentorUser')) {
-        window.location.href = 'mentor-dashboard.html';
-        return;
-      }
-      
       // Check for lockout
       checkLockout();
       
@@ -281,17 +274,6 @@
       document.getElementById('email').value = 'mentor@crowntrade.com';
       document.getElementById('password').value = 'mentor123';
     });
-
-    // Add shake animation
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        75% { transform: translateX(5px); }
-      }
-    `;
-    document.head.appendChild(style);
   </script>
 </body>
 </html>
