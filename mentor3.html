@@ -1,56 +1,379 @@
-<!-- FILE: mentor3.html -->
-<div class="muted text-sm">Plan: Pro</div>
-</div>
-<div class="text-right muted text-sm">Next call: 2025-11-17</div>
-</div>
-</div>
-</div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crown Trade Academy — Affiliate Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    /* Same styles as signup page, just different content */
+    :root {
+      --nude-light: #F9F6F2;
+      --nude-med: #E8DFD6;
+      --gold: #C8A97E;
+      --gold-dark: #B89463;
+      --charcoal: #2e2e2e;
+      --muted: #7A7A7A;
+      --success: #10B981;
+      --danger: #EF4444;
+    }
+    
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+    
+    body { 
+      font-family: 'Montserrat', sans-serif; 
+      background: linear-gradient(135deg, var(--nude-light) 0%, #ffffff 100%);
+      color: var(--charcoal); 
+      min-height: 100vh;
+      line-height: 1.6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .login-container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+    }
+    
+    .login-form {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      border: 1px solid rgba(212,200,188,0.6);
+    }
+    
+    .brand {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--gold-dark);
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    
+    .brand-subtitle {
+      color: var(--muted);
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 400;
+    }
+    
+    .affiliate-badge {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(212,200,188,0.5);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(200,169,126,0.1);
+    }
+    
+    .btn {
+      background: var(--gold);
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+    
+    .btn:hover {
+      background: var(--gold-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(200,169,126,0.3);
+    }
+    
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+      position: relative;
+    }
+    
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+      margin-left: -10px;
+      margin-top: -10px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .notification {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: var(--gold);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(200,169,126,0.3);
+      z-index: 1000;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 350px;
+      animation: slideInRight 0.5s ease;
+    }
+    
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .notification.success {
+      background: var(--success);
+    }
+    
+    .notification.error {
+      background: var(--danger);
+    }
+    
+    .signup-link {
+      text-align: center;
+      margin-top: 20px;
+      color: var(--muted);
+    }
+    
+    .signup-link a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .demo-account {
+      background: var(--nude-light);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    
+    .demo-title {
+      font-weight: 600;
+      color: var(--gold-dark);
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    
+    .demo-credentials {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 10px;
+    }
+    
+    .demo-btn {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+    }
+    
+    .demo-btn:hover {
+      background: var(--gold);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-form">
+      <div class="brand">Crown Trade</div>
+      <div class="brand-subtitle">Affiliate Portal</div>
+      <div style="text-align: center;">
+        <span class="affiliate-badge">AFFILIATE LOGIN</span>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="email" placeholder="Enter your email">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" id="password" placeholder="Enter your password">
+      </div>
+      
+      <button class="btn" id="loginBtn">
+        <i class="fas fa-sign-in-alt"></i> Sign In to Affiliate Dashboard
+      </button>
+      
+      <div class="demo-account">
+        <div class="demo-title">Demo Account</div>
+        <div class="demo-credentials">demo@affiliate.com / demo123</div>
+        <button class="demo-btn" onclick="fillDemoCredentials()">
+          <i class="fas fa-magic"></i> Fill Demo Credentials
+        </button>
+      </div>
+      
+      <div class="signup-link">
+        Don't have an affiliate account? <a href="referral-signup.html">Join now - $400</a>
+      </div>
+    </div>
+  </div>
 
+  <script>
+    // Supabase Configuration
+    const SUPABASE_URL = 'https://your-project.supabase.co';
+    const SUPABASE_ANON_KEY = 'your-anon-key';
+    
+    // Initialize Supabase
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-<div class="card">
-<h3 class="font-semibold">Upcoming Calls</h3>
-<ul class="mt-2 space-y-2 muted text-sm">
-<li>2025-11-12 · 08:00 — Musa — Topic: Structured exits</li>
-<li>2025-11-17 · 16:00 — Salma — Topic: Edge hunting</li>
-</ul>
-</div>
+    // Check if user is already logged in
+    function checkAuthStatus() {
+      const user = localStorage.getItem('affiliate_user');
+      if (user) {
+        window.location.href = 'referral-dashboard.html';
+      }
+    }
 
+    // Handle login
+    async function handleLogin() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      if (!email || !password) {
+        showNotification('Please enter both email and password', 'error');
+        return;
+      }
+      
+      const loginBtn = document.getElementById('loginBtn');
+      loginBtn.classList.add('loading');
+      loginBtn.disabled = true;
+      
+      try {
+        // In a real app, you would verify credentials properly
+        const { data: user, error } = await supabase
+          .from('affiliate_clients')
+          .select('*')
+          .eq('email', email)
+          .eq('password', password) // In real app, use proper authentication
+          .single();
+        
+        if (error) throw error;
+        
+        if (!user) {
+          throw new Error('Invalid email or password');
+        }
+        
+        showNotification('Login successful!', 'success');
+        
+        // Store user session
+        localStorage.setItem('affiliate_user', JSON.stringify(user));
+        
+        setTimeout(() => {
+          window.location.href = 'referral-dashboard.html';
+        }, 1000);
+        
+      } catch (error) {
+        showNotification(error.message, 'error');
+      } finally {
+        loginBtn.classList.remove('loading');
+        loginBtn.disabled = false;
+      }
+    }
 
-</section>
+    // Fill demo credentials
+    function fillDemoCredentials() {
+      document.getElementById('email').value = 'demo@affiliate.com';
+      document.getElementById('password').value = 'demo123';
+      showNotification('Demo credentials filled! Click Sign In.', 'success');
+    }
 
+    // Show notification
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      
+      let icon = 'fas fa-check-circle';
+      if (type === 'error') icon = 'fas fa-exclamation-triangle';
+      
+      notification.innerHTML = `
+        <i class="${icon}"></i>
+        <span>${message}</span>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 4000);
+    }
 
-<aside class="lg:col-span-4 space-y-6">
-<div class="card">
-<h4 class="font-semibold">Earnings</h4>
-<div class="mt-2">
-<div class="text-xs muted">Generated (total)</div>
-<div class="text-2xl font-bold">$1,550</div>
-<div class="text-xs muted mt-1">Your share this month: <span class="font-medium">$1,130.12</span></div>
-</div>
-</div>
-
-
-<div class="card">
-<h4 class="font-semibold">Metrics</h4>
-<div class="mt-2 muted text-sm">Sessions this month: <span class="font-medium">18</span></div>
-<div class="mt-2 muted text-sm">Avg rating: <span class="font-medium">4.9</span></div>
-</div>
-
-
-<div class="card">
-<h4 class="font-semibold">Quick Links</h4>
-<div class="mt-2 grid grid-cols-1 gap-2">
-<button class="py-2 rounded-md border">Book session</button>
-<button class="py-2 rounded-md border">Add client</button>
-<button class="py-2 rounded-md border">Request payout</button>
-</div>
-</div>
-</aside>
-</main>
-
-
-<footer class="mt-8 text-center muted text-sm">Candice • Mentor • Mentorship Platform</footer>
-</div>
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthStatus();
+      
+      // Event listeners
+      document.getElementById('loginBtn').addEventListener('click', handleLogin);
+      
+      document.getElementById('password').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          handleLogin();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
