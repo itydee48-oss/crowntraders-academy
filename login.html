@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crown Trade — Login</title>
+  <title>Crown Trade — Mentor Login</title>
   <style>
     body { 
       background: #F9F6F2; 
-      font-family: 'Segoe UI', sans-serif; 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
@@ -16,11 +16,11 @@
     }
     .login-box { 
       background: white; 
-      padding: 80px 60px; 
+      padding: 60px 50px; 
       border-radius: 20px; 
       box-shadow: 0 30px 80px rgba(0,0,0,0.1); 
       text-align: center; 
-      width: 400px; 
+      width: 420px; 
     }
     h1 { 
       font-size: 2.8rem; 
@@ -28,57 +28,270 @@
       margin-bottom: 10px; 
       font-family: 'Georgia', serif; 
     }
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #2e2e2e;
+    }
+    input {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #C8A97E;
+      box-shadow: 0 0 0 3px rgba(200, 169, 126, 0.1);
+    }
     .login-btn {
       background: #C8A97E;
       color: white;
       border: none;
-      padding: 20px 40px;
+      padding: 18px;
       border-radius: 14px;
       font-weight: bold;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       cursor: pointer;
-      transition: all 0.3s;
-      margin: 30px 0;
       width: 100%;
+      transition: all 0.3s;
+      margin-top: 10px;
     }
     .login-btn:hover {
       background: #B89463;
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(200, 169, 126, 0.3);
+      transform: translateY(-2px);
     }
-    .welcome-text {
+    .login-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .demo-info {
+      background: #F0F7FF;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 25px;
+      border-left: 4px solid #C8A97E;
+    }
+    .demo-info h3 {
+      margin: 0 0 10px 0;
+      color: #2e2e2e;
+      font-size: 1rem;
+    }
+    .demo-info p {
+      margin: 5px 0;
       color: #666;
-      font-size: 1.1rem;
-      margin-bottom: 40px;
+      font-size: 0.9rem;
+    }
+    .error {
+      color: #EF4444;
+      margin-top: 10px;
+      font-weight: 600;
+      display: none;
+    }
+    .lock-icon {
+      font-size: 3rem;
+      color: #C8A97E;
+      margin-bottom: 20px;
+    }
+    .attempts-warning {
+      color: #EF4444;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      display: none;
     }
   </style>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
   <div class="login-box">
+    <div class="lock-icon">
+      <i class="fas fa-lock"></i>
+    </div>
     <h1>Crown Trade</h1>
-    <p class="welcome-text">Mentor Dashboard</p>
+    <p class="subtitle">Mentor Dashboard Login</p>
     
-    <button class="login-btn" onclick="login()">Enter Dashboard</button>
-    
-    <p style="color: #888; font-size: 0.9rem;">
-      One-click access for all mentors
-    </p>
+    <form id="loginForm">
+      <div class="input-group">
+        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+      </div>
+      
+      <div class="input-group">
+        <label for="password"><i class="fas fa-key"></i> Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+      </div>
+      
+      <button type="submit" class="login-btn" id="loginButton">
+        <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+      </button>
+      
+      <div id="errorMessage" class="error">
+        <i class="fas fa-exclamation-triangle"></i> Invalid email or password
+      </div>
+      
+      <div id="attemptsWarning" class="attempts-warning">
+        <i class="fas fa-shield-alt"></i> Too many failed attempts. Try again in <span id="countdown">30</span> seconds.
+      </div>
+    </form>
+
+    <div class="demo-info">
+      <h3><i class="fas fa-info-circle"></i> Login Credentials</h3>
+      <p><strong>Email:</strong> mentor@crowntrade.com</p>
+      <p><strong>Password:</strong> mentor123</p>
+    </div>
   </div>
 
   <script>
-    function login() {
-      // Store simple session
-      localStorage.setItem('mentorLoggedIn', 'true');
-      localStorage.setItem('mentorName', 'Mentor User');
-      
-      // Go directly to dashboard
-      window.location.href = 'mentor-dashboard.html';
+    let failedAttempts = 0;
+    const maxAttempts = 3;
+    let lockoutTime = 0;
+
+    // Check if we're in a lockout period
+    function checkLockout() {
+      const lockoutUntil = localStorage.getItem('loginLockout');
+      if (lockoutUntil && Date.now() < parseInt(lockoutUntil)) {
+        const remainingTime = Math.ceil((parseInt(lockoutUntil) - Date.now()) / 1000);
+        startLockout(remainingTime);
+        return true;
+      }
+      return false;
     }
 
-    // If already logged in, redirect to dashboard
-    if (localStorage.getItem('mentorLoggedIn')) {
-      window.location.href = 'mentor-dashboard.html';
+    // Start lockout period
+    function startLockout(seconds) {
+      lockoutTime = seconds;
+      document.getElementById('loginButton').disabled = true;
+      document.getElementById('attemptsWarning').style.display = 'block';
+      document.getElementById('errorMessage').style.display = 'none';
+      
+      const countdownElement = document.getElementById('countdown');
+      const countdownInterval = setInterval(() => {
+        lockoutTime--;
+        countdownElement.textContent = lockoutTime;
+        
+        if (lockoutTime <= 0) {
+          clearInterval(countdownInterval);
+          document.getElementById('loginButton').disabled = false;
+          document.getElementById('attemptsWarning').style.display = 'none';
+          localStorage.removeItem('loginLockout');
+          failedAttempts = 0;
+        }
+      }, 1000);
     }
+
+    // Validate credentials
+    function validateCredentials(email, password) {
+      const validCredentials = [
+        { email: 'mentor@crowntrade.com', password: 'mentor123', name: 'Demo Mentor' },
+        { email: 'mentor1@crowntrade.com', password: 'mentor123', name: 'Mentor 1' },
+        { email: 'mentor2@crowntrade.com', password: 'mentor123', name: 'Mentor 2' },
+        { email: 'mentor3@crowntrade.com', password: 'mentor123', name: 'Mentor 3' }
+      ];
+      
+      return validCredentials.find(cred => 
+        cred.email === email && cred.password === password
+      );
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Check if we're in lockout period
+      if (checkLockout()) {
+        return;
+      }
+      
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('errorMessage');
+      const loginButton = document.getElementById('loginButton');
+      
+      // Validate credentials
+      const user = validateCredentials(email, password);
+      
+      if (user) {
+        // Successful login
+        failedAttempts = 0;
+        localStorage.removeItem('loginLockout');
+        
+        // Store user session
+        localStorage.setItem('mentorUser', JSON.stringify({
+          id: 'mentor-' + Date.now(),
+          email: user.email,
+          name: user.name,
+          role: 'mentor',
+          loginTime: new Date().toISOString()
+        }));
+        
+        // Show success and redirect
+        loginButton.innerHTML = '<i class="fas fa-check"></i> Login Successful!';
+        loginButton.style.background = '#10B981';
+        setTimeout(() => {
+          window.location.href = 'mentor-dashboard.html';
+        }, 1000);
+        
+      } else {
+        // Failed login
+        failedAttempts++;
+        errorMessage.style.display = 'block';
+        
+        if (failedAttempts >= maxAttempts) {
+          // Start lockout period (30 seconds)
+          const lockoutUntil = Date.now() + 30000; // 30 seconds
+          localStorage.setItem('loginLockout', lockoutUntil.toString());
+          startLockout(30);
+        }
+        
+        // Clear password field
+        document.getElementById('password').value = '';
+        
+        // Shake animation for error
+        loginButton.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+          loginButton.style.animation = '';
+        }, 500);
+      }
+    });
+
+    // Auto-fill demo credentials for easy testing
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if already logged in
+      if (localStorage.getItem('mentorUser')) {
+        window.location.href = 'mentor-dashboard.html';
+        return;
+      }
+      
+      // Check for lockout
+      checkLockout();
+      
+      // Auto-fill credentials
+      document.getElementById('email').value = 'mentor@crowntrade.com';
+      document.getElementById('password').value = 'mentor123';
+    });
+
+    // Add shake animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 </body>
 </html>
