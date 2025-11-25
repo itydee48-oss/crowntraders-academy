@@ -559,7 +559,89 @@
       </div>
     </div>
   </div>
+// ==================== AUTHENTICATION CHECK ====================
+const mentorUser = localStorage.getItem('mentorUser');
+if (!mentorUser) {
+    window.location.href = 'login.html';
+    throw new Error('Not authenticated');
+}
 
+const user = JSON.parse(mentorUser);
+console.log('Welcome back,', user.name);
+
+// Update UI with user info
+function updateUserInterface() {
+    // Update welcome message
+    const welcomeElement = document.querySelector('.welcome h1');
+    if (welcomeElement) {
+        welcomeElement.textContent = `Welcome back, ${user.name}!`;
+    }
+    
+    // Update user info in header
+    const userInfoElement = document.querySelector('.user-info div');
+    if (userInfoElement) {
+        userInfoElement.innerHTML = `
+            <div style="font-weight: bold;">${user.name}</div>
+            <div style="color: #666; font-size: 0.9rem;">Mentor • ${user.email}</div>
+        `;
+    }
+    
+    // Update avatar with user initial
+    const avatarElement = document.querySelector('.avatar');
+    if (avatarElement) {
+        avatarElement.textContent = user.name.charAt(0).toUpperCase();
+    }
+}
+
+// Enhanced logout function
+function setupLogout() {
+    const logoutBtn = document.getElementById('logout');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear all auth data
+                localStorage.removeItem('mentorUser');
+                // Redirect to login
+                window.location.href = 'login.html';
+            }
+        });
+    }
+}
+
+// Auto-logout after 24 hours for security
+function setupAutoLogout() {
+    const loginTime = new Date(user.loginTime);
+    const now = new Date();
+    const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
+    
+    if (hoursSinceLogin > 24) {
+        localStorage.removeItem('mentorUser');
+        window.location.href = 'login.html';
+    }
+}
+
+// Initialize authentication
+document.addEventListener('DOMContentLoaded', function() {
+    updateUserInterface();
+    setupLogout();
+    setupAutoLogout();
+    
+    // Show welcome notification
+    setTimeout(() => {
+        showNotification(`Welcome back, ${user.name}!`);
+    }, 1000);
+});
+// ==================== END AUTHENTICATION ====================
+
+// Your existing dashboard code continues below...
+// Make sure to replace your existing init function with this:
+async function init() {
+    // Authentication is already handled above
+    await loadAllData();
+    setupEventListeners();
+    initializeCalendar();
+    showNotification('Dashboard loaded successfully!');
+}
   <script>
     // Initialize Supabase
     const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
