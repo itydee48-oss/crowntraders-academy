@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReferralHub - Complete System</title>
+    <title>Nude Theme Referral Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -13,22 +13,9 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        :root {
-            --primary: #c8a97e;
-            --primary-dark: #b89768;
-            --secondary: #8b7355;
-            --light: #f9f5f0;
-            --text: #5a4d41;
-            --text-light: #a08c72;
-            --white: #ffffff;
-            --border: #e0d6cc;
-            --success: #5cb85c;
-            --error: #d9534f;
-        }
-        
         body {
-            background-color: var(--light);
-            color: var(--text);
+            background-color: #f9f5f0;
+            color: #5a4d41;
             line-height: 1.6;
         }
         
@@ -38,13 +25,12 @@
             padding: 20px;
         }
         
-        /* Header Styles */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid #e0d6cc;
             margin-bottom: 30px;
         }
         
@@ -56,33 +42,13 @@
         
         .logo i {
             font-size: 28px;
-            color: var(--primary);
+            color: #c8a97e;
         }
         
         .logo h1 {
             font-size: 24px;
             font-weight: 600;
-            color: var(--secondary);
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 25px;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-        
-        .nav-links a.active {
-            color: var(--primary);
+            color: #8b7355;
         }
         
         .user-info {
@@ -99,20 +65,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text);
+            color: #5a4d41;
             font-weight: bold;
         }
         
-        /* Page Styles */
-        .page {
-            display: none;
-        }
-        
-        .page.active {
-            display: block;
-        }
-        
-        /* Dashboard Styles */
         .dashboard-title {
             margin-bottom: 30px;
             text-align: center;
@@ -122,11 +78,11 @@
             font-size: 32px;
             font-weight: 300;
             margin-bottom: 10px;
-            color: var(--secondary);
+            color: #8b7355;
         }
         
         .dashboard-title p {
-            color: var(--text-light);
+            color: #a08c72;
             font-size: 16px;
         }
         
@@ -138,7 +94,7 @@
         }
         
         .stat-card {
-            background: var(--white);
+            background: #fff;
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(139, 115, 85, 0.1);
@@ -165,18 +121,18 @@
             margin-bottom: 15px;
             font-size: 28px;
             background: #f5f0e8;
-            color: var(--primary);
+            color: #c8a97e;
         }
         
         .stat-value {
             font-size: 32px;
             font-weight: 700;
             margin: 10px 0;
-            color: var(--secondary);
+            color: #8b7355;
         }
         
         .stat-label {
-            color: var(--text-light);
+            color: #a08c72;
             font-size: 16px;
         }
         
@@ -188,7 +144,7 @@
         }
         
         .action-card {
-            background: var(--white);
+            background: #fff;
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(139, 115, 85, 0.1);
@@ -216,13 +172,13 @@
             justify-content: center;
             font-size: 22px;
             background: #f5f0e8;
-            color: var(--primary);
+            color: #c8a97e;
         }
         
         .action-title {
             font-size: 20px;
             font-weight: 600;
-            color: var(--secondary);
+            color: #8b7355;
         }
         
         .referral-link-container {
@@ -232,11 +188,11 @@
         
         .referral-link {
             flex: 1;
-            background: var(--light);
-            border: 1px solid var(--border);
+            background: #f9f5f0;
+            border: 1px solid #e0d6cc;
             border-radius: 8px 0 0 8px;
             padding: 12px 15px;
-            color: var(--text);
+            color: #5a4d41;
             font-size: 14px;
             overflow: hidden;
             white-space: nowrap;
@@ -244,7 +200,7 @@
         }
         
         .copy-btn {
-            background: var(--primary);
+            background: #c8a97e;
             border: none;
             border-radius: 0 8px 8px 0;
             padding: 0 20px;
@@ -255,7 +211,7 @@
         }
         
         .copy-btn:hover {
-            background: var(--primary-dark);
+            background: #b89768;
         }
         
         .share-buttons {
@@ -268,7 +224,7 @@
             flex: 1;
             padding: 10px;
             border-radius: 8px;
-            border: 1px solid var(--border);
+            border: 1px solid #e0d6cc;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -277,7 +233,7 @@
             justify-content: center;
             gap: 8px;
             background: white;
-            color: var(--secondary);
+            color: #8b7355;
         }
         
         .share-btn:hover {
@@ -285,8 +241,34 @@
             transform: translateY(-2px);
         }
         
+        .withdrawal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            color: #8b7355;
+        }
+        
+        .form-control {
+            background: #f9f5f0;
+            border: 1px solid #e0d6cc;
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: #5a4d41;
+            font-size: 16px;
+        }
+        
         .withdraw-btn {
-            background: var(--primary);
+            background: #c8a97e;
             border: none;
             border-radius: 8px;
             padding: 14px;
@@ -296,16 +278,15 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 10px;
-            width: 100%;
         }
         
         .withdraw-btn:hover {
-            background: var(--primary-dark);
+            background: #b89768;
             transform: translateY(-2px);
         }
         
         .referrals-list {
-            background: var(--white);
+            background: #fff;
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(139, 115, 85, 0.1);
@@ -323,11 +304,11 @@
         .section-title {
             font-size: 22px;
             font-weight: 600;
-            color: var(--secondary);
+            color: #8b7355;
         }
         
         .view-all {
-            color: var(--primary);
+            color: #c8a97e;
             text-decoration: none;
             font-weight: 500;
             display: flex;
@@ -343,8 +324,8 @@
         .referrals-table th {
             text-align: left;
             padding: 15px 10px;
-            border-bottom: 1px solid var(--border);
-            color: var(--primary);
+            border-bottom: 1px solid #e0d6cc;
+            color: #c8a97e;
             font-weight: 600;
         }
         
@@ -362,7 +343,7 @@
         
         .status.active {
             background: #e8f5e8;
-            color: var(--success);
+            color: #5cb85c;
         }
         
         .status.pending {
@@ -370,206 +351,11 @@
             color: #f0ad4e;
         }
         
-        /* Registration Page Styles */
-        .registration-container {
-            max-width: 500px;
-            margin: 40px auto;
-            background: var(--white);
-            border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(139, 115, 85, 0.1);
-        }
-        
-        .registration-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .registration-header h2 {
-            font-size: 28px;
-            color: var(--secondary);
-            margin-bottom: 10px;
-        }
-        
-        .registration-header p {
-            color: var(--text-light);
-        }
-        
-        .referral-notice {
-            background: #f0e9df;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .referral-notice i {
-            color: var(--primary);
-            margin-right: 8px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--secondary);
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--light);
-            color: var(--text);
-            font-size: 16px;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        .submit-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-        }
-        
-        .submit-btn:hover {
-            background: var(--primary-dark);
-        }
-        
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .login-link a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-        
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 500px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .modal-title {
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--secondary);
-        }
-        
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text-light);
-        }
-        
-        .method-options {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .method-option {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .method-option.active {
-            border-color: var(--primary);
-            background-color: var(--light);
-        }
-        
-        .method-icon {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-        
-        .method-details {
-            display: none;
-            margin-top: 20px;
-            padding: 20px;
-            background-color: var(--light);
-            border-radius: 8px;
-        }
-        
-        .method-details.active {
-            display: block;
-        }
-        
-        .info-text {
-            font-size: 14px;
-            color: var(--text-light);
-            margin-bottom: 15px;
-        }
-        
-        .success-message {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            background-color: #e8f5e8;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        
-        .success-icon {
-            font-size: 48px;
-            color: var(--success);
-            margin-bottom: 15px;
-        }
-        
         footer {
             text-align: center;
             padding: 20px 0;
-            border-top: 1px solid var(--border);
-            color: var(--text-light);
+            border-top: 1px solid #e0d6cc;
+            color: #a08c72;
             font-size: 14px;
         }
         
@@ -594,398 +380,163 @@
                 border-radius: 0 0 8px 8px;
                 padding: 12px;
             }
-            
-            .method-options {
-                flex-direction: column;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .registration-container {
-                padding: 25px;
-                margin: 20px auto;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <div class="container">
         <header>
             <div class="logo">
                 <i class="fas fa-user-friends"></i>
                 <h1>ReferralHub</h1>
             </div>
-            <div class="nav-links">
-                <a href="#" class="nav-link active" data-page="dashboard">Dashboard</a>
-                <a href="#" class="nav-link" data-page="referrals">My Referrals</a>
-                <a href="#" class="nav-link" data-page="withdrawals">Withdrawals</a>
-                <a href="#" class="nav-link" data-page="profile">Profile</a>
-            </div>
             <div class="user-info">
                 <div class="user-avatar">JD</div>
                 <div>
-                    <div style="font-weight: 600; color: var(--secondary);">John Doe</div>
-                    <div style="font-size: 14px; color: var(--text-light);">Gold Member</div>
+                    <div style="font-weight: 600; color: #8b7355;">John Doe</div>
+                    <div style="font-size: 14px; color: #a08c72;">Gold Member</div>
                 </div>
             </div>
         </header>
-    </div>
-
-    <!-- Dashboard Page -->
-    <div class="container">
-        <div class="page active" id="dashboard">
-            <section class="dashboard-title">
-                <h2>Your Referral Dashboard</h2>
-                <p>Track your referrals and earnings in real-time</p>
-            </section>
+        
+        <section class="dashboard-title">
+            <h2>Your Referral Dashboard</h2>
+            <p>Track your referrals and earnings in real-time</p>
+        </section>
+        
+        <section class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-value">24</div>
+                <div class="stat-label">Total Referrals</div>
+            </div>
             
-            <section class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-value">24</div>
-                    <div class="stat-label">Total Referrals</div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-coins"></i>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-coins"></i>
-                    </div>
-                    <div class="stat-value">$1,250</div>
-                    <div class="stat-label">Total Earnings</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-value">$350</div>
-                    <div class="stat-label">Pending Withdrawal</div>
-                </div>
-            </section>
+                <div class="stat-value">$1,250</div>
+                <div class="stat-label">Total Earnings</div>
+            </div>
             
-            <section class="actions-container">
-                <div class="action-card">
-                    <div class="action-header">
-                        <div class="action-icon">
-                            <i class="fas fa-link"></i>
-                        </div>
-                        <div class="action-title">Your Referral Link</div>
-                    </div>
-                    <p style="margin-bottom: 15px; color: var(--text-light);">Share your unique link and earn rewards for every successful referral</p>
-                    <div class="referral-link-container">
-                        <a href="#" class="referral-link" id="referralLink" onclick="showRegistrationPage()">https://referralhub.com/register?ref=johndoe889</a>
-                        <button class="copy-btn" id="copyBtn">Copy</button>
-                    </div>
-                    <div class="share-buttons">
-                        <button class="share-btn" id="whatsappShare">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
-                        </button>
-                        <button class="share-btn" id="facebookShare">
-                            <i class="fab fa-facebook-f"></i> Facebook
-                        </button>
-                        <button class="share-btn" id="twitterShare">
-                            <i class="fab fa-twitter"></i> Twitter
-                        </button>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
                 </div>
-                
-                <div class="action-card">
-                    <div class="action-header">
-                        <div class="action-icon">
-                            <i class="fas fa-wallet"></i>
-                        </div>
-                        <div class="action-title">Request Withdrawal</div>
+                <div class="stat-value">$350</div>
+                <div class="stat-label">Pending Withdrawal</div>
+            </div>
+        </section>
+        
+        <section class="actions-container">
+            <div class="action-card">
+                <div class="action-header">
+                    <div class="action-icon">
+                        <i class="fas fa-link"></i>
                     </div>
-                    <p style="margin-bottom: 15px; color: var(--text-light);">Withdraw your earnings to your preferred payment method</p>
-                    <button class="withdraw-btn" id="openWithdrawalModal">Request Withdrawal</button>
+                    <div class="action-title">Your Referral Link</div>
                 </div>
-            </section>
-            
-            <section class="referrals-list">
-                <div class="section-header">
-                    <div class="section-title">Recent Referrals</div>
-                    <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+                <p style="margin-bottom: 15px; color: #a08c72;">Share your unique link and earn rewards for every successful referral</p>
+                <div class="referral-link-container">
+                    <div class="referral-link" id="referralLink">https://referralhub.com/ref/johndoe889</div>
+                    <button class="copy-btn" id="copyBtn">Copy</button>
                 </div>
-                <table class="referrals-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Date Joined</th>
-                            <th>Status</th>
-                            <th>Earned</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Sarah Johnson</td>
-                            <td>Oct 12, 2023</td>
-                            <td><span class="status active">Active</span></td>
-                            <td>$50</td>
-                        </tr>
-                        <tr>
-                            <td>Michael Chen</td>
-                            <td>Oct 10, 2023</td>
-                            <td><span class="status active">Active</span></td>
-                            <td>$50</td>
-                        </tr>
-                        <tr>
-                            <td>Emma Wilson</td>
-                            <td>Oct 5, 2023</td>
-                            <td><span class="status pending">Pending</span></td>
-                            <td>$25</td>
-                        </tr>
-                        <tr>
-                            <td>Robert Brown</td>
-                            <td>Oct 1, 2023</td>
-                            <td><span class="status active">Active</span></td>
-                            <td>$50</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-        </div>
-
-        <!-- Registration Page -->
-        <div class="page" id="registration">
-            <div class="registration-container">
-                <div class="registration-header">
-                    <h2>Create Your Account</h2>
-                    <p>Join thousands of users earning with our referral program</p>
-                </div>
-                
-                <div class="referral-notice" id="referralNotice">
-                    <i class="fas fa-gift"></i>
-                    <span>You're joining with John Doe's referral! You'll both earn rewards.</span>
-                </div>
-                
-                <form id="registrationForm">
-                    <div class="form-group">
-                        <label for="fullName">Full Name</label>
-                        <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" class="form-control" placeholder="Create a password" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="confirmPassword">Confirm Password</label>
-                        <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm your password" required>
-                    </div>
-                    
-                    <button type="submit" class="submit-btn">Create Account</button>
-                </form>
-                
-                <div class="login-link">
-                    Already have an account? <a href="#" onclick="showLoginPage()">Log in</a>
+                <div class="share-buttons">
+                    <button class="share-btn">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </button>
+                    <button class="share-btn">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </button>
+                    <button class="share-btn">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Login Page -->
-        <div class="page" id="login">
-            <div class="registration-container">
-                <div class="registration-header">
-                    <h2>Welcome Back</h2>
-                    <p>Sign in to your account</p>
+            
+            <div class="action-card">
+                <div class="action-header">
+                    <div class="action-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="action-title">Request Withdrawal</div>
                 </div>
-                
-                <form id="loginForm">
+                <p style="margin-bottom: 15px; color: #a08c72;">Withdraw your earnings to your preferred payment method</p>
+                <form class="withdrawal-form">
                     <div class="form-group">
-                        <label for="loginEmail">Email Address</label>
-                        <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email" required>
+                        <label for="amount">Amount to Withdraw</label>
+                        <input type="number" id="amount" class="form-control" placeholder="Enter amount" min="10" max="1250">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="loginPassword">Password</label>
-                        <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
+                        <label for="method">Payment Method</label>
+                        <select id="method" class="form-control">
+                            <option value="">Select payment method</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="bank">Bank Transfer</option>
+                            <option value="crypto">Cryptocurrency</option>
+                        </select>
                     </div>
-                    
-                    <button type="submit" class="submit-btn">Sign In</button>
+                    <button type="button" class="withdraw-btn">Request Withdrawal</button>
                 </form>
-                
-                <div class="login-link">
-                    Don't have an account? <a href="#" onclick="showRegistrationPage()">Sign up</a>
-                </div>
             </div>
-        </div>
-
+        </section>
+        
+        <section class="referrals-list">
+            <div class="section-header">
+                <div class="section-title">Recent Referrals</div>
+                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+            </div>
+            <table class="referrals-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Date Joined</th>
+                        <th>Status</th>
+                        <th>Earned</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Sarah Johnson</td>
+                        <td>Oct 12, 2023</td>
+                        <td><span class="status active">Active</span></td>
+                        <td>$50</td>
+                    </tr>
+                    <tr>
+                        <td>Michael Chen</td>
+                        <td>Oct 10, 2023</td>
+                        <td><span class="status active">Active</span></td>
+                        <td>$50</td>
+                    </tr>
+                    <tr>
+                        <td>Emma Wilson</td>
+                        <td>Oct 5, 2023</td>
+                        <td><span class="status pending">Pending</span></td>
+                        <td>$25</td>
+                    </tr>
+                    <tr>
+                        <td>Robert Brown</td>
+                        <td>Oct 1, 2023</td>
+                        <td><span class="status active">Active</span></td>
+                        <td>$50</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
         <footer>
-            <p>&copy; 2023 ReferralHub. All rights reserved. | <a href="#" style="color: var(--primary);">Privacy Policy</a> | <a href="#" style="color: var(--primary);">Terms of Service</a></p>
+            <p>&copy; 2023 ReferralHub. All rights reserved. | <a href="#" style="color: #c8a97e;">Privacy Policy</a> | <a href="#" style="color: #c8a97e;">Terms of Service</a></p>
         </footer>
     </div>
 
-    <!-- Withdrawal Modal -->
-    <div class="modal" id="withdrawalModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Request Withdrawal</h3>
-                <button class="close-btn" id="closeModal">&times;</button>
-            </div>
-            
-            <div class="form-group">
-                <label for="withdrawalAmount">Amount to Withdraw</label>
-                <input type="number" id="withdrawalAmount" class="form-control" placeholder="Enter amount" min="10" max="1250">
-                <div class="info-text">Minimum withdrawal: $10. Available balance: $1,250</div>
-            </div>
-            
-            <div class="form-group">
-                <label>Select Payment Method</label>
-                <div class="method-options">
-                    <div class="method-option active" data-method="mpesa">
-                        <div class="method-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <div>M-Pesa</div>
-                    </div>
-                    <div class="method-option" data-method="paypal">
-                        <div class="method-icon">
-                            <i class="fab fa-paypal"></i>
-                        </div>
-                        <div>PayPal</div>
-                    </div>
-                    <div class="method-option" data-method="bank">
-                        <div class="method-icon">
-                            <i class="fas fa-university"></i>
-                        </div>
-                        <div>Bank Transfer</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- M-Pesa Details -->
-            <div class="method-details active" id="mpesaDetails">
-                <h4 style="margin-bottom: 15px; color: var(--secondary);">M-Pesa Withdrawal Details</h4>
-                <div class="form-group">
-                    <label for="mpesaNumber">M-Pesa Phone Number</label>
-                    <input type="tel" id="mpesaNumber" class="form-control" placeholder="e.g. 254712345678">
-                </div>
-                <div class="form-group">
-                    <label for="mpesaName">Full Name (as registered with M-Pesa)</label>
-                    <input type="text" id="mpesaName" class="form-control" placeholder="Enter your full name">
-                </div>
-                <div class="info-text">
-                    <strong>Important:</strong> Ensure your M-Pesa number is registered and active. 
-                    Withdrawals typically process within 2-4 hours during business days.
-                </div>
-            </div>
-            
-            <!-- PayPal Details -->
-            <div class="method-details" id="paypalDetails">
-                <h4 style="margin-bottom: 15px; color: var(--secondary);">PayPal Withdrawal Details</h4>
-                <div class="form-group">
-                    <label for="paypalEmail">PayPal Email Address</label>
-                    <input type="email" id="paypalEmail" class="form-control" placeholder="Enter your PayPal email">
-                </div>
-                <div class="info-text">
-                    <strong>Note:</strong> PayPal withdrawals may take 3-5 business days to process. 
-                    Ensure your PayPal account is verified to avoid delays.
-                </div>
-            </div>
-            
-            <!-- Bank Transfer Details -->
-            <div class="method-details" id="bankDetails">
-                <h4 style="margin-bottom: 15px; color: var(--secondary);">Bank Transfer Details</h4>
-                <div class="form-group">
-                    <label for="bankName">Bank Name</label>
-                    <input type="text" id="bankName" class="form-control" placeholder="Enter bank name">
-                </div>
-                <div class="form-group">
-                    <label for="accountName">Account Holder Name</label>
-                    <input type="text" id="accountName" class="form-control" placeholder="Enter account holder name">
-                </div>
-                <div class="form-group">
-                    <label for="accountNumber">Account Number</label>
-                    <input type="text" id="accountNumber" class="form-control" placeholder="Enter account number">
-                </div>
-                <div class="form-group">
-                    <label for="swiftCode">SWIFT/BIC Code</label>
-                    <input type="text" id="swiftCode" class="form-control" placeholder="Enter SWIFT code">
-                </div>
-                <div class="info-text">
-                    <strong>Processing Time:</strong> Bank transfers typically take 3-7 business days. 
-                    International transfers may take longer and incur additional fees.
-                </div>
-            </div>
-            
-            <button class="withdraw-btn" id="submitWithdrawal">Submit Withdrawal Request</button>
-            
-            <div class="success-message" id="successMessage">
-                <div class="success-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <h3 style="margin-bottom: 10px; color: var(--success);">Withdrawal Request Submitted!</h3>
-                <p>Your withdrawal request has been received and is being processed. You will receive a confirmation email shortly.</p>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Page Navigation
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const pageId = this.getAttribute('data-page');
-                
-                // Update active nav link
-                document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Show selected page
-                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-                document.getElementById(pageId).classList.add('active');
-            });
-        });
-
-        // Show registration page (when referral link is clicked)
-        function showRegistrationPage() {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById('registration').classList.add('active');
-            
-            // Update navigation
-            document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
-        }
-
-        // Show login page
-        function showLoginPage() {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById('login').classList.add('active');
-            
-            // Update navigation
-            document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
-        }
-
-        // Show dashboard (after login)
-        function showDashboard() {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById('dashboard').classList.add('active');
-            
-            // Update navigation
-            document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
-            document.querySelector('[data-page="dashboard"]').classList.add('active');
-        }
-
         // Copy referral link functionality
         document.getElementById('copyBtn').addEventListener('click', function() {
             const referralLink = document.getElementById('referralLink');
             const textArea = document.createElement('textarea');
-            textArea.value = referralLink.href;
+            textArea.value = referralLink.textContent;
             document.body.appendChild(textArea);
             textArea.select();
             document.execCommand('copy');
@@ -994,7 +545,7 @@
             // Change button text temporarily
             const originalText = this.textContent;
             this.textContent = 'Copied!';
-            this.style.background = 'var(--success)';
+            this.style.background = '#5cb85c';
             
             setTimeout(() => {
                 this.textContent = originalText;
@@ -1002,76 +553,13 @@
             }, 2000);
         });
         
-        // Share buttons functionality
-        document.getElementById('whatsappShare').addEventListener('click', function() {
-            const link = document.getElementById('referralLink').href;
-            const text = "Join me on ReferralHub and start earning rewards!";
-            const url = `https://wa.me/?text=${encodeURIComponent(text + " " + link)}`;
-            window.open(url, '_blank', 'width=600,height=400');
-        });
-        
-        document.getElementById('facebookShare').addEventListener('click', function() {
-            const link = document.getElementById('referralLink').href;
-            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
-            window.open(url, '_blank', 'width=600,height=400');
-        });
-        
-        document.getElementById('twitterShare').addEventListener('click', function() {
-            const link = document.getElementById('referralLink').href;
-            const text = "Join me on ReferralHub and start earning rewards!";
-            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`;
-            window.open(url, '_blank', 'width=600,height=400');
-        });
-        
-        // Modal functionality
-        const modal = document.getElementById('withdrawalModal');
-        const openModalBtn = document.getElementById('openWithdrawalModal');
-        const closeModalBtn = document.getElementById('closeModal');
-        const submitWithdrawalBtn = document.getElementById('submitWithdrawal');
-        const methodOptions = document.querySelectorAll('.method-option');
-        const methodDetails = document.querySelectorAll('.method-details');
-        const successMessage = document.getElementById('successMessage');
-        
-        openModalBtn.addEventListener('click', function() {
-            modal.style.display = 'flex';
-        });
-        
-        closeModalBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-            successMessage.style.display = 'none';
-        });
-        
-        window.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-                successMessage.style.display = 'none';
-            }
-        });
-        
-        // Method selection
-        methodOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                // Remove active class from all options
-                methodOptions.forEach(opt => opt.classList.remove('active'));
-                // Add active class to clicked option
-                this.classList.add('active');
-                
-                // Hide all method details
-                methodDetails.forEach(detail => detail.classList.remove('active'));
-                
-                // Show selected method details
-                const method = this.getAttribute('data-method');
-                document.getElementById(`${method}Details`).classList.add('active');
-            });
-        });
-        
-        // Withdrawal submission
-        submitWithdrawalBtn.addEventListener('click', function() {
-            const amount = document.getElementById('withdrawalAmount').value;
-            const activeMethod = document.querySelector('.method-option.active').getAttribute('data-method');
+        // Withdrawal request functionality
+        document.querySelector('.withdraw-btn').addEventListener('click', function() {
+            const amount = document.getElementById('amount').value;
+            const method = document.getElementById('method').value;
             
-            if (!amount) {
-                alert('Please enter the withdrawal amount');
+            if (!amount || !method) {
+                alert('Please fill in all fields');
                 return;
             }
             
@@ -1080,102 +568,31 @@
                 return;
             }
             
-            if (amount > 1250) {
-                alert('Withdrawal amount cannot exceed your available balance of $1,250');
-                return;
-            }
-            
-            // Validate method-specific details
-            let isValid = true;
-            let message = '';
-            
-            if (activeMethod === 'mpesa') {
-                const mpesaNumber = document.getElementById('mpesaNumber').value;
-                const mpesaName = document.getElementById('mpesaName').value;
-                
-                if (!mpesaNumber || !mpesaName) {
-                    isValid = false;
-                    message = 'Please fill in all M-Pesa details';
-                } else if (!/^254[17]\d{8}$/.test(mpesaNumber)) {
-                    isValid = false;
-                    message = 'Please enter a valid M-Pesa number starting with 254';
-                }
-            } else if (activeMethod === 'paypal') {
-                const paypalEmail = document.getElementById('paypalEmail').value;
-                
-                if (!paypalEmail) {
-                    isValid = false;
-                    message = 'Please enter your PayPal email address';
-                } else if (!/^\S+@\S+\.\S+$/.test(paypalEmail)) {
-                    isValid = false;
-                    message = 'Please enter a valid email address';
-                }
-            } else if (activeMethod === 'bank') {
-                const bankName = document.getElementById('bankName').value;
-                const accountName = document.getElementById('accountName').value;
-                const accountNumber = document.getElementById('accountNumber').value;
-                const swiftCode = document.getElementById('swiftCode').value;
-                
-                if (!bankName || !accountName || !accountNumber || !swiftCode) {
-                    isValid = false;
-                    message = 'Please fill in all bank details';
-                }
-            }
-            
-            if (!isValid) {
-                alert(message);
-                return;
-            }
-            
-            // Show success message
-            successMessage.style.display = 'block';
-            
-            // In a real app, this would send the request to the server
-            setTimeout(() => {
-                modal.style.display = 'none';
-                successMessage.style.display = 'none';
-                alert(`Withdrawal request for $${amount} via ${activeMethod.toUpperCase()} has been submitted successfully!`);
-            }, 3000);
+            // In a real app, this would send a request to the server
+            alert(`Withdrawal request for $${amount} via ${method} has been submitted!`);
+            document.getElementById('amount').value = '';
+            document.getElementById('method').value = '';
         });
-
-        // Registration form submission
-        document.getElementById('registrationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return;
-            }
-            
-            // In a real app, this would send the registration data to the server
-            alert('Registration successful! Redirecting to dashboard...');
-            showDashboard();
-        });
-
-        // Login form submission
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // In a real app, this would send the login data to the server
-            alert('Login successful! Redirecting to dashboard...');
-            showDashboard();
-        });
-
-        // Check if there's a referral parameter in the URL
-        window.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const refParam = urlParams.get('ref');
-            
-            if (refParam) {
-                // If there's a referral parameter, show registration page
-                showRegistrationPage();
+        
+        // Share buttons functionality
+        document.querySelectorAll('.share-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const link = document.getElementById('referralLink').textContent;
+                const platform = this.querySelector('i').className.split('-')[1];
                 
-                // In a real app, you would store the referrer information
-                console.log('Referral detected from user:', refParam);
-            }
+                let url;
+                const text = "Join me on ReferralHub and start earning rewards!";
+                
+                if (platform === 'whatsapp') {
+                    url = `https://wa.me/?text=${encodeURIComponent(text + " " + link)}`;
+                } else if (platform === 'facebook') {
+                    url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
+                } else if (platform === 'twitter') {
+                    url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`;
+                }
+                
+                window.open(url, '_blank', 'width=600,height=400');
+            });
         });
     </script>
 </body>
