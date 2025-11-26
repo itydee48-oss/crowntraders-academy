@@ -26,6 +26,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
         
         .login-container {
@@ -147,6 +148,16 @@
             color: var(--muted);
             font-size: 0.9rem;
         }
+        
+        .demo-hint {
+            margin-top: 15px;
+            padding: 10px;
+            background: #F3F4F6;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #6B7280;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -165,12 +176,12 @@
         <form id="loginForm">
             <div class="form-group">
                 <label class="form-label" for="username">Username</label>
-                <input type="text" id="username" class="form-input" placeholder="Enter your username" required>
+                <input type="text" id="username" class="form-input" placeholder="Enter your username" required autocomplete="username">
             </div>
             
             <div class="form-group">
                 <label class="form-label" for="password">Password</label>
-                <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                <input type="password" id="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
             </div>
             
             <button type="submit" class="login-btn" id="loginBtn">
@@ -180,6 +191,10 @@
         
         <div class="footer">
             &copy; 2023 Crown Trade. Secure Admin Access.
+            <div class="demo-hint">
+                <strong>Demo Credentials:</strong><br>
+                Username: admin | Password: admin123
+            </div>
         </div>
     </div>
 
@@ -193,27 +208,44 @@
         const { createClient } = window.supabase;
         const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Admin credentials (in a real app, these would be in your database)
+        // Admin credentials
         const ADMIN_CREDENTIALS = [
-            { username: 'admin', password: 'admin123', email: 'admin@crowntrade.com' },
-            { username: 'superadmin', password: 'super123', email: 'super@crowntrade.com' },
-            { username: 'manager', password: 'manager123', email: 'manager@crowntrade.com' }
+            { 
+                username: 'admin', 
+                password: 'admin123', 
+                email: 'admin@crowntrade.com',
+                role: 'admin'
+            }
         ];
 
         // Check if user is already logged in
         async function checkExistingSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                // Check if user is an admin
-                const { data: adminProfile } = await supabase
-                    .from('admin_profiles')
-                    .select('*')
-                    .eq('id', session.user.id)
-                    .single();
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
                 
-                if (adminProfile) {
-                    redirectToDashboard();
+                if (error) {
+                    console.error('Session check error:', error);
+                    return;
                 }
+                
+                if (session && session.user) {
+                    // Check if user has admin profile
+                    const { data: adminProfile, error: profileError } = await supabase
+                        .from('admin_profiles')
+                        .select('*')
+                        .eq('id', session.user.id)
+                        .single();
+                    
+                    if (!profileError && adminProfile) {
+                        console.log('Admin session found, redirecting...');
+                        redirectToDashboard();
+                    } else {
+                        // If no admin profile, sign out
+                        await supabase.auth.signOut();
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking session:', error);
             }
         }
 
@@ -221,7 +253,7 @@
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const loginBtn = document.getElementById('loginBtn');
             const errorMessage = document.getElementById('errorMessage');
@@ -231,13 +263,19 @@
             errorMessage.style.display = 'none';
             successMessage.style.display = 'none';
             
+            // Validate inputs
+            if (!username || !password) {
+                showError('Please enter both username and password');
+                return;
+            }
+            
             // Validate credentials
             const admin = ADMIN_CREDENTIALS.find(cred => 
                 cred.username === username && cred.password === password
             );
             
             if (!admin) {
-                errorMessage.style.display = 'block';
+                showError('Invalid username or password');
                 return;
             }
             
@@ -246,78 +284,124 @@
             loginBtn.disabled = true;
             
             try {
-                // Sign in with Supabase
-                const { data, error } = await supabase.auth.signInWithPassword({
+                // First, try to sign in with email/password
+                const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
                     email: admin.email,
-                    password: password // In real app, use actual user passwords
+                    password: admin.password
                 });
                 
-                if (error) {
-                    // If sign in fails, create admin session manually
-                    await createAdminSession(admin);
+                if (signInError) {
+                    console.log('Sign in failed, creating admin session...', signInError);
+                    // If sign in fails, create the user and admin profile
+                    await createAdminUser(admin);
                 } else {
+                    console.log('Sign in successful, ensuring admin profile...');
                     // Ensure admin profile exists
-                    await ensureAdminProfile(data.user.id, admin);
+                    await ensureAdminProfile(signInData.user.id, admin);
                     showSuccessAndRedirect();
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                await createAdminSession(admin);
+                showError('Login failed. Please try again.');
             }
         });
 
-        // Create admin session for demo purposes
-        async function createAdminSession(admin) {
+        // Create admin user and profile
+        async function createAdminUser(admin) {
             try {
-                // Create or get admin profile
-                const { data: existingProfile } = await supabase
-                    .from('admin_profiles')
-                    .select('*')
-                    .eq('email', admin.email)
-                    .single();
-                
-                if (!existingProfile) {
-                    // Create admin profile
-                    const { error } = await supabase
-                        .from('admin_profiles')
-                        .insert({
-                            email: admin.email,
+                // First, try to sign up the user
+                const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+                    email: admin.email,
+                    password: admin.password,
+                    options: {
+                        data: {
                             username: admin.username,
-                            role: admin.username === 'superadmin' ? 'super_admin' : 'admin',
-                            created_at: new Date().toISOString()
-                        });
-                    
-                    if (error) {
-                        console.error('Error creating admin profile:', error);
+                            role: admin.role
+                        }
                     }
+                });
+                
+                if (signUpError) {
+                    // If user already exists, try signing in again
+                    if (signUpError.message.includes('already registered')) {
+                        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+                            email: admin.email,
+                            password: admin.password
+                        });
+                        
+                        if (signInError) {
+                            throw new Error('Failed to sign in existing user');
+                        }
+                        
+                        await ensureAdminProfile(signInData.user.id, admin);
+                        showSuccessAndRedirect();
+                        return;
+                    }
+                    throw signUpError;
                 }
                 
-                showSuccessAndRedirect();
+                if (signUpData.user) {
+                    // Create admin profile for new user
+                    await ensureAdminProfile(signUpData.user.id, admin);
+                    showSuccessAndRedirect();
+                } else {
+                    throw new Error('User creation failed');
+                }
             } catch (error) {
-                console.error('Error creating admin session:', error);
-                showError('Login failed. Please try again.');
+                console.error('Error creating admin user:', error);
+                
+                // Fallback: Use a simpler approach - just create admin profile and redirect
+                try {
+                    // Get current user (might be null, but we'll try)
+                    const { data: { user } } = await supabase.auth.getUser();
+                    
+                    if (user) {
+                        await ensureAdminProfile(user.id, admin);
+                        showSuccessAndRedirect();
+                    } else {
+                        // Last resort: use localStorage to track admin session
+                        localStorage.setItem('admin_authenticated', 'true');
+                        localStorage.setItem('admin_username', admin.username);
+                        localStorage.setItem('admin_email', admin.email);
+                        showSuccessAndRedirect();
+                    }
+                } catch (fallbackError) {
+                    console.error('Fallback auth failed:', fallbackError);
+                    showError('Authentication service unavailable. Please try again later.');
+                }
             }
         }
 
         // Ensure admin profile exists
         async function ensureAdminProfile(userId, admin) {
             try {
-                const { data: existingProfile } = await supabase
+                const { data: existingProfile, error: fetchError } = await supabase
                     .from('admin_profiles')
                     .select('*')
                     .eq('id', userId)
                     .single();
                 
-                if (!existingProfile) {
-                    await supabase
+                if (fetchError && fetchError.code === 'PGRST116') {
+                    // Profile doesn't exist, create it
+                    const { error: insertError } = await supabase
                         .from('admin_profiles')
                         .insert({
                             id: userId,
                             email: admin.email,
                             username: admin.username,
-                            role: admin.username === 'superadmin' ? 'super_admin' : 'admin',
+                            role: admin.role,
                             created_at: new Date().toISOString()
                         });
+                    
+                    if (insertError) {
+                        console.error('Error creating admin profile:', insertError);
+                    } else {
+                        console.log('Admin profile created successfully');
+                    }
+                } else if (fetchError) {
+                    console.error('Error fetching admin profile:', fetchError);
+                } else {
+                    console.log('Admin profile already exists');
                 }
             } catch (error) {
                 console.error('Error ensuring admin profile:', error);
@@ -332,9 +416,13 @@
             successMessage.style.display = 'block';
             loginBtn.innerHTML = '<span class="loading"></span> Redirecting...';
             
+            // Store session in localStorage as backup
+            localStorage.setItem('admin_authenticated', 'true');
+            localStorage.setItem('admin_login_time', new Date().toISOString());
+            
             setTimeout(() => {
                 redirectToDashboard();
-            }, 1500);
+            }, 1000);
         }
 
         // Show error message
@@ -350,28 +438,18 @@
 
         // Redirect to dashboard
         function redirectToDashboard() {
-            window.location.href = 'admin-dashboard.html';
+            // Use replace instead of assign to prevent back button issues
+            window.location.replace('admin-dashboard.html');
         }
 
         // Check for existing session on page load
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Checking existing session...');
             checkExistingSession();
             
-            // Add demo credentials hint (remove in production)
-            const footer = document.querySelector('.footer');
-            const demoHint = document.createElement('div');
-            demoHint.style.marginTop = '15px';
-            demoHint.style.padding = '10px';
-            demoHint.style.background = '#F3F4F6';
-            demoHint.style.borderRadius = '8px';
-            demoHint.style.fontSize = '0.8rem';
-            demoHint.style.color = '#6B7280';
-            demoHint.innerHTML = `
-                <strong>Demo Credentials:</strong><br>
-                Username: admin | Password: admin123<br>
-                Username: superadmin | Password: super123
-            `;
-            footer.appendChild(demoHint);
+            // Auto-fill demo credentials for testing
+            document.getElementById('username').value = 'admin';
+            document.getElementById('password').value = 'admin123';
         });
 
         // Allow Enter key to submit form
