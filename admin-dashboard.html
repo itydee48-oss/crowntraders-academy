@@ -144,59 +144,6 @@
     .status-completed { color: var(--success); font-weight: 600; }
     .status-failed { color: var(--danger); font-weight: 600; }
     
-    .form-group { margin-bottom: 16px; }
-    .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--charcoal); }
-    .form-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 1rem; }
-    .form-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,169,126,0.1); }
-    
-    .chart-container {
-      background: white;
-      padding: 20px;
-      border-radius: 14px;
-      margin: 20px 0;
-      height: 300px;
-    }
-    
-    .quick-actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin: 20px 0;
-    }
-    
-    .action-card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.2s;
-      border: 2px solid transparent;
-    }
-    
-    .action-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--gold);
-    }
-    
-    .loading { opacity: 0.6; pointer-events: none; }
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 15px 20px;
-      border-radius: 8px;
-      color: white;
-      font-weight: 600;
-      z-index: 1000;
-      animation: slideIn 0.3s ease;
-    }
-    
-    .notification.success { background: var(--success); }
-    .notification.error { background: var(--danger); }
-    .notification.warning { background: var(--warning); }
-    
-    /* New styles for payment requests */
     .payment-request {
       border-left: 4px solid var(--warning);
       background: #FFFBF0;
@@ -262,27 +209,22 @@
       animation: pulse 2s infinite;
     }
     
-    .session-expired {
+    .loading { opacity: 0.6; pointer-events: none; }
+    .notification {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
     }
     
-    .session-modal {
-      background: white;
-      padding: 30px;
-      border-radius: 16px;
-      text-align: center;
-      max-width: 400px;
-      width: 90%;
-    }
+    .notification.success { background: var(--success); }
+    .notification.error { background: var(--danger); }
+    .notification.warning { background: var(--warning); }
     
     @keyframes pulse {
       0% { opacity: 1; }
@@ -302,16 +244,6 @@
 </head>
 <body>
 
-<!-- Session Expired Modal -->
-<div class="session-expired" id="sessionExpiredModal">
-  <div class="session-modal">
-    <div style="font-size: 3rem; margin-bottom: 20px;">🔒</div>
-    <h2 style="color: var(--gold-dark); margin-bottom: 15px;">Session Expired</h2>
-    <p style="color: var(--muted); margin-bottom: 25px;">Your session has expired. Please log in again to continue.</p>
-    <button class="btn" onclick="redirectToLogin()" style="width: 100%;">Return to Login</button>
-  </div>
-</div>
-
 <div class="admin-app">
   <!-- Sidebar -->
   <aside class="sidebar">
@@ -324,12 +256,8 @@
     
     <nav class="nav">
       <button data-tab="dashboard" class="active">📊 Dashboard</button>
-      <button data-tab="members">👥 Member Approval</button>
       <button data-tab="payment-requests">💰 Payment Requests <span class="real-time-badge" id="paymentRequestsBadge">0</span></button>
-      <button data-tab="withdrawals">🏦 Withdrawals</button>
-      <button data-tab="pricing">💎 Pricing</button>
-      <button data-tab="referral">🎯 Referral Program</button>
-      <button data-tab="reports">📈 Reports</button>
+      <button data-tab="members">👥 Members</button>
       <button data-tab="settings">⚙️ Settings</button>
     </nav>
     
@@ -354,68 +282,44 @@
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-label">Total Revenue</div>
-          <div class="stat-value" id="totalRevenue">$0</div>
-          <div style="color:var(--success);font-size:0.9rem;" id="revenueTrend">Loading...</div>
+          <div class="stat-value" id="totalRevenue">KSh 0</div>
+          <div style="color:var(--success);font-size:0.9rem;">All time revenue</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Active Members</div>
           <div class="stat-value" id="activeMembers">0</div>
-          <div style="color:var(--success);font-size:0.9rem;" id="membersTrend">Loading...</div>
+          <div style="color:var(--success);font-size:0.9rem;">Active members</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Pending Approvals</div>
-          <div class="stat-value" id="pendingApprovals">0</div>
+          <div class="stat-label">Pending Payments</div>
+          <div class="stat-value" id="pendingPayments">0</div>
           <div style="color:var(--warning);font-size:0.9rem;">Requires attention</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Withdrawal Requests</div>
-          <div class="stat-value" id="withdrawalRequests">0</div>
-          <div style="color:var(--warning);font-size:0.9rem;" id="withdrawalAmount">$0 total</div>
-        </div>
-      </div>
-
-      <!-- Quick Actions -->
-      <div class="quick-actions">
-        <div class="action-card" onclick="switchTab('members')">
-          <div style="font-size:2rem;">👥</div>
-          <div style="font-weight:600;">Review Members</div>
-          <small id="quickPendingMembers">Loading...</small>
-        </div>
-        <div class="action-card" onclick="switchTab('payment-requests')">
-          <div style="font-size:2rem;">💰</div>
-          <div style="font-weight:600;">Payment Requests</div>
-          <small id="quickPaymentRequests">Loading...</small>
-        </div>
-        <div class="action-card" onclick="switchTab('withdrawals')">
-          <div style="font-size:2rem;">🏦</div>
-          <div style="font-weight:600;">Process Withdrawals</div>
-          <small id="quickWithdrawals">Loading...</small>
-        </div>
-        <div class="action-card" onclick="switchTab('pricing')">
-          <div style="font-size:2rem;">💎</div>
-          <div style="font-weight:600;">Update Pricing</div>
-          <small>3 plans</small>
+          <div class="stat-label">Today's Revenue</div>
+          <div class="stat-value" id="todayRevenue">KSh 0</div>
+          <div style="color:var(--success);font-size:0.9rem;">Today's earnings</div>
         </div>
       </div>
 
       <!-- Recent Activity -->
       <div class="card">
         <div class="card-header">
-          <div class="card-title">Recent Activity</div>
-          <button class="btn btn-info" onclick="loadRecentActivity()">Refresh</button>
+          <div class="card-title">Recent Payment Activity</div>
+          <button class="btn btn-info" onclick="loadRecentPayments()">Refresh</button>
         </div>
         <table class="table">
           <thead>
             <tr>
               <th>Time</th>
               <th>User</th>
-              <th>Action</th>
               <th>Amount</th>
+              <th>Method</th>
               <th>Status</th>
             </tr>
           </thead>
-          <tbody id="recentActivity">
-            <tr><td colspan="5" style="text-align:center;">Loading recent activity...</td></tr>
+          <tbody id="recentPayments">
+            <tr><td colspan="5" style="text-align:center;">Loading recent payments...</td></tr>
           </tbody>
         </table>
       </div>
@@ -436,7 +340,7 @@
               <th>Amount</th>
               <th>Screenshot</th>
               <th>Submitted</th>
-              <th>Status</th>
+              <th>Reference</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -450,6 +354,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">Recently Approved Payments</div>
+          <button class="btn btn-info" onclick="loadApprovedPayments()">Refresh</button>
         </div>
         <table class="table">
           <thead>
@@ -473,30 +378,8 @@
     <div id="members" style="display:none;">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">Pending Member Approvals</div>
-          <button class="btn btn-info" onclick="loadPendingMembers()">Refresh</button>
-        </div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Applied</th>
-              <th>Plan</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="pendingMembers">
-            <tr><td colspan="6" style="text-align:center;">Loading pending members...</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Approved Members -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Approved Members</div>
+          <div class="card-title">All Members</div>
+          <button class="btn btn-info" onclick="loadAllMembers()">Refresh</button>
         </div>
         <table class="table">
           <thead>
@@ -509,125 +392,10 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="approvedMembers">
-            <tr><td colspan="6" style="text-align:center;">Loading approved members...</td></tr>
+          <tbody id="allMembers">
+            <tr><td colspan="6" style="text-align:center;">Loading members...</td></tr>
           </tbody>
         </table>
-      </div>
-    </div>
-
-    <!-- Withdrawals Tab -->
-    <div id="withdrawals" style="display:none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Withdrawal Requests</div>
-          <button class="btn btn-info" onclick="loadWithdrawalRequests()">Refresh</button>
-        </div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Mentor</th>
-              <th>Amount</th>
-              <th>Method</th>
-              <th>Account</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="withdrawalRequestsTable">
-            <tr><td colspan="7" style="text-align:center;">Loading withdrawal requests...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Pricing Tab -->
-    <div id="pricing" style="display:none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Program Pricing</div>
-          <button class="btn btn-info" onclick="loadPricing()">Refresh</button>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Basic Plan Price ($)</label>
-          <input type="number" id="basicPrice" class="form-input" value="99" step="0.01">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Pro Plan Price ($)</label>
-          <input type="number" id="proPrice" class="form-input" value="199" step="0.01">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Elite Plan Price ($)</label>
-          <input type="number" id="elitePrice" class="form-input" value="399" step="0.01">
-        </div>
-        <button class="btn" onclick="updatePricing()">Update Pricing</button>
-      </div>
-    </div>
-
-    <!-- Referral Program Tab -->
-    <div id="referral" style="display:none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Referral Program Settings</div>
-          <button class="btn btn-info" onclick="loadReferralSettings()">Refresh</button>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Referral Bonus Percentage (%)</label>
-          <input type="number" id="referralBonus" class="form-input" value="15" step="0.1">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Minimum Payout Amount ($)</label>
-          <input type="number" id="minPayout" class="form-input" value="50" step="0.01">
-        </div>
-        <button class="btn" onclick="updateReferralSettings()">Update Settings</button>
-      </div>
-      
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Top Referrers</div>
-        </div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Referrer</th>
-              <th>Referrals</th>
-              <th>Earnings</th>
-            </tr>
-          </thead>
-          <tbody id="topReferrers">
-            <tr><td colspan="4" style="text-align:center;">Loading top referrers...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Reports Tab -->
-    <div id="reports" style="display:none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Business Analytics</div>
-          <button class="btn btn-info" onclick="loadReports()">Refresh</button>
-        </div>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-label">Monthly Revenue</div>
-            <div class="stat-value" id="monthlyRevenue">$0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">New Members This Month</div>
-            <div class="stat-value" id="monthlyMembers">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Conversion Rate</div>
-            <div class="stat-value" id="conversionRate">0%</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Avg. Revenue per User</div>
-            <div class="stat-value" id="avgRevenue">$0</div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -636,21 +404,20 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">System Settings</div>
-          <button class="btn btn-info" onclick="loadSystemSettings()">Refresh</button>
         </div>
         <div class="form-group">
-          <label class="form-label">Business Name</label>
-          <input type="text" id="businessName" class="form-input" value="Crown Trade Academy">
+          <label class="form-label">M-Pesa Number</label>
+          <input type="text" id="mpesaNumber" class="form-input" value="0769968847" readonly>
         </div>
         <div class="form-group">
-          <label class="form-label">Support Email</label>
-          <input type="email" id="supportEmail" class="form-input" value="support@crowntrade.com">
+          <label class="form-label">Confirmation Name</label>
+          <input type="text" id="confirmationName" class="form-input" value="Racheal Waithira" readonly>
         </div>
         <div class="form-group">
-          <label class="form-label">Auto-approval Threshold ($)</label>
-          <input type="number" id="autoApprove" class="form-input" value="500" step="0.01">
+          <label class="form-label">Payment Amount</label>
+          <input type="text" id="paymentAmount" class="form-input" value="KSh 400" readonly>
         </div>
-        <button class="btn" onclick="updateSystemSettings()">Save Settings</button>
+        <button class="btn" onclick="updateSettings()">Update Settings</button>
       </div>
     </div>
   </main>
@@ -664,150 +431,112 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Supabase Configuration
-const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxza2pzaGJjbmlpbHpseXhlY3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2MzcwMjksImV4cCI6MjA3OTIxMzAyOX0.PxvhBTZ2Bv4hnwxTrFA0E_zucNxMYrVwDSuRGniDBnc';
+// Supabase Configuration - USING YOUR CORRECT PROJECT DETAILS
+const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
-// Wait for Supabase to load
-let supabase;
+// Initialize Supabase
+const { createClient } = window.supabase;
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
 let currentAdmin = null;
 let realtimeSubscription = null;
-let sessionCheckInterval;
 
-function initSupabase() {
-  if (typeof window.supabase !== 'undefined') {
-    const { createClient } = window.supabase;
-    supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log('Supabase initialized successfully');
-    return true;
-  } else {
-    console.error('Supabase not loaded yet');
-    return false;
+// Initialize Admin Dashboard
+async function initAdmin() {
+  try {
+    console.log('Initializing admin dashboard...');
+    
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session) {
+      console.log('No session found, redirecting to login...');
+      window.location.href = 'admin-login.html';
+      return;
+    }
+
+    currentAdmin = session.user;
+    
+    // Update admin info
+    document.getElementById('adminName').textContent = currentAdmin.email;
+    document.getElementById('adminEmail').textContent = currentAdmin.email;
+    document.getElementById('adminRole').textContent = '● ADMIN';
+    document.getElementById('topName').textContent = 'Administrator';
+    document.getElementById('topEmail').textContent = `Last login: ${new Date().toLocaleString()}`;
+    
+    // Setup sidebar navigation
+    setupSidebarNavigation();
+    
+    // Setup real-time subscriptions
+    setupRealtimeSubscriptions();
+    
+    await loadDashboardData();
+    showNotification('Admin dashboard loaded successfully!');
+    
+  } catch (error) {
+    console.error('Error initializing admin:', error);
+    showNotification('Error loading dashboard', 'error');
   }
 }
 
-// Session Validation
-async function validateAdminSession() {
-  console.log('Validating admin session...');
+// Setup real-time subscriptions
+function setupRealtimeSubscriptions() {
+  console.log('Setting up real-time subscriptions...');
   
-  // Check localStorage first (fallback)
-  const isAuthenticated = localStorage.getItem('admin_authenticated');
-  const loginTime = localStorage.getItem('admin_login_time');
-  
-  if (isAuthenticated && loginTime) {
-    const loginDate = new Date(loginTime);
-    const now = new Date();
-    const hoursDiff = (now - loginDate) / (1000 * 60 * 60);
-    
-    // Session expires after 24 hours
-    if (hoursDiff < 24) {
-      console.log('LocalStorage session valid');
-      return true;
-    } else {
-      console.log('LocalStorage session expired');
-      localStorage.removeItem('admin_authenticated');
-      localStorage.removeItem('admin_login_time');
-      localStorage.removeItem('admin_username');
-      localStorage.removeItem('admin_email');
-    }
-  }
-  
-  // Check Supabase session
+  // Subscribe to payment_requests table changes
+  realtimeSubscription = supabase
+    .channel('payment-requests-channel')
+    .on('postgres_changes', 
+      { 
+        event: '*', 
+        schema: 'public', 
+        table: 'payment_requests' 
+      }, 
+      (payload) => {
+        console.log('Real-time update received:', payload);
+        updatePaymentRequestsBadge();
+        
+        // Refresh the current view if it's payment requests
+        if (document.getElementById('payment-requests').style.display !== 'none') {
+          loadPaymentRequests();
+          loadApprovedPayments();
+        }
+        
+        // Always update dashboard
+        loadDashboardData();
+      }
+    )
+    .subscribe((status) => {
+      console.log('Realtime subscription status:', status);
+      if (status === 'SUBSCRIBED') {
+        console.log('Successfully subscribed to payment requests');
+      } else {
+        console.log('Failed to subscribe to payment requests:', status);
+      }
+    });
+}
+
+// Update payment requests badge
+async function updatePaymentRequestsBadge() {
   try {
-    const { data: { session }, error } = await supabase.auth.getSession();
+    const { data: pendingRequests, error } = await supabase
+      .from('payment_requests')
+      .select('id')
+      .eq('status', 'pending');
     
     if (error) {
-      console.error('Session check error:', error);
-      showSessionExpired();
-      return false;
+      console.error('Error fetching pending requests:', error);
+      return;
     }
     
-    if (!session || !session.user) {
-      console.log('No Supabase session found');
-      showSessionExpired();
-      return false;
+    const badge = document.getElementById('paymentRequestsBadge');
+    if (badge) {
+      badge.textContent = pendingRequests ? pendingRequests.length.toString() : '0';
+      console.log(`Updated payment badge to: ${badge.textContent}`);
     }
-    
-    // Verify admin profile exists
-    const { data: adminProfile, error: profileError } = await supabase
-      .from('admin_profiles')
-      .select('*')
-      .eq('id', session.user.id)
-      .single();
-    
-    if (profileError || !adminProfile) {
-      console.log('No admin profile found');
-      await supabase.auth.signOut();
-      showSessionExpired();
-      return false;
-    }
-    
-    console.log('Supabase session valid');
-    return true;
   } catch (error) {
-    console.error('Error validating session:', error);
-    showSessionExpired();
-    return false;
+    console.error('Error updating payment badge:', error);
   }
-}
-
-function showSessionExpired() {
-  document.getElementById('sessionExpiredModal').style.display = 'flex';
-}
-
-function redirectToLogin() {
-  // Clear all session data
-  localStorage.removeItem('admin_authenticated');
-  localStorage.removeItem('admin_login_time');
-  localStorage.removeItem('admin_username');
-  localStorage.removeItem('admin_email');
-  
-  // Redirect to login
-  window.location.replace('admin-login.html');
-}
-
-// Initialize Supabase when page loads
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('Admin dashboard loading...');
-  
-  // Start session checking
-  sessionCheckInterval = setInterval(async () => {
-    const isValid = await validateAdminSession();
-    if (!isValid) {
-      clearInterval(sessionCheckInterval);
-    }
-  }, 30000); // Check every 30 seconds
-  
-  setTimeout(() => {
-    if (initSupabase()) {
-      initAdmin();
-    } else {
-      document.getElementById('adminName').textContent = 'Error: Supabase not loaded';
-      showNotification('Failed to load authentication. Please refresh the page.', 'error');
-    }
-  }, 1000);
-});
-
-// Notification System
-function showNotification(message, type = 'success') {
-  const notification = document.createElement('div');
-  notification.className = `notification ${type}`;
-  notification.textContent = message;
-  document.body.appendChild(notification);
-  
-  setTimeout(() => {
-    notification.remove();
-  }, 3000);
-}
-
-// Modal functions
-function openModal(imageSrc) {
-  document.getElementById('modalImage').src = imageSrc;
-  document.getElementById('screenshotModal').style.display = 'flex';
-}
-
-function closeModal() {
-  document.getElementById('screenshotModal').style.display = 'none';
 }
 
 // Sidebar Navigation
@@ -827,7 +556,7 @@ function setupSidebarNavigation() {
       this.classList.add('active');
       
       // Hide all tabs
-      document.querySelectorAll('#dashboard, #members, #payment-requests, #withdrawals, #pricing, #referral, #reports, #settings')
+      document.querySelectorAll('#dashboard, #payment-requests, #members, #settings')
         .forEach(tab => {
           tab.style.display = 'none';
         });
@@ -843,206 +572,42 @@ function setupSidebarNavigation() {
           case 'dashboard':
             loadDashboardData();
             break;
-          case 'members':
-            loadPendingMembers();
-            loadApprovedMembers();
-            break;
           case 'payment-requests':
             loadPaymentRequests();
             loadApprovedPayments();
             break;
-          case 'withdrawals':
-            loadWithdrawalRequests();
-            break;
-          case 'pricing':
-            loadPricing();
-            break;
-          case 'referral':
-            loadReferralSettings();
-            loadTopReferrers();
-            break;
-          case 'reports':
-            loadReports();
+          case 'members':
+            loadAllMembers();
             break;
           case 'settings':
-            loadSystemSettings();
+            loadSettings();
             break;
         }
       }
     });
   });
-}
-
-// Quick action tab switching
-function switchTab(tabName) {
-  // Update sidebar buttons
-  document.querySelectorAll('.nav button').forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.getAttribute('data-tab') === tabName) {
-      btn.classList.add('active');
-    }
-  });
-  
-  // Hide all tabs
-  document.querySelectorAll('#dashboard, #members, #payment-requests, #withdrawals, #pricing, #referral, #reports, #settings')
-    .forEach(tab => {
-      tab.style.display = 'none';
-    });
-  
-  // Show selected tab
-  const targetTab = document.getElementById(tabName);
-  if (targetTab) {
-    targetTab.style.display = 'block';
-    
-    // Load data for the selected tab
-    switch(tabName) {
-      case 'dashboard':
-        loadDashboardData();
-        break;
-      case 'members':
-        loadPendingMembers();
-        loadApprovedMembers();
-        break;
-      case 'payment-requests':
-        loadPaymentRequests();
-        loadApprovedPayments();
-        break;
-      case 'withdrawals':
-        loadWithdrawalRequests();
-        break;
-      case 'pricing':
-        loadPricing();
-        break;
-      case 'referral':
-        loadReferralSettings();
-        loadTopReferrers();
-        break;
-      case 'reports':
-        loadReports();
-        break;
-      case 'settings':
-        loadSystemSettings();
-        break;
-    }
-  }
-}
-
-// Initialize Admin Dashboard
-async function initAdmin() {
-  // Validate session first
-  const isValidSession = await validateAdminSession();
-  if (!isValidSession) {
-    return;
-  }
-
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
-    // Try localStorage fallback
-    const localStorageAdmin = localStorage.getItem('admin_username');
-    if (!localStorageAdmin) {
-      redirectToLogin();
-      return;
-    }
-    
-    // Use localStorage data
-    currentAdmin = {
-      id: 'local-' + Date.now(),
-      email: localStorage.getItem('admin_email'),
-      username: localStorageAdmin
-    };
-    
-    document.getElementById('adminName').textContent = currentAdmin.username;
-    document.getElementById('adminEmail').textContent = currentAdmin.email;
-    document.getElementById('adminRole').textContent = '● ADMIN';
-    document.getElementById('topName').textContent = currentAdmin.username;
-    document.getElementById('topEmail').textContent = `Last login: ${new Date().toLocaleString()}`;
-  } else {
-    currentAdmin = session.user;
-    
-    const { data: adminProfile } = await supabase
-      .from('admin_profiles')
-      .select('*')
-      .eq('id', currentAdmin.id)
-      .single();
-
-    if (!adminProfile) {
-      redirectToLogin();
-      return;
-    }
-
-    // Update admin info
-    document.getElementById('adminName').textContent = adminProfile.username || adminProfile.email;
-    document.getElementById('adminEmail').textContent = adminProfile.email;
-    document.getElementById('adminRole').textContent = `● ${adminProfile.role.replace('_', ' ').toUpperCase()}`;
-    document.getElementById('topName').textContent = adminProfile.username || 'Administrator';
-    document.getElementById('topEmail').textContent = `Last login: ${new Date().toLocaleString()}`;
-  }
-  
-  // Setup sidebar navigation
-  setupSidebarNavigation();
-  
-  // Setup real-time subscriptions
-  setupRealtimeSubscriptions();
-  
-  await loadDashboardData();
-  showNotification('Admin dashboard loaded successfully!');
-}
-
-// Setup real-time subscriptions for instant updates
-function setupRealtimeSubscriptions() {
-  // Subscribe to payment requests
-  realtimeSubscription = supabase
-    .channel('payment-requests')
-    .on('postgres_changes', 
-      { 
-        event: '*', 
-        schema: 'public', 
-        table: 'payment_requests' 
-      }, 
-      (payload) => {
-        console.log('Payment request update:', payload);
-        updatePaymentRequestsBadge();
-        if (document.getElementById('payment-requests').style.display !== 'none') {
-          loadPaymentRequests();
-          loadApprovedPayments();
-        }
-        loadDashboardData();
-      }
-    )
-    .subscribe();
-}
-
-// Update payment requests badge
-async function updatePaymentRequestsBadge() {
-  try {
-    const { data: pendingRequests } = await supabase
-      .from('payment_requests')
-      .select('id')
-      .eq('status', 'pending');
-    
-    const badge = document.getElementById('paymentRequestsBadge');
-    if (badge) {
-      badge.textContent = pendingRequests?.length || '0';
-    }
-  } catch (error) {
-    console.error('Error updating payment badge:', error);
-  }
 }
 
 // Load Dashboard Data
 async function loadDashboardData() {
   await loadStatistics();
-  await loadRecentActivity();
+  await loadRecentPayments();
   await updatePaymentRequestsBadge();
 }
 
+// Load Statistics
 async function loadStatistics() {
   try {
-    // Get total revenue from completed payments
-    const { data: payments } = await supabase
-      .from('payments')
+    // Get total revenue from approved payments
+    const { data: payments, error } = await supabase
+      .from('payment_requests')
       .select('amount')
-      .eq('status', 'completed');
+      .eq('status', 'approved');
+    
+    if (error) {
+      console.error('Error fetching payments:', error);
+      return;
+    }
     
     const totalRevenue = payments?.reduce((sum, payment) => sum + parseFloat(payment.amount), 0) || 0;
     
@@ -1052,126 +617,88 @@ async function loadStatistics() {
       .select('id')
       .eq('membership_status', 'approved');
     
-    // Get pending approvals count
-    const { data: pendingMembers } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('membership_status', 'pending');
-    
-    // Get withdrawal requests
-    const { data: withdrawals } = await supabase
-      .from('withdrawals')
-      .select('amount')
-      .eq('status', 'pending');
-    
     // Get pending payment requests
-    const { data: paymentRequests } = await supabase
+    const { data: pendingPayments } = await supabase
       .from('payment_requests')
       .select('id')
       .eq('status', 'pending');
     
-    const totalWithdrawals = withdrawals?.reduce((sum, withdrawal) => sum + parseFloat(withdrawal.amount), 0) || 0;
+    // Get today's revenue
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const { data: todayPayments } = await supabase
+      .from('payment_requests')
+      .select('amount')
+      .eq('status', 'approved')
+      .gte('created_at', today.toISOString());
+    
+    const todayRevenue = todayPayments?.reduce((sum, payment) => sum + parseFloat(payment.amount), 0) || 0;
     
     // Update stats
-    document.getElementById('totalRevenue').textContent = `$${totalRevenue.toLocaleString()}`;
-    document.getElementById('revenueTrend').textContent = 'All time revenue';
+    document.getElementById('totalRevenue').textContent = `KSh ${totalRevenue}`;
     document.getElementById('activeMembers').textContent = activeMembers?.length || 0;
-    document.getElementById('membersTrend').textContent = 'Active members';
-    document.getElementById('pendingApprovals').textContent = pendingMembers?.length || 0;
-    document.getElementById('withdrawalRequests').textContent = withdrawals?.length || 0;
-    document.getElementById('withdrawalAmount').textContent = `$${totalWithdrawals} total`;
-    
-    // Update quick actions
-    document.getElementById('quickPendingMembers').textContent = `${pendingMembers?.length || 0} pending`;
-    document.getElementById('quickPaymentRequests').textContent = `${paymentRequests?.length || 0} requests`;
-    document.getElementById('quickWithdrawals').textContent = `${withdrawals?.length || 0} requests`;
+    document.getElementById('pendingPayments').textContent = pendingPayments?.length || 0;
+    document.getElementById('todayRevenue').textContent = `KSh ${todayRevenue}`;
     
   } catch (error) {
     console.error('Error loading statistics:', error);
-    showNotification('Error loading statistics', 'error');
   }
 }
 
-async function loadRecentActivity() {
+// Load Recent Payments
+async function loadRecentPayments() {
   try {
-    // Get recent payments and payment requests
-    const { data: recentPayments } = await supabase
-      .from('payments')
-      .select('*, profiles(username, email)')
-      .order('created_at', { ascending: false })
-      .limit(5);
-    
-    const { data: recentApprovals } = await supabase
+    const { data: recentPayments, error } = await supabase
       .from('payment_requests')
-      .select('*, profiles(username, email)')
-      .eq('status', 'approved')
-      .order('approved_at', { ascending: false })
-      .limit(5);
+      .select('*, profiles(email)')
+      .order('created_at', { ascending: false })
+      .limit(10);
     
-    // Combine and sort activities
-    const activities = [];
-    
-    if (recentPayments) {
-      recentPayments.forEach(payment => {
-        activities.push({
-          type: 'payment',
-          time: payment.created_at,
-          user: payment.profiles?.email || 'Unknown',
-          action: `${payment.plan_type} Payment`,
-          amount: payment.amount,
-          status: payment.status
-        });
-      });
+    if (error) {
+      console.error('Error fetching recent payments:', error);
+      throw error;
     }
     
-    if (recentApprovals) {
-      recentApprovals.forEach(approval => {
-        activities.push({
-          type: 'approval',
-          time: approval.approved_at,
-          user: approval.profiles?.email || 'Unknown',
-          action: 'Payment Approved',
-          amount: approval.amount,
-          status: 'approved'
-        });
-      });
-    }
-    
-    // Sort by time and take top 10
-    activities.sort((a, b) => new Date(b.time) - new Date(a.time));
-    const recentActivities = activities.slice(0, 10);
-    
-    const activityHTML = recentActivities.map(activity => `
+    const paymentsHTML = recentPayments?.map(payment => `
       <tr>
-        <td>${new Date(activity.time).toLocaleDateString()}</td>
-        <td>${activity.user}</td>
-        <td>${activity.action}</td>
-        <td>$${activity.amount}</td>
-        <td class="status-${activity.status}">${activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}</td>
+        <td>${new Date(payment.created_at).toLocaleDateString()}</td>
+        <td>${payment.profiles?.email || 'Unknown'}</td>
+        <td>KSh ${payment.amount}</td>
+        <td>${payment.payment_method}</td>
+        <td class="status-${payment.status}">${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}</td>
       </tr>
-    `).join('') || '<tr><td colspan="5">No recent activity</td></tr>';
+    `).join('') || '<tr><td colspan="5">No recent payments</td></tr>';
     
-    document.getElementById('recentActivity').innerHTML = activityHTML;
+    document.getElementById('recentPayments').innerHTML = paymentsHTML;
   } catch (error) {
-    console.error('Error loading recent activity:', error);
-    document.getElementById('recentActivity').innerHTML = '<tr><td colspan="5">Error loading activity</td></tr>';
+    console.error('Error loading recent payments:', error);
+    document.getElementById('recentPayments').innerHTML = '<tr><td colspan="5">Error loading payments</td></tr>';
   }
 }
 
-// Payment Requests Management
+// Load Payment Requests
 async function loadPaymentRequests() {
   try {
-    const { data: paymentRequests } = await supabase
+    console.log('Loading payment requests...');
+    
+    const { data: paymentRequests, error } = await supabase
       .from('payment_requests')
-      .select('*, profiles(username, email)')
+      .select('*, profiles(email, username)')
       .eq('status', 'pending')
       .order('created_at', { ascending: true });
+    
+    if (error) {
+      console.error('Error fetching payment requests:', error);
+      throw error;
+    }
+    
+    console.log('Payment requests found:', paymentRequests);
     
     const requestsHTML = paymentRequests?.map(request => `
       <tr class="payment-request">
         <td>${request.profiles?.email || 'Unknown'}</td>
-        <td>${request.plan_type}</td>
-        <td>$${request.amount}</td>
+        <td>${request.plan_type || 'Premium'}</td>
+        <td>KSh ${request.amount}</td>
         <td>
           ${request.screenshot_url ? `
             <img src="${request.screenshot_url}" alt="Payment screenshot" class="screenshot-preview" 
@@ -1179,41 +706,47 @@ async function loadPaymentRequests() {
           ` : 'No screenshot'}
         </td>
         <td>${new Date(request.created_at).toLocaleDateString()}</td>
-        <td class="status-pending">Pending</td>
+        <td>${request.reference_id || 'N/A'}</td>
         <td>
           <button class="btn btn-success" onclick="approvePaymentRequest('${request.id}', '${request.user_id}')">Approve</button>
           <button class="btn btn-danger" onclick="rejectPaymentRequest('${request.id}')">Reject</button>
-          <button class="btn btn-info" onclick="viewPaymentDetails('${request.id}')">Details</button>
         </td>
       </tr>
-    `).join('') || '<tr><td colspan="7">No pending payment requests</td></tr>';
+    `).join('') || '<tr><td colspan="7" style="text-align:center;">No pending payment requests</td></tr>';
     
     document.getElementById('paymentRequestsTable').innerHTML = requestsHTML;
+    
   } catch (error) {
     console.error('Error loading payment requests:', error);
-    showNotification('Error loading payment requests', 'error');
+    document.getElementById('paymentRequestsTable').innerHTML = '<tr><td colspan="7" style="text-align:center;">Error loading payment requests</td></tr>';
   }
 }
 
+// Load Approved Payments
 async function loadApprovedPayments() {
   try {
-    const { data: approvedPayments } = await supabase
+    const { data: approvedPayments, error } = await supabase
       .from('payment_requests')
-      .select('*, profiles(username, email), admin_profiles(username)')
+      .select('*, profiles(email, username)')
       .eq('status', 'approved')
       .order('approved_at', { ascending: false })
       .limit(20);
+    
+    if (error) {
+      console.error('Error fetching approved payments:', error);
+      throw error;
+    }
     
     const paymentsHTML = approvedPayments?.map(payment => `
       <tr class="payment-request approved">
         <td>${payment.profiles?.email || 'Unknown'}</td>
         <td>${payment.plan_type}</td>
-        <td>$${payment.amount}</td>
-        <td>${payment.admin_profiles?.username || 'System'}</td>
-        <td>${new Date(payment.approved_at).toLocaleDateString()}</td>
+        <td>KSh ${payment.amount}</td>
+        <td>Admin</td>
+        <td>${payment.approved_at ? new Date(payment.approved_at).toLocaleDateString() : 'N/A'}</td>
         <td class="status-approved">Approved</td>
       </tr>
-    `).join('') || '<tr><td colspan="6">No approved payments</td></tr>';
+    `).join('') || '<tr><td colspan="6" style="text-align:center;">No approved payments</td></tr>';
     
     document.getElementById('approvedPaymentsTable').innerHTML = paymentsHTML;
   } catch (error) {
@@ -1221,6 +754,7 @@ async function loadApprovedPayments() {
   }
 }
 
+// Approve Payment Request
 async function approvePaymentRequest(requestId, userId) {
   if (confirm('Approve this payment request?')) {
     try {
@@ -1228,7 +762,6 @@ async function approvePaymentRequest(requestId, userId) {
         .from('payment_requests')
         .update({ 
           status: 'approved',
-          approved_by: currentAdmin.id,
           approved_at: new Date().toISOString()
         })
         .eq('id', requestId);
@@ -1239,41 +772,10 @@ async function approvePaymentRequest(requestId, userId) {
           .from('profiles')
           .update({ 
             membership_status: 'approved',
-            plan_type: (await supabase.from('payment_requests').select('plan_type').eq('id', requestId).single()).data.plan_type,
+            plan_type: 'premium',
             updated_at: new Date().toISOString()
           })
           .eq('id', userId);
-        
-        // Create payment record
-        const requestData = await supabase
-          .from('payment_requests')
-          .select('*')
-          .eq('id', requestId)
-          .single();
-        
-        if (requestData.data) {
-          await supabase
-            .from('payments')
-            .insert({
-              user_id: userId,
-              amount: requestData.data.amount,
-              plan_type: requestData.data.plan_type,
-              payment_method: requestData.data.payment_method,
-              status: 'completed',
-              screenshot_url: requestData.data.screenshot_url
-            });
-        }
-        
-        // Log the action
-        await supabase
-          .from('audit_logs')
-          .insert({
-            admin_id: currentAdmin.id,
-            action: 'payment_approval',
-            resource_type: 'payment_request',
-            resource_id: requestId,
-            details: { status: 'approved' }
-          });
         
         showNotification('Payment approved successfully! User membership activated.');
         loadPaymentRequests();
@@ -1289,6 +791,7 @@ async function approvePaymentRequest(requestId, userId) {
   }
 }
 
+// Reject Payment Request
 async function rejectPaymentRequest(requestId) {
   const reason = prompt('Reason for rejection:');
   if (reason) {
@@ -1303,16 +806,6 @@ async function rejectPaymentRequest(requestId) {
         .eq('id', requestId);
       
       if (!error) {
-        await supabase
-          .from('audit_logs')
-          .insert({
-            admin_id: currentAdmin.id,
-            action: 'payment_rejection',
-            resource_type: 'payment_request',
-            resource_id: requestId,
-            details: { status: 'rejected', reason: reason }
-          });
-        
         showNotification('Payment request rejected.');
         loadPaymentRequests();
         loadDashboardData();
@@ -1326,459 +819,68 @@ async function rejectPaymentRequest(requestId) {
   }
 }
 
-function viewPaymentDetails(requestId) {
-  // In a real implementation, this would show a modal with full details
-  alert(`Payment request details for ID: ${requestId}\n\nThis would show full transaction details, user information, and payment history.`);
-}
-
-// [Rest of your existing functions for members, withdrawals, pricing, etc. remain the same...]
-// Member Management
-async function loadPendingMembers() {
+// Load All Members
+async function loadAllMembers() {
   try {
-    const { data: pendingMembers } = await supabase
+    const { data: members, error } = await supabase
       .from('profiles')
       .select('*')
-      .eq('membership_status', 'pending')
-      .order('applied_at', { ascending: true });
+      .order('created_at', { ascending: false });
     
-    const membersHTML = pendingMembers?.map(member => `
-      <tr>
-        <td>${member.username || 'No name'}</td>
-        <td>${member.email}</td>
-        <td>${new Date(member.applied_at).toLocaleDateString()}</td>
-        <td>${member.plan_type || 'basic'}</td>
-        <td class="status-pending">Pending</td>
-        <td>
-          <button class="btn btn-success" onclick="approveMember('${member.id}')">Approve</button>
-          <button class="btn btn-danger" onclick="rejectMember('${member.id}')">Reject</button>
-        </td>
-      </tr>
-    `).join('') || '<tr><td colspan="6">No pending members</td></tr>';
+    if (error) {
+      console.error('Error fetching members:', error);
+      throw error;
+    }
     
-    document.getElementById('pendingMembers').innerHTML = membersHTML;
-  } catch (error) {
-    console.error('Error loading pending members:', error);
-    showNotification('Error loading pending members', 'error');
-  }
-}
-
-async function loadApprovedMembers() {
-  try {
-    const { data: approvedMembers } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('membership_status', 'approved')
-      .order('applied_at', { ascending: false })
-      .limit(50);
-    
-    const membersHTML = approvedMembers?.map(member => `
+    const membersHTML = members?.map(member => `
       <tr>
         <td>${member.username || 'No name'}</td>
         <td>${member.email}</td>
         <td>${member.plan_type || 'basic'}</td>
-        <td>${new Date(member.applied_at).toLocaleDateString()}</td>
-        <td class="status-approved">Active</td>
+        <td>${new Date(member.created_at).toLocaleDateString()}</td>
+        <td class="status-${member.membership_status}">${member.membership_status.charAt(0).toUpperCase() + member.membership_status.slice(1)}</td>
         <td>
           <button class="btn btn-warning" onclick="suspendMember('${member.id}')">Suspend</button>
         </td>
       </tr>
-    `).join('') || '<tr><td colspan="6">No approved members</td></tr>';
+    `).join('') || '<tr><td colspan="6">No members found</td></tr>';
     
-    document.getElementById('approvedMembers').innerHTML = membersHTML;
+    document.getElementById('allMembers').innerHTML = membersHTML;
   } catch (error) {
-    console.error('Error loading approved members:', error);
+    console.error('Error loading members:', error);
   }
 }
 
-async function approveMember(userId) {
-  if (confirm('Approve this member?')) {
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ 
-          membership_status: 'approved',
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', userId);
-      
-      if (!error) {
-        // Log the action
-        await supabase
-          .from('audit_logs')
-          .insert({
-            admin_id: currentAdmin.id,
-            action: 'member_approval',
-            resource_type: 'profile',
-            resource_id: userId,
-            details: { status: 'approved' }
-          });
-        
-        showNotification('Member approved successfully!');
-        loadPendingMembers();
-        loadApprovedMembers();
-        loadStatistics();
-      } else {
-        throw error;
-      }
-    } catch (error) {
-      console.error('Error approving member:', error);
-      showNotification('Error approving member', 'error');
-    }
-  }
+// Modal functions
+function openModal(imageSrc) {
+  document.getElementById('modalImage').src = imageSrc;
+  document.getElementById('screenshotModal').style.display = 'flex';
 }
 
-async function rejectMember(userId) {
-  const reason = prompt('Reason for rejection:');
-  if (reason) {
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ 
-          membership_status: 'rejected',
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', userId);
-      
-      if (!error) {
-        await supabase
-          .from('audit_logs')
-          .insert({
-            admin_id: currentAdmin.id,
-            action: 'member_rejection',
-            resource_type: 'profile',
-            resource_id: userId,
-            details: { status: 'rejected', reason: reason }
-          });
-        
-        showNotification('Member rejected.');
-        loadPendingMembers();
-        loadStatistics();
-      } else {
-        throw error;
-      }
-    } catch (error) {
-      console.error('Error rejecting member:', error);
-      showNotification('Error rejecting member', 'error');
-    }
-  }
+function closeModal() {
+  document.getElementById('screenshotModal').style.display = 'none';
 }
 
-async function suspendMember(userId) {
-  if (confirm('Suspend this member?')) {
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ 
-          membership_status: 'suspended',
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', userId);
-      
-      if (!error) {
-        showNotification('Member suspended.');
-        loadApprovedMembers();
-      } else {
-        throw error;
-      }
-    } catch (error) {
-      console.error('Error suspending member:', error);
-      showNotification('Error suspending member', 'error');
-    }
-  }
-}
-
-// Withdrawal Management
-async function loadWithdrawalRequests() {
-  try {
-    const { data: withdrawals } = await supabase
-      .from('withdrawals')
-      .select('*, profiles(username, email)')
-      .order('created_at', { ascending: false })
-      .limit(50);
-    
-    const withdrawalsHTML = withdrawals?.map(withdrawal => `
-      <tr>
-        <td>${new Date(withdrawal.created_at).toLocaleDateString()}</td>
-        <td>${withdrawal.profiles?.email || 'Unknown'}</td>
-        <td>$${withdrawal.amount}</td>
-        <td>${withdrawal.payment_method}</td>
-        <td>${withdrawal.account_details?.last4 || 'N/A'}</td>
-        <td class="status-${withdrawal.status}">${withdrawal.status.charAt(0).toUpperCase() + withdrawal.status.slice(1)}</td>
-        <td>
-          ${withdrawal.status === 'pending' ? `
-            <button class="btn btn-success" onclick="updateWithdrawalStatus('${withdrawal.id}', 'approved')">Approve</button>
-            <button class="btn btn-danger" onclick="updateWithdrawalStatus('${withdrawal.id}', 'rejected')">Reject</button>
-          ` : '-'}
-        </td>
-      </tr>
-    `).join('') || '<tr><td colspan="7">No withdrawal requests</td></tr>';
-    
-    document.getElementById('withdrawalRequestsTable').innerHTML = withdrawalsHTML;
-  } catch (error) {
-    console.error('Error loading withdrawal requests:', error);
-    showNotification('Error loading withdrawal requests', 'error');
-  }
-}
-
-async function updateWithdrawalStatus(withdrawalId, status) {
-  const notes = status === 'rejected' ? prompt('Reason for rejection:') : null;
+// Notification System
+function showNotification(message, type = 'success') {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  document.body.appendChild(notification);
   
-  if (status === 'rejected' && !notes) return;
-  
-  try {
-    const { error } = await supabase
-      .from('withdrawals')
-      .update({ 
-        status: status,
-        admin_notes: notes
-      })
-      .eq('id', withdrawalId);
-    
-    if (!error) {
-      showNotification(`Withdrawal ${status}`);
-      loadWithdrawalRequests();
-      loadStatistics();
-    } else {
-      throw error;
-    }
-  } catch (error) {
-    console.error('Error updating withdrawal status:', error);
-    showNotification('Error updating withdrawal status', 'error');
-  }
-}
-
-// Pricing Management
-async function loadPricing() {
-  try {
-    const { data: pricing } = await supabase
-      .from('pricing_plans')
-      .select('*')
-      .order('price', { ascending: true });
-    
-    if (pricing) {
-      pricing.forEach(plan => {
-        const input = document.getElementById(`${plan.plan_type}Price`);
-        if (input) input.value = plan.price;
-      });
-    }
-  } catch (error) {
-    console.error('Error loading pricing:', error);
-    showNotification('Error loading pricing', 'error');
-  }
-}
-
-async function updatePricing() {
-  const basicPrice = document.getElementById('basicPrice').value;
-  const proPrice = document.getElementById('proPrice').value;
-  const elitePrice = document.getElementById('elitePrice').value;
-  
-  try {
-    // Update basic plan
-    await supabase
-      .from('pricing_plans')
-      .update({ price: basicPrice })
-      .eq('plan_type', 'basic');
-    
-    // Update pro plan
-    await supabase
-      .from('pricing_plans')
-      .update({ price: proPrice })
-      .eq('plan_type', 'pro');
-    
-    // Update elite plan
-    await supabase
-      .from('pricing_plans')
-      .update({ price: elitePrice })
-      .eq('plan_type', 'elite');
-    
-    showNotification('Pricing updated successfully!');
-  } catch (error) {
-    console.error('Error updating pricing:', error);
-    showNotification('Error updating pricing', 'error');
-  }
-}
-
-// Referral Program
-async function loadReferralSettings() {
-  try {
-    const { data: settings } = await supabase
-      .from('system_settings')
-      .select('*')
-      .in('setting_key', ['referral_bonus_percentage', 'min_payout_amount']);
-    
-    if (settings) {
-      settings.forEach(setting => {
-        if (setting.setting_key === 'referral_bonus_percentage') {
-          document.getElementById('referralBonus').value = setting.setting_value;
-        } else if (setting.setting_key === 'min_payout_amount') {
-          document.getElementById('minPayout').value = setting.setting_value;
-        }
-      });
-    }
-  } catch (error) {
-    console.error('Error loading referral settings:', error);
-    showNotification('Error loading referral settings', 'error');
-  }
-}
-
-async function loadTopReferrers() {
-  try {
-    // This would require a more complex query to calculate top referrers
-    document.getElementById('topReferrers').innerHTML = `
-      <tr><td colspan="4" style="text-align:center;">Referral analytics coming soon</td></tr>
-    `;
-  } catch (error) {
-    console.error('Error loading top referrers:', error);
-  }
-}
-
-async function updateReferralSettings() {
-  const bonus = document.getElementById('referralBonus').value;
-  const minPayout = document.getElementById('minPayout').value;
-  
-  try {
-    // Update referral bonus
-    await supabase
-      .from('system_settings')
-      .update({ setting_value: bonus })
-      .eq('setting_key', 'referral_bonus_percentage');
-    
-    // Update min payout
-    await supabase
-      .from('system_settings')
-      .update({ setting_value: minPayout })
-      .eq('setting_key', 'min_payout_amount');
-    
-    showNotification('Referral settings updated!');
-  } catch (error) {
-    console.error('Error updating referral settings:', error);
-    showNotification('Error updating referral settings', 'error');
-  }
-}
-
-// Reports
-async function loadReports() {
-  try {
-    // Calculate monthly revenue (last 30 days)
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    
-    const { data: monthlyPayments } = await supabase
-      .from('payments')
-      .select('amount')
-      .eq('status', 'completed')
-      .gte('created_at', thirtyDaysAgo.toISOString());
-    
-    const monthlyRevenue = monthlyPayments?.reduce((sum, payment) => sum + parseFloat(payment.amount), 0) || 0;
-    
-    // Calculate new members this month
-    const { data: monthlyMembers } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('membership_status', 'approved')
-      .gte('applied_at', thirtyDaysAgo.toISOString());
-    
-    // Calculate average revenue per user
-    const { data: allMembers } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('membership_status', 'approved');
-    
-    const totalRevenue = monthlyPayments?.reduce((sum, payment) => sum + parseFloat(payment.amount), 0) || 0;
-    const avgRevenue = allMembers?.length > 0 ? totalRevenue / allMembers.length : 0;
-    
-    // Update reports
-    document.getElementById('monthlyRevenue').textContent = `$${monthlyRevenue.toLocaleString()}`;
-    document.getElementById('monthlyMembers').textContent = monthlyMembers?.length || 0;
-    document.getElementById('conversionRate').textContent = '12.4%'; // This would require more complex calculation
-    document.getElementById('avgRevenue').textContent = `$${avgRevenue.toFixed(2)}`;
-    
-  } catch (error) {
-    console.error('Error loading reports:', error);
-    showNotification('Error loading reports', 'error');
-  }
-}
-
-// System Settings
-async function loadSystemSettings() {
-  try {
-    const { data: settings } = await supabase
-      .from('system_settings')
-      .select('*')
-      .in('setting_key', ['business_name', 'support_email', 'auto_approval_threshold']);
-    
-    if (settings) {
-      settings.forEach(setting => {
-        if (setting.setting_key === 'business_name') {
-          document.getElementById('businessName').value = setting.setting_value;
-        } else if (setting.setting_key === 'support_email') {
-          document.getElementById('supportEmail').value = setting.setting_value;
-        } else if (setting.setting_key === 'auto_approval_threshold') {
-          document.getElementById('autoApprove').value = setting.setting_value;
-        }
-      });
-    }
-  } catch (error) {
-    console.error('Error loading system settings:', error);
-    showNotification('Error loading system settings', 'error');
-  }
-}
-
-async function updateSystemSettings() {
-  const businessName = document.getElementById('businessName').value;
-  const supportEmail = document.getElementById('supportEmail').value;
-  const autoApprove = document.getElementById('autoApprove').value;
-  
-  try {
-    // Update business name
-    await supabase
-      .from('system_settings')
-      .update({ setting_value: businessName })
-      .eq('setting_key', 'business_name');
-    
-    // Update support email
-    await supabase
-      .from('system_settings')
-      .update({ setting_value: supportEmail })
-      .eq('setting_key', 'support_email');
-    
-    // Update auto approval threshold
-    await supabase
-      .from('system_settings')
-      .update({ setting_value: autoApprove })
-      .eq('setting_key', 'auto_approval_threshold');
-    
-    showNotification('System settings saved!');
-  } catch (error) {
-    console.error('Error updating system settings:', error);
-    showNotification('Error updating system settings', 'error');
-  }
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
 }
 
 // Event Listeners
 document.getElementById('btnLogout').addEventListener('click', async () => {
   if (confirm('Are you sure you want to logout?')) {
-    // Clear all session data
-    localStorage.removeItem('admin_authenticated');
-    localStorage.removeItem('admin_login_time');
-    localStorage.removeItem('admin_username');
-    localStorage.removeItem('admin_email');
-    
-    // Stop session checking
-    if (sessionCheckInterval) {
-      clearInterval(sessionCheckInterval);
-    }
-    
-    // Remove realtime subscription
     if (realtimeSubscription) {
       supabase.removeChannel(realtimeSubscription);
     }
-    
-    // Sign out from Supabase
     await supabase.auth.signOut();
-    
-    // Redirect to login
-    window.location.replace('admin-login.html');
+    window.location.href = 'admin-login.html';
   }
 });
 
@@ -1789,8 +891,11 @@ setInterval(() => {
   }
 }, 30000);
 
-// Initialize
-initAdmin();
+// Initialize the dashboard
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM loaded, initializing admin dashboard...');
+  initAdmin();
+});
 </script>
 </body>
 </html>
