@@ -513,7 +513,7 @@
                     </div>
                     <div class="payment-row">
                         <div class="payment-label">Amount</div>
-                        <div class="payment-value payment-amount" id="paymentAmount">$99.00</div>
+                        <div class="payment-value payment-amount" id="paymentAmount">KSh 400</div>
                     </div>
                     <div class="payment-row">
                         <div class="payment-label">Payment Method</div>
@@ -521,7 +521,7 @@
                     </div>
                     <div class="payment-row">
                         <div class="payment-label">Reference ID</div>
-                        <div class="payment-value" id="referenceId">REF-789123</div>
+                        <div class="payment-value" id="referenceId">CT-789123</div>
                     </div>
                 </div>
                 
@@ -533,39 +533,29 @@
                     <div class="mpesa-steps">
                         <div class="mpesa-step">
                             <div class="step-number">1</div>
-                            <div class="step-text">Go to M-Pesa on your phone</div>
+                            <div class="step-text">Go to <strong>M-Pesa</strong> on your phone</div>
                         </div>
                         <div class="mpesa-step">
                             <div class="step-number">2</div>
-                            <div class="step-text">Select "Lipa Na M-Pesa"</div>
+                            <div class="step-text">Select <strong>"Send Money"</strong></div>
                         </div>
                         <div class="mpesa-step">
                             <div class="step-number">3</div>
-                            <div class="step-text">Select "Pay Bill"</div>
+                            <div class="step-text">Enter phone number: <strong>0769968847</strong></div>
                         </div>
                         <div class="mpesa-step">
                             <div class="step-number">4</div>
-                            <div class="step-text">
-                                <strong>Business Number:</strong> 0769968847
-                            </div>
+                            <div class="step-text">Enter amount: <strong>KSh 400</strong></div>
                         </div>
                         <div class="mpesa-step">
                             <div class="step-number">5</div>
                             <div class="step-text">
-                                <strong>Account Number:</strong> <span id="accountNumber">CT-789123</span>
+                                <strong>Confirmation Name:</strong> Racheal Waithira
                             </div>
                         </div>
                         <div class="mpesa-step">
                             <div class="step-number">6</div>
-                            <div class="step-text">
-                                <strong>Amount:</strong> KSh 10,900
-                            </div>
-                        </div>
-                        <div class="mpesa-step">
-                            <div class="step-number">7</div>
-                            <div class="step-text">
-                                <strong>Confirmation Name:</strong> Racheal Waithira
-                            </div>
+                            <div class="step-text">Enter your M-Pesa PIN to complete payment</div>
                         </div>
                     </div>
                 </div>
@@ -672,7 +662,6 @@
         const userAvatar = document.getElementById('userAvatar');
         const userName = document.getElementById('userName');
         const userEmail = document.getElementById('userEmail');
-        const accountNumber = document.getElementById('accountNumber');
         const referenceId = document.getElementById('referenceId');
 
         // Current user and payment details
@@ -689,7 +678,6 @@
                 
                 if (error) {
                     console.error('Session error:', error);
-                    // Continue without redirecting for now
                 }
                 
                 if (session && session.user) {
@@ -720,14 +708,12 @@
                 // Generate reference ID based on user
                 const refId = `CT-${currentUser.id.slice(-6).toUpperCase()}`;
                 referenceId.textContent = refId;
-                accountNumber.textContent = refId;
                 
                 // Check if user already has a pending payment request
                 await checkExistingPaymentRequest();
                 
             } catch (error) {
                 console.error('Error initializing page:', error);
-                // Don't redirect on error - allow user to continue
             }
         }
 
@@ -749,7 +735,6 @@
                     showWaitingPage();
                 }
             } catch (error) {
-                // No existing request found, continue
                 console.log('No existing payment request found');
             }
         }
@@ -808,18 +793,15 @@
             
             try {
                 // For demo purposes, we'll simulate the upload process
-                // In production, you would upload to Supabase Storage
-                
-                // Simulate file upload delay
                 await new Promise(resolve => setTimeout(resolve, 1500));
                 
-                // Create a mock file URL (in production, this would be the actual Supabase URL)
+                // Create a mock file URL
                 const mockFileUrl = `https://example.com/payments/${Date.now()}.jpg`;
                 
-                // Create payment request in database
+                // Create payment request in database - THIS WILL APPEAR IN ADMIN DASHBOARD
                 const paymentData = {
                     user_id: currentUser.id,
-                    amount: 99.00,
+                    amount: 400, // KSh 400
                     plan_type: 'premium',
                     payment_method: 'mpesa',
                     screenshot_url: mockFileUrl,
@@ -830,9 +812,9 @@
                     created_at: new Date().toISOString()
                 };
                 
-                console.log('Submitting payment data:', paymentData);
+                console.log('Submitting payment data to admin dashboard:', paymentData);
                 
-                // Try to insert into Supabase
+                // Insert into Supabase - this will make it appear in admin dashboard
                 try {
                     const { data: paymentRequest, error: dbError } = await supabase
                         .from('payment_requests')
@@ -846,10 +828,10 @@
                         currentPaymentRequest = { id: 'mock-' + Date.now(), ...paymentData };
                     } else {
                         currentPaymentRequest = paymentRequest;
+                        console.log('Payment request created successfully:', paymentRequest.id);
                     }
                 } catch (dbError) {
                     console.error('Database insertion failed:', dbError);
-                    // Use mock data as fallback
                     currentPaymentRequest = { id: 'mock-' + Date.now(), ...paymentData };
                 }
                 
@@ -875,36 +857,6 @@
             setTimeout(() => {
                 progressFill.style.width = '70%';
             }, 500);
-            
-            // Start checking for approval status (optional)
-            // startApprovalCheck();
-        }
-        
-        // Check for approval status (optional - uncomment if you want auto-checking)
-        function startApprovalCheck() {
-            if (!currentPaymentRequest || !currentPaymentRequest.id) return;
-            
-            // Check every 10 seconds for approval
-            const checkInterval = setInterval(async () => {
-                try {
-                    // This would check the actual approval status in production
-                    console.log('Checking approval status...');
-                    
-                    // For demo, we'll simulate approval after 30 seconds
-                    if (Date.now() - new Date(currentPaymentRequest.created_at).getTime() > 30000) {
-                        clearInterval(checkInterval);
-                        progressFill.style.width = '100%';
-                        document.querySelector('.progress-text').textContent = 'Approved!';
-                        
-                        setTimeout(() => {
-                            alert('Payment approved! Your account has been upgraded.');
-                            window.location.href = 'dashboard.html';
-                        }, 2000);
-                    }
-                } catch (error) {
-                    console.error('Error checking approval status:', error);
-                }
-            }, 10000);
         }
         
         // Drag and drop functionality
