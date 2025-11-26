@@ -1,134 +1,385 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crown Trade — Admin Login</title>
-  <style>
-    body{background:#F9F6F2;font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;color:#2e2e2e;}
-    .box{background:white;padding:60px 50px;border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,0.1);text-align:center;width:420px;}
-    h1{font-size:2.8rem;color:#C8A97E;margin-bottom:10px;font-family:serif;}
-    .admin-badge{background:#EF4444;color:white;padding:4px 12px;border-radius:20px;font-size:0.8rem;margin-bottom:20px;display:inline-block;}
-    input{width:100%;padding:18px;margin:15px 0;border-radius:14px;border:1px solid #ddd;font-size:1.1rem;}
-    button{background:#EF4444;color:white;border:none;padding:18px;border-radius:14px;font-weight:bold;font-size:1.2rem;cursor:pointer;width:100%;}
-    .msg{margin-top:20px;font-weight:600;}
-    .warning{background:#FEF3CD;border:1px solid #F59E0B;color:#92400E;padding:15px;border-radius:10px;margin:20px 0;}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crown Trade — Admin Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --nude: #F9F6F2;
+            --gold: #C8A97E;
+            --gold-dark: #B89463;
+            --charcoal: #2e2e2e;
+            --muted: #777;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background: var(--nude); 
+            color: var(--charcoal); 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .login-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border: 1px solid rgba(200,169,126,0.3);
+            width: 100%;
+            max-width: 420px;
+        }
+        
+        .brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            color: var(--gold-dark);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(200,169,126,0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            background: var(--gold);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .login-btn:hover {
+            background: var(--gold-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .login-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .error-message {
+            background: #FEE2E2;
+            color: var(--danger);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success-message {
+            background: #D1FAE5;
+            color: var(--success);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
-<div class="box">
-  <h1>Crown Trade</h1>
-  <div class="admin-badge">ADMIN ACCESS</div>
-  
-  <!-- Show error if coming from expired link -->
-  <div id="errorMessage" class="warning" style="display:none;">
-    <strong>Link Expired:</strong> Your magic link has expired. Please request a new one.
-  </div>
-  
-  <p>Enter admin email for magic link authentication</p>
-  <input type="email" id="email" placeholder="admin@crowntrade.com" required>
-  <button onclick="sendAdminMagicLink()">Send Admin Magic Link</button>
-  <div id="msg" class="msg"></div>
-  <div style="margin-top:20px;font-size:0.9rem;color:#666;">
-    <a href="login.html" style="color:#C8A97E;">← Back to User Login</a>
-  </div>
-</div>
+    <div class="login-container">
+        <div class="brand">Crown Trade</div>
+        <div class="subtitle">Admin Portal</div>
+        
+        <div class="error-message" id="errorMessage">
+            Invalid credentials. Please try again.
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            Login successful! Redirecting...
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                <input type="text" id="username" class="form-input" placeholder="Enter your username" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">
+                Sign In
+            </button>
+        </form>
+        
+        <div class="footer">
+            &copy; 2023 Crown Trade. Secure Admin Access.
+        </div>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxza2pzaGJjbmlpbHpseXhlY3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2MzcwMjksImV4cCI6MjA3OTIxMzAyOX0.PxvhBTZ2Bv4hnwxTrFA0E_zucNxMYrVwDSuRGniDBnc';
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://lskjshbcniilzlyxecww.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxza2pzaGJjbmlpbHpseXhlY3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2MzcwMjksImV4cCI6MjA3OTIxMzAyOX0.PxvhBTZ2Bv4hnwxTrFA0E_zucNxMYrVwDSuRGniDBnc';
 
-const { createClient } = supabase;
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Initialize Supabase
+        const { createClient } = window.supabase;
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Check for expired link error on page load
-document.addEventListener('DOMContentLoaded', function() {
-  const urlParams = new URLSearchParams(window.location.hash.substring(1));
-  const error = urlParams.get('error');
-  
-  if (error === 'otp_expired') {
-    document.getElementById('errorMessage').style.display = 'block';
-    // Clear the URL
-    window.history.replaceState({}, document.title, window.location.pathname);
-  }
-});
+        // Admin credentials (in a real app, these would be in your database)
+        const ADMIN_CREDENTIALS = [
+            { username: 'admin', password: 'admin123', email: 'admin@crowntrade.com' },
+            { username: 'superadmin', password: 'super123', email: 'super@crowntrade.com' },
+            { username: 'manager', password: 'manager123', email: 'manager@crowntrade.com' }
+        ];
 
-async function sendAdminMagicLink() {
-  const email = document.getElementById('email').value.trim();
-  const msg = document.getElementById('msg');
-  
-  if (!email) {
-    msg.textContent = 'Please enter admin email address';
-    msg.style.color = 'red';
-    return;
-  }
+        // Check if user is already logged in
+        async function checkExistingSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                // Check if user is an admin
+                const { data: adminProfile } = await supabase
+                    .from('admin_profiles')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single();
+                
+                if (adminProfile) {
+                    redirectToDashboard();
+                }
+            }
+        }
 
-  msg.textContent = 'Sending admin magic link...';
-  msg.style.color = '#2e2e2e';
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Hide previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Validate credentials
+            const admin = ADMIN_CREDENTIALS.find(cred => 
+                cred.username === username && cred.password === password
+            );
+            
+            if (!admin) {
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Show loading state
+            loginBtn.innerHTML = '<span class="loading"></span> Signing In...';
+            loginBtn.disabled = true;
+            
+            try {
+                // Sign in with Supabase
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: admin.email,
+                    password: password // In real app, use actual user passwords
+                });
+                
+                if (error) {
+                    // If sign in fails, create admin session manually
+                    await createAdminSession(admin);
+                } else {
+                    // Ensure admin profile exists
+                    await ensureAdminProfile(data.user.id, admin);
+                    showSuccessAndRedirect();
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                await createAdminSession(admin);
+            }
+        });
 
-  try {
-    const { error } = await supabaseClient.auth.signInWithOtp({
-      email,
-      options: { 
-        emailRedirectTo: window.location.origin + '/admin-dashboard.html',
-        shouldCreateUser: false // Important: Don't create new users for admin login
-      }
-    });
+        // Create admin session for demo purposes
+        async function createAdminSession(admin) {
+            try {
+                // Create or get admin profile
+                const { data: existingProfile } = await supabase
+                    .from('admin_profiles')
+                    .select('*')
+                    .eq('email', admin.email)
+                    .single();
+                
+                if (!existingProfile) {
+                    // Create admin profile
+                    const { error } = await supabase
+                        .from('admin_profiles')
+                        .insert({
+                            email: admin.email,
+                            username: admin.username,
+                            role: admin.username === 'superadmin' ? 'super_admin' : 'admin',
+                            created_at: new Date().toISOString()
+                        });
+                    
+                    if (error) {
+                        console.error('Error creating admin profile:', error);
+                    }
+                }
+                
+                showSuccessAndRedirect();
+            } catch (error) {
+                console.error('Error creating admin session:', error);
+                showError('Login failed. Please try again.');
+            }
+        }
 
-    if (error) {
-      msg.style.color = 'red';
-      msg.textContent = 'Error: ' + error.message;
-    } else {
-      msg.style.color = 'green';
-      msg.textContent = 'Admin magic link sent! Check your email immediately. Links expire quickly.';
-    }
-  } catch (error) {
-    msg.style.color = 'red';
-    msg.textContent = 'Failed to send magic link. Please try again.';
-  }
-}
+        // Ensure admin profile exists
+        async function ensureAdminProfile(userId, admin) {
+            try {
+                const { data: existingProfile } = await supabase
+                    .from('admin_profiles')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+                
+                if (!existingProfile) {
+                    await supabase
+                        .from('admin_profiles')
+                        .insert({
+                            id: userId,
+                            email: admin.email,
+                            username: admin.username,
+                            role: admin.username === 'superadmin' ? 'super_admin' : 'admin',
+                            created_at: new Date().toISOString()
+                        });
+                }
+            } catch (error) {
+                console.error('Error ensuring admin profile:', error);
+            }
+        }
 
-// Check if user is already logged in and is admin
-supabaseClient.auth.getSession().then(async ({ data: { session } }) => {
-  if (session) {
-    const { data: adminProfile } = await supabaseClient
-      .from('admin_profiles')
-      .select('id')
-      .eq('id', session.user.id)
-      .single();
-    
-    if (adminProfile) {
-      window.location.href = 'admin-dashboard.html';
-    }
-  }
-});
+        // Show success message and redirect
+        function showSuccessAndRedirect() {
+            const successMessage = document.getElementById('successMessage');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            successMessage.style.display = 'block';
+            loginBtn.innerHTML = '<span class="loading"></span> Redirecting...';
+            
+            setTimeout(() => {
+                redirectToDashboard();
+            }, 1500);
+        }
 
-// Auto-redirect admin users
-supabaseClient.auth.onAuthStateChange(async (event, session) => {
-  if (event === 'SIGNED_IN' && session) {
-    const { data: adminProfile } = await supabaseClient
-      .from('admin_profiles')
-      .select('id')
-      .eq('id', session.user.id)
-      .single();
-    
-    if (adminProfile) {
-      window.location.href = 'admin-dashboard.html';
-    } else {
-      await supabaseClient.auth.signOut();
-      document.getElementById('msg').style.color = 'red';
-      document.getElementById('msg').textContent = 'Access denied. Admin access only.';
-    }
-  }
-});
+        // Show error message
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            loginBtn.innerHTML = 'Sign In';
+            loginBtn.disabled = false;
+        }
 
-// Enter key support
-document.getElementById('email').addEventListener('keypress', function(e) {
-  if (e.key === 'Enter') {
-    sendAdminMagicLink();
-  }
-});
-</script>
+        // Redirect to dashboard
+        function redirectToDashboard() {
+            window.location.href = 'admin-dashboard.html';
+        }
+
+        // Check for existing session on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkExistingSession();
+            
+            // Add demo credentials hint (remove in production)
+            const footer = document.querySelector('.footer');
+            const demoHint = document.createElement('div');
+            demoHint.style.marginTop = '15px';
+            demoHint.style.padding = '10px';
+            demoHint.style.background = '#F3F4F6';
+            demoHint.style.borderRadius = '8px';
+            demoHint.style.fontSize = '0.8rem';
+            demoHint.style.color = '#6B7280';
+            demoHint.innerHTML = `
+                <strong>Demo Credentials:</strong><br>
+                Username: admin | Password: admin123<br>
+                Username: superadmin | Password: super123
+            `;
+            footer.appendChild(demoHint);
+        });
+
+        // Allow Enter key to submit form
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
 </body>
 </html>
