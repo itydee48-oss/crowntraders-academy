@@ -196,6 +196,78 @@
     .notification.error { background: var(--danger); }
     .notification.warning { background: var(--warning); }
     
+    /* New styles for payment requests */
+    .payment-request {
+      border-left: 4px solid var(--warning);
+      background: #FFFBF0;
+    }
+    
+    .payment-request.approved {
+      border-left-color: var(--success);
+      background: #F0F9FF;
+    }
+    
+    .screenshot-preview {
+      max-width: 200px;
+      max-height: 150px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    .screenshot-preview:hover {
+      transform: scale(1.05);
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 12px;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    
+    .real-time-badge {
+      background: var(--success);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      margin-left: 8px;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+    
     @keyframes slideIn {
       from { transform: translateX(100%); opacity: 0; }
       to { transform: translateX(0); opacity: 1; }
@@ -221,7 +293,7 @@
     <nav class="nav">
       <button data-tab="dashboard" class="active">📊 Dashboard</button>
       <button data-tab="members">👥 Member Approval</button>
-      <button data-tab="payments">💰 Payments</button>
+      <button data-tab="payment-requests">💰 Payment Requests <span class="real-time-badge" id="paymentRequestsBadge">0</span></button>
       <button data-tab="withdrawals">🏦 Withdrawals</button>
       <button data-tab="pricing">💎 Pricing</button>
       <button data-tab="referral">🎯 Referral Program</button>
@@ -277,10 +349,10 @@
           <div style="font-weight:600;">Review Members</div>
           <small id="quickPendingMembers">Loading...</small>
         </div>
-        <div class="action-card" onclick="switchTab('payments')">
+        <div class="action-card" onclick="switchTab('payment-requests')">
           <div style="font-size:2rem;">💰</div>
-          <div style="font-weight:600;">Manage Payments</div>
-          <small id="quickPayments">Loading...</small>
+          <div style="font-weight:600;">Payment Requests</div>
+          <small id="quickPaymentRequests">Loading...</small>
         </div>
         <div class="action-card" onclick="switchTab('withdrawals')">
           <div style="font-size:2rem;">🏦</div>
@@ -312,6 +384,54 @@
           </thead>
           <tbody id="recentActivity">
             <tr><td colspan="5" style="text-align:center;">Loading recent activity...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Payment Requests Tab -->
+    <div id="payment-requests" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Pending Payment Requests</div>
+          <button class="btn btn-info" onclick="loadPaymentRequests()">Refresh</button>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Plan</th>
+              <th>Amount</th>
+              <th>Screenshot</th>
+              <th>Submitted</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="paymentRequestsTable">
+            <tr><td colspan="7" style="text-align:center;">Loading payment requests...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Approved Payments -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recently Approved Payments</div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Plan</th>
+              <th>Amount</th>
+              <th>Approved By</th>
+              <th>Approved At</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="approvedPaymentsTable">
+            <tr><td colspan="6" style="text-align:center;">Loading approved payments...</td></tr>
           </tbody>
         </table>
       </div>
@@ -359,32 +479,6 @@
           </thead>
           <tbody id="approvedMembers">
             <tr><td colspan="6" style="text-align:center;">Loading approved members...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Payments Tab -->
-    <div id="payments" style="display:none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Payment History</div>
-          <button class="btn btn-info" onclick="loadPaymentHistory()">Refresh</button>
-        </div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Member</th>
-              <th>Plan</th>
-              <th>Amount</th>
-              <th>Method</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="paymentHistory">
-            <tr><td colspan="7" style="text-align:center;">Loading payment history...</td></tr>
           </tbody>
         </table>
       </div>
@@ -530,6 +624,12 @@
   </main>
 </div>
 
+<!-- Screenshot Modal -->
+<div class="modal" id="screenshotModal">
+  <button class="close-modal" onclick="closeModal()">×</button>
+  <img class="modal-content" id="modalImage" src="">
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // Supabase Configuration
@@ -538,6 +638,8 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 // Wait for Supabase to load
 let supabase;
+let currentAdmin = null;
+let realtimeSubscription = null;
 
 function initSupabase() {
   if (typeof window.supabase !== 'undefined') {
@@ -562,7 +664,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }, 1000);
 });
-let currentAdmin = null;
 
 // Notification System
 function showNotification(message, type = 'success') {
@@ -576,7 +677,17 @@ function showNotification(message, type = 'success') {
   }, 3000);
 }
 
-// Sidebar Navigation - FIXED
+// Modal functions
+function openModal(imageSrc) {
+  document.getElementById('modalImage').src = imageSrc;
+  document.getElementById('screenshotModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('screenshotModal').style.display = 'none';
+}
+
+// Sidebar Navigation
 function setupSidebarNavigation() {
   const sidebarButtons = document.querySelectorAll('.nav button');
   
@@ -593,7 +704,7 @@ function setupSidebarNavigation() {
       this.classList.add('active');
       
       // Hide all tabs
-      document.querySelectorAll('#dashboard, #members, #payments, #withdrawals, #pricing, #referral, #reports, #settings')
+      document.querySelectorAll('#dashboard, #members, #payment-requests, #withdrawals, #pricing, #referral, #reports, #settings')
         .forEach(tab => {
           tab.style.display = 'none';
         });
@@ -613,8 +724,9 @@ function setupSidebarNavigation() {
             loadPendingMembers();
             loadApprovedMembers();
             break;
-          case 'payments':
-            loadPaymentHistory();
+          case 'payment-requests':
+            loadPaymentRequests();
+            loadApprovedPayments();
             break;
           case 'withdrawals':
             loadWithdrawalRequests();
@@ -649,7 +761,7 @@ function switchTab(tabName) {
   });
   
   // Hide all tabs
-  document.querySelectorAll('#dashboard, #members, #payments, #withdrawals, #pricing, #referral, #reports, #settings')
+  document.querySelectorAll('#dashboard, #members, #payment-requests, #withdrawals, #pricing, #referral, #reports, #settings')
     .forEach(tab => {
       tab.style.display = 'none';
     });
@@ -668,8 +780,9 @@ function switchTab(tabName) {
         loadPendingMembers();
         loadApprovedMembers();
         break;
-      case 'payments':
-        loadPaymentHistory();
+      case 'payment-requests':
+        loadPaymentRequests();
+        loadApprovedPayments();
         break;
       case 'withdrawals':
         loadWithdrawalRequests();
@@ -722,14 +835,59 @@ async function initAdmin() {
   // Setup sidebar navigation
   setupSidebarNavigation();
   
+  // Setup real-time subscriptions
+  setupRealtimeSubscriptions();
+  
   await loadDashboardData();
   showNotification('Admin dashboard loaded successfully!');
+}
+
+// Setup real-time subscriptions for instant updates
+function setupRealtimeSubscriptions() {
+  // Subscribe to payment requests
+  realtimeSubscription = supabase
+    .channel('payment-requests')
+    .on('postgres_changes', 
+      { 
+        event: '*', 
+        schema: 'public', 
+        table: 'payment_requests' 
+      }, 
+      (payload) => {
+        console.log('Payment request update:', payload);
+        updatePaymentRequestsBadge();
+        if (document.getElementById('payment-requests').style.display !== 'none') {
+          loadPaymentRequests();
+          loadApprovedPayments();
+        }
+        loadDashboardData();
+      }
+    )
+    .subscribe();
+}
+
+// Update payment requests badge
+async function updatePaymentRequestsBadge() {
+  try {
+    const { data: pendingRequests } = await supabase
+      .from('payment_requests')
+      .select('id')
+      .eq('status', 'pending');
+    
+    const badge = document.getElementById('paymentRequestsBadge');
+    if (badge) {
+      badge.textContent = pendingRequests?.length || '0';
+    }
+  } catch (error) {
+    console.error('Error updating payment badge:', error);
+  }
 }
 
 // Load Dashboard Data
 async function loadDashboardData() {
   await loadStatistics();
   await loadRecentActivity();
+  await updatePaymentRequestsBadge();
 }
 
 async function loadStatistics() {
@@ -760,6 +918,12 @@ async function loadStatistics() {
       .select('amount')
       .eq('status', 'pending');
     
+    // Get pending payment requests
+    const { data: paymentRequests } = await supabase
+      .from('payment_requests')
+      .select('id')
+      .eq('status', 'pending');
+    
     const totalWithdrawals = withdrawals?.reduce((sum, withdrawal) => sum + parseFloat(withdrawal.amount), 0) || 0;
     
     // Update stats
@@ -773,7 +937,7 @@ async function loadStatistics() {
     
     // Update quick actions
     document.getElementById('quickPendingMembers').textContent = `${pendingMembers?.length || 0} pending`;
-    document.getElementById('quickPayments').textContent = `${payments?.length || 0} transactions`;
+    document.getElementById('quickPaymentRequests').textContent = `${paymentRequests?.length || 0} requests`;
     document.getElementById('quickWithdrawals').textContent = `${withdrawals?.length || 0} requests`;
     
   } catch (error) {
@@ -784,20 +948,60 @@ async function loadStatistics() {
 
 async function loadRecentActivity() {
   try {
-    // Get recent payments
+    // Get recent payments and payment requests
     const { data: recentPayments } = await supabase
       .from('payments')
       .select('*, profiles(username, email)')
       .order('created_at', { ascending: false })
-      .limit(10);
+      .limit(5);
     
-    const activityHTML = recentPayments?.map(payment => `
+    const { data: recentApprovals } = await supabase
+      .from('payment_requests')
+      .select('*, profiles(username, email)')
+      .eq('status', 'approved')
+      .order('approved_at', { ascending: false })
+      .limit(5);
+    
+    // Combine and sort activities
+    const activities = [];
+    
+    if (recentPayments) {
+      recentPayments.forEach(payment => {
+        activities.push({
+          type: 'payment',
+          time: payment.created_at,
+          user: payment.profiles?.email || 'Unknown',
+          action: `${payment.plan_type} Payment`,
+          amount: payment.amount,
+          status: payment.status
+        });
+      });
+    }
+    
+    if (recentApprovals) {
+      recentApprovals.forEach(approval => {
+        activities.push({
+          type: 'approval',
+          time: approval.approved_at,
+          user: approval.profiles?.email || 'Unknown',
+          action: 'Payment Approved',
+          amount: approval.amount,
+          status: 'approved'
+        });
+      });
+    }
+    
+    // Sort by time and take top 10
+    activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+    const recentActivities = activities.slice(0, 10);
+    
+    const activityHTML = recentActivities.map(activity => `
       <tr>
-        <td>${new Date(payment.created_at).toLocaleDateString()}</td>
-        <td>${payment.profiles?.email || 'Unknown'}</td>
-        <td>${payment.plan_type} Payment</td>
-        <td>$${payment.amount}</td>
-        <td class="status-${payment.status}">${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}</td>
+        <td>${new Date(activity.time).toLocaleDateString()}</td>
+        <td>${activity.user}</td>
+        <td>${activity.action}</td>
+        <td>$${activity.amount}</td>
+        <td class="status-${activity.status}">${activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}</td>
       </tr>
     `).join('') || '<tr><td colspan="5">No recent activity</td></tr>';
     
@@ -807,6 +1011,181 @@ async function loadRecentActivity() {
     document.getElementById('recentActivity').innerHTML = '<tr><td colspan="5">Error loading activity</td></tr>';
   }
 }
+
+// Payment Requests Management
+async function loadPaymentRequests() {
+  try {
+    const { data: paymentRequests } = await supabase
+      .from('payment_requests')
+      .select('*, profiles(username, email)')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: true });
+    
+    const requestsHTML = paymentRequests?.map(request => `
+      <tr class="payment-request">
+        <td>${request.profiles?.email || 'Unknown'}</td>
+        <td>${request.plan_type}</td>
+        <td>$${request.amount}</td>
+        <td>
+          ${request.screenshot_url ? `
+            <img src="${request.screenshot_url}" alt="Payment screenshot" class="screenshot-preview" 
+                 onclick="openModal('${request.screenshot_url}')">
+          ` : 'No screenshot'}
+        </td>
+        <td>${new Date(request.created_at).toLocaleDateString()}</td>
+        <td class="status-pending">Pending</td>
+        <td>
+          <button class="btn btn-success" onclick="approvePaymentRequest('${request.id}', '${request.user_id}')">Approve</button>
+          <button class="btn btn-danger" onclick="rejectPaymentRequest('${request.id}')">Reject</button>
+          <button class="btn btn-info" onclick="viewPaymentDetails('${request.id}')">Details</button>
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="7">No pending payment requests</td></tr>';
+    
+    document.getElementById('paymentRequestsTable').innerHTML = requestsHTML;
+  } catch (error) {
+    console.error('Error loading payment requests:', error);
+    showNotification('Error loading payment requests', 'error');
+  }
+}
+
+async function loadApprovedPayments() {
+  try {
+    const { data: approvedPayments } = await supabase
+      .from('payment_requests')
+      .select('*, profiles(username, email), admin_profiles(username)')
+      .eq('status', 'approved')
+      .order('approved_at', { ascending: false })
+      .limit(20);
+    
+    const paymentsHTML = approvedPayments?.map(payment => `
+      <tr class="payment-request approved">
+        <td>${payment.profiles?.email || 'Unknown'}</td>
+        <td>${payment.plan_type}</td>
+        <td>$${payment.amount}</td>
+        <td>${payment.admin_profiles?.username || 'System'}</td>
+        <td>${new Date(payment.approved_at).toLocaleDateString()}</td>
+        <td class="status-approved">Approved</td>
+      </tr>
+    `).join('') || '<tr><td colspan="6">No approved payments</td></tr>';
+    
+    document.getElementById('approvedPaymentsTable').innerHTML = paymentsHTML;
+  } catch (error) {
+    console.error('Error loading approved payments:', error);
+  }
+}
+
+async function approvePaymentRequest(requestId, userId) {
+  if (confirm('Approve this payment request?')) {
+    try {
+      const { error } = await supabase
+        .from('payment_requests')
+        .update({ 
+          status: 'approved',
+          approved_by: currentAdmin.id,
+          approved_at: new Date().toISOString()
+        })
+        .eq('id', requestId);
+      
+      if (!error) {
+        // Update user membership status
+        await supabase
+          .from('profiles')
+          .update({ 
+            membership_status: 'approved',
+            plan_type: (await supabase.from('payment_requests').select('plan_type').eq('id', requestId).single()).data.plan_type,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', userId);
+        
+        // Create payment record
+        const requestData = await supabase
+          .from('payment_requests')
+          .select('*')
+          .eq('id', requestId)
+          .single();
+        
+        if (requestData.data) {
+          await supabase
+            .from('payments')
+            .insert({
+              user_id: userId,
+              amount: requestData.data.amount,
+              plan_type: requestData.data.plan_type,
+              payment_method: requestData.data.payment_method,
+              status: 'completed',
+              screenshot_url: requestData.data.screenshot_url
+            });
+        }
+        
+        // Log the action
+        await supabase
+          .from('audit_logs')
+          .insert({
+            admin_id: currentAdmin.id,
+            action: 'payment_approval',
+            resource_type: 'payment_request',
+            resource_id: requestId,
+            details: { status: 'approved' }
+          });
+        
+        showNotification('Payment approved successfully! User membership activated.');
+        loadPaymentRequests();
+        loadApprovedPayments();
+        loadDashboardData();
+      } else {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error approving payment:', error);
+      showNotification('Error approving payment', 'error');
+    }
+  }
+}
+
+async function rejectPaymentRequest(requestId) {
+  const reason = prompt('Reason for rejection:');
+  if (reason) {
+    try {
+      const { error } = await supabase
+        .from('payment_requests')
+        .update({ 
+          status: 'rejected',
+          admin_notes: reason,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', requestId);
+      
+      if (!error) {
+        await supabase
+          .from('audit_logs')
+          .insert({
+            admin_id: currentAdmin.id,
+            action: 'payment_rejection',
+            resource_type: 'payment_request',
+            resource_id: requestId,
+            details: { status: 'rejected', reason: reason }
+          });
+        
+        showNotification('Payment request rejected.');
+        loadPaymentRequests();
+        loadDashboardData();
+      } else {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error rejecting payment:', error);
+      showNotification('Error rejecting payment', 'error');
+    }
+  }
+}
+
+function viewPaymentDetails(requestId) {
+  // In a real implementation, this would show a modal with full details
+  alert(`Payment request details for ID: ${requestId}\n\nThis would show full transaction details, user information, and payment history.`);
+}
+
+// [Rest of the functions remain the same as in your original code...]
 
 // Member Management
 async function loadPendingMembers() {
@@ -960,59 +1339,6 @@ async function suspendMember(userId) {
       console.error('Error suspending member:', error);
       showNotification('Error suspending member', 'error');
     }
-  }
-}
-
-// Payment Management
-async function loadPaymentHistory() {
-  try {
-    const { data: payments } = await supabase
-      .from('payments')
-      .select('*, profiles(username, email)')
-      .order('created_at', { ascending: false })
-      .limit(50);
-    
-    const paymentsHTML = payments?.map(payment => `
-      <tr>
-        <td>${new Date(payment.created_at).toLocaleDateString()}</td>
-        <td>${payment.profiles?.email || 'Unknown'}</td>
-        <td>${payment.plan_type}</td>
-        <td>$${payment.amount}</td>
-        <td>${payment.payment_method}</td>
-        <td class="status-${payment.status}">${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}</td>
-        <td>
-          ${payment.status === 'pending' ? `
-            <button class="btn btn-success" onclick="updatePaymentStatus('${payment.id}', 'completed')">Complete</button>
-            <button class="btn btn-danger" onclick="updatePaymentStatus('${payment.id}', 'failed')">Fail</button>
-          ` : '-'}
-        </td>
-      </tr>
-    `).join('') || '<tr><td colspan="7">No payment history</td></tr>';
-    
-    document.getElementById('paymentHistory').innerHTML = paymentsHTML;
-  } catch (error) {
-    console.error('Error loading payment history:', error);
-    showNotification('Error loading payment history', 'error');
-  }
-}
-
-async function updatePaymentStatus(paymentId, status) {
-  try {
-    const { error } = await supabase
-      .from('payments')
-      .update({ status: status })
-      .eq('id', paymentId);
-    
-    if (!error) {
-      showNotification(`Payment marked as ${status}`);
-      loadPaymentHistory();
-      loadStatistics();
-    } else {
-      throw error;
-    }
-  } catch (error) {
-    console.error('Error updating payment status:', error);
-    showNotification('Error updating payment status', 'error');
   }
 }
 
@@ -1287,6 +1613,9 @@ async function updateSystemSettings() {
 // Event Listeners
 document.getElementById('btnLogout').addEventListener('click', async () => {
   if (confirm('Are you sure you want to logout?')) {
+    if (realtimeSubscription) {
+      supabase.removeChannel(realtimeSubscription);
+    }
     await supabase.auth.signOut();
     window.location.href = 'admin-login.html';
   }
