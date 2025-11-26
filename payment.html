@@ -1,140 +1,628 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Crown Trade Academy - Payment</title>
-<style>
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background: #f9f6f2;
-    color: #3a3a3a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-  }
-  .container {
-    background: #e8dfd6;
-    padding: 2rem 3rem;
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(200, 169, 126, 0.3);
-    max-width: 420px;
-    text-align: center;
-  }
-  h1 {
-    font-family: 'Cormorant Garamond', serif;
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-  }
-  .info {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-  }
-  label {
-    display: block;
-    margin: 1rem 0 0.5rem;
-    font-weight: 600;
-  }
-  input[type="file"] {
-    width: 100%;
-    padding: 0.3rem;
-  }
-  button {
-    background-color: #c8a97e;
-    border: none;
-    color: #f9f6f2;
-    padding: 1rem 2rem;
-    margin-top: 1.5rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 1rem;
-    border-radius: 4px;
-    width: 100%;
-    transition: background-color 0.3s ease;
-  }
-  button:hover {
-    background-color: #b89463;
-  }
-  .mpesa-number {
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-  .success-message {
-    color: green;
-    font-weight: 600;
-    margin-top: 1rem;
-    display: none;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Submission</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f5f0;
+            color: #5a4d41;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #e0d6cc;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            color: #c8a97e;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #8b7355;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #d4c1a6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5a4d41;
+            font-weight: bold;
+        }
+        
+        .page-title {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .page-title h2 {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 10px;
+            color: #8b7355;
+        }
+        
+        .page-title p {
+            color: #a08c72;
+            font-size: 16px;
+        }
+        
+        .payment-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(139, 115, 85, 0.1);
+            border: 1px solid #e8dfd3;
+            margin-bottom: 30px;
+        }
+        
+        .payment-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            background: #f5f0e8;
+            color: #c8a97e;
+        }
+        
+        .payment-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #8b7355;
+        }
+        
+        .payment-details {
+            background: #f9f5f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e8dfd3;
+        }
+        
+        .payment-row:last-child {
+            border-bottom: none;
+        }
+        
+        .payment-label {
+            color: #8b7355;
+            font-weight: 500;
+        }
+        
+        .payment-value {
+            color: #5a4d41;
+            font-weight: 600;
+        }
+        
+        .payment-amount {
+            font-size: 24px;
+            color: #c8a97e;
+        }
+        
+        .upload-section {
+            margin-bottom: 25px;
+        }
+        
+        .upload-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #8b7355;
+        }
+        
+        .upload-area {
+            border: 2px dashed #e0d6cc;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f9f5f0;
+        }
+        
+        .upload-area:hover {
+            border-color: #c8a97e;
+            background: #f5f0e8;
+        }
+        
+        .upload-icon {
+            font-size: 40px;
+            color: #c8a97e;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            color: #a08c72;
+            margin-bottom: 10px;
+        }
+        
+        .upload-hint {
+            font-size: 14px;
+            color: #b8a995;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .preview-container {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .preview-title {
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #8b7355;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .remove-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .remove-btn:hover {
+            background: #c0392b;
+        }
+        
+        .submit-btn {
+            background: #c8a97e;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .submit-btn:hover {
+            background: #b89768;
+            transform: translateY(-2px);
+        }
+        
+        .submit-btn:disabled {
+            background: #e0d6cc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Waiting for Approval Page */
+        .approval-page {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .approval-icon {
+            font-size: 80px;
+            color: #c8a97e;
+            margin-bottom: 30px;
+        }
+        
+        .approval-title {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 15px;
+            color: #8b7355;
+        }
+        
+        .approval-message {
+            color: #a08c72;
+            font-size: 18px;
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .progress-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 40px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e8dfd3;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #c8a97e;
+            width: 0%;
+            border-radius: 4px;
+            transition: width 2s ease-in-out;
+        }
+        
+        .progress-text {
+            color: #a08c72;
+            font-size: 14px;
+        }
+        
+        .next-steps {
+            background: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(139, 115, 85, 0.1);
+            border: 1px solid #e8dfd3;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .steps-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #8b7355;
+            text-align: center;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #f5f0e8;
+            color: #c8a97e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            color: #5a4d41;
+            padding-top: 5px;
+        }
+        
+        .dashboard-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #c8a97e;
+            text-decoration: none;
+            font-weight: 500;
+            border: 1px solid #c8a97e;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-link:hover {
+            background: #c8a97e;
+            color: white;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid #e0d6cc;
+            color: #a08c72;
+            font-size: 14px;
+            margin-top: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .payment-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .payment-value {
+                text-align: right;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-user-friends"></i>
+                <h1>ReferralHub</h1>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">JD</div>
+                <div>
+                    <div style="font-weight: 600; color: #8b7355;">John Doe</div>
+                    <div style="font-size: 14px; color: #a08c72;">Gold Member</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Payment Submission Page -->
+        <div id="paymentPage">
+            <section class="page-title">
+                <h2>Payment Verification</h2>
+                <p>Submit your payment screenshot for approval</p>
+            </section>
+            
+            <div class="payment-card">
+                <div class="payment-header">
+                    <div class="payment-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="payment-title">Payment Details</div>
+                </div>
+                
+                <div class="payment-details">
+                    <div class="payment-row">
+                        <div class="payment-label">Program</div>
+                        <div class="payment-value">Premium Membership</div>
+                    </div>
+                    <div class="payment-row">
+                        <div class="payment-label">Amount</div>
+                        <div class="payment-value payment-amount">$99.00</div>
+                    </div>
+                    <div class="payment-row">
+                        <div class="payment-label">Payment Method</div>
+                        <div class="payment-value">Bank Transfer</div>
+                    </div>
+                    <div class="payment-row">
+                        <div class="payment-label">Reference ID</div>
+                        <div class="payment-value">REF-789123</div>
+                    </div>
+                </div>
+                
+                <div class="upload-section">
+                    <label class="upload-label">Upload Payment Screenshot</label>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">Click to upload or drag and drop</div>
+                        <div class="upload-hint">PNG, JPG, GIF up to 5MB</div>
+                        <input type="file" id="fileInput" class="file-input" accept="image/*">
+                    </div>
+                    
+                    <div class="preview-container" id="previewContainer">
+                        <div class="preview-title">Preview:</div>
+                        <img id="previewImage" class="preview-image" src="" alt="Preview">
+                        <button class="remove-btn" id="removeBtn">
+                            <i class="fas fa-times"></i> Remove Image
+                        </button>
+                    </div>
+                </div>
+                
+                <button class="submit-btn" id="submitBtn" disabled>
+                    <i class="fas fa-check-circle"></i> I Have Paid - Submit for Approval
+                </button>
+            </div>
+        </div>
+        
+        <!-- Waiting for Approval Page -->
+        <div class="approval-page" id="approvalPage">
+            <div class="approval-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            
+            <h2 class="approval-title">Waiting for Approval</h2>
+            
+            <p class="approval-message">
+                Thank you for your payment! Your transaction is being reviewed and will be approved within 24 hours.
+            </p>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">Approval in progress...</div>
+            </div>
+            
+            <div class="next-steps">
+                <div class="steps-title">What happens next?</div>
+                
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Our team verifies your payment details</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">We confirm the transaction with our payment provider</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Your account is upgraded to Premium status</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">You receive a confirmation email with next steps</div>
+                </div>
+            </div>
+            
+            <a href="#" class="dashboard-link">
+                <i class="fas fa-tachometer-alt"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2023 ReferralHub. All rights reserved. | <a href="#" style="color: #c8a97e;">Privacy Policy</a> | <a href="#" style="color: #c8a97e;">Terms of Service</a></p>
+    </footer>
 
-<div class="container">
-  <h1>Payment Details</h1>
-  <p class="info">Please send the enrollment fee to the M-Pesa number below.</p>
-  <div class="mpesa-number" id="mpesaNumber"></div>
-  <p class="info" id="feeInfo"></p>
-
-  <form id="paymentForm">
-    <label for="paymentProof">Upload Payment Screenshot:</label>
-    <input type="file" id="paymentProof" accept="image/*" required />
-    <button type="submit">I Have Paid</button>
-  </form>
-
-  <p class="success-message" id="successMessage">Thank you for your payment. Your application is now pending approval.</p>
-</div>
-
-<script>
-  const mpesaNumberEl = document.getElementById('mpesaNumber');
-  const feeInfoEl = document.getElementById('feeInfo');
-  const paymentForm = document.getElementById('paymentForm');
-  const successMessage = document.getElementById('successMessage');
-
-  const selectedProgram = localStorage.getItem('selectedProgram');
-
-  if (!selectedProgram) {
-    alert('No program selected. Redirecting to program selection.');
-    window.location.href = 'program-selection.html';
-  }
-
-  const programDetails = {
-    mentorship: {
-      fee: 3000,
-      mpesa: '0769968847',
-    },
-    referral: {
-      fee: 500,
-      mpesa: '0769968847',
-    }
-  };
-
-  const currentProgram = programDetails[selectedProgram];
-
-  mpesaNumberEl.textContent = `M-Pesa Number: ${currentProgram.mpesa}`;
-  feeInfoEl.textContent = `Enrollment Fee: KES ${currentProgram.fee}`;
-
-  paymentForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    // Simulate payment proof upload & confirmation
-    const fileInput = document.getElementById('paymentProof');
-    if (fileInput.files.length === 0) {
-      alert('Please upload a payment screenshot.');
-      return;
-    }
-
-    // Here you would normally handle file upload to your backend or storage
-
-    // Show success message and disable the form
-    successMessage.style.display = 'block';
-    paymentForm.querySelector('button').disabled = true;
-    paymentForm.querySelector('button').textContent = 'Waiting for Approval';
-
-    // Optionally, you could redirect or further instructions here
-  });
-</script>
-
+    <script>
+        // DOM Elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const removeBtn = document.getElementById('removeBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const paymentPage = document.getElementById('paymentPage');
+        const approvalPage = document.getElementById('approvalPage');
+        const progressFill = document.getElementById('progressFill');
+        
+        // Upload area click handler
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        // File input change handler
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    submitBtn.disabled = false;
+                }
+                
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+        
+        // Remove image handler
+        removeBtn.addEventListener('click', function() {
+            fileInput.value = '';
+            previewContainer.style.display = 'none';
+            submitBtn.disabled = true;
+        });
+        
+        // Submit button handler
+        submitBtn.addEventListener('click', function() {
+            // Show loading state
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Hide payment page, show approval page
+                paymentPage.style.display = 'none';
+                approvalPage.style.display = 'block';
+                
+                // Animate progress bar
+                setTimeout(() => {
+                    progressFill.style.width = '70%';
+                }, 500);
+            }, 1500);
+        });
+        
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#c8a97e';
+            this.style.background = '#f5f0e8';
+        });
+        
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#e0d6cc';
+            this.style.background = '#f9f5f0';
+        });
+        
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#e0d6cc';
+            this.style.background = '#f9f5f0';
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    submitBtn.disabled = false;
+                }
+                reader.readAsDataURL(e.dataTransfer.files[0]);
+            }
+        });
+    </script>
 </body>
 </html>
