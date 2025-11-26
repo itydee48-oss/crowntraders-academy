@@ -4,74 +4,189 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crown Trade Academy — Register</title>
-  <!-- Same styles as signup page -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6a0dad;
+      --success: #10b981;
+      --muted: #94a3b8;
+      --dark: #1e293b;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+      color: white;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .signup-container {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+    .signup-form {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .brand {
+      font-size: 2.2rem;
+      font-weight: 800;
+      text-align: center;
+      background: linear-gradient(90deg, #ffd700, #ffaa00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .brand-subtitle {
+      text-align: center;
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      color: #e2e8f0;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.3);
+    }
+    .btn.success {
+      background: linear-gradient(90deg, #10b981, #34d399);
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+    .btn.success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+    }
+    .trust-badge {
+      text-align: center;
+      margin: 25px 0 15px;
+      font-size: 0.95rem;
+      color: #94a3b8;
+    }
+    .trust-badge i {
+      color: #10b981;
+      margin-right: 6px;
+    }
+  </style>
 </head>
 <body>
+
   <div class="signup-container">
     <div class="signup-form">
       <div class="brand">Crown Trade</div>
-      <div class="brand-subtitle">Join Our Program - $400</div>
-      
-      <div id="referralBonus" style="display: none; background: var(--success); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
-        <i class="fas fa-gift"></i> <strong>Referral Bonus Active!</strong> Your friend will earn $250 when you complete registration.
+      <div class="brand-subtitle">Join The Elite Program — One-Time $400</div>
+
+      <!-- Success message when referred -->
+      <div id="referralBonus" style="display: none; background: linear-gradient(90deg, #7c3aed, #a855f7); color: white; padding: 16px; border-radius: 12px; margin-bottom: 20px; text-align: center; font-weight: 700;">
+        <i class="fas fa-gift"></i> <strong>Referral Bonus Activated!</strong><br>
+        <span style="font-size:0.95rem; opacity:0.9;">Your friend earns $250 commission when you join</span>
       </div>
-      
-      <div class="form-group">
-        <label class="form-label">Full Name</label>
-        <input type="text" class="form-input" id="fullName" placeholder="Enter your full name">
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input type="email" class="form-input" id="email" placeholder="Enter your email">
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Phone Number</label>
-        <input type="tel" class="form-input" id="phone" placeholder="Enter your phone number">
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input type="password" class="form-input" id="password" placeholder="Create a password">
-      </div>
-      
-      <div id="referralSection" style="display: none;">
+
+      <form id="registrationForm">
         <div class="form-group">
-          <label class="form-label">Referral Code</label>
-          <input type="text" class="form-input" id="referralCode" readonly>
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" id="fullName" placeholder="John Doe" required>
         </div>
-      </div>
-      
-      <button class="btn success" id="registerBtn" style="width: 100%;">
-        <i class="fas fa-credit-card"></i> Complete Registration - $400
-      </button>
-      
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" id="email" placeholder="you@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone Number (WhatsApp)</label>
+          <input type="tel" class="form-input" id="phone" placeholder="+1 (555) 123-4567" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Create Password</label>
+          <input type="password" class="form-input" id="password" placeholder="Min. 8 characters" required minlength="8">
+        </div>
+
+        <!-- Optional Referral Code Field (appears if ref= in URL) -->
+        <div id="referralSection" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Referral Code (Applied)</label>
+            <input type="text" class="form-input" id="referralCode" readonly style="background:rgba(16,185,129,0.2); border-color:#10b981;">
+          </div>
+        </div>
+
+        <!-- Trust badge -->
+        <div class="trust-badge">
+          <i class="fas fa-lock"></i> 256-bit SSL · Instant Access After Payment · 7-Day Refund
+        </div>
+
+        <button type="submit" class="btn success" id="registerBtn">
+          <i class="fas fa-credit-card"></i> Complete Registration — Pay $400 Now
+        </button>
+      </form>
+
       <div style="text-align: center; margin-top: 20px; color: var(--muted); font-size: 0.9rem;">
-        By registering, you agree to our Terms of Service and Privacy Policy
+        By registering, you agree to our <a href="#" style="color:#a78bfa;">Terms</a> and <a href="#" style="color:#a78bfa;">Privacy Policy</a>
       </div>
     </div>
   </div>
 
   <script>
-    // Check for referral code in URL
     const urlParams = new URLSearchParams(window.location.search);
     const refCode = urlParams.get('ref');
-    
+
     if (refCode) {
       document.getElementById('referralBonus').style.display = 'block';
       document.getElementById('referralSection').style.display = 'block';
       document.getElementById('referralCode').value = refCode;
-      
-      // Store referral code for later use
       localStorage.setItem('referral_code', refCode);
     }
 
-    // Registration logic would handle:
-    // 1. User account creation
-    // 2. $400 payment processing
-    // 3. Referral tracking and commission assignment
-    // 4. Redirect to appropriate dashboard
+    // Optional: You can connect this to Stripe + Supabase later
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Show loading state
+      const btn = document.getElementById('registerBtn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Payment...';
+      btn.disabled = true;
+
+      // Simulate success (replace with real Stripe + backend later)
+      setTimeout(() => {
+        alert('Payment Successful! Welcome to Crown Trade Academy 🎉\n\nRedirecting to your dashboard...');
+        window.location.href = '/dashboard.html'; // Change to your real dashboard
+      }, 2500);
+    });
   </script>
 </body>
 </html>
