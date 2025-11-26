@@ -3,104 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crown Trade Academy — Register</title>
+  <title>Crown Trade Academy — Join Now</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    :root {
-      --primary: #6a0dad;
-      --success: #10b981;
-      --muted: #94a3b8;
-      --dark: #1e293b;
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
-      color: white;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .signup-container {
-      width: 100%;
-      max-width: 420px;
-      padding: 20px;
-    }
-    .signup-form {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 40px 30px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .brand {
-      font-size: 2.2rem;
-      font-weight: 800;
-      text-align: center;
-      background: linear-gradient(90deg, #ffd700, #ffaa00);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 8px;
-    }
-    .brand-subtitle {
-      text-align: center;
-      font-size: 1.3rem;
-      margin-bottom: 30px;
-      color: #e2e8f0;
-    }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    .form-label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #e2e8f0;
-    }
-    .form-input {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      font-size: 1rem;
-      transition: all 0.3s;
-    }
-    .form-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.3);
-    }
-    .btn.success {
-      background: linear-gradient(90deg, #10b981, #34d399);
-      color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      padding: 16px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s;
-      margin-top: 10px;
-    }
-    .btn.success:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
-    }
-    .trust-badge {
-      text-align: center;
-      margin: 25px 0 15px;
-      font-size: 0.95rem;
-      color: #94a3b8;
-    }
-    .trust-badge i {
-      color: #10b981;
-      margin-right: 6px;
-    }
+    :root {--primary:#6a0dad;--success:#10b981;--muted:#94a3b8;--dark:#1e293b}
+    body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0f0f23 0%,#1a1a2e 100%);color:white;margin:0;padding:0;min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .signup-container{width:100%;max-width:420px;padding:20px}
+    .signup-form{background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);border-radius:20px;padding:40px 30px;box-shadow:0 20px 40px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1)}
+    .brand{font-size:2.4rem;font-weight:900;text-align:center;background:linear-gradient(90deg,#ffd700,#ffaa00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .brand-subtitle{text-align:center;font-size:1.35rem;margin-bottom:30px;color:#e2e8f0}
+    .form-group{margin-bottom:20px}
+    .form-label{display:block;margin-bottom:8px;font-weight:600;color:#e2e8f0}
+    .form-input{width:100%;padding:15px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;transition:all .3s}
+    .form-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(106,13,173,0.3)}
+    .btn.success{background:linear-gradient(90deg,#10b981,#34d399);color:white;font-weight:700;font-size:1.15rem;padding:18px;border:none;border-radius:12px;cursor:pointer;transition:all .3s;margin-top:10px;width:100%}
+    .btn.success:hover{transform:translateY(-3px);box-shadow:0 15px 30px rgba(16,185,129,0.5)}
+    .trust-badge{text-align:center;margin:25px 0 15px;font-size:.95rem;color:#94a3b8}
+    .trust-badge i{color:#10b981;margin-right:6px}
   </style>
 </head>
 <body>
@@ -110,83 +29,97 @@
       <div class="brand">Crown Trade</div>
       <div class="brand-subtitle">Join The Elite Program — One-Time $400</div>
 
-      <!-- Success message when referred -->
-      <div id="referralBonus" style="display: none; background: linear-gradient(90deg, #7c3aed, #a855f7); color: white; padding: 16px; border-radius: 12px; margin-bottom: 20px; text-align: center; font-weight: 700;">
-        <i class="fas fa-gift"></i> <strong>Referral Bonus Activated!</strong><br>
-        <span style="font-size:0.95rem; opacity:0.9;">Your friend earns $250 commission when you join</span>
+      <div id="referralBonus" style="display:none;background:linear-gradient(90deg,#7c3aed,#a855f7);color:white;padding:16px;border-radius:12px;margin-bottom:20px;text-align:center;font-weight:700">
+        <i class="fas fa-gift"></i> Referral Bonus Activated!<br>
+        <span style="font-size:.95rem;opacity:.9">Your friend earns $250 instantly when you join</span>
       </div>
 
       <form id="registrationForm">
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" id="fullName" placeholder="John Doe" required>
-        </div>
+        <div class="form-group"><label class="form-label">Full Name</label><input type="text" name="fullName" class="form-input" placeholder="John Doe" required></div>
+        <div class="form-group"><label class="form-label">Email Address</label><input type="email" name="email" class="form-input" placeholder="you@example.com" required></div>
+        <div class="form-group"><label class="form-label">Phone Number (WhatsApp)</label><input type="tel" name="phone" class="form-input" placeholder="+1 (555) 123-4567" required></div>
+        <div class="form-group"><label class="form-label">Create Password</label><input type="password" name="password" class="form-input" placeholder="Min 8 characters" required minlength="8"></div>
 
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" id="email" placeholder="you@example.com" required>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Phone Number (WhatsApp)</label>
-          <input type="tel" class="form-input" id="phone" placeholder="+1 (555) 123-4567" required>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Create Password</label>
-          <input type="password" class="form-input" id="password" placeholder="Min. 8 characters" required minlength="8">
-        </div>
-
-        <!-- Optional Referral Code Field (appears if ref= in URL) -->
-        <div id="referralSection" style="display: none;">
-          <div class="form-group">
-            <label class="form-label">Referral Code (Applied)</label>
-            <input type="text" class="form-input" id="referralCode" readonly style="background:rgba(16,185,129,0.2); border-color:#10b981;">
+        <div id="referralSection" style="display:none">
+          <div class="form-group"><label class="form-label">Referral Code Applied</label>
+            <input type="text" id="referralCode" class="form-input" readonly style="background:rgba(16,185,129,0.2);border-color:#10b981;color:#10b981;font-weight:600">
           </div>
         </div>
 
-        <!-- Trust badge -->
-        <div class="trust-badge">
-          <i class="fas fa-lock"></i> 256-bit SSL · Instant Access After Payment · 7-Day Refund
-        </div>
+        <div class="trust-badge"><i class="fas fa-lock"></i> 256-bit SSL · Instant Access · 7-Day Money-Back</div>
 
         <button type="submit" class="btn success" id="registerBtn">
           <i class="fas fa-credit-card"></i> Complete Registration — Pay $400 Now
         </button>
       </form>
 
-      <div style="text-align: center; margin-top: 20px; color: var(--muted); font-size: 0.9rem;">
-        By registering, you agree to our <a href="#" style="color:#a78bfa;">Terms</a> and <a href="#" style="color:#a78bfa;">Privacy Policy</a>
+      <div style="text-align:center;margin-top:20px;color:var(--muted);font-size:.9rem">
+        By registering you agree to our <a href="#" style="color:#a78bfa">Terms</a> and <a href="#" style="color:#a78bfa">Privacy Policy</a>
       </div>
     </div>
   </div>
 
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const refCode = urlParams.get('ref');
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+    const supabase = createClient(
+      'https://eygjxxdgxzatchqgwvep.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGM40G55tqg'
+    )
+
+    const urlParams = new URLSearchParams(window.location.search)
+    const refCode = urlParams.get('ref')
 
     if (refCode) {
-      document.getElementById('referralBonus').style.display = 'block';
-      document.getElementById('referralSection').style.display = 'block';
-      document.getElementById('referralCode').value = refCode;
-      localStorage.setItem('referral_code', refCode);
+      document.getElementById('referralBonus').style.display = 'block'
+      document.getElementById('referralSection').style.display = 'block'
+      document.getElementById('referralCode').value = refCode
     }
 
-    // Optional: You can connect this to Stripe + Supabase later
-    document.getElementById('registrationForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      // Show loading state
-      const btn = document.getElementById('registerBtn');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Payment...';
-      btn.disabled = true;
+    document.getElementById('registrationForm').addEventListener('submit', async e => {
+      e.preventDefault()
+      const btn = document.getElementById('registerBtn')
+      const original = btn.innerHTML
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Payment...'
+      btn.disabled = true
 
-      // Simulate success (replace with real Stripe + backend later)
-      setTimeout(() => {
-        alert('Payment Successful! Welcome to Crown Trade Academy 🎉\n\nRedirecting to your dashboard...');
-        window.location.href = '/dashboard.html'; // Change to your real dashboard
-      }, 2500);
-    });
+      const f = new FormData(e.target)
+      const payload = {
+        fullName: f.get('fullName'),
+        email: f.get('email').toLowerCase().trim(),
+        phone: f.get('phone'),
+        password: f.get('password'),
+        refCode: refCode || null
+      }
+
+      try {
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: payload.email,
+          password: payload.password,
+          options: { data: { full_name: payload.fullName, phone: payload.phone, referred_by: payload.refCode, role: 'student', paid: false }}
+        })
+        if (authError) throw authError
+
+        const { data: session, error: sessionError } = await supabase.functions.invoke('create-stripe-checkout', {
+          body: {
+            user_id: authData.user.id,
+            email: payload.email,
+            name: payload.fullName,
+            referral_code: payload.refCode,
+            amount: 40000,
+            success_url: `${window.location.origin}/welcome.html?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: window.location.href
+          }
+        })
+        if (sessionError) throw sessionError
+
+        window.location.href = session.url
+      } catch (err) {
+        alert('Error: ' + (err.message || 'Try again'))
+        btn.innerHTML = original
+        btn.disabled = false
+      }
+    })
   </script>
 </body>
 </html>
