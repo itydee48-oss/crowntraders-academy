@@ -1,361 +1,549 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crown Trade — Admin Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --nude: #F9F6F2;
-            --gold: #C8A97E;
-            --gold-dark: #B89463;
-            --charcoal: #2e2e2e;
-            --muted: #777;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Montserrat', sans-serif; 
-            background: var(--nude); 
-            color: var(--charcoal); 
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .login-container {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-            border: 1px solid rgba(200,169,126,0.3);
-            width: 100%;
-            max-width: 420px;
-        }
-        
-        .brand {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.5rem;
-            color: var(--gold-dark);
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: var(--muted);
-            margin-bottom: 30px;
-            font-size: 1rem;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--charcoal);
-        }
-        
-        .form-input {
-            width: 100%;
-            padding: 14px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .form-input:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(200,169,126,0.1);
-        }
-        
-        .login-btn {
-            width: 100%;
-            background: var(--gold);
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-        
-        .login-btn:hover {
-            background: var(--gold-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        
-        .login-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .error-message {
-            background: #FEE2E2;
-            color: var(--danger);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            display: none;
-        }
-        
-        .success-message {
-            background: #D1FAE5;
-            color: var(--success);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            display: none;
-        }
-        
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: var(--muted);
-            font-size: 0.9rem;
-        }
-        
-        .demo-hint {
-            margin-top: 15px;
-            padding: 10px;
-            background: #F3F4F6;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            color: #6B7280;
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crown Trade — Admin Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --nude: #F9F6F2;
+      --gold: #C8A97E;
+      --gold-dark: #B89463;
+      --charcoal: #2e2e2e;
+      --muted: #777;
+      --success: #10B981;
+      --danger: #EF4444;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, var(--nude) 0%, #f1e8d8 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .login-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(200, 169, 126, 0.3);
+      overflow: hidden;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+    }
+    
+    .login-header {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      padding: 40px 30px;
+      text-align: center;
+      color: white;
+    }
+    
+    .brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+    
+    .login-form {
+      padding: 40px 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 24px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--charcoal);
+      font-size: 0.9rem;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #fcfcfc;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(200, 169, 126, 0.1);
+    }
+    
+    .form-input.error {
+      border-color: var(--danger);
+      background: #fef2f2;
+    }
+    
+    .login-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+    
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(200, 169, 126, 0.4);
+    }
+    
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .error-message {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-top: 8px;
+      display: none;
+    }
+    
+    .security-notice {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 25px;
+      text-align: center;
+    }
+    
+    .security-notice h4 {
+      color: #0369a1;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    
+    .security-notice p {
+      color: #64748b;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+    
+    .loading-spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+      display: none;
+    }
+    
+    .notification.success { background: var(--success); }
+    .notification.error { background: var(--danger); }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    
+    .shake {
+      animation: shake 0.5s ease-in-out;
+    }
+    
+    .password-toggle {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    .input-wrapper {
+      position: relative;
+    }
+    
+    @media (max-width: 480px) {
+      .login-container {
+        margin: 10px;
+      }
+      
+      .login-header {
+        padding: 30px 20px;
+      }
+      
+      .login-form {
+        padding: 30px 20px;
+      }
+      
+      .brand {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="brand">Crown Trade</div>
-        <div class="subtitle">Admin Portal</div>
-        
-        <div class="error-message" id="errorMessage">
-            Invalid credentials. Please try again.
-        </div>
-        
-        <div class="success-message" id="successMessage">
-            Login successful! Redirecting...
-        </div>
-        
-        <form id="loginForm">
-            <div class="form-group">
-                <label class="form-label" for="username">Username</label>
-                <input type="text" id="username" class="form-input" placeholder="Enter your username" required autocomplete="username">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="password">Password</label>
-                <input type="password" id="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
-            </div>
-            
-            <button type="submit" class="login-btn" id="loginBtn">
-                Sign In
-            </button>
-        </form>
-        
-        <div class="footer">
-            &copy; 2023 Crown Trade. Secure Admin Access.
-            <div class="demo-hint">
-                <strong>Demo Credentials:</strong><br>
-                Username: admin | Password: admin123
-            </div>
-        </div>
+
+<!-- Notification System -->
+<div class="notification" id="notification"></div>
+
+<div class="login-container">
+  <div class="login-header">
+    <div class="brand">Crown Trade</div>
+    <div class="subtitle">Administrator Access</div>
+  </div>
+  
+  <form class="login-form" id="loginForm">
+    <div class="form-group">
+      <label class="form-label">Admin Username</label>
+      <input 
+        type="text" 
+        id="username" 
+        class="form-input" 
+        placeholder="Enter admin username"
+        autocomplete="username"
+        required
+      >
+      <div class="error-message" id="usernameError">Please enter a valid username</div>
     </div>
+    
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <div class="input-wrapper">
+        <input 
+          type="password" 
+          id="password" 
+          class="form-input" 
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          required
+        >
+        <button type="button" class="password-toggle" id="passwordToggle">👁️</button>
+      </div>
+      <div class="error-message" id="passwordError">Please enter your password</div>
+    </div>
+    
+    <button type="submit" class="login-btn" id="loginBtn">
+      <span id="btnText">Access Dashboard</span>
+      <div class="loading-spinner" id="loadingSpinner"></div>
+    </button>
+    
+    <div class="security-notice">
+      <h4>🔒 Secure Access</h4>
+      <p>This area is restricted to authorized personnel only. All activities are monitored and logged.</p>
+    </div>
+  </form>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        // Supabase Configuration - USING YOUR CORRECT PROJECT
-        const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Supabase Configuration - Same as admin panel
+const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
-        // Initialize Supabase
-        const { createClient } = window.supabase;
-        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// Initialize Supabase
+const { createClient } = window.supabase;
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Admin credentials
-        const ADMIN_CREDENTIALS = [
-            { 
-                username: 'admin', 
-                password: 'admin123', 
-                email: 'admin@crowntrade.com',
-                role: 'admin'
-            }
-        ];
+// Admin credentials (In production, this should be handled server-side)
+const ADMIN_CREDENTIALS = [
+  {
+    username: "admin",
+    password: "CrownTrade2024!",
+    email: "admin@crowntrade.com",
+    role: "Super Administrator"
+  },
+  {
+    username: "racheal",
+    password: "Racheal123!",
+    email: "racheal@crowntrade.com",
+    role: "Administrator"
+  },
+  {
+    username: "moderator",
+    password: "Mod2024!",
+    email: "moderator@crowntrade.com",
+    role: "Moderator"
+  }
+];
 
-        // Check if user is already logged in
-        async function checkExistingSession() {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                
-                if (session && session.user) {
-                    console.log('Session found, checking admin access...');
-                    // Check if user has admin access by trying to access admin data
-                    const { data: paymentRequests } = await supabase
-                        .from('payment_requests')
-                        .select('*')
-                        .limit(1);
-                    
-                    // If we can access admin data, redirect to dashboard
-                    if (paymentRequests !== null) {
-                        console.log('Admin access confirmed, redirecting...');
-                        redirectToDashboard();
-                    }
-                }
-            } catch (error) {
-                console.log('No valid session found');
-            }
-        }
+// DOM Elements
+const loginForm = document.getElementById('loginForm');
+const usernameInput = document.getElementById('username');
+const passwordInput = document.getElementById('password');
+const loginBtn = document.getElementById('loginBtn');
+const btnText = document.getElementById('btnText');
+const loadingSpinner = document.getElementById('loadingSpinner');
+const passwordToggle = document.getElementById('passwordToggle');
+const notification = document.getElementById('notification');
 
-        // Handle login form submission
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
-            const errorMessage = document.getElementById('errorMessage');
-            const successMessage = document.getElementById('successMessage');
-            
-            // Hide previous messages
-            errorMessage.style.display = 'none';
-            successMessage.style.display = 'none';
-            
-            // Validate inputs
-            if (!username || !password) {
-                showError('Please enter both username and password');
-                return;
-            }
-            
-            // Validate credentials
-            const admin = ADMIN_CREDENTIALS.find(cred => 
-                cred.username === username && cred.password === password
-            );
-            
-            if (!admin) {
-                showError('Invalid username or password');
-                return;
-            }
-            
-            // Show loading state
-            loginBtn.innerHTML = '<span class="loading"></span> Signing In...';
-            loginBtn.disabled = true;
-            
-            try {
-                // Try to sign in with email/password
-                console.log('Attempting to sign in...');
-                
-                // For demo purposes, we'll create a session manually
-                // In production, you would use actual user authentication
-                await createAdminSession(admin);
-                
-            } catch (error) {
-                console.error('Login error:', error);
-                showError('Login failed. Please try again.');
-            }
-        });
+// Show notification
+function showNotification(message, type = 'success') {
+  notification.textContent = message;
+  notification.className = `notification ${type}`;
+  notification.style.display = 'block';
+  
+  setTimeout(() => {
+    notification.style.display = 'none';
+  }, 4000);
+}
 
-        // Create admin session
-        async function createAdminSession(admin) {
-            try {
-                console.log('Creating admin session...');
-                
-                // Store admin session in localStorage
-                localStorage.setItem('admin_authenticated', 'true');
-                localStorage.setItem('admin_login_time', new Date().toISOString());
-                localStorage.setItem('admin_username', admin.username);
-                localStorage.setItem('admin_email', admin.email);
-                localStorage.setItem('admin_role', admin.role);
-                
-                // Show success and redirect
-                showSuccessAndRedirect();
-                
-            } catch (error) {
-                console.error('Error creating admin session:', error);
-                showError('Authentication service unavailable. Please try again.');
-            }
-        }
+// Show error on input
+function showError(inputElement, errorElement, message) {
+  inputElement.classList.add('error');
+  errorElement.textContent = message;
+  errorElement.style.display = 'block';
+  inputElement.classList.add('shake');
+  
+  setTimeout(() => {
+    inputElement.classList.remove('shake');
+  }, 500);
+}
 
-        // Show success message and redirect
-        function showSuccessAndRedirect() {
-            const successMessage = document.getElementById('successMessage');
-            const loginBtn = document.getElementById('loginBtn');
-            
-            successMessage.style.display = 'block';
-            loginBtn.innerHTML = '<span class="loading"></span> Redirecting...';
-            
-            setTimeout(() => {
-                redirectToDashboard();
-            }, 1000);
-        }
+// Hide error
+function hideError(inputElement, errorElement) {
+  inputElement.classList.remove('error');
+  errorElement.style.display = 'none';
+}
 
-        // Show error message
-        function showError(message) {
-            const errorMessage = document.getElementById('errorMessage');
-            const loginBtn = document.getElementById('loginBtn');
-            
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            loginBtn.innerHTML = 'Sign In';
-            loginBtn.disabled = false;
-        }
+// Validate credentials
+function validateCredentials(username, password) {
+  return ADMIN_CREDENTIALS.find(admin => 
+    admin.username === username && admin.password === password
+  );
+}
 
-        // Redirect to dashboard
-        function redirectToDashboard() {
-            window.location.href = 'admin-dashboard.html';
-        }
+// Set admin session
+function setAdminSession(admin) {
+  localStorage.setItem('admin_authenticated', 'true');
+  localStorage.setItem('admin_login_time', new Date().toISOString());
+  localStorage.setItem('admin_username', admin.username);
+  localStorage.setItem('admin_email', admin.email);
+  localStorage.setItem('admin_role', admin.role);
+}
 
-        // Check for existing session on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Checking for existing session...');
-            checkExistingSession();
-            
-            // Auto-fill demo credentials for testing
-            document.getElementById('username').value = 'admin';
-            document.getElementById('password').value = 'admin123';
-        });
+// Check for existing valid session
+function checkExistingSession() {
+  const isAuthenticated = localStorage.getItem('admin_authenticated');
+  const loginTime = localStorage.getItem('admin_login_time');
+  
+  if (isAuthenticated && loginTime) {
+    const loginDate = new Date(loginTime);
+    const now = new Date();
+    const hoursDiff = (now - loginDate) / (1000 * 60 * 60);
+    
+    if (hoursDiff < 24) {
+      // Session is still valid, redirect to dashboard
+      window.location.href = 'admin-panel.html';
+      return true;
+    } else {
+      // Session expired, clear it
+      clearAdminSession();
+    }
+  }
+  return false;
+}
 
-        // Allow Enter key to submit form
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-            }
-        });
-    </script>
+// Clear admin session
+function clearAdminSession() {
+  localStorage.removeItem('admin_authenticated');
+  localStorage.removeItem('admin_login_time');
+  localStorage.removeItem('admin_username');
+  localStorage.removeItem('admin_email');
+  localStorage.removeItem('admin_role');
+}
+
+// Toggle password visibility
+function togglePasswordVisibility() {
+  const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+  passwordInput.setAttribute('type', type);
+  passwordToggle.textContent = type === 'password' ? '👁️' : '🔒';
+}
+
+// Handle login form submission
+async function handleLogin(event) {
+  event.preventDefault();
+  
+  // Get form values
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value.trim();
+  
+  // Basic validation
+  let isValid = true;
+  
+  if (!username) {
+    showError(usernameInput, document.getElementById('usernameError'), 'Username is required');
+    isValid = false;
+  } else {
+    hideError(usernameInput, document.getElementById('usernameError'));
+  }
+  
+  if (!password) {
+    showError(passwordInput, document.getElementById('passwordError'), 'Password is required');
+    isValid = false;
+  } else {
+    hideError(passwordInput, document.getElementById('passwordError'));
+  }
+  
+  if (!isValid) return;
+  
+  // Show loading state
+  loginBtn.disabled = true;
+  btnText.textContent = 'Authenticating...';
+  loadingSpinner.style.display = 'block';
+  
+  // Simulate API call delay
+  setTimeout(() => {
+    const admin = validateCredentials(username, password);
+    
+    if (admin) {
+      // Successful login
+      setAdminSession(admin);
+      showNotification(`Welcome back, ${admin.username}!`, 'success');
+      
+      // Redirect to admin panel after short delay
+      setTimeout(() => {
+        window.location.href = 'admin-panel.html';
+      }, 1000);
+      
+    } else {
+      // Failed login
+      showError(usernameInput, document.getElementById('usernameError'), 'Invalid credentials');
+      showError(passwordInput, document.getElementById('passwordError'), 'Invalid credentials');
+      showNotification('Invalid username or password', 'error');
+      
+      // Reset form state
+      loginBtn.disabled = false;
+      btnText.textContent = 'Access Dashboard';
+      loadingSpinner.style.display = 'none';
+      
+      // Clear password field for security
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
+  }, 1500); // Simulate network delay
+}
+
+// Initialize the login page
+function initLoginPage() {
+  console.log('Initializing admin login page...');
+  
+  // Check for existing session
+  if (checkExistingSession()) {
+    return; // Will redirect to dashboard
+  }
+  
+  // Add event listeners
+  loginForm.addEventListener('submit', handleLogin);
+  passwordToggle.addEventListener('click', togglePasswordVisibility);
+  
+  // Add input event listeners for real-time validation
+  usernameInput.addEventListener('input', function() {
+    hideError(this, document.getElementById('usernameError'));
+  });
+  
+  passwordInput.addEventListener('input', function() {
+    hideError(this, document.getElementById('passwordError'));
+  });
+  
+  // Focus on username field
+  usernameInput.focus();
+  
+  // Add keyboard shortcut (Ctrl + Alt + L for demo access)
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.altKey && e.key === 'l') {
+      // Auto-fill demo credentials
+      usernameInput.value = 'admin';
+      passwordInput.value = 'CrownTrade2024!';
+      showNotification('Demo credentials filled', 'success');
+    }
+  });
+  
+  console.log('Admin login page ready');
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initLoginPage);
+
+// Handle page visibility changes (for security)
+document.addEventListener('visibilitychange', function() {
+  if (document.hidden) {
+    // Page is hidden - clear sensitive data if needed
+    console.log('Page hidden - security mode active');
+  }
+});
+
+// Prevent right-click (optional security measure)
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  showNotification('Right-click disabled for security', 'error');
+  return false;
+});
+
+// Prevent F12, Ctrl+Shift+I, etc. (optional)
+document.addEventListener('keydown', function(e) {
+  if (
+    e.key === 'F12' ||
+    (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+    (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+    (e.ctrlKey && e.key === 'U')
+  ) {
+    e.preventDefault();
+    showNotification('Developer tools are disabled', 'error');
+    return false;
+  }
+});
+</script>
 </body>
 </html>
