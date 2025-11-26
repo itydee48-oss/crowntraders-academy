@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Submission</title>
+    <title>Payment Verification - Crown Trade</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -13,10 +13,20 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        :root {
+            --nude: #F9F6F2;
+            --gold: #C8A97E;
+            --gold-dark: #B89463;
+            --charcoal: #2e2e2e;
+            --muted: #777;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        
         body {
-            background-color: #f9f5f0;
-            color: #5a4d41;
-            line-height: 1.6;
+            background-color: var(--nude);
+            color: var(--charcoal);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -34,7 +44,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
-            border-bottom: 1px solid #e0d6cc;
+            border-bottom: 1px solid rgba(200,169,126,0.3);
             margin-bottom: 30px;
         }
         
@@ -42,17 +52,18 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            font-family: 'Cormorant Garamond', serif;
         }
         
         .logo i {
             font-size: 28px;
-            color: #c8a97e;
+            color: var(--gold);
         }
         
         .logo h1 {
             font-size: 24px;
             font-weight: 600;
-            color: #8b7355;
+            color: var(--gold-dark);
         }
         
         .user-info {
@@ -65,11 +76,11 @@
             width: 45px;
             height: 45px;
             border-radius: 50%;
-            background: #d4c1a6;
+            background: var(--gold);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #5a4d41;
+            color: white;
             font-weight: bold;
         }
         
@@ -82,20 +93,20 @@
             font-size: 32px;
             font-weight: 300;
             margin-bottom: 10px;
-            color: #8b7355;
+            color: var(--gold-dark);
         }
         
         .page-title p {
-            color: #a08c72;
+            color: var(--muted);
             font-size: 16px;
         }
         
         .payment-card {
-            background: #fff;
+            background: white;
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 5px 15px rgba(139, 115, 85, 0.1);
-            border: 1px solid #e8dfd3;
+            border: 1px solid rgba(200,169,126,0.3);
             margin-bottom: 30px;
         }
         
@@ -114,18 +125,18 @@
             align-items: center;
             justify-content: center;
             font-size: 22px;
-            background: #f5f0e8;
-            color: #c8a97e;
+            background: rgba(200,169,126,0.1);
+            color: var(--gold);
         }
         
         .payment-title {
             font-size: 20px;
             font-weight: 600;
-            color: #8b7355;
+            color: var(--gold-dark);
         }
         
         .payment-details {
-            background: #f9f5f0;
+            background: rgba(249,246,242,0.5);
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 25px;
@@ -135,7 +146,7 @@
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid #e8dfd3;
+            border-bottom: 1px solid rgba(200,169,126,0.2);
         }
         
         .payment-row:last-child {
@@ -143,18 +154,62 @@
         }
         
         .payment-label {
-            color: #8b7355;
+            color: var(--gold-dark);
             font-weight: 500;
         }
         
         .payment-value {
-            color: #5a4d41;
+            color: var(--charcoal);
             font-weight: 600;
         }
         
         .payment-amount {
             font-size: 24px;
-            color: #c8a97e;
+            color: var(--gold);
+        }
+        
+        .mpesa-details {
+            background: #E8F5E8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .mpesa-title {
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .mpesa-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .mpesa-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--success);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
         }
         
         .upload-section {
@@ -165,38 +220,38 @@
             display: block;
             margin-bottom: 10px;
             font-weight: 500;
-            color: #8b7355;
+            color: var(--gold-dark);
         }
         
         .upload-area {
-            border: 2px dashed #e0d6cc;
+            border: 2px dashed rgba(200,169,126,0.5);
             border-radius: 10px;
             padding: 30px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #f9f5f0;
+            background: rgba(249,246,242,0.5);
         }
         
-        .upload-area:hover {
-            border-color: #c8a97e;
-            background: #f5f0e8;
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--gold);
+            background: rgba(200,169,126,0.1);
         }
         
         .upload-icon {
             font-size: 40px;
-            color: #c8a97e;
+            color: var(--gold);
             margin-bottom: 15px;
         }
         
         .upload-text {
-            color: #a08c72;
+            color: var(--muted);
             margin-bottom: 10px;
         }
         
         .upload-hint {
             font-size: 14px;
-            color: #b8a995;
+            color: var(--muted);
         }
         
         .file-input {
@@ -211,7 +266,7 @@
         .preview-title {
             font-weight: 500;
             margin-bottom: 10px;
-            color: #8b7355;
+            color: var(--gold-dark);
         }
         
         .preview-image {
@@ -222,7 +277,7 @@
         }
         
         .remove-btn {
-            background: #e74c3c;
+            background: var(--danger);
             color: white;
             border: none;
             border-radius: 5px;
@@ -238,7 +293,7 @@
         }
         
         .submit-btn {
-            background: #c8a97e;
+            background: var(--gold);
             border: none;
             border-radius: 8px;
             padding: 16px;
@@ -255,12 +310,12 @@
         }
         
         .submit-btn:hover {
-            background: #b89768;
+            background: var(--gold-dark);
             transform: translateY(-2px);
         }
         
         .submit-btn:disabled {
-            background: #e0d6cc;
+            background: #ccc;
             cursor: not-allowed;
             transform: none;
         }
@@ -274,7 +329,7 @@
         
         .approval-icon {
             font-size: 80px;
-            color: #c8a97e;
+            color: var(--gold);
             margin-bottom: 30px;
         }
         
@@ -282,11 +337,11 @@
             font-size: 32px;
             font-weight: 300;
             margin-bottom: 15px;
-            color: #8b7355;
+            color: var(--gold-dark);
         }
         
         .approval-message {
-            color: #a08c72;
+            color: var(--muted);
             font-size: 18px;
             margin-bottom: 30px;
             max-width: 500px;
@@ -302,7 +357,7 @@
         
         .progress-bar {
             height: 8px;
-            background: #e8dfd3;
+            background: rgba(200,169,126,0.2);
             border-radius: 4px;
             overflow: hidden;
             margin-bottom: 15px;
@@ -310,23 +365,23 @@
         
         .progress-fill {
             height: 100%;
-            background: #c8a97e;
+            background: var(--gold);
             width: 0%;
             border-radius: 4px;
             transition: width 2s ease-in-out;
         }
         
         .progress-text {
-            color: #a08c72;
+            color: var(--muted);
             font-size: 14px;
         }
         
         .next-steps {
-            background: #fff;
+            background: white;
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(139, 115, 85, 0.1);
-            border: 1px solid #e8dfd3;
+            border: 1px solid rgba(200,169,126,0.3);
             max-width: 500px;
             margin: 0 auto;
         }
@@ -335,7 +390,7 @@
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 20px;
-            color: #8b7355;
+            color: var(--gold-dark);
             text-align: center;
         }
         
@@ -354,8 +409,8 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background: #f5f0e8;
-            color: #c8a97e;
+            background: rgba(200,169,126,0.1);
+            color: var(--gold);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -364,34 +419,48 @@
         }
         
         .step-text {
-            color: #5a4d41;
+            color: var(--charcoal);
             padding-top: 5px;
         }
         
         .dashboard-link {
             display: inline-block;
             margin-top: 30px;
-            color: #c8a97e;
+            color: var(--gold);
             text-decoration: none;
             font-weight: 500;
-            border: 1px solid #c8a97e;
+            border: 1px solid var(--gold);
             padding: 10px 20px;
             border-radius: 8px;
             transition: all 0.3s ease;
         }
         
         .dashboard-link:hover {
-            background: #c8a97e;
+            background: var(--gold);
             color: white;
         }
         
         footer {
             text-align: center;
             padding: 20px 0;
-            border-top: 1px solid #e0d6cc;
-            color: #a08c72;
+            border-top: 1px solid rgba(200,169,126,0.3);
+            color: var(--muted);
             font-size: 14px;
             margin-top: auto;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
         @media (max-width: 768px) {
@@ -410,14 +479,14 @@
     <div class="container">
         <header>
             <div class="logo">
-                <i class="fas fa-user-friends"></i>
-                <h1>ReferralHub</h1>
+                <i class="fas fa-crown"></i>
+                <h1>Crown Trade</h1>
             </div>
             <div class="user-info">
-                <div class="user-avatar">JD</div>
+                <div class="user-avatar" id="userAvatar">U</div>
                 <div>
-                    <div style="font-weight: 600; color: #8b7355;">John Doe</div>
-                    <div style="font-size: 14px; color: #a08c72;">Gold Member</div>
+                    <div style="font-weight: 600; color: var(--gold-dark);" id="userName">User</div>
+                    <div style="font-size: 14px; color: var(--muted);" id="userEmail">Loading...</div>
                 </div>
             </div>
         </header>
@@ -426,7 +495,7 @@
         <div id="paymentPage">
             <section class="page-title">
                 <h2>Payment Verification</h2>
-                <p>Submit your payment screenshot for approval</p>
+                <p>Complete your payment via M-Pesa and upload the confirmation screenshot</p>
             </section>
             
             <div class="payment-card">
@@ -440,24 +509,69 @@
                 <div class="payment-details">
                     <div class="payment-row">
                         <div class="payment-label">Program</div>
-                        <div class="payment-value">Premium Membership</div>
+                        <div class="payment-value" id="programName">Premium Membership</div>
                     </div>
                     <div class="payment-row">
                         <div class="payment-label">Amount</div>
-                        <div class="payment-value payment-amount">$99.00</div>
+                        <div class="payment-value payment-amount" id="paymentAmount">$99.00</div>
                     </div>
                     <div class="payment-row">
                         <div class="payment-label">Payment Method</div>
-                        <div class="payment-value">Bank Transfer</div>
+                        <div class="payment-value">M-Pesa</div>
                     </div>
                     <div class="payment-row">
                         <div class="payment-label">Reference ID</div>
-                        <div class="payment-value">REF-789123</div>
+                        <div class="payment-value" id="referenceId">REF-789123</div>
+                    </div>
+                </div>
+                
+                <div class="mpesa-details">
+                    <div class="mpesa-title">
+                        <i class="fas fa-mobile-alt"></i>
+                        M-Pesa Payment Instructions
+                    </div>
+                    <div class="mpesa-steps">
+                        <div class="mpesa-step">
+                            <div class="step-number">1</div>
+                            <div class="step-text">Go to M-Pesa on your phone</div>
+                        </div>
+                        <div class="mpesa-step">
+                            <div class="step-number">2</div>
+                            <div class="step-text">Select "Lipa Na M-Pesa"</div>
+                        </div>
+                        <div class="mpesa-step">
+                            <div class="step-number">3</div>
+                            <div class="step-text">Select "Pay Bill"</div>
+                        </div>
+                        <div class="mpesa-step">
+                            <div class="step-number">4</div>
+                            <div class="step-text">
+                                <strong>Business Number:</strong> 0769968847
+                            </div>
+                        </div>
+                        <div class="mpesa-step">
+                            <div class="step-number">5</div>
+                            <div class="step-text">
+                                <strong>Account Number:</strong> <span id="accountNumber">CT-789123</span>
+                            </div>
+                        </div>
+                        <div class="mpesa-step">
+                            <div class="step-number">6</div>
+                            <div class="step-text">
+                                <strong>Amount:</strong> KSh 10,900
+                            </div>
+                        </div>
+                        <div class="mpesa-step">
+                            <div class="step-number">7</div>
+                            <div class="step-text">
+                                <strong>Confirmation Name:</strong> Racheal Waithira
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="upload-section">
-                    <label class="upload-label">Upload Payment Screenshot</label>
+                    <label class="upload-label">Upload M-Pesa Confirmation Screenshot</label>
                     <div class="upload-area" id="uploadArea">
                         <div class="upload-icon">
                             <i class="fas fa-cloud-upload-alt"></i>
@@ -511,7 +625,7 @@
                 
                 <div class="step">
                     <div class="step-number">2</div>
-                    <div class="step-text">We confirm the transaction with our payment provider</div>
+                    <div class="step-text">We confirm the transaction with M-Pesa</div>
                 </div>
                 
                 <div class="step">
@@ -525,17 +639,26 @@
                 </div>
             </div>
             
-            <a href="#" class="dashboard-link">
+            <a href="dashboard.html" class="dashboard-link">
                 <i class="fas fa-tachometer-alt"></i> Back to Dashboard
             </a>
         </div>
     </div>
     
     <footer>
-        <p>&copy; 2023 ReferralHub. All rights reserved. | <a href="#" style="color: #c8a97e;">Privacy Policy</a> | <a href="#" style="color: #c8a97e;">Terms of Service</a></p>
+        <p>&copy; 2023 Crown Trade. All rights reserved. | <a href="#" style="color: var(--gold);">Privacy Policy</a> | <a href="#" style="color: var(--gold);">Terms of Service</a></p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
+
+        // Initialize Supabase
+        const { createClient } = window.supabase;
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
         // DOM Elements
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
@@ -546,7 +669,76 @@
         const paymentPage = document.getElementById('paymentPage');
         const approvalPage = document.getElementById('approvalPage');
         const progressFill = document.getElementById('progressFill');
-        
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const accountNumber = document.getElementById('accountNumber');
+        const referenceId = document.getElementById('referenceId');
+
+        // Current user and payment details
+        let currentUser = null;
+        let currentPaymentRequest = null;
+
+        // Initialize the page
+        async function initPage() {
+            try {
+                // Check if user is logged in
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (!session) {
+                    // Redirect to login if not authenticated
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                currentUser = session.user;
+                
+                // Get user profile
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (profile) {
+                    // Update user info
+                    const displayName = profile.username || profile.email.split('@')[0];
+                    userAvatar.textContent = displayName.charAt(0).toUpperCase();
+                    userName.textContent = displayName;
+                    userEmail.textContent = profile.email;
+                    
+                    // Generate reference ID based on user
+                    const refId = `CT-${currentUser.id.slice(-6).toUpperCase()}`;
+                    referenceId.textContent = refId;
+                    accountNumber.textContent = refId;
+                    
+                    // Check if user already has a pending payment request
+                    await checkExistingPaymentRequest();
+                }
+            } catch (error) {
+                console.error('Error initializing page:', error);
+            }
+        }
+
+        // Check for existing payment request
+        async function checkExistingPaymentRequest() {
+            try {
+                const { data: existingRequest } = await supabase
+                    .from('payment_requests')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .eq('status', 'pending')
+                    .single();
+
+                if (existingRequest) {
+                    // Show waiting page if there's a pending request
+                    showWaitingPage();
+                }
+            } catch (error) {
+                // No existing request found, continue
+            }
+        }
+
         // Upload area click handler
         uploadArea.addEventListener('click', () => {
             fileInput.click();
@@ -555,6 +747,20 @@
         // File input change handler
         fileInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
+                const file = this.files[0];
+                
+                // Validate file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    return;
+                }
+                
+                // Validate file type
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file (PNG, JPG, GIF)');
+                    return;
+                }
+                
                 const reader = new FileReader();
                 
                 reader.onload = function(e) {
@@ -563,7 +769,7 @@
                     submitBtn.disabled = false;
                 }
                 
-                reader.readAsDataURL(this.files[0]);
+                reader.readAsDataURL(file);
             }
         });
         
@@ -575,43 +781,150 @@
         });
         
         // Submit button handler
-        submitBtn.addEventListener('click', function() {
+        submitBtn.addEventListener('click', async function() {
+            if (!fileInput.files[0]) {
+                alert('Please upload a payment confirmation screenshot');
+                return;
+            }
+
             // Show loading state
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            submitBtn.innerHTML = '<span class="loading"></span> Submitting...';
             submitBtn.disabled = true;
             
-            // Simulate API call delay
-            setTimeout(() => {
-                // Hide payment page, show approval page
-                paymentPage.style.display = 'none';
-                approvalPage.style.display = 'block';
+            try {
+                // Upload image to Supabase Storage
+                const file = fileInput.files[0];
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${currentUser.id}-${Date.now()}.${fileExt}`;
+                const filePath = `payment-screenshots/${fileName}`;
                 
-                // Animate progress bar
-                setTimeout(() => {
-                    progressFill.style.width = '70%';
-                }, 500);
-            }, 1500);
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('payment-proofs')
+                    .upload(filePath, file);
+                
+                if (uploadError) {
+                    throw new Error(`Upload failed: ${uploadError.message}`);
+                }
+                
+                // Get public URL for the uploaded image
+                const { data: { publicUrl } } = supabase.storage
+                    .from('payment-proofs')
+                    .getPublicUrl(filePath);
+                
+                // Create payment request in database
+                const { data: paymentRequest, error: dbError } = await supabase
+                    .from('payment_requests')
+                    .insert({
+                        user_id: currentUser.id,
+                        amount: 99.00,
+                        plan_type: 'premium',
+                        payment_method: 'mpesa',
+                        screenshot_url: publicUrl,
+                        status: 'pending',
+                        reference_id: referenceId.textContent,
+                        mpesa_number: '0769968847',
+                        mpesa_confirmation_name: 'Racheal Waithira'
+                    })
+                    .select()
+                    .single();
+                
+                if (dbError) {
+                    throw new Error(`Database error: ${dbError.message}`);
+                }
+                
+                currentPaymentRequest = paymentRequest;
+                
+                // Show success page
+                showWaitingPage();
+                
+            } catch (error) {
+                console.error('Error submitting payment:', error);
+                alert('Failed to submit payment. Please try again.');
+                
+                // Reset button
+                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> I Have Paid - Submit for Approval';
+                submitBtn.disabled = false;
+            }
         });
+        
+        // Show waiting page
+        function showWaitingPage() {
+            paymentPage.style.display = 'none';
+            approvalPage.style.display = 'block';
+            
+            // Animate progress bar
+            setTimeout(() => {
+                progressFill.style.width = '70%';
+            }, 500);
+            
+            // Start checking for approval status
+            startApprovalCheck();
+        }
+        
+        // Check for approval status
+        function startApprovalCheck() {
+            // Check every 10 seconds for approval
+            const checkInterval = setInterval(async () => {
+                try {
+                    const { data: request } = await supabase
+                        .from('payment_requests')
+                        .select('status')
+                        .eq('id', currentPaymentRequest.id)
+                        .single();
+                    
+                    if (request && request.status === 'approved') {
+                        clearInterval(checkInterval);
+                        progressFill.style.width = '100%';
+                        document.querySelector('.progress-text').textContent = 'Approved!';
+                        
+                        // Update user membership status
+                        await supabase
+                            .from('profiles')
+                            .update({ 
+                                membership_status: 'approved',
+                                plan_type: 'premium'
+                            })
+                            .eq('id', currentUser.id);
+                        
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 2000);
+                    }
+                } catch (error) {
+                    console.error('Error checking approval status:', error);
+                }
+            }, 10000);
+        }
         
         // Drag and drop functionality
         uploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
-            this.style.borderColor = '#c8a97e';
-            this.style.background = '#f5f0e8';
+            this.classList.add('dragover');
         });
         
         uploadArea.addEventListener('dragleave', function(e) {
             e.preventDefault();
-            this.style.borderColor = '#e0d6cc';
-            this.style.background = '#f9f5f0';
+            this.classList.remove('dragover');
         });
         
         uploadArea.addEventListener('drop', function(e) {
             e.preventDefault();
-            this.style.borderColor = '#e0d6cc';
-            this.style.background = '#f9f5f0';
+            this.classList.remove('dragover');
             
             if (e.dataTransfer.files.length) {
+                const file = e.dataTransfer.files[0];
+                
+                // Validate file
+                if (!file.type.match('image.*')) {
+                    alert('Please drop an image file (PNG, JPG, GIF)');
+                    return;
+                }
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    return;
+                }
+                
                 fileInput.files = e.dataTransfer.files;
                 
                 const reader = new FileReader();
@@ -620,8 +933,13 @@
                     previewContainer.style.display = 'block';
                     submitBtn.disabled = false;
                 }
-                reader.readAsDataURL(e.dataTransfer.files[0]);
+                reader.readAsDataURL(file);
             }
+        });
+
+        // Initialize the page when loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initPage();
         });
     </script>
 </body>
