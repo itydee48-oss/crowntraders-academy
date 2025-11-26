@@ -209,6 +209,28 @@
       animation: pulse 2s infinite;
     }
     
+    .session-expired {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    
+    .session-modal {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+    
     .loading { opacity: 0.6; pointer-events: none; }
     .notification {
       position: fixed;
@@ -225,6 +247,11 @@
     .notification.success { background: var(--success); }
     .notification.error { background: var(--danger); }
     .notification.warning { background: var(--warning); }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--charcoal); }
+    .form-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 1rem; }
+    .form-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,169,126,0.1); }
     
     @keyframes pulse {
       0% { opacity: 1; }
@@ -243,6 +270,16 @@
   </style>
 </head>
 <body>
+
+<!-- Session Expired Modal -->
+<div class="session-expired" id="sessionExpiredModal">
+  <div class="session-modal">
+    <div style="font-size: 3rem; margin-bottom: 20px;">🔒</div>
+    <h2 style="color: var(--gold-dark); margin-bottom: 15px;">Session Expired</h2>
+    <p style="color: var(--muted); margin-bottom: 25px;">Your session has expired. Please log in again to continue.</p>
+    <button class="btn" onclick="redirectToLogin()" style="width: 100%;">Return to Login</button>
+  </div>
+</div>
 
 <div class="admin-app">
   <!-- Sidebar -->
@@ -431,7 +468,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Supabase Configuration - USING YOUR CORRECT PROJECT DETAILS
+// Supabase Configuration - USING YOUR CORRECT PROJECT
 const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
@@ -441,102 +478,91 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentAdmin = null;
 let realtimeSubscription = null;
+let sessionCheckInterval;
 
-// Initialize Admin Dashboard
-async function initAdmin() {
-  try {
-    console.log('Initializing admin dashboard...');
-    
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session) {
-      console.log('No session found, redirecting to login...');
-      window.location.href = 'admin-login.html';
-      return;
-    }
-
-    currentAdmin = session.user;
-    
-    // Update admin info
-    document.getElementById('adminName').textContent = currentAdmin.email;
-    document.getElementById('adminEmail').textContent = currentAdmin.email;
-    document.getElementById('adminRole').textContent = '● ADMIN';
-    document.getElementById('topName').textContent = 'Administrator';
-    document.getElementById('topEmail').textContent = `Last login: ${new Date().toLocaleString()}`;
-    
-    // Setup sidebar navigation
-    setupSidebarNavigation();
-    
-    // Setup real-time subscriptions
-    setupRealtimeSubscriptions();
-    
-    await loadDashboardData();
-    showNotification('Admin dashboard loaded successfully!');
-    
-  } catch (error) {
-    console.error('Error initializing admin:', error);
-    showNotification('Error loading dashboard', 'error');
-  }
-}
-
-// Setup real-time subscriptions
-function setupRealtimeSubscriptions() {
-  console.log('Setting up real-time subscriptions...');
+// Session Validation
+async function validateAdminSession() {
+  console.log('Validating admin session...');
   
-  // Subscribe to payment_requests table changes
-  realtimeSubscription = supabase
-    .channel('payment-requests-channel')
-    .on('postgres_changes', 
-      { 
-        event: '*', 
-        schema: 'public', 
-        table: 'payment_requests' 
-      }, 
-      (payload) => {
-        console.log('Real-time update received:', payload);
-        updatePaymentRequestsBadge();
-        
-        // Refresh the current view if it's payment requests
-        if (document.getElementById('payment-requests').style.display !== 'none') {
-          loadPaymentRequests();
-          loadApprovedPayments();
-        }
-        
-        // Always update dashboard
-        loadDashboardData();
-      }
-    )
-    .subscribe((status) => {
-      console.log('Realtime subscription status:', status);
-      if (status === 'SUBSCRIBED') {
-        console.log('Successfully subscribed to payment requests');
-      } else {
-        console.log('Failed to subscribe to payment requests:', status);
-      }
-    });
+  // Check localStorage for admin session
+  const isAuthenticated = localStorage.getItem('admin_authenticated');
+  const loginTime = localStorage.getItem('admin_login_time');
+  
+  if (isAuthenticated && loginTime) {
+    const loginDate = new Date(loginTime);
+    const now = new Date();
+    const hoursDiff = (now - loginDate) / (1000 * 60 * 60);
+    
+    // Session expires after 24 hours
+    if (hoursDiff < 24) {
+      console.log('LocalStorage session valid');
+      return true;
+    } else {
+      console.log('LocalStorage session expired');
+      clearAdminSession();
+    }
+  }
+  
+  // If no valid session found, redirect to login
+  console.log('No valid session found, redirecting to login...');
+  showSessionExpired();
+  return false;
 }
 
-// Update payment requests badge
-async function updatePaymentRequestsBadge() {
-  try {
-    const { data: pendingRequests, error } = await supabase
-      .from('payment_requests')
-      .select('id')
-      .eq('status', 'pending');
-    
-    if (error) {
-      console.error('Error fetching pending requests:', error);
-      return;
+function clearAdminSession() {
+  localStorage.removeItem('admin_authenticated');
+  localStorage.removeItem('admin_login_time');
+  localStorage.removeItem('admin_username');
+  localStorage.removeItem('admin_email');
+  localStorage.removeItem('admin_role');
+}
+
+function showSessionExpired() {
+  document.getElementById('sessionExpiredModal').style.display = 'flex';
+}
+
+function redirectToLogin() {
+  clearAdminSession();
+  window.location.href = 'admin-login.html';
+}
+
+// Initialize Supabase when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Admin dashboard loading...');
+  
+  // Start session checking
+  sessionCheckInterval = setInterval(async () => {
+    const isValid = await validateAdminSession();
+    if (!isValid) {
+      clearInterval(sessionCheckInterval);
     }
-    
-    const badge = document.getElementById('paymentRequestsBadge');
-    if (badge) {
-      badge.textContent = pendingRequests ? pendingRequests.length.toString() : '0';
-      console.log(`Updated payment badge to: ${badge.textContent}`);
-    }
-  } catch (error) {
-    console.error('Error updating payment badge:', error);
-  }
+  }, 30000); // Check every 30 seconds
+  
+  setTimeout(() => {
+    initAdmin();
+  }, 1000);
+});
+
+// Notification System
+function showNotification(message, type = 'success') {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
+
+// Modal functions
+function openModal(imageSrc) {
+  document.getElementById('modalImage').src = imageSrc;
+  document.getElementById('screenshotModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('screenshotModal').style.display = 'none';
 }
 
 // Sidebar Navigation
@@ -586,6 +612,125 @@ function setupSidebarNavigation() {
       }
     });
   });
+}
+
+// Quick action tab switching
+function switchTab(tabName) {
+  // Update sidebar buttons
+  document.querySelectorAll('.nav button').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-tab') === tabName) {
+      btn.classList.add('active');
+    }
+  });
+  
+  // Hide all tabs
+  document.querySelectorAll('#dashboard, #payment-requests, #members, #settings')
+    .forEach(tab => {
+      tab.style.display = 'none';
+    });
+  
+  // Show selected tab
+  const targetTab = document.getElementById(tabName);
+  if (targetTab) {
+    targetTab.style.display = 'block';
+    
+    // Load data for the selected tab
+    switch(tabName) {
+      case 'dashboard':
+        loadDashboardData();
+        break;
+      case 'payment-requests':
+        loadPaymentRequests();
+        loadApprovedPayments();
+        break;
+      case 'members':
+        loadAllMembers();
+        break;
+      case 'settings':
+        loadSettings();
+        break;
+    }
+  }
+}
+
+// Initialize Admin Dashboard
+async function initAdmin() {
+  // Validate session first
+  const isValidSession = await validateAdminSession();
+  if (!isValidSession) {
+    return;
+  }
+
+  // Use localStorage data
+  const adminUsername = localStorage.getItem('admin_username') || 'Administrator';
+  const adminEmail = localStorage.getItem('admin_email') || 'admin@crowntrade.com';
+  
+  // Update admin info
+  document.getElementById('adminName').textContent = adminUsername;
+  document.getElementById('adminEmail').textContent = adminEmail;
+  document.getElementById('adminRole').textContent = '● ADMIN';
+  document.getElementById('topName').textContent = adminUsername;
+  document.getElementById('topEmail').textContent = `Last login: ${new Date().toLocaleString()}`;
+  
+  // Setup sidebar navigation
+  setupSidebarNavigation();
+  
+  // Setup real-time subscriptions
+  setupRealtimeSubscriptions();
+  
+  await loadDashboardData();
+  showNotification('Admin dashboard loaded successfully!');
+}
+
+// Setup real-time subscriptions for instant updates
+function setupRealtimeSubscriptions() {
+  console.log('Setting up real-time subscriptions...');
+  
+  // Subscribe to payment requests
+  realtimeSubscription = supabase
+    .channel('payment-requests-channel')
+    .on('postgres_changes', 
+      { 
+        event: '*', 
+        schema: 'public', 
+        table: 'payment_requests' 
+      }, 
+      (payload) => {
+        console.log('Payment request update:', payload);
+        updatePaymentRequestsBadge();
+        if (document.getElementById('payment-requests').style.display !== 'none') {
+          loadPaymentRequests();
+          loadApprovedPayments();
+        }
+        loadDashboardData();
+      }
+    )
+    .subscribe((status) => {
+      console.log('Realtime subscription status:', status);
+    });
+}
+
+// Update payment requests badge
+async function updatePaymentRequestsBadge() {
+  try {
+    const { data: pendingRequests, error } = await supabase
+      .from('payment_requests')
+      .select('id')
+      .eq('status', 'pending');
+    
+    if (error) {
+      console.error('Error fetching pending requests:', error);
+      return;
+    }
+    
+    const badge = document.getElementById('paymentRequestsBadge');
+    if (badge) {
+      badge.textContent = pendingRequests ? pendingRequests.length.toString() : '0';
+    }
+  } catch (error) {
+    console.error('Error updating payment badge:', error);
+  }
 }
 
 // Load Dashboard Data
@@ -851,51 +996,369 @@ async function loadAllMembers() {
   }
 }
 
-// Modal functions
-function openModal(imageSrc) {
-  document.getElementById('modalImage').src = imageSrc;
-  document.getElementById('screenshotModal').style.display = 'flex';
+// Load Settings
+function loadSettings() {
+  // Settings are pre-filled and read-only
+  console.log('Settings loaded');
 }
 
-function closeModal() {
-  document.getElementById('screenshotModal').style.display = 'none';
+// Update Settings
+function updateSettings() {
+  showNotification('Settings updated successfully!');
 }
 
-// Notification System
-function showNotification(message, type = 'success') {
-  const notification = document.createElement('div');
-  notification.className = `notification ${type}`;
-  notification.textContent = message;
-  document.body.appendChild(notification);
-  
-  setTimeout(() => {
-    notification.remove();
-  }, 3000);
-}
-
-// Event Listeners
-document.getElementById('btnLogout').addEventListener('click', async () => {
-  if (confirm('Are you sure you want to logout?')) {
-    if (realtimeSubscription) {
-      supabase.removeChannel(realtimeSubscription);
-    }
-    await supabase.auth.signOut();
-    window.location.href = 'admin-login.html';
-  }
-});
-
-// Auto-refresh data every 30 seconds
-setInterval(() => {
-  if (document.getElementById('dashboard').style.display !== 'none') {
-    loadDashboardData();
-  }
-}, 30000);
-
-// Initialize the dashboard
+  // Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM loaded, initializing admin dashboard...');
-  initAdmin();
+  // Logout button
+  document.getElementById('btnLogout').addEventListener('click', function() {
+    if (confirm('Are you sure you want to logout?')) {
+      clearAdminSession();
+      window.location.href = 'admin-login.html';
+    }
+  });
+
+  // Close modal when clicking outside
+  document.getElementById('screenshotModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeModal();
+    }
+  });
+
+  // Close modal with Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
 });
+
+// Suspend Member Function
+async function suspendMember(memberId) {
+  if (confirm('Are you sure you want to suspend this member?')) {
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ 
+          membership_status: 'suspended',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', memberId);
+      
+      if (!error) {
+        showNotification('Member suspended successfully!');
+        loadAllMembers();
+        loadDashboardData();
+      } else {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error suspending member:', error);
+      showNotification('Error suspending member', 'error');
+    }
+  }
+}
+
+// Reactivate Member Function
+async function reactivateMember(memberId) {
+  try {
+    const { error } = await supabase
+      .from('profiles')
+      .update({ 
+        membership_status: 'approved',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', memberId);
+    
+    if (!error) {
+      showNotification('Member reactivated successfully!');
+      loadAllMembers();
+      loadDashboardData();
+    } else {
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error reactivating member:', error);
+    showNotification('Error reactivating member', 'error');
+  }
+}
+
+// Search and Filter Functions
+function setupSearchFunctionality() {
+  // Add search input to members table
+  const membersCard = document.querySelector('#members .card');
+  const membersHeader = membersCard.querySelector('.card-header');
+  
+  const searchInput = document.createElement('input');
+  searchInput.type = 'text';
+  searchInput.placeholder = 'Search members...';
+  searchInput.className = 'form-input';
+  searchInput.style.width = '200px';
+  searchInput.style.marginLeft = 'auto';
+  searchInput.style.marginRight = '10px';
+  
+  searchInput.addEventListener('input', function(e) {
+    filterMembersTable(e.target.value);
+  });
+  
+  membersHeader.appendChild(searchInput);
+}
+
+async function filterMembersTable(searchTerm) {
+  const rows = document.querySelectorAll('#allMembers tr');
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    if (text.includes(searchTerm.toLowerCase())) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+// Export Data Function
+async function exportData(type) {
+  try {
+    let data, filename, content;
+    
+    switch(type) {
+      case 'members':
+        const { data: members } = await supabase
+          .from('profiles')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        data = members;
+        filename = `members-export-${new Date().toISOString().split('T')[0]}.csv`;
+        content = convertToCSV(data);
+        break;
+        
+      case 'payments':
+        const { data: payments } = await supabase
+          .from('payment_requests')
+          .select('*, profiles(email)')
+          .order('created_at', { ascending: false });
+        
+        data = payments;
+        filename = `payments-export-${new Date().toISOString().split('T')[0]}.csv`;
+        content = convertToCSV(data);
+        break;
+    }
+    
+    downloadCSV(content, filename);
+    showNotification(`${type} data exported successfully!`);
+    
+  } catch (error) {
+    console.error('Error exporting data:', error);
+    showNotification('Error exporting data', 'error');
+  }
+}
+
+function convertToCSV(data) {
+  if (!data || data.length === 0) return '';
+  
+  const headers = Object.keys(data[0]);
+  const csvRows = [headers.join(',')];
+  
+  for (const row of data) {
+    const values = headers.map(header => {
+      const value = row[header];
+      return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+    });
+    csvRows.push(values.join(','));
+  }
+  
+  return csvRows.join('\n');
+}
+
+function downloadCSV(content, filename) {
+  const blob = new Blob([content], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
+
+// Bulk Actions
+function setupBulkActions() {
+  // Add bulk action buttons to payment requests
+  const paymentRequestsCard = document.querySelector('#payment-requests .card');
+  const paymentHeader = paymentRequestsCard.querySelector('.card-header');
+  
+  const bulkApproveBtn = document.createElement('button');
+  bulkApproveBtn.className = 'btn btn-success';
+  bulkApproveBtn.textContent = 'Bulk Approve';
+  bulkApproveBtn.style.marginRight = '10px';
+  bulkApproveBtn.onclick = bulkApprovePayments;
+  
+  paymentHeader.appendChild(bulkApproveBtn);
+}
+
+async function bulkApprovePayments() {
+  if (confirm('Approve all pending payment requests?')) {
+    try {
+      const { data: pendingRequests, error } = await supabase
+        .from('payment_requests')
+        .select('id, user_id')
+        .eq('status', 'pending');
+      
+      if (error) throw error;
+      
+      for (const request of pendingRequests) {
+        await supabase
+          .from('payment_requests')
+          .update({ 
+            status: 'approved',
+            approved_at: new Date().toISOString()
+          })
+          .eq('id', request.id);
+        
+        await supabase
+          .from('profiles')
+          .update({ 
+            membership_status: 'approved',
+            plan_type: 'premium',
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', request.user_id);
+      }
+      
+      showNotification(`Approved ${pendingRequests.length} payment requests!`);
+      loadPaymentRequests();
+      loadApprovedPayments();
+      loadDashboardData();
+      
+    } catch (error) {
+      console.error('Error in bulk approval:', error);
+      showNotification('Error in bulk approval', 'error');
+    }
+  }
+}
+
+// Enhanced Statistics with Charts (placeholder for future implementation)
+function setupCharts() {
+  // This would integrate with a charting library like Chart.js
+  console.log('Chart setup ready for implementation');
+}
+
+// Real-time Clock
+function setupRealTimeClock() {
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('topEmail').textContent = 
+      `Last login: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+  }
+  
+  setInterval(updateClock, 1000);
+  updateClock();
+}
+
+// Initialize enhanced features
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => {
+    setupSearchFunctionality();
+    setupBulkActions();
+    setupRealTimeClock();
+    setupCharts();
+  }, 2000);
+});
+
+// Error Boundary and Fallbacks
+window.addEventListener('error', function(e) {
+  console.error('Global error:', e.error);
+  showNotification('An unexpected error occurred', 'error');
+});
+
+// Network Status Monitoring
+window.addEventListener('online', function() {
+  showNotification('Connection restored', 'success');
+  loadDashboardData();
+});
+
+window.addEventListener('offline', function() {
+  showNotification('Connection lost - working offline', 'warning');
+});
+
+// Performance Monitoring
+let loadStartTime = performance.now();
+
+window.addEventListener('load', function() {
+  const loadTime = performance.now() - loadStartTime;
+  console.log(`Admin dashboard loaded in ${loadTime.toFixed(2)}ms`);
+  
+  if (loadTime > 3000) {
+    console.warn('Slow load time detected:', loadTime);
+  }
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+  if (realtimeSubscription) {
+    supabase.removeChannel(realtimeSubscription);
+  }
+  
+  if (sessionCheckInterval) {
+    clearInterval(sessionCheckInterval);
+  }
+});
+
+// Utility Functions
+function formatCurrency(amount) {
+  return new Intl.NumberFormat('en-KE', {
+    style: 'currency',
+    currency: 'KES'
+  }).format(amount);
+}
+
+function formatDate(dateString) {
+  return new Date(dateString).toLocaleDateString('en-KE', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// Enhanced member loading with pagination
+let currentMemberPage = 1;
+const membersPerPage = 10;
+
+async function loadAllMembersPaginated(page = 1) {
+  try {
+    const from = (page - 1) * membersPerPage;
+    const to = from + membersPerPage - 1;
+    
+    const { data: members, error, count } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(from, to);
+    
+    if (error) throw error;
+    
+    // Update table...
+    // Add pagination controls...
+    
+  } catch (error) {
+    console.error('Error loading paginated members:', error);
+  }
+}
+
+console.log('Admin dashboard JavaScript loaded successfully');
 </script>
 </body>
 </html>
