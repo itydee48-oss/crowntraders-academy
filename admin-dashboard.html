@@ -262,6 +262,28 @@
       animation: pulse 2s infinite;
     }
     
+    .session-expired {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    
+    .session-modal {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+    
     @keyframes pulse {
       0% { opacity: 1; }
       50% { opacity: 0.7; }
@@ -279,6 +301,16 @@
   </style>
 </head>
 <body>
+
+<!-- Session Expired Modal -->
+<div class="session-expired" id="sessionExpiredModal">
+  <div class="session-modal">
+    <div style="font-size: 3rem; margin-bottom: 20px;">🔒</div>
+    <h2 style="color: var(--gold-dark); margin-bottom: 15px;">Session Expired</h2>
+    <p style="color: var(--muted); margin-bottom: 25px;">Your session has expired. Please log in again to continue.</p>
+    <button class="btn" onclick="redirectToLogin()" style="width: 100%;">Return to Login</button>
+  </div>
+</div>
 
 <div class="admin-app">
   <!-- Sidebar -->
@@ -640,6 +672,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 let supabase;
 let currentAdmin = null;
 let realtimeSubscription = null;
+let sessionCheckInterval;
 
 function initSupabase() {
   if (typeof window.supabase !== 'undefined') {
@@ -653,8 +686,98 @@ function initSupabase() {
   }
 }
 
+// Session Validation
+async function validateAdminSession() {
+  console.log('Validating admin session...');
+  
+  // Check localStorage first (fallback)
+  const isAuthenticated = localStorage.getItem('admin_authenticated');
+  const loginTime = localStorage.getItem('admin_login_time');
+  
+  if (isAuthenticated && loginTime) {
+    const loginDate = new Date(loginTime);
+    const now = new Date();
+    const hoursDiff = (now - loginDate) / (1000 * 60 * 60);
+    
+    // Session expires after 24 hours
+    if (hoursDiff < 24) {
+      console.log('LocalStorage session valid');
+      return true;
+    } else {
+      console.log('LocalStorage session expired');
+      localStorage.removeItem('admin_authenticated');
+      localStorage.removeItem('admin_login_time');
+      localStorage.removeItem('admin_username');
+      localStorage.removeItem('admin_email');
+    }
+  }
+  
+  // Check Supabase session
+  try {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (error) {
+      console.error('Session check error:', error);
+      showSessionExpired();
+      return false;
+    }
+    
+    if (!session || !session.user) {
+      console.log('No Supabase session found');
+      showSessionExpired();
+      return false;
+    }
+    
+    // Verify admin profile exists
+    const { data: adminProfile, error: profileError } = await supabase
+      .from('admin_profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .single();
+    
+    if (profileError || !adminProfile) {
+      console.log('No admin profile found');
+      await supabase.auth.signOut();
+      showSessionExpired();
+      return false;
+    }
+    
+    console.log('Supabase session valid');
+    return true;
+  } catch (error) {
+    console.error('Error validating session:', error);
+    showSessionExpired();
+    return false;
+  }
+}
+
+function showSessionExpired() {
+  document.getElementById('sessionExpiredModal').style.display = 'flex';
+}
+
+function redirectToLogin() {
+  // Clear all session data
+  localStorage.removeItem('admin_authenticated');
+  localStorage.removeItem('admin_login_time');
+  localStorage.removeItem('admin_username');
+  localStorage.removeItem('admin_email');
+  
+  // Redirect to login
+  window.location.replace('admin-login.html');
+}
+
 // Initialize Supabase when page loads
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('Admin dashboard loading...');
+  
+  // Start session checking
+  sessionCheckInterval = setInterval(async () => {
+    const isValid = await validateAdminSession();
+    if (!isValid) {
+      clearInterval(sessionCheckInterval);
+    }
+  }, 30000); // Check every 30 seconds
+  
   setTimeout(() => {
     if (initSupabase()) {
       initAdmin();
@@ -806,31 +929,54 @@ function switchTab(tabName) {
 
 // Initialize Admin Dashboard
 async function initAdmin() {
+  // Validate session first
+  const isValidSession = await validateAdminSession();
+  if (!isValidSession) {
+    return;
+  }
+
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) {
-    window.location.href = 'admin-login.html';
-    return;
+    // Try localStorage fallback
+    const localStorageAdmin = localStorage.getItem('admin_username');
+    if (!localStorageAdmin) {
+      redirectToLogin();
+      return;
+    }
+    
+    // Use localStorage data
+    currentAdmin = {
+      id: 'local-' + Date.now(),
+      email: localStorage.getItem('admin_email'),
+      username: localStorageAdmin
+    };
+    
+    document.getElementById('adminName').textContent = currentAdmin.username;
+    document.getElementById('adminEmail').textContent = currentAdmin.email;
+    document.getElementById('adminRole').textContent = '● ADMIN';
+    document.getElementById('topName').textContent = currentAdmin.username;
+    document.getElementById('topEmail').textContent = `Last login: ${new Date().toLocaleString()}`;
+  } else {
+    currentAdmin = session.user;
+    
+    const { data: adminProfile } = await supabase
+      .from('admin_profiles')
+      .select('*')
+      .eq('id', currentAdmin.id)
+      .single();
+
+    if (!adminProfile) {
+      redirectToLogin();
+      return;
+    }
+
+    // Update admin info
+    document.getElementById('adminName').textContent = adminProfile.username || adminProfile.email;
+    document.getElementById('adminEmail').textContent = adminProfile.email;
+    document.getElementById('adminRole').textContent = `● ${adminProfile.role.replace('_', ' ').toUpperCase()}`;
+    document.getElementById('topName').textContent = adminProfile.username || 'Administrator';
+    document.getElementById('topEmail').textContent = `Last login: ${new Date().toLocaleString()}`;
   }
-
-  currentAdmin = session.user;
-  
-  const { data: adminProfile } = await supabase
-    .from('admin_profiles')
-    .select('*')
-    .eq('id', currentAdmin.id)
-    .single();
-
-  if (!adminProfile) {
-    window.location.href = 'admin-login.html';
-    return;
-  }
-
-  // Update admin info
-  document.getElementById('adminName').textContent = adminProfile.username || adminProfile.email;
-  document.getElementById('adminEmail').textContent = adminProfile.email;
-  document.getElementById('adminRole').textContent = `● ${adminProfile.role.replace('_', ' ').toUpperCase()}`;
-  document.getElementById('topName').textContent = adminProfile.username || 'Administrator';
-  document.getElementById('topEmail').textContent = `Last login: ${new Date().toLocaleString()}`;
   
   // Setup sidebar navigation
   setupSidebarNavigation();
@@ -1185,8 +1331,7 @@ function viewPaymentDetails(requestId) {
   alert(`Payment request details for ID: ${requestId}\n\nThis would show full transaction details, user information, and payment history.`);
 }
 
-// [Rest of the functions remain the same as in your original code...]
-
+// [Rest of your existing functions for members, withdrawals, pricing, etc. remain the same...]
 // Member Management
 async function loadPendingMembers() {
   try {
@@ -1613,11 +1758,27 @@ async function updateSystemSettings() {
 // Event Listeners
 document.getElementById('btnLogout').addEventListener('click', async () => {
   if (confirm('Are you sure you want to logout?')) {
+    // Clear all session data
+    localStorage.removeItem('admin_authenticated');
+    localStorage.removeItem('admin_login_time');
+    localStorage.removeItem('admin_username');
+    localStorage.removeItem('admin_email');
+    
+    // Stop session checking
+    if (sessionCheckInterval) {
+      clearInterval(sessionCheckInterval);
+    }
+    
+    // Remove realtime subscription
     if (realtimeSubscription) {
       supabase.removeChannel(realtimeSubscription);
     }
+    
+    // Sign out from Supabase
     await supabase.auth.signOut();
-    window.location.href = 'admin-login.html';
+    
+    // Redirect to login
+    window.location.replace('admin-login.html');
   }
 });
 
