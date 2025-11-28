@@ -1,9 +1,10 @@
 // admin.js (module)
 // Make sure admin-config.js exists in the same folder and exports SUPABASE_URL and SUPABASE_ANON_KEY
 // If you do not want to include keys in the repo, create admin-config.js locally and add it to .gitignore
-
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from './admin-config.js';
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
