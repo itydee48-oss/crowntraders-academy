@@ -44,12 +44,18 @@
 </div>
 
 <script>
-  // DIRECT FETCH — NO CDN, NO LIBRARY, 100% WORKS
-  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyNzA4MDAsImV4cCI6MjA0NDg0NjgwMH0.0g8v3e9bfO3i2y9rW4nRj4bL5nO8v3e9bfO3i2y9rW4';
-  const headers = { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}`, 'Content-Type': 'application/json' };
+  // CORRECT URL + ANON KEY (from your working index.html)
+  const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
+  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
+  
+  const headers = {
+    'apikey': ANON_KEY,
+    'Authorization': `Bearer ${ANON_KEY}`,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=minimal'
+  };
 
-  async function registerMentorship() {
+  async function registerMentorship() {   // ← or registerReferral() for the other page
     const name = document.getElementById('fullName').value.trim();
     const email = document.getElementById('email').value.trim();
     const phone = document.getElementById('phone').value.trim();
@@ -65,27 +71,30 @@
     btn.textContent = "Creating Account...";
 
     try {
-      // 1. Create Auth Account (direct fetch)
+      // 1. Create Auth Account
       const authRes = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
         method: 'POST',
         headers,
-        body: JSON.stringify({ email, password, options: { data: { full_name: name, phone } } })
+        body: JSON.stringify({ email, password })
       });
 
-      if (!authRes.ok) throw await authRes.json();
+      if (!authRes.ok) {
+        const err = await authRes.json();
+        throw new Error(err.error_description || err.msg || 'Signup failed');
+      }
 
       const { user } = await authRes.json();
 
-      // 2. Create Profile
+      // 2. Insert Profile
       const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
         method: 'POST',
         headers,
         body: JSON.stringify({
           id: user.id,
           full_name: name,
-          email,
+          email: email.toLowerCase(),
           phone,
-          client_type: 'mentorship',
+          client_type: 'mentorship',  // ← change to 'referral' on the other page
           role: 'client',
           payment_status: 'pending',
           created_at: new Date().toISOString()
@@ -95,10 +104,11 @@
       if (!profileRes.ok) throw await profileRes.json();
 
       alert("Account created! Check your email to confirm.");
-      location.href = 'mentorship-payment.html';
+      location.href = 'mentorship-payment.html';  // ← change to referral-payment.html on the other
 
     } catch (err) {
-      alert("Error: " + (err.message || err.error_description || 'Try again'));
+      console.error(err);
+      alert("Error: " + (err.message || "Try again later"));
       btn.disabled = false;
       btn.textContent = "Create Account & Proceed to Payment";
     }
