@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Complete Payment - Referral Partner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    :root { --green:#10b981; }
+    body {margin:0;background:linear-gradient(135deg,#f0fdf4,#ecfdf5);font-family:Montserrat;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
+    .card {background:white;padding:3.5rem;border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.12);max-width:500px;width:100%;text-align:center;border:2px solid rgba(16,185,129,.2);}
+    .badge {background:var(--green);color:white;padding:.6rem 1.8rem;border-radius:50px;font-weight:700;font-size:.95rem;display:inline-block;margin-bottom:1rem;}
+    h1 {font-family:'Cormorant Garamond';font-size:2.8rem;color:#065f46;}
+    .price {font-size:3.5rem;font-weight:800;color:#065f46;margin:1.5rem 0;}
+    .mpesa {background:#ecfdf5;padding:1.5rem;border-radius:16px;margin:2rem 0;border:2px dashed var(--green);}
+    .number {font-size:2rem;font-weight:900;color:#065f46;letter-spacing:2px;}
+    .upload-area {border:3px dashed var(--green);border-radius:16px;padding:2rem;margin:2rem 0;cursor:pointer;background:#f0fdfa;}
+    .upload-area.dragover {background:#d1fae5;}
+    .btn {background:var(--green);color:white;padding:1.3rem;border:none;border-radius:50px;width:100%;font-weight:700;font-size:1.3rem;cursor:pointer;}
+    .btn:disabled {background:#999;cursor:not-allowed;}
+    .hidden {display:none;}
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="badge">Final Step</div>
+  <i class="fas fa-users" style="font-size:5rem;color:var(--green);margin:1rem 0;"></i>
+  <h1>Referral Partner</h1>
+  <div class="price">KSh 2,997</div>
+
+  <div class="mpesa">
+    <p>Send exactly <strong>KSh 2,997</strong> via M-Pesa to:</p>
+    <div class="number">0769968847</div>
+    <div class="name">RACHEAL WAITHIRA</div>
+  </div>
+
+  <div class="upload-area" id="dropArea">
+    <i class="fas fa-cloud-upload-alt" style="font-size:3rem;color:var(--green);margin-bottom:1rem;"></i>
+    <p><strong>Click or drag screenshot here</strong><br>M-Pesa confirmation message</p>
+    <input type="file" id="fileInput" accept="image/*" class="hidden">
+    <div id="preview" style="margin-top:1rem;"></div>
+  </div>
+
+  <button class="btn" id="submitBtn" disabled>I Have Paid — Submit Proof</button>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
+  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
+  const headers = { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}` };
+
+  let selectedFile = null;
+  const dropArea = document.getElementById('dropArea');
+  const fileInput = document.getElementById('fileInput');
+  const preview = document.getElementById('preview');
+  const submitBtn = document.getElementById('submitBtn');
+
+  dropArea.onclick = () => fileInput.click();
+  fileInput.onchange = e => handleFile(e.target.files[0]);
+  ['dragover', 'dragenter'].forEach(e => dropArea.addEventListener(e, ev => { ev.preventDefault(); dropArea.classList.add('dragover'); }));
+  ['dragleave', 'dragend', 'drop'].forEach(e => dropArea.addEventListener(e, ev => { ev.preventDefault(); dropArea.classList.remove('dragover'); }));
+  dropArea.ondrop = e => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); };
+
+  function handleFile(file) {
+    if (!file || !file.type.startsWith('image/')) return alert("Upload image only");
+    selectedFile = file;
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.innerHTML = `<img src="${e.target.result}" style="max-width:100%;max-height:300px;border-radius:12px;">`;
+      submitBtn.disabled = false;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  submitBtn.onclick = async () => {
+    if (!selectedFile) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
+
+    try {
+      const fileExt = selectedFile.name.split('.').pop();
+      const fileName = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+      await fetch(`${SUPABASE_URL}/storage/v1/object/payment-proofs/${fileName}`, {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': selectedFile.type },
+        body: selectedFile
+      });
+
+      const screenshotUrl = `${SUPABASE_URL}/storage/v1/object/public/payment-proofs/${fileName}`;
+
+      const { data: user } = await (await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers })).json();
+      const authId = user?.id || 'temp';
+
+      await fetch(`${SUPABASE_URL}/rest/v1/registrations?auth_id=eq.${authId}`, {
+        method: 'PATCH',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          payment_status: 'pending_approval',
+          payment_screenshot: screenshotUrl,
+          amount_paid: 2997,
+          updated_at: new Date().toISOString()
+        })
+      });
+
+      alert("Proof submitted! Redirecting...");
+      location.href = 'waiting-approval.html';
+
+    } catch (err) {
+      alert("Error: Try again");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "I Have Paid — Submit Proof";
+    }
+  }
+</script>
+</body>
+</html>
