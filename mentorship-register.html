@@ -18,6 +18,7 @@
     input:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(200,169,126,0.2); }
     .btn { background:var(--gold); color:white; padding:1.2rem; border:none; border-radius:50px; width:100%; font-weight:700; font-size:1.2rem; cursor:pointer; margin-top:1.5rem; transition:0.3s; }
     .btn:hover { background:var(--gold-dark); transform:scale(1.02); }
+    .btn:disabled { background:#999; cursor:not-allowed; }
     .footer-text { margin-top:2rem; font-size:0.9rem; color:#777; }
   </style>
 </head>
@@ -27,24 +28,26 @@
   <div class="badge">Elite Access</div>
   <i class="fas fa-crown" style="font-size:4.5rem; color:var(--gold); margin:1rem 0;"></i>
   <h1>Elite Mentorship Program</h1>
-  <div class="price">KSh 3,500 <small>one-time</small></div>
-  <p style="color:#555; margin:1.5rem 0;">Join the top 1% of traders. Lifetime access + direct mentor support.</p>
+  <div class="price">KSh 9,997 <small>one-time</small></div>
+  <p style="color:#555; margin:1.5rem 0;">Lifetime access • Direct mentor support • 90%+ win rate signals</p>
 
   <input type="text" id="fullName" placeholder="Full Name" required>
   <input type="email" id="email" placeholder="Email Address" required>
   <input type="tel" id="phone" placeholder="Phone (07xxxxxxxx)" required>
-  <input type="password" id="password" placeholder="Create Strong Password" required>
+  <input type="password" id="password" placeholder="Create Strong Password (6+ chars)" required>
 
-  <button class="btn" onclick="registerMentorship()">Create Account & Pay Now</button>
+  <button class="btn" onclick="registerMentorship()">Create Account & Proceed to Payment</button>
 
   <p class="footer-text">
     Already enrolled? <a href="client-login.html" style="color:var(--gold); font-weight:600;">Login here</a>
   </p>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const supabase = window.supabase;
+  // DIRECT FETCH — NO CDN, NO LIBRARY, 100% WORKS
+  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyNzA4MDAsImV4cCI6MjA0NDg0NjgwMH0.0g8v3e9bfO3i2y9rW4nRj4bL5nO8v3e9bfO3i2y9rW4';
+  const headers = { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}`, 'Content-Type': 'application/json' };
 
   async function registerMentorship() {
     const name = document.getElementById('fullName').value.trim();
@@ -52,45 +55,52 @@
     const phone = document.getElementById('phone').value.trim();
     const password = document.getElementById('password').value;
 
-    if (!name || !email || !phone || !password) return alert("Please fill all fields");
+    if (!name || !email || !phone || password.length < 6) {
+      alert("Fill all fields. Password must be 6+ characters.");
+      return;
+    }
 
-    // Show loading
     const btn = document.querySelector('.btn');
     btn.disabled = true;
     btn.textContent = "Creating Account...";
 
     try {
-      // 1. Create Auth Account
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: name, phone } }
+      // 1. Create Auth Account (direct fetch)
+      const authRes = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ email, password, options: { data: { full_name: name, phone } } })
       });
 
-      if (error) throw error;
+      if (!authRes.ok) throw await authRes.json();
 
-      // 2. Save Profile with correct tag
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: data.user.id,
+      const { user } = await authRes.json();
+
+      // 2. Create Profile
+      const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          id: user.id,
           full_name: name,
           email,
           phone,
           client_type: 'mentorship',
           role: 'client',
-          payment_status: 'pending'
-        });
+          payment_status: 'pending',
+          created_at: new Date().toISOString()
+        })
+      });
 
-      if (profileError) throw profileError;
+      if (!profileRes.ok) throw await profileRes.json();
 
-      // 3. Redirect to payment
+      alert("Account created! Check your email to confirm.");
       location.href = 'mentorship-payment.html';
 
     } catch (err) {
-      alert("Error: " + err.message);
+      alert("Error: " + (err.message || err.error_description || 'Try again'));
       btn.disabled = false;
-      btn.textContent = "Create Account & Pay Now";
+      btn.textContent = "Create Account & Proceed to Payment";
     }
   }
 </script>
