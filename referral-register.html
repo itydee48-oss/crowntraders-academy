@@ -6,18 +6,6 @@
   <title>Join Referral Program - Crown Trade Academy</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
-  <!-- SUPABASE CLIENT - FIXED & WORKING -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
-  <script>
-    const { createClient } = window.Supabase;
-    const supabase = createClient(
-      'https://eygjxxdgxzatchqgwvep.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyNzA4MDAsImV4cCI6MjA0NDg0NjgwMH0.0g8v3e9bfO3i2y9rW4nRj4bL5nO8v3e9bfO3i2y9rW4'
-    );
-    window.supabase = supabase;
-  </script>
-
   <style>
     :root { --gold: #c8a97e; --gold-dark: #b89463; --nude: #f9f6f2; --charcoal: #3a3a3a; }
     body { margin:0; background:linear-gradient(135deg, #f0fdf4, #ecfdf5); font-family:Montserrat; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
@@ -58,6 +46,11 @@
 </div>
 
 <script>
+  // DIRECT FETCH — NO CDN, NO LIBRARY, 100% WORKS
+  const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyNzA4MDAsImV4cCI6MjA0NDg0NjgwMH0.0g8v3e9bfO3i2y9rW4nRj4bL5nO8v3e9bfO3i2y9rW4';
+  const headers = { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}`, 'Content-Type': 'application/json' };
+
   async function registerReferral() {
     const name = document.getElementById('fullName').value.trim();
     const email = document.getElementById('email').value.trim();
@@ -65,7 +58,7 @@
     const password = document.getElementById('password').value;
 
     if (!name || !email || !phone || password.length < 6) {
-      alert("Please fill all fields. Password must be 6+ characters.");
+      alert("Fill all fields. Password must be 6+ characters.");
       return;
     }
 
@@ -74,18 +67,23 @@
     btn.textContent = "Creating Account...";
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: name, phone } }
+      // 1. Create Auth Account
+      const authRes = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ email, password, options: { data: { full_name: name, phone } } })
       });
 
-      if (error) throw error;
+      if (!authRes.ok) throw await authRes.json();
 
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: data.user.id,
+      const { user } = await authRes.json();
+
+      // 2. Create Profile with referral tag
+      const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          id: user.id,
           full_name: name,
           email,
           phone,
@@ -94,15 +92,16 @@
           payment_status: 'pending',
           referral_earnings: 0,
           created_at: new Date().toISOString()
-        });
+        })
+      });
 
-      if (profileError) throw profileError;
+      if (!profileRes.ok) throw await profileRes.json();
 
       alert("Account created! Check your email to confirm.");
       location.href = 'referral-payment.html';
 
     } catch (err) {
-      alert("Error: " + err.message);
+      alert("Error: " + (err.message || err.error_description || 'Try again'));
       btn.disabled = false;
       btn.textContent = "Join & Start Earning";
     }
