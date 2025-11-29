@@ -7,22 +7,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    :root { --gold: #c8a97e; --gold-dark: #b89463; }
-    body { margin:0; background:linear-gradient(135deg,#f9f6f2,#e8dfd6); font-family:Montserrat; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
-    .card { background:white; padding:3.5rem; border-radius:24px; box-shadow:0 30px 80px rgba(0,0,0,0.12); max-width:460px; width:100%; text-align:center; border:2px solid rgba(200,169,126,0.2); }
-    .badge { background:var(--gold); color:white; padding:0.6rem 1.8rem; border-radius:50px; font-weight:700; font-size:0.95rem; display:inline-block; margin-bottom:1rem; text-transform:uppercase; }
-    h1 { font-family:'Cormorant Garamond'; font-size:2.8rem; color:var(--gold-dark); margin:1rem 0; }
-    .price { font-size:3.2rem; font-weight:800; color:var(--gold-dark); }
-    input { width:100%; padding:1.1rem; margin:0.9rem 0; border:1px solid #ddd; border-radius:16px; font-size:1rem; }
-    .btn { background:var(--gold); color:white; padding:1.2rem; border:none; border-radius:50px; width:100%; font-weight:700; font-size:1.2rem; cursor:pointer; margin-top:1.5rem; }
-    .btn:disabled { background:#999; cursor:not-allowed; }
+    :root { --gold:#c8a97e; --dark:#b89463; }
+    body {margin:0;background:linear-gradient(135deg,#f9f6f2,#e8dfd6);font-family:Montserrat;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
+    .card {background:white;padding:3.5rem;border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.12);max-width:460px;width:100%;text-align:center;border:2px solid rgba(200,169,126,.2);}
+    .badge {background:var(--gold);color:white;padding:.6rem 1.8rem;border-radius:50px;font-weight:700;font-size:.95rem;display:inline-block;margin-bottom:1rem;}
+    h1 {font-family:'Cormorant Garamond';font-size:2.8rem;color:var(--dark);margin:1rem 0;}
+    .price {font-size:3.2rem;font-weight:800;color:var(--dark);}
+    input {width:100%;padding:1.1rem;margin:.9rem 0;border:1px solid #ddd;border-radius:16px;font-size:1rem;}
+    .btn {background:var(--gold);color:white;padding:1.2rem;border:none;border-radius:50px;width:100%;font-weight:700;font-size:1.2rem;cursor:pointer;margin-top:1.5rem;}
+    .btn:disabled {background:#999;cursor:not-allowed;}
   </style>
 </head>
 <body>
 
 <div class="card">
   <div class="badge">Elite Access</div>
-  <i class="fas fa-crown" style="font-size:4.5rem; color:var(--gold);"></i>
+  <i class="fas fa-crown" style="font-size:4.5rem;color:var(--gold);"></i>
   <h1>Elite Mentorship</h1>
   <div class="price">KSh 9,997 <small style="font-size:1rem;color:#777;">one-time</small></div>
 
@@ -44,17 +44,15 @@
     const phone = document.getElementById('phone').value.trim();
     const password = document.getElementById('password').value;
 
-    if (!name || !email || !phone || password.length < 6) {
-      return alert("Please fill all fields correctly");
-    }
+    if (!name || !email || !phone || password.length < 6) return alert("Fill all fields");
 
     const btn = document.querySelector('.btn');
     btn.disabled = true;
-    btn.textContent = "Creating Account...";
+    btn.textContent = "Creating...";
 
     try {
       // 1. Sign up
-      const signupRes = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
         method: 'POST',
         headers: {
           'apikey': ANON_KEY,
@@ -63,17 +61,15 @@
         body: JSON.stringify({ email, password })
       });
 
-      const signupData = await signupRes.json();
+      const data = await res.json();
 
-      if (!signupRes.ok) {
-        throw new Error(signupData.msg || signupData.error_description || "Signup failed");
-      }
+      if (!res.ok) throw new Error(data.msg || data.error_description || "Signup failed");
 
-      // FIXED: Get user ID correctly
-      const userId = signupData.user?.id;
-      if (!userId) throw new Error("User ID not returned");
+      // CRITICAL FIX — NEW RESPONSE FORMAT WHEN CONFIRMATION IS ON
+      const userId = data.id || data.user?.id;
+      if (!userId) throw new Error("User ID not found in response");
 
-      // 2. Insert profile
+      // 2. Create profile
       const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
         method: 'POST',
         headers: {
@@ -94,21 +90,18 @@
         })
       });
 
-      if (!profileRes.ok) {
-        const err = await profileRes.json();
-        throw new Error(err.message || "Profile creation failed");
-      }
+      if (!profileRes.ok) throw await profileRes.json();
 
       alert("Account created! Check your email to confirm.");
       location.href = 'mentorship-payment.html';
 
     } catch (err) {
-      console.error("Error:", err);
+      console.error(err);
       alert("Error: " + err.message);
       btn.disabled = false;
       btn.textContent = "Create Account & Pay";
     }
   }
 </script>
-</body>
-</html>
+body>
+html>
