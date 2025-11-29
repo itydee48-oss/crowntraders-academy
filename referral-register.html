@@ -2,124 +2,93 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crown Trade Academy — Join Now</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Join Referral Program - Crown Trade Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    :root {--primary:#6a0dad;--success:#10b981;--muted:#94a3b8;--dark:#1e293b}
-    body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0f0f23 0%,#1a1a2e 100%);color:white;margin:0;padding:0;min-height:100vh;display:flex;align-items:center;justify-content:center}
-    .signup-container{width:100%;max-width:420px;padding:20px}
-    .signup-form{background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);border-radius:20px;padding:40px 30px;box-shadow:0 20px 40px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1)}
-    .brand{font-size:2.4rem;font-weight:900;text-align:center;background:linear-gradient(90deg,#ffd700,#ffaa00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-    .brand-subtitle{text-align:center;font-size:1.35rem;margin-bottom:30px;color:#e2e8f0}
-    .form-group{margin-bottom:20px}
-    .form-label{display:block;margin-bottom:8px;font-weight:600;color:#e2e8f0}
-    .form-input{width:100%;padding:15px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;transition:all .3s}
-    .form-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(106,13,173,0.3)}
-    .btn.success{background:linear-gradient(90deg,#10b981,#34d399);color:white;font-weight:700;font-size:1.15rem;padding:18px;border:none;border-radius:12px;cursor:pointer;transition:all .3s;margin-top:10px;width:100%}
-    .btn.success:hover{transform:translateY(-3px);box-shadow:0 15px 30px rgba(16,185,129,0.5)}
-    .trust-badge{text-align:center;margin:25px 0 15px;font-size:.95rem;color:#94a3b8}
-    .trust-badge i{color:#10b981;margin-right:6px}
+    :root { --gold: #c8a97e; --gold-dark: #b89463; --nude: #f9f6f2; --charcoal: #3a3a3a; }
+    body { margin:0; background:linear-gradient(135deg, #f0f8f0, #e8f5e8); font-family:Montserrat; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+    .card { background:white; padding:3.5rem; border-radius:24px; box-shadow:0 30px 80px rgba(0,0,0,0.12); max-width:460px; width:100%; text-align:center; border:2px solid rgba(16,185,129,0.2); }
+    .badge { background:#10b981; color:white; padding:0.6rem 1.8rem; border-radius:50px; font-weight:700; font-size:0.95rem; display:inline-block; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px; }
+    h1 { font-family:'Cormorant Garamond'; font-size:2.8rem; color:#065f46; margin:1rem 0; }
+    .price { font-size:3.2rem; font-weight:800; color:#065f46; margin:1.5rem 0; }
+    .price small { font-size:1rem; color:#777; }
+    input { width:100%; padding:1.1rem; margin:0.9rem 0; border:1px solid #ddd; border-radius:16px; font-size:1rem; }
+    .btn { background:#10b981; color:white; padding:1.2rem; border:none; border-radius:50px; width:100%; font-weight:700; font-size:1.2rem; cursor:pointer; margin-top:1.5rem; }
+    .btn:hover { background:#059669; transform:scale(1.02); }
+    .highlight { background:#ecfdf5; padding:1rem; border-radius:12px; margin:1.5rem 0; color:#065f46; font-weight:600; }
   </style>
 </head>
 <body>
 
-  <div class="signup-container">
-    <div class="signup-form">
-      <div class="brand">Crown Trade</div>
-      <div class="brand-subtitle">Join The Elite Program — One-Time $400</div>
-
-      <div id="referralBonus" style="display:none;background:linear-gradient(90deg,#7c3aed,#a855f7);color:white;padding:16px;border-radius:12px;margin-bottom:20px;text-align:center;font-weight:700">
-        <i class="fas fa-gift"></i> Referral Bonus Activated!<br>
-        <span style="font-size:.95rem;opacity:.9">Your friend earns $250 instantly when you join</span>
-      </div>
-
-      <form id="registrationForm">
-        <div class="form-group"><label class="form-label">Full Name</label><input type="text" name="fullName" class="form-input" placeholder="John Doe" required></div>
-        <div class="form-group"><label class="form-label">Email Address</label><input type="email" name="email" class="form-input" placeholder="you@example.com" required></div>
-        <div class="form-group"><label class="form-label">Phone Number (WhatsApp)</label><input type="tel" name="phone" class="form-input" placeholder="+1 (555) 123-4567" required></div>
-        <div class="form-group"><label class="form-label">Create Password</label><input type="password" name="password" class="form-input" placeholder="Min 8 characters" required minlength="8"></div>
-
-        <div id="referralSection" style="display:none">
-          <div class="form-group"><label class="form-label">Referral Code Applied</label>
-            <input type="text" id="referralCode" class="form-input" readonly style="background:rgba(16,185,129,0.2);border-color:#10b981;color:#10b981;font-weight:600">
-          </div>
-        </div>
-
-        <div class="trust-badge"><i class="fas fa-lock"></i> 256-bit SSL · Instant Access · 7-Day Money-Back</div>
-
-        <button type="submit" class="btn success" id="registerBtn">
-          <i class="fas fa-credit-card"></i> Complete Registration — Pay $400 Now
-        </button>
-      </form>
-
-      <div style="text-align:center;margin-top:20px;color:var(--muted);font-size:.9rem">
-        By registering you agree to our <a href="#" style="color:#a78bfa">Terms</a> and <a href="#" style="color:#a78bfa">Privacy Policy</a>
-      </div>
-    </div>
+<div class="card">
+  <div class="badge">High Earnings</div>
+  <i class="fas fa-users" style="font-size:4.5rem; color:#10b981; margin:1rem 0;"></i>
+  <h1>Referral Partner Program</h1>
+  <div class="price">KSh 2,997 <small>one-time</small></div>
+  <div class="highlight">
+    Earn <strong>KSh 1,500</strong> per successful referral<br>
+    Paid every Friday • No trading required
   </div>
 
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+  <input type="text" id="fullName" placeholder="Full Name" required>
+  <input type="email" id="email" placeholder="Email Address" required>
+  <input type="tel" id="phone" placeholder="Phone (07xxxxxxxx)" required>
+  <input type="password" id="password" placeholder="Create Password" required>
 
-    const supabase = createClient(
-      'https://eygjxxdgxzatchqgwvep.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGM40G55tqg'
-    )
+  <button class="btn" onclick="registerReferral()">Join & Start Earning</button>
 
-    const urlParams = new URLSearchParams(window.location.search)
-    const refCode = urlParams.get('ref')
+  <p style="margin-top:2rem; font-size:0.9rem; color:#777;">
+    Have an account? <a href="client-login.html" style="color:#10b981; font-weight:600;">Login here</a>
+  </p>
+</div>
 
-    if (refCode) {
-      document.getElementById('referralBonus').style.display = 'block'
-      document.getElementById('referralSection').style.display = 'block'
-      document.getElementById('referralCode').value = refCode
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabase = window.supabase;
+
+  async function registerReferral() {
+    const name = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!name || !email || !phone || !password) return alert("Fill all fields");
+
+    const btn = document.querySelector('.btn');
+    btn.disabled = true;
+    btn.textContent = "Creating Account...";
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email, password,
+        options: { data: { full_name: name, phone } }
+      });
+
+      if (error) throw error;
+
+      await supabase
+        .from('profiles')
+        .insert({
+          id: data.user.id,
+          full_name: name,
+          email,
+          phone,
+          client_type: 'referral',
+          role: 'client',
+          payment_status: 'pending',
+          referral_earnings: 0
+        });
+
+      location.href = 'referral-payment.html';
+
+    } catch (err) {
+      alert("Error: " + err.message);
+      btn.disabled = false;
+      btn.textContent = "Join & Start Earning";
     }
-
-    document.getElementById('registrationForm').addEventListener('submit', async e => {
-      e.preventDefault()
-      const btn = document.getElementById('registerBtn')
-      const original = btn.innerHTML
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Payment...'
-      btn.disabled = true
-
-      const f = new FormData(e.target)
-      const payload = {
-        fullName: f.get('fullName'),
-        email: f.get('email').toLowerCase().trim(),
-        phone: f.get('phone'),
-        password: f.get('password'),
-        refCode: refCode || null
-      }
-
-      try {
-        const { data: authData, error: authError } = await supabase.auth.signUp({
-          email: payload.email,
-          password: payload.password,
-          options: { data: { full_name: payload.fullName, phone: payload.phone, referred_by: payload.refCode, role: 'student', paid: false }}
-        })
-        if (authError) throw authError
-
-        const { data: session, error: sessionError } = await supabase.functions.invoke('create-stripe-checkout', {
-          body: {
-            user_id: authData.user.id,
-            email: payload.email,
-            name: payload.fullName,
-            referral_code: payload.refCode,
-            amount: 40000,
-            success_url: `${window.location.origin}/welcome.html?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: window.location.href
-          }
-        })
-        if (sessionError) throw sessionError
-
-        window.location.href = session.url
-      } catch (err) {
-        alert('Error: ' + (err.message || 'Try again'))
-        btn.innerHTML = original
-        btn.disabled = false
-      }
-    })
-  </script>
+  }
+</script>
 </body>
 </html>
