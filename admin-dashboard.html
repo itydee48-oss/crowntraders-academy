@@ -4,327 +4,206 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Crown Trade — Admin Panel</title>
-
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    :root{
-      --nude:#F9F6F2;
-      --gold:#C8A97E;
-      --gold-dark:#B89463;
-      --charcoal:#2e2e2e;
-      --muted:#777;
-      --success:#10B981;
-      --warning:#F59E0B;
-      --danger:#EF4444;
-      --info:#3B82F6;
-      --glass: rgba(255,255,255,0.95);
-    }
-
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{
-      font-family: "Montserrat", sans-serif;
-      background: linear-gradient(180deg,#F7F3EE 0%, #F9F6F2 100%);
-      color:var(--charcoal);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding:18px;
-    }
-
-    .admin-app{
-      display:grid;
-      grid-template-columns: 300px 1fr;
-      gap:18px;
-      height: calc(100vh - 36px);
-    }
-
-    /* SIDEBAR */
-    .sidebar{
-      background:var(--glass);
-      border-radius:14px;
-      padding:22px;
-      border:1px solid rgba(200,169,126,0.28);
-      box-shadow:0 18px 40px rgba(0,0,0,0.06);
-      display:flex;
-      flex-direction:column;
-    }
-    .brand{ font-family: "Cormorant Garamond", serif; font-size:28px;color:var(--gold-dark); margin-bottom:6px }
-    .admin-info{ margin:14px 0; font-size:0.95rem; color:var(--muted) }
-
-    .nav{ margin-top:6px; display:flex; flex-direction:column; gap:8px }
-    .nav button{
-      width:100%;
-      padding:12px 14px;
-      background:transparent;
-      border:none;
-      border-radius:10px;
-      text-align:left;
-      font-weight:700;
-      cursor:pointer;
-      transition:all .18s;
-      color:var(--charcoal);
-    }
-    .nav button.active, .nav button:hover{ background:var(--gold); color:white }
-
-    .btn-logout{ margin-top:auto; padding:12px; border-radius:10px; background:var(--danger); color:white; border:none; font-weight:700; cursor:pointer }
-
-    /* MAIN */
-    .main-content{
-      background:var(--glass);
-      border-radius:14px;
-      padding:20px;
-      overflow:auto;
-      border:1px solid rgba(200,169,126,0.28);
-      box-shadow:0 18px 40px rgba(0,0,0,0.04);
-    }
-
-    .topbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-    .title{ font-family:"Cormorant Garamond", serif; font-size:24px; color:var(--gold-dark) }
-    .top-meta{ text-align:right; font-size:0.95rem; color:var(--muted) }
-
-    /* STATS */
-    .stats-grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fit,minmax(160px,1fr));
-      gap:14px;
-      margin-bottom:16px;
-    }
-    .stat-card{
-      background:white; border-radius:12px; padding:14px; text-align:center; box-shadow:0 8px 20px rgba(0,0,0,0.03); border:1px solid #eee;
-    }
-    .stat-label{ color:var(--muted); font-size:0.85rem }
-    .stat-value{ font-size:22px; font-weight:800; color:var(--gold-dark); margin-top:8px }
-
-    /* CARDS */
-    .card{ background:white; padding:14px; border-radius:12px; margin-bottom:14px; border:1px solid #eee }
-    .card-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px }
-    .card-title{ font-weight:700; color:var(--gold-dark) }
-
-    table{ width:100%; border-collapse:collapse; font-size:0.95rem }
-    th,td{ padding:10px 8px; border-bottom:1px solid #f1f1f1; text-align:left }
-    th{ background:transparent; color:var(--muted); font-weight:700; font-size:0.85rem }
-
-    .btn{ padding:8px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:700 }
-    .btn-info{ background:var(--info); color:white }
-    .btn-success{ background:var(--success); color:white }
-    .btn-danger{ background:var(--danger); color:white }
-    .btn-warning{ background:var(--warning); color:white }
-
-    .status-pending{ color:var(--warning); font-weight:700 }
-    .status-approved{ color:var(--success); font-weight:700 }
-    .status-rejected{ color:var(--danger); font-weight:700 }
-
-    /* screenshot */
-    .screenshot-preview{ max-width:160px; max-height:110px; border-radius:8px; cursor:pointer; }
-
-    /* modal */
-    .modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); justify-content:center; align-items:center; z-index:9999 }
-    .modal img{ max-width:90vw; max-height:80vh; border-radius:8px }
-
-    /* responsive */
-    @media (max-width:980px){
-      .admin-app{ grid-template-columns: 1fr; height:auto }
-      .sidebar{ order:2; width:100% }
-      .main-content{ order:1 }
-    }
-
-    /* notification */
-    .notification{
-      position:fixed; top:20px; right:20px; padding:12px 16px; border-radius:8px; color:white; z-index:10000; font-weight:700;
-    }
-    .notification.success{ background:var(--success) }
-    .notification.error{ background:var(--danger) }
-    .notification.warning{ background:var(--warning) }
-
-    /* misc */
-    .small-muted{ font-size:0.85rem; color:var(--muted) }
-
+    :root{--nude:#F9F6F2;--gold:#C8A97E;--gold-dark:#B89463;--charcoal:#2e2e2e;--muted:#777;--success:#10B981;--warning:#F59E0B;--danger:#EF4444;--info:#3B82F6;--glass:rgba(255,255,255,0.95)}
+    *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}
+    body{font-family:"Montserrat",sans-serif;background:linear-gradient(180deg,#F7F3EE,#F9F6F2);color:var(--charcoal);padding:18px}
+    .admin-app{display:grid;grid-template-columns:300px 1fr;gap:18px;height:calc(100vh - 36px)}
+    .sidebar{background:var(--glass);border-radius:14px;padding:22px;border:1px solid rgba(200,169,126,.28);box-shadow:0 18px 40px rgba(0,0,0,.06);display:flex;flex-direction:column}
+    .brand{font-family:"Cormorant Garamond",serif;font-size:28px;color:var(--gold-dark);margin-bottom:6px}
+    .admin-info{margin:14px 0;font-size:0.95rem;color:var(--muted)}
+    .nav{margin-top:6px;display:flex;flex-direction:column;gap:8px}
+    .nav button{width:100%;padding:12px 14px;background:transparent;border:none;border-radius:10px;text-align:left;font-weight:700;cursor:pointer;transition:all .18s;color:var(--charcoal)}
+    .nav button.active,.nav button:hover{background:var(--gold);color:white}
+    .btn-logout{margin-top:auto;padding:12px;border-radius:10px;background:var(--danger);color:white;border:none;font-weight:700;cursor:pointer}
+    .main-content{background:var(--glass);border-radius:14px;padding:20px;overflow:auto;border:1px solid rgba(200,169,126,.28);box-shadow:0 18px 40px rgba(0,0,0,.04)}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .title{font-family:"Cormorant Garamond",serif;font-size:24px;color:var(--gold-dark)}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px}
+    .stat-card{background:white;border-radius:12px;padding:16px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.03);border:1px solid #eee}
+    .stat-label{color:var(--muted);font-size:0.9rem}
+    .stat-value{font-size:26px;font-weight:800;color:var(--gold-dark);margin:8px 0}
+    .card{background:white;padding:18px;border-radius:12px;margin-bottom:18px;border:1px solid #eee}
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    .card-title{font-weight:700;color:var(--gold-dark)}
+    table{width:100%;border-collapse:collapse;font-size:0.95rem}
+    th,td{padding:12px 8px;border-bottom:1px solid #f1f1f1;text-align:left}
+    th{background:transparent;color:var(--muted);font-weight:700;font-size:0.85rem}
+    .btn{padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:0.9rem}
+    .btn-success{background:var(--success);color:white}
+    .btn-danger{background:var(--danger);color:white}
+    .btn-info{background:var(--info);color:white}
+    .status-pending{color:var(--warning);font-weight:700}
+    .status-approved{color:var(--success);font-weight:700}
+    .status-rejected{color:var(--danger);font-weight:700}
+    .screenshot-preview{max-width:160px;max-height:110px;border-radius:8px;cursor:pointer;object-fit:cover}
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:9999}
+    .modal img{max-width:90vw;max-height:90vh;border-radius:12px}
+    .notification{position:fixed;top:20px;right:20px;padding:14px 20px;border-radius:10px;color:white;z-index:10000;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+    .notification.success{background:var(--success)}
+    .notification.error{background:var(--danger)}
+    @media(max-width:980px){.admin-app{grid-template-columns:1fr}.sidebar{order:2}.main-content{order:1}}
   </style>
 </head>
 <body>
-
   <div class="admin-app">
     <aside class="sidebar">
       <div class="brand">Crown Trade</div>
       <div class="admin-info">
-        <div id="adminName">—</div>
-        <div id="adminEmail" class="small-muted">—</div>
-        <div id="adminRole" class="small-muted" style="margin-top:6px">● ADMIN</div>
+        <div id="adminName">Loading...</div>
+        <div id="adminEmail" class="small-muted"></div>
+        <div class="small-muted" style="margin-top:6px">● ADMIN</div>
       </div>
-
-      <nav class="nav" role="navigation">
-        <button data-tab="dashboard" class="active">📊 Dashboard</button>
-        <button data-tab="payment-requests">💰 Payment Requests <span id="paymentRequestsBadge" style="float:right" class="small-muted">0</span></button>
-        <button data-tab="withdrawals">🏧 Withdrawals</button>
-        <button data-tab="members">👥 Members</button>
-        <button data-tab="settings">⚙️ Settings</button>
+      <nav class="nav">
+        <button data-tab="dashboard" class="active">Dashboard</button>
+        <button data-tab="payments">Payment Requests <span id="pendingBadge">0</span></button>
+        <button data-tab="members">Members</button>
       </nav>
-
-      <button class="btn-logout" id="btnLogout">Logout</button>
+      <button class="btn-logout" id="logoutBtn">Logout</button>
     </aside>
 
-    <main class="main-content" role="main">
+    <main class="main-content">
       <div class="topbar">
         <div class="title">Admin Console</div>
-        <div class="top-meta">
+        <div style="text-align:right">
           <div id="topName">—</div>
-          <div id="topEmail" class="small-muted">Last login: —</div>
+          <div class="small-muted">Last login: <span id="lastLogin">—</span></div>
         </div>
       </div>
 
       <!-- DASHBOARD -->
-      <section id="dashboard" style="display:block">
+      <section id="dashboard">
         <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-label">Total Revenue</div>
-            <div class="stat-value" id="totalRevenue">KSh 0</div>
-            <div class="small-muted">All-time revenue</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Active Members</div>
-            <div class="stat-value" id="activeMembers">0</div>
-            <div class="small-muted">Approved members</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Pending Payments</div>
-            <div class="stat-value" id="pendingPayments">0</div>
-            <div class="small-muted">Requires attention</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Today's Revenue</div>
-            <div class="stat-value" id="todayRevenue">KSh 0</div>
-            <div class="small-muted">Today</div>
-          </div>
+          <div class="stat-card"><div class="stat-label">Total Revenue</div><div class="stat-value" id="totalRev">KSh 0</div></div>
+          <div class="stat-card"><div class="stat-label">Active Members</div><div class="stat-value" id="activeMem">0</div></div>
+          <div class="stat-card"><div class="stat-label">Pending Payments</div><div class="stat-value" id="pendingPay">0</div></div>
+          <div class="stat-card"><div class="stat-label">Today's Revenue</div><div class="stat-value" id="todayRev">KSh 0</div></div>
         </div>
 
         <div class="card">
-          <div class="card-header">
-            <div class="card-title">Recent Payment Activity</div>
-            <div>
-              <button class="btn btn-info" id="refreshPaymentsBtn">Refresh</button>
-            </div>
-          </div>
-          <div style="overflow:auto">
-            <table aria-describedby="recent payments table">
-              <thead>
-                <tr><th>Time</th><th>User</th><th>Amount</th><th>Method</th><th>Status</th></tr>
-              </thead>
-              <tbody id="recentPayments">
-                <tr><td colspan="5" style="text-align:center">Loading...</td></tr>
-              </tbody>
-            </table>
-          </div>
+          <div class="card-header"><div class="card-title">Recent Activity</div></div>
+          <table><thead><tr><th>Date</th><th>User</th><th>Amount</th><th>Status</th></tr></thead><tbody id="recentTable"></tbody></table>
         </div>
       </section>
 
       <!-- PAYMENT REQUESTS -->
-      <section id="payment-requests" style="display:none">
+      <section id="payments" style="display:none">
         <div class="card">
-          <div class="card-header">
-            <div class="card-title">Pending Payment Requests</div>
-            <div>
-              <button class="btn btn-success" id="bulkApprovePayments">Bulk Approve</button>
-              <button class="btn btn-info" id="refreshPaymentRequests">Refresh</button>
-            </div>
-          </div>
-          <div style="overflow:auto">
-            <table>
-              <thead><tr><th>User</th><th>Amount</th><th>Screenshot</th><th>Submitted</th><th>Actions</th></tr></thead>
-              <tbody id="paymentRequestsTable"><tr><td colspan="5" style="text-align:center">Loading...</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Recently Approved Payments</div>
-            <div><button class="btn btn-info" id="refreshApprovedPayments">Refresh</button></div>
-          </div>
-          <div style="overflow:auto">
-            <table>
-              <thead><tr><th>User</th><th>Amount</th><th>Approved At</th><th>Status</th></tr></thead>
-              <tbody id="approvedPaymentsTable"><tr><td colspan="4" style="text-align:center">Loading...</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- WITHDRAWALS -->
-      <section id="withdrawals" style="display:none">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Withdrawal Requests</div>
-            <div><button class="btn btn-info" id="refreshWithdrawals">Refresh</button></div>
-          </div>
-          <div style="overflow:auto">
-            <table>
-              <thead><tr><th>User</th><th>Amount</th><th>Method</th><th>Submitted</th><th>Actions</th></tr></thead>
-              <tbody id="withdrawalsTable"><tr><td colspan="5" style="text-align:center">Loading...</td></tr></tbody>
-            </table>
-          </div>
+          <div class="card-header"><div class="card-title">Pending Payment Requests</div><button class="btn btn-info" id="refreshPayments">Refresh</button></div>
+          <table>
+            <thead><tr><th>User</th><th>Amount</th><th>Screenshot</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="pendingTable"></tbody>
+          </table>
         </div>
       </section>
 
       <!-- MEMBERS -->
       <section id="members" style="display:none">
         <div class="card">
-          <div class="card-header">
-            <div class="card-title">All Members</div>
-            <div>
-              <input id="memberSearch" placeholder="Search members..." class="form-input" style="padding:8px;border-radius:8px;border:1px solid #ddd" />
-              <button class="btn btn-info" id="refreshMembers">Refresh</button>
-            </div>
-          </div>
-          <div style="overflow:auto">
-            <table>
-              <thead><tr><th>Name</th><th>Email</th><th>Plan</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
-              <tbody id="allMembers"><tr><td colspan="6" style="text-align:center">Loading...</td></tr></tbody>
-            </table>
-          </div>
+          <div class="card-header"><div class="card-title">All Members</div></div>
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Joined</th></tr></thead>
+            <tbody id="membersTable"></tbody>
+          </table>
         </div>
       </section>
-
-      <!-- SETTINGS -->
-      <section id="settings" style="display:none">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">System Settings</div>
-            <div><button class="btn btn-info" id="reloadSettings">Reload</button></div>
-          </div>
-
-          <div style="display:grid;gap:12px">
-            <div>
-              <label class="small-muted">M-Pesa Number</label>
-              <input id="mpesaNumber" class="form-input" style="padding:10px;border-radius:8px;border:1px solid #ddd;width:100%" />
-            </div>
-            <div>
-              <label class="small-muted">Confirmation Name</label>
-              <input id="confirmationName" class="form-input" style="padding:10px;border-radius:8px;border:1px solid #ddd;width:100%" />
-            </div>
-            <div>
-              <label class="small-muted">Payment Amount (KSh)</label>
-              <input id="paymentAmount" class="form-input" style="padding:10px;border-radius:8px;border:1px solid #ddd;width:100%" />
-            </div>
-            <div>
-              <button class="btn btn-success" id="saveSettings">Save Settings</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
     </main>
   </div>
 
-  <!-- Screenshot modal -->
-  <div id="screenshotModal" class="modal" aria-hidden="true" onclick="if(event.target===this) closeModal()">
-    <img id="modalImage" src="" alt="screenshot preview" />
-  </div>
+  <!-- Screenshot Modal -->
+  <div id="modal" class="modal" onclick="this.style.display='none'"><img id="modalImg" src="" /></div>
 
-  <!-- notification container (JS will create) -->
+  <!-- THE ONLY JS FILE YOU NEED -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
 
-  <!-- Config example is imported in admin.js; create your own admin-config.js next to this file -->
-  <script type="module" src="./admin.js"></script>
+    const supabase = createClient(
+      'https://omrsywvfdhzeokmfdrfh.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o'
+    );
+
+    const $ = (id) => document.getElementById(id);
+
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return location.href = 'login.html';
+
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+      if (profile?.role !== 'admin') return alert('Admin only'), location.href = 'login.html';
+
+      $('adminName').textContent = $('topName').textContent = session.user.email.split('@')[0];
+      $('adminEmail').textContent = session.user.email;
+      $('lastLogin').textContent = new Date().toLocaleString();
+
+      loadEverything();
+      setupRealtime();
+    }
+
+    async function loadEverything() {
+      await Promise.all([loadStats(), loadPending(), loadRecent(), loadMembers()]);
+    }
+
+    async function loadStats() {
+      const { data } = await supabase.from('payment_requests').select('amount,status,created_at');
+      const total = data?.filter(p=>p.status==='approved').reduce((a,p)=>a+p.amount,0) || 0;
+      const pending = data?.filter(p=>p.status==='pending').length || 0;
+      const today = data?.filter(p=>p.status==='approved' && new Date(p.created_at).toDateString()===new Date().toDateString()).reduce((a,p)=>a+p.amount,0) || 0;
+
+      $('totalRev').textContent = `KSh ${total}`;
+      $('pendingPay').textContent = $('pendingBadge').textContent = pending;
+      $('todayRev').textContent = `KSh ${today}`;
+      const { count } = await supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role','client');
+      $('activeMem').textContent = count || 0;
+    }
+
+    async function loadPending() {
+      const { data } = await supabase.from('payment_requests').select('*').eq('status','pending').order('created_at',{ascending:false});
+      $('pendingTable').innerHTML = data?.map(p=>`
+        <tr>
+          <td>${p.user_email || p.user_id.slice(0,8)}</td>
+          <td>KSh ${p.amount}</td>
+          <td><img src="${p.screenshot_url}" class="screenshot-preview" onclick="document.getElementById('modalImg').src=this.src;document.getElementById('modal').style.display='flex'"></td>
+          <td>${new Date(p.created_at).toLocaleDateString()}</td>
+          <td>
+            <button class="btn btn-success" onclick="approve(${p.id})">Approve</button>
+            <button class="btn btn-danger" onclick="reject(${p.id})">Reject</button>
+          </td>
+        </tr>
+      `).join('') || '<tr><td colspan="5" style="text-align:center">No pending requests</td></tr>';
+    }
+
+    async function loadRecent() {
+      const { data } = await supabase.from('payment_requests').select('*').order('created_at',{ascending:false}).limit(10);
+      $('recentTable').innerHTML = data?.map(p=>`
+        <tr><td>${new Date(p.created_at).toLocaleDateString()}</td><td>${p.user_email||p.user_id.slice(0,8)}</td><td>KSh ${p.amount}</td><td><span class="status-${p.status}">${p.status.toUpperCase()}</span></td></tr>
+      `).join('') || '<tr><td colspan="4">No activity</td></tr>';
+    }
+
+    async function loadMembers() {
+      const { data } = await supabase.from('profiles').select('*').in('role',['client','mentor']);
+      $('membersTable').innerHTML = data?.map(p=>`
+        <tr><td>${p.username || p.email.split('@')[0]}</td><td>${p.email}</td><td>${p.payment_status==='approved'?'Premium':'Pending'}</td><td>${new Date(p.created_at).toLocaleDateString()}</td></tr>
+      `).join('') || '<tr><td colspan="4">No members</td></tr>';
+    }
+
+    window.approve = async (id) => { if(confirm('Approve this payment?')) await supabase.from('payment_requests').update({status:'approved',updated_at:new Date().toISOString()}).eq('id',id); loadEverything(); showNotif('Approved!','success'); }
+    window.reject = async (id) => { if(confirm('Reject this payment?')) await supabase.from('payment_requests').update({status:'rejected',updated_at:new Date().toISOString()}).eq('id',id); loadEverything(); showNotif('Rejected','error'); }
+
+    function showNotif(msg,type){ const n=document.createElement('div'); n.className=`notification ${type}`; n.textContent=msg; document.body.appendChild(n); setTimeout(()=>n.remove(),3000); }
+
+    function setupRealtime() {
+      supabase.channel('payments').on('postgres_changes', { event: '*', schema: 'public', table: 'payment_requests' }, () => loadEverything()).subscribe();
+    }
+
+    // Tabs
+    document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('section').forEach(s=>s.style.display='none');$(b.dataset.tab).style.display='block'});
+
+    $('refreshPayments').onclick = loadPending;
+    $('logoutBtn').onclick = () => supabase.auth.signOut().then(()=>location.href='login.html');
+
+    init();
+  </script>
 </body>
 </html>
