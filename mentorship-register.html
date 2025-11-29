@@ -61,9 +61,8 @@
       if (!res.ok) throw new Error(data.msg || "Signup failed");
 
       const userId = data.id || data.user?.id;
-      if (!userId) throw new Error("No user ID");
 
-      // ONLY CHANGE: users instead of profiles
+      // NOW USING THE CORRECT TABLE: users
       const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
         method: 'POST',
         headers: {
@@ -78,19 +77,16 @@
           email,
           phone,
           client_type: 'mentorship',  // ← change to 'referral' on referral page
-          role: 'client',
-          payment_status: 'pending',
-          created_at: new Date().toISOString()
+          payment_status: 'pending'
         })
       });
 
       if (!profileRes.ok) throw await profileRes.json();
 
-      alert("Account created! Check your email to confirm.");
+      alert("Account created successfully! Check your email.");
       location.href = 'mentorship-payment.html';  // ← change on referral page
 
     } catch (err) {
-      console.error(err);
       alert("Error: " + (err.message || "Try again"));
       btn.disabled = false;
       btn.textContent = "Create Account & Pay";
