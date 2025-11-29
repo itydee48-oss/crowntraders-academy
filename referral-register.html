@@ -4,20 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Join Referral Program - Crown Trade Academy</title>
-  <!-- ADD THIS TO BOTH mentorship-register.html AND referral-register.html -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
-<script>
-  const supabaseUrl = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyNzA4MDAsImV4cCI6MjA0NDg0NjgwMH0.0g8v3e9bfO3i2y9rW4nRj4bL5nO8v3e9bfO3i2y9rW4';
-  const { createClient } = Supabase;
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
-  window.supabase = supabase;
-</script>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+  <!-- SUPABASE CLIENT - FIXED & WORKING -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+  <script>
+    const { createClient } = window.Supabase;
+    const supabase = createClient(
+      'https://eygjxxdgxzatchqgwvep.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyNzA4MDAsImV4cCI6MjA0NDg0NjgwMH0.0g8v3e9bfO3i2y9rW4nRj4bL5nO8v3e9bfO3i2y9rW4'
+    );
+    window.supabase = supabase;
+  </script>
+
   <style>
     :root { --gold: #c8a97e; --gold-dark: #b89463; --nude: #f9f6f2; --charcoal: #3a3a3a; }
-    body { margin:0; background:linear-gradient(135deg, #f0f8f0, #e8f5e8); font-family:Montserrat; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+    body { margin:0; background:linear-gradient(135deg, #f0fdf4, #ecfdf5); font-family:Montserrat; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
     .card { background:white; padding:3.5rem; border-radius:24px; box-shadow:0 30px 80px rgba(0,0,0,0.12); max-width:460px; width:100%; text-align:center; border:2px solid rgba(16,185,129,0.2); }
     .badge { background:#10b981; color:white; padding:0.6rem 1.8rem; border-radius:50px; font-weight:700; font-size:0.95rem; display:inline-block; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px; }
     h1 { font-family:'Cormorant Garamond'; font-size:2.8rem; color:#065f46; margin:1rem 0; }
@@ -26,6 +29,7 @@
     input { width:100%; padding:1.1rem; margin:0.9rem 0; border:1px solid #ddd; border-radius:16px; font-size:1rem; }
     .btn { background:#10b981; color:white; padding:1.2rem; border:none; border-radius:50px; width:100%; font-weight:700; font-size:1.2rem; cursor:pointer; margin-top:1.5rem; }
     .btn:hover { background:#059669; transform:scale(1.02); }
+    .btn:disabled { background:#999; cursor:not-allowed; }
     .highlight { background:#ecfdf5; padding:1rem; border-radius:12px; margin:1.5rem 0; color:#065f46; font-weight:600; }
   </style>
 </head>
@@ -35,16 +39,16 @@
   <div class="badge">High Earnings</div>
   <i class="fas fa-users" style="font-size:4.5rem; color:#10b981; margin:1rem 0;"></i>
   <h1>Referral Partner Program</h1>
-  <div class="price">KSh 500 <small>one-time</small></div>
+  <div class="price">KSh 2,997 <small>one-time</small></div>
   <div class="highlight">
-    Earn <strong>KSh 300</strong> per successful referral<br>
+    Earn <strong>KSh 1,500</strong> per successful referral<br>
     Paid every Friday • No trading required
   </div>
 
   <input type="text" id="fullName" placeholder="Full Name" required>
   <input type="email" id="email" placeholder="Email Address" required>
   <input type="tel" id="phone" placeholder="Phone (07xxxxxxxx)" required>
-  <input type="password" id="password" placeholder="Create Password" required>
+  <input type="password" id="password" placeholder="Create Password (6+ chars)" required>
 
   <button class="btn" onclick="registerReferral()">Join & Start Earning</button>
 
@@ -53,17 +57,17 @@
   </p>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const supabase = window.supabase;
-
   async function registerReferral() {
     const name = document.getElementById('fullName').value.trim();
     const email = document.getElementById('email').value.trim();
     const phone = document.getElementById('phone').value.trim();
     const password = document.getElementById('password').value;
 
-    if (!name || !email || !phone || !password) return alert("Fill all fields");
+    if (!name || !email || !phone || password.length < 6) {
+      alert("Please fill all fields. Password must be 6+ characters.");
+      return;
+    }
 
     const btn = document.querySelector('.btn');
     btn.disabled = true;
@@ -71,13 +75,14 @@
 
     try {
       const { data, error } = await supabase.auth.signUp({
-        email, password,
+        email,
+        password,
         options: { data: { full_name: name, phone } }
       });
 
       if (error) throw error;
 
-      await supabase
+      const { error: profileError } = await supabase
         .from('profiles')
         .insert({
           id: data.user.id,
@@ -87,9 +92,13 @@
           client_type: 'referral',
           role: 'client',
           payment_status: 'pending',
-          referral_earnings: 0
+          referral_earnings: 0,
+          created_at: new Date().toISOString()
         });
 
+      if (profileError) throw profileError;
+
+      alert("Account created! Check your email to confirm.");
       location.href = 'referral-payment.html';
 
     } catch (err) {
