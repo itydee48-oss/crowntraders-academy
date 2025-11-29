@@ -7,15 +7,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    :root { --gold: #c8a97e; --gold-dark: #b89463; --nude: #f9f6f2; }
-    body { margin:0; background:linear-gradient(135deg, #f9f6f2, #e8dfd6); font-family:Montserrat; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+    :root { --gold: #c8a97e; --gold-dark: #b89463; }
+    body { margin:0; background:linear-gradient(135deg,#f9f6f2,#e8dfd6); font-family:Montserrat; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
     .card { background:white; padding:3.5rem; border-radius:24px; box-shadow:0 30px 80px rgba(0,0,0,0.12); max-width:460px; width:100%; text-align:center; border:2px solid rgba(200,169,126,0.2); }
-    .badge { background:var(--gold); color:white; padding:0.6rem 1.8rem; border-radius:50px; font-weight:700; font-size:0.95rem; display:inline-block; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px; }
+    .badge { background:var(--gold); color:white; padding:0.6rem 1.8rem; border-radius:50px; font-weight:700; font-size:0.95rem; display:inline-block; margin-bottom:1rem; text-transform:uppercase; }
     h1 { font-family:'Cormorant Garamond'; font-size:2.8rem; color:var(--gold-dark); margin:1rem 0; }
-    .price { font-size:3.2rem; font-weight:800; color:var(--gold-dark); margin:1.5rem 0; }
+    .price { font-size:3.2rem; font-weight:800; color:var(--gold-dark); }
     input { width:100%; padding:1.1rem; margin:0.9rem 0; border:1px solid #ddd; border-radius:16px; font-size:1rem; }
     .btn { background:var(--gold); color:white; padding:1.2rem; border:none; border-radius:50px; width:100%; font-weight:700; font-size:1.2rem; cursor:pointer; margin-top:1.5rem; }
-    .btn:hover { background:var(--gold-dark); }
     .btn:disabled { background:#999; cursor:not-allowed; }
   </style>
 </head>
@@ -23,9 +22,9 @@
 
 <div class="card">
   <div class="badge">Elite Access</div>
-  <i class="fas fa-crown" style="font-size:4.5rem; color:var(--gold); margin:1rem 0;"></i>
+  <i class="fas fa-crown" style="font-size:4.5rem; color:var(--gold);"></i>
   <h1>Elite Mentorship</h1>
-  <div class="price">KSh 9,997 <small>one-time</small></div>
+  <div class="price">KSh 9,997 <small style="font-size:1rem;color:#777;">one-time</small></div>
 
   <input type="text" id="fullName" placeholder="Full Name" required>
   <input type="email" id="email" placeholder="Email Address" required>
@@ -38,40 +37,67 @@
 <script>
   const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
   const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
-  const headers = { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' };
 
   async function registerMentorship() {
     const name = document.getElementById('fullName').value.trim();
-    const email = document.getElementById('email').value.trim();
+    const email = document.getElementById('email').value.trim().toLowerCase();
     const phone = document.getElementById('phone').value.trim();
     const password = document.getElementById('password').value;
 
-    if (!name || !email || !phone || password.length < 6) return alert("Fill all fields properly");
+    if (!name || !email || !phone || password.length < 6) return alert("Fill all fields correctly");
 
     const btn = document.querySelector('.btn');
     btn.disabled = true;
-    btn.textContent = "Creating...";
+    btn.textContent = "Creating Account...";
 
     try {
-      const authRes = await fetch(`${SUPABASE_URL}/auth/v1/signup`, { method: 'POST', headers, body: JSON.stringify({ email, password }) });
-      if (!authRes.ok) throw await authRes.json();
-      const { user } = await authRes.json();
+      // 1. Sign up user
+      const signupRes = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+        method: 'POST',
+        headers: {
+          'apikey': ANON_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
 
+      const signupData = await signupRes.json();
+      if (!signupRes.ok) throw signupData;
+
+      const userId = signupData.user.id;
+
+      // 2. Insert profile — THIS WAS THE FIX
       const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
-        method: 'POST', headers,
+        method: 'POST',
+        headers: {
+          'apikey': ANON_KEY,
+          'Authorization': `Bearer ${ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        },
         body: JSON.stringify({
-          id: user.id, full_name: name, email, phone,
-          client_type: 'mentorship', role: 'client', payment_status: 'pending'
+          id: userId,
+          full_name: name,
+          email,
+          phone,
+          client_type: 'mentorship',
+          role: 'client',
+          payment_status: 'pending',
+          created_at: new Date().toISOString()
         })
       });
 
-      if (!profileRes.ok) throw await profileRes.json();
+      if (!profileRes.ok) {
+        const err = await profileRes.json();
+        throw err;
+      }
 
-      alert("Account created! Check your email.");
+      alert("Account created successfully! Check your email to confirm.");
       location.href = 'mentorship-payment.html';
 
     } catch (err) {
-      alert("Error: " + (err.msg || err.error_description || "Try again"));
+      console.error(err);
+      alert("Error: " + (err.msg || err.error_description || "Please try again"));
       btn.disabled = false;
       btn.textContent = "Create Account & Pay";
     }
