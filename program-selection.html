@@ -44,47 +44,33 @@
     <p class="subtitle">Select the program that matches your trading goals. Both paths lead to financial mastery — choose wisely.</p>
 
     <div class="programs">
-      <!-- MENTORSHIP PROGRAM -->
-      <div class="program-card" onclick="selectProgram('mentorship')">
-        <i class="fas fa-crown" style="font-size:4rem; color:var(--gold);"></i>
-        <h3>Elite Mentorship</h3>
-        <div class="price">KSh 3,500 <small style="font-size:1rem; color:#777;">one-time</small></div>
-        <ul class="features">
-          <li>1-on-1 Live Mentorship Calls</li>
-          <li>Full Strategy Blueprint (Forex + Crypto)</li>
-          <li>Private Signal Group (90%+ Win Rate)</li>
-          <li>Lifetime Access + Updates</li>
-          <li>Direct Mentor WhatsApp Access</li>
-        </ul>
-        <button class="btn">Join Mentorship Program</button>
-      </div>
-
-      <!-- REFERRAL PROGRAM -->
-      <div class="program-card" onclick="selectProgram('referral')">
-        <i class="fas fa-users" style="font-size:4rem; color:var(--gold);"></i>
-        <h3>Referral Partner</h3>
-        <div class="price">KSh 500 <small style="font-size:1rem; color:#777;">one-time</small></div>
-        <ul class="features">
-          <li>Earn KSh 300 per successful referral</li>
-          <li>Access to referral dashboard & links</li>
-          <li>Basic trading education included</li>
-          <li>Weekly payout every Friday</li>
-          <li>No trading required</li>
-        </ul>
-        <button class="btn">Join Referral Program</button>
-      </div>
-    </div>
+  <!-- MENTORSHIP PROGRAM -->
+  <div class="program-card" onclick="location.href='mentorship-register.html'">
+    <i class="fas fa-crown" style="font-size:4rem; color:var(--gold);"></i>
+    <h3>Elite Mentorship</h3>
+    <div class="price">KSh 9,997 <small style="font-size:1rem; color:#777;">one-time</small></div>
+    <ul class="features">
+      <li>1-on-1 Live Mentorship Calls</li>
+      <li>Full Strategy Blueprint (Forex + Crypto)</li>
+      <li>Private Signal Group (90%+ Win Rate)</li>
+      <li>Lifetime Access + Updates</li>
+      <li>Direct Mentor WhatsApp Access</li>
+    </ul>
+    <button class="btn">Join Mentorship Program</button>
   </div>
-</main>
 
-<footer>© 2025 Crown Trade Academy</footer>
-
-<script>
-function selectProgram(type) {
-  localStorage.setItem('selected_program', type);
-  localStorage.setItem('program_price', type === 'mentorship' ? '9997' : '2997');
-  location.href = 'register.html';
-}
-</script>
-</body>
-</html>
+  <!-- REFERRAL PROGRAM -->
+  <div class="program-card" onclick="location.href='referral-register.html'">
+    <i class="fas fa-users" style="font-size:4rem; color:var(--gold);"></i>
+    <h3>Referral Partner</h3>
+    <div class="price">KSh 2,997 <small style="font-size:1rem; color:#777;">one-time</small></div>
+    <ul class="features">
+      <li>Earn KSh 1,500 per successful referral</li>
+      <li>Access to referral dashboard & links</li>
+      <li>Basic trading education included</li>
+      <li>Weekly payout every Friday</li>
+      <li>No trading required</li>
+    </ul>
+    <button class="btn">Join Referral Program</button>
+  </div>
+</div>
