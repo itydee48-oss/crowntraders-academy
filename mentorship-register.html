@@ -38,7 +38,7 @@
   const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
   const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
 
-  async function registerMentorship() {
+  async function registerMentorship() {  // or registerReferral()
     const name = document.getElementById('fullName').value.trim();
     const email = document.getElementById('email').value.trim().toLowerCase();
     const phone = document.getElementById('phone').value.trim();
@@ -51,26 +51,20 @@
     btn.textContent = "Creating...";
 
     try {
-      // 1. Sign up
       const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
         method: 'POST',
-        headers: {
-          'apikey': ANON_KEY,
-          'Content-Type': 'application/json'
-        },
+        headers: { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data.msg || "Signup failed");
 
-      if (!res.ok) throw new Error(data.msg || data.error_description || "Signup failed");
-
-      // CRITICAL FIX — NEW RESPONSE FORMAT WHEN CONFIRMATION IS ON
       const userId = data.id || data.user?.id;
-      if (!userId) throw new Error("User ID not found in response");
+      if (!userId) throw new Error("No user ID");
 
-      // 2. Create profile
-      const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
+      // ONLY CHANGE: users instead of profiles
+      const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
         method: 'POST',
         headers: {
           'apikey': ANON_KEY,
@@ -83,7 +77,7 @@
           full_name: name,
           email,
           phone,
-          client_type: 'mentorship',
+          client_type: 'mentorship',  // ← change to 'referral' on referral page
           role: 'client',
           payment_status: 'pending',
           created_at: new Date().toISOString()
@@ -93,11 +87,11 @@
       if (!profileRes.ok) throw await profileRes.json();
 
       alert("Account created! Check your email to confirm.");
-      location.href = 'mentorship-payment.html';
+      location.href = 'mentorship-payment.html';  // ← change on referral page
 
     } catch (err) {
       console.error(err);
-      alert("Error: " + err.message);
+      alert("Error: " + (err.message || "Try again"));
       btn.disabled = false;
       btn.textContent = "Create Account & Pay";
     }
