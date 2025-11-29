@@ -1,191 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Choose Your Path - Crown Trade Academy</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --nude-light: #F9F6F2;
-    --nude-medium: #E8DFD6;
-    --nude-dark: #D4C8BC;
-    --gold: #C8A97E;
-    --gold-dark: #B89463;
-    --charcoal: #3A3A3A;
-    --text-light: #7A7A7A;
-    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-  }
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  body {
-    background: var(--nude-light);
-    font-family: 'Montserrat', sans-serif;
-    color: var(--charcoal);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  header {
-    background: rgba(249,246,242,0.95);
-    backdrop-filter: blur(10px);
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid var(--nude-dark);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  header .logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 700;
-    font-size: 1.8rem;
-    color: var(--charcoal);
-    letter-spacing: 1px;
-    text-decoration: none;
-  }
-  main {
-    max-width: 900px;
-    margin: 3rem auto 6rem;
-    padding: 0 1.5rem;
-    flex-grow: 1;
-  }
-  h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 600;
-    font-size: 2.8rem;
-    text-align: center;
-    margin-bottom: 0.8rem;
-  }
-  p.intro {
-    text-align: center;
-    color: var(--text-light);
-    font-size: 1.1rem;
-    max-width: 600px;
-    margin: 0 auto 3rem;
-    line-height: 1.6;
-  }
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
-    gap: 2.5rem;
-  }
-  .card {
-    background: var(--nude-medium);
-    border-radius: 12px;
-    padding: 2.5rem 2rem 3rem;
-    box-shadow: 0 10px 25px rgba(200,169,126,0.15);
-    border: 2px solid transparent;
-    cursor: pointer;
-    position: relative;
-    transition: var(--transition);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  .card:hover {
-    border-color: var(--gold);
-    box-shadow: 0 15px 30px rgba(200,169,126,0.4);
-    transform: translateY(-8px);
-  }
-  .card-icon {
-    font-size: 4rem;
-    color: var(--gold-dark);
-    margin-bottom: 1.3rem;
-    transition: var(--transition);
-  }
-  .card:hover .card-icon {
-    color: var(--gold);
-    transform: scale(1.15);
-  }
-  .card h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    font-size: 1.8rem;
-    color: var(--charcoal);
-  }
-  .card p {
-    flex-grow: 1;
-    color: var(--text-light);
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-    padding: 0 0.3rem;
-  }
-  .select-btn {
-    background: var(--gold);
-    color: var(--nude-light);
-    border: none;
-    padding: 0.85rem 2.5rem;
-    font-weight: 600;
-    font-size: 1rem;
-    letter-spacing: 0.8px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: var(--transition);
-    text-transform: uppercase;
-    box-shadow: 0 5px 10px rgba(200,169,126,0.4);
-  }
-  .select-btn:hover {
-    background: var(--gold-dark);
-    box-shadow: 0 8px 15px rgba(200,169,126,0.6);
-  }
-
-  /* Subtle pulse animation on buttons */
-  .select-btn:hover {
-    animation: pulseGlow 1.6s infinite alternate ease-in-out;
-  }
-  @keyframes pulseGlow {
-    0% { box-shadow: 0 5px 15px rgba(200,169,126,0.4); }
-    100% { box-shadow: 0 5px 25px rgba(200,169,126,0.75); }
-  }
-
-  /* Responsive */
-  @media (max-width: 480px) {
-    h1 {
-      font-size: 2.2rem;
-    }
-    .cards {
-      grid-template-columns: 1fr;
-      gap: 1.8rem;
-    }
-    .card {
-      padding: 2rem 1.5rem 2.5rem;
-    }
-  }
-</style>
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Select Your Program - Crown Trade Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    :root { --gold: #c8a97e; --gold-dark: #b89463; --nude: #f9f6f2; --charcoal: #3a3a3a; }
+    body { margin:0; background:var(--nude); font-family:Montserrat; color:var(--charcoal); min-height:100vh; display:flex; flex-direction:column; }
+    header { background:rgba(249,246,242,0.98); position:fixed; width:100%; top:0; z-index:1000; border-bottom:1px solid rgba(200,169,126,0.3); }
+    .nav { max-width:1200px; margin:auto; padding:1.2rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+    .logo { font-family:'Cormorant Garamond'; font-size:1.8rem; font-weight:700; color:var(--charcoal); text-decoration:none; }
+    main { flex:1; display:flex; align-items:center; justify-content:center; padding:6rem 2rem 4rem; }
+    .container { max-width:1000px; text-align:center; }
+    .title { font-family:'Cormorant Garamond'; font-size:3.2rem; margin-bottom:1rem; }
+    .subtitle { font-size:1.2rem; color:#777; margin-bottom:3rem; max-width:700px; margin-left:auto; margin-right:auto; }
+    .programs { display:grid; grid-template-columns:repeat(auto-fit, minmax(380px, 1fr)); gap:2.5rem; }
+    .program-card { background:white; border-radius:16px; padding:3rem 2.5rem; box-shadow:0 20px 50px rgba(0,0,0,0.08); border:2px solid transparent; transition:all 0.4s; cursor:pointer; }
+    .program-card:hover { border-color:var(--gold); transform:translateY(-12px); }
+    .program-card h3 { font-family:'Cormorant Garamond'; font-size:2.2rem; margin:1.5rem 0 1rem; color:var(--gold-dark); }
+    .price { font-size:2.8rem; font-weight:700; color:var(--gold-dark); margin:1rem 0; }
+    .features { text-align:left; margin:2rem 0; }
+    .features li { margin:0.8rem 0; font-size:1.05rem; }
+    .features i { color:var(--gold); margin-right:10px; }
+    .btn { background:var(--gold); color:white; padding:1.1rem 2.8rem; border:none; border-radius:50px; font-weight:600; cursor:pointer; font-size:1.1rem; transition:0.3s; margin-top:1.5rem; }
+    .btn:hover { background:var(--gold-dark); }
+    footer { background:#3a3a3a; color:#ccc; text-align:center; padding:2rem; }
+  </style>
 </head>
 <body>
-  <header>
+
+<header>
+  <div class="nav">
     <a href="index.html" class="logo">Crown Trade Academy</a>
-  </header>
-  <main>
-    <h1>Choose Your Path</h1>
-    <p class="intro">
-      Select the program that best suits your goals. Whether you want expert mentorship or to build income through our referral program, Crown Trade Academy supports your success journey.
-    </p>
-    <div class="cards">
-      <div class="card" tabindex="0" role="button" onclick="location.href='mentorship-form.html'">
-        <div class="card-icon"><i class="fas fa-chart-line"></i></div>
-        <h2>Elite Mentorship Program</h2>
-        <p>Learn directly from professional traders with proven strategies, personalized coaching, and live sessions to accelerate your trading mastery.</p>
-<button class="select-btn" aria-label="Select Mentorship Program" onclick="event.stopPropagation(); location.href='registration.html?program=mentorship'">Select</button>
+    <a href="client-login.html" style="color:var(--gold); font-weight:600;">Already a member? Login →</a>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <h1 class="title">Choose Your Path to Profit</h1>
+    <p class="subtitle">Select the program that matches your trading goals. Both paths lead to financial mastery — choose wisely.</p>
+
+    <div class="programs">
+      <!-- MENTORSHIP PROGRAM -->
+      <div class="program-card" onclick="selectProgram('mentorship')">
+        <i class="fas fa-crown" style="font-size:4rem; color:var(--gold);"></i>
+        <h3>Elite Mentorship</h3>
+        <div class="price">KSh 9,997 <small style="font-size:1rem; color:#777;">one-time</small></div>
+        <ul class="features">
+          <li>1-on-1 Live Mentorship Calls</li>
+          <li>Full Strategy Blueprint (Forex + Crypto)</li>
+          <li>Private Signal Group (90%+ Win Rate)</li>
+          <li>Lifetime Access + Updates</li>
+          <li>Direct Mentor WhatsApp Access</li>
+        </ul>
+        <button class="btn">Join Mentorship Program</button>
       </div>
-      <div class="card" tabindex="0" role="button" onclick="location.href='referral-register.html'">
-        <div class="card-icon"><i class="fas fa-handshake"></i></div>
-        <h2>Referral Program</h2>
-        <p>Earn passive income by introducing others to Crown Trade Academy. Get rewarded for every successful referral with attractive bonuses and support.</p>
-<button class="select-btn" aria-label="Select Referral Program" onclick="event.stopPropagation(); location.href='registration.html?program=referral'">Select</button>
-     </div>
+
+      <!-- REFERRAL PROGRAM -->
+      <div class="program-card" onclick="selectProgram('referral')">
+        <i class="fas fa-users" style="font-size:4rem; color:var(--gold);"></i>
+        <h3>Referral Partner</h3>
+        <div class="price">KSh 2,997 <small style="font-size:1rem; color:#777;">one-time</small></div>
+        <ul class="features">
+          <li>Earn KSh 1,500 per successful referral</li>
+          <li>Access to referral dashboard & links</li>
+          <li>Basic trading education included</li>
+          <li>Weekly payout every Friday</li>
+          <li>No trading required</li>
+        </ul>
+        <button class="btn">Join Referral Program</button>
+      </div>
     </div>
-  </main>
+  </div>
+</main>
+
+<footer>© 2025 Crown Trade Academy</footer>
+
+<script>
+function selectProgram(type) {
+  localStorage.setItem('selected_program', type);
+  localStorage.setItem('program_price', type === 'mentorship' ? '9997' : '2997');
+  location.href = 'register.html';
+}
+</script>
 </body>
 </html>
