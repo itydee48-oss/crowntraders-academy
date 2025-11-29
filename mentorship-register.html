@@ -44,14 +44,16 @@
     const phone = document.getElementById('phone').value.trim();
     const password = document.getElementById('password').value;
 
-    if (!name || !email || !phone || password.length < 6) return alert("Fill all fields correctly");
+    if (!name || !email || !phone || password.length < 6) {
+      return alert("Please fill all fields correctly");
+    }
 
     const btn = document.querySelector('.btn');
     btn.disabled = true;
     btn.textContent = "Creating Account...";
 
     try {
-      // 1. Sign up user
+      // 1. Sign up
       const signupRes = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
         method: 'POST',
         headers: {
@@ -62,11 +64,16 @@
       });
 
       const signupData = await signupRes.json();
-      if (!signupRes.ok) throw signupData;
 
-      const userId = signupData.user.id;
+      if (!signupRes.ok) {
+        throw new Error(signupData.msg || signupData.error_description || "Signup failed");
+      }
 
-      // 2. Insert profile — THIS WAS THE FIX
+      // FIXED: Get user ID correctly
+      const userId = signupData.user?.id;
+      if (!userId) throw new Error("User ID not returned");
+
+      // 2. Insert profile
       const profileRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
         method: 'POST',
         headers: {
@@ -89,15 +96,15 @@
 
       if (!profileRes.ok) {
         const err = await profileRes.json();
-        throw err;
+        throw new Error(err.message || "Profile creation failed");
       }
 
-      alert("Account created successfully! Check your email to confirm.");
+      alert("Account created! Check your email to confirm.");
       location.href = 'mentorship-payment.html';
 
     } catch (err) {
-      console.error(err);
-      alert("Error: " + (err.msg || err.error_description || "Please try again"));
+      console.error("Error:", err);
+      alert("Error: " + err.message);
       btn.disabled = false;
       btn.textContent = "Create Account & Pay";
     }
