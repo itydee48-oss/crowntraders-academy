@@ -7,348 +7,1870 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --nude: #F9F6F2; --gold:#C8A97E; --gold-dark:#B89463; --charcoal:#2e2e2e;
-      --muted:#777; --success:#10B981; --warning:#F59E0B; --danger:#EF4444; --info:#3B82F6;
+      --nude: #F9F6F2;
+      --gold: #C8A97E;
+      --gold-dark: #B89463;
+      --charcoal: #2e2e2e;
+      --muted: #777;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --info: #3B82F6;
     }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Montserrat',sans-serif; background:var(--nude); color:var(--charcoal); min-height:100vh; }
-    .mentor-app { display:grid; grid-template-columns:280px 1fr; gap:24px; padding:24px; height:100vh; }
-    .sidebar { background:rgba(255,255,255,0.95); border:1px solid rgba(200,169,126,0.4); border-radius:16px; padding:30px; box-shadow:0 20px 60px rgba(0,0,0,0.06); }
-    .brand { font-family:'Cormorant Garamond',serif; font-size:2.4rem; color:var(--gold-dark); margin-bottom:8px; }
-    .mentor-info { margin:20px 0; font-size:0.95rem; color:var(--muted); }
-    .nav button { width:100%; padding:14px 18px; margin:8px 0; border:none; border-radius:12px; background:transparent; color:var(--charcoal); font-weight:600; text-align:left; cursor:pointer; transition:.3s; }
-    .nav button:hover, .nav button.active { background:var(--gold); color:white; }
-    .main-content { background:rgba(255,255,255,0.95); border-radius:16px; padding:30px; overflow:auto; border:1px solid rgba(200,169,126,0.3); }
-    .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; padding-bottom:20px; border-bottom:2px solid var(--nude); }
-    .title { font-family:'Cormorant Garamond',serif; font-size:2.2rem; color:var(--gold-dark); }
-    .search-box { display:flex; gap:10px; margin-bottom:20px; }
-    .search-input { flex:1; padding:12px 16px; border:1px solid #ddd; border-radius:8px; font-size:1rem; }
-    .search-input:focus { outline:none; border-color:var(--gold); }
-    .card { background:white; padding:24px; border-radius:14px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.05); border:1px solid #eee; }
-    .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
-    .card-title { font-size:1.4rem; color:var(--gold-dark); font-weight:600; }
-    .table { width:100%; border-collapse:collapse; }
-    .table th,.table td { padding:12px; text-align:left; border-bottom:1px solid #eee; }
-    .table th { background:var(--nude); font-weight:600; color:var(--charcoal); }
-    .btn { background:var(--gold); color:white; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:600; margin:2px; font-size:0.9rem; transition:all .3s; }
-    .btn:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,0.15); }
-    .btn-success { background:var(--success); }
-    .btn-danger { background:var(--danger); }
-    .btn-warning { background:var(--warning); }
-    .btn-info { background:var(--info); }
-    .status-pending { color:var(--warning); font-weight:600; }
-    .status-approved { color:var(--success); font-weight:600; }
-    .client-details { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000; justify-content:center; align-items:center; }
-    .client-modal { background:white; padding:30px; border-radius:16px; max-width:900px; width:95%; max-height:90vh; overflow-y:auto; box-shadow:0 30px 100px rgba(0,0,0,0.3); }
-    .close-modal { position:absolute; top:15px; right:20px; background:var(--danger); color:white; border:none; border-radius:50%; width:40px; height:40px; font-size:22px; cursor:pointer; }
-    .tabs { display:flex; border-bottom:1px solid #eee; margin-bottom:20px; gap:20px; }
-    .tab { padding:12px 0; cursor:pointer; border-bottom:3px solid transparent; font-weight:600; }
-    .tab.active { border-bottom:3px solid var(--gold); color:var(--gold-dark); }
-    .tab-content { display:none; }
-    .tab-content.active { display:block; }
-    .form-group { margin-bottom:16px; }
-    .form-label { display:block; margin-bottom:8px; font-weight:600; }
-    .form-input,.form-textarea { width:100%; padding:12px; border-radius:8px; border:1px solid #ddd; font-size:1rem; }
-    .form-textarea { min-height:100px; resize:vertical; }
-    .form-input:focus,.form-textarea:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(200,169,126,0.15); }
-    .task-item { display:flex; justify-content:space-between; align-items:center; padding:14px; border:1px solid #eee; border-radius:10px; margin-bottom:12px; background:#fcfcfc; }
-    .task-done { background:#f0fdf4; border-color:var(--success); }
-    .resource-item { display:flex; justify-content:space-between; align-items:center; padding:14px; border:1px solid #eee; border-radius:10px; margin-bottom:12px; background:#f8f8f8; }
-    .note-item { padding:16px; background:#f0f0f0; border-radius:10px; margin-bottom:12px; }
-    .notification { position:fixed; top:20px; right:20px; padding:16px 24px; border-radius:10px; color:white; font-weight:600; z-index:10000; animation:slideIn .4s; box-shadow:0 10px 30px rgba(0,0,0,0.3); }
-    .notification.success { background:var(--success); }
-    .notification.error { background:var(--danger); }
-    @keyframes slideIn { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
-    .logout { position:fixed; bottom:30px; right:30px; background:var(--danger); color:white; padding:16px 32px; border-radius:50px; font-weight:700; cursor:pointer; box-shadow:0 10px 30px rgba(239,68,68,0.4); z-index:100; }
-    @media(max-width:1000px){ .mentor-app{grid-template-columns:1fr}}
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Montserrat', sans-serif; background: var(--nude); color: var(--charcoal); min-height: 100vh; }
+    
+    .mentor-app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      padding: 24px;
+      height: 100vh;
+    }
+    
+    .sidebar {
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(200,169,126,0.4);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+    }
+    
+    .brand { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--gold-dark); margin-bottom: 8px; }
+    .mentor-info { margin: 20px 0; font-size: 0.95rem; color: var(--muted); }
+    
+    .nav button {
+      width: 100%;
+      padding: 14px 18px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--charcoal);
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    
+    .nav button:hover, .nav button.active {
+      background: var(--gold);
+      color: white;
+    }
+    
+    .main-content {
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      padding: 30px;
+      overflow: auto;
+      border: 1px solid rgba(200,169,126,0.3);
+    }
+    
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--nude);
+    }
+    
+    .title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--gold-dark); }
+    
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .card-title { font-size: 1.4rem; color: var(--gold-dark); font-weight: 600; }
+    
+    .table { width: 100%; border-collapse: collapse; }
+    .table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+    .table th { background: var(--nude); font-weight: 600; color: var(--charcoal); }
+    
+    .btn {
+      background: var(--gold);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 2px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .btn-success { background: var(--success); }
+    .btn-danger { background: var(--danger); }
+    .btn-warning { background: var(--warning); }
+    .btn-info { background: var(--info); }
+    
+    .status-pending { color: var(--warning); font-weight: 600; }
+    .status-approved { color: var(--success); font-weight: 600; }
+    .status-rejected { color: var(--danger); font-weight: 600; }
+    
+    .client-details {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .client-modal {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      max-width: 800px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 20px;
+    }
+    
+    .tab {
+      padding: 12px 20px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    
+    .tab.active {
+      border-bottom: 2px solid var(--gold);
+      color: var(--gold-dark);
+      font-weight: 600;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--charcoal); }
+    .form-input, .form-textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 1rem; }
+    .form-textarea { min-height: 100px; resize: vertical; }
+    .form-input:focus, .form-textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,169,126,0.1); }
+    
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    
+    .task-done {
+      background: #f0f9f0;
+      border-color: var(--success);
+    }
+    
+    .resource-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    
+    .session-item {
+      padding: 12px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    
+    .note-item {
+      padding: 12px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #f9f9f9;
+    }
+    
+    .lesson-item {
+      padding: 16px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      background: #f9f9f9;
+    }
+    
+    .lesson-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    
+    .lesson-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--gold-dark);
+      margin-bottom: 8px;
+    }
+    
+    .lesson-meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    
+    .lesson-description {
+      color: var(--charcoal);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    
+    .file-upload-area {
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .file-upload-area:hover {
+      border-color: var(--gold);
+      background: #f9f6f2;
+    }
+    
+    .file-upload-area.dragover {
+      border-color: var(--gold);
+      background: #f0f9f0;
+    }
+    
+    .upload-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+    
+    .file-input {
+      display: none;
+    }
+    
+    .file-preview {
+      margin-top: 16px;
+      padding: 12px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      display: none;
+    }
+    
+    .file-preview.active {
+      display: block;
+    }
+    
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .file-icon {
+      font-size: 1.5rem;
+      color: var(--danger);
+    }
+    
+    .file-details {
+      flex: 1;
+    }
+    
+    .file-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .file-size {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    
+    .remove-file {
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+    
+    .lessons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .lesson-card {
+      background: white;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+    
+    .lesson-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    
+    .lesson-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    
+    .lesson-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gold-dark);
+      margin-bottom: 8px;
+    }
+    
+    .lesson-card-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    
+    .lesson-card-description {
+      font-size: 0.9rem;
+      color: var(--charcoal);
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+    
+    .lesson-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+    }
+    
+    .notification.success { background: var(--success); }
+    .notification.error { background: var(--danger); }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @media (max-width: 1000px) {
+      .mentor-app { grid-template-columns: 1fr; }
+      .lessons-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 
-<!-- PROTECTION -->
-<script>
-  if(localStorage.getItem('mentor_logged_in')!=='true'){
-    window.location.href='mentor-login.html';
-  }
-</script>
+<!-- Client Details Modal -->
+<div class="client-details" id="clientDetailsModal">
+  <div class="client-modal">
+    <button class="close-modal" onclick="closeClientModal()">×</button>
+    <h2 id="clientName" style="color: var(--gold-dark); margin-bottom: 20px;">Client Details</h2>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="profile">Profile</div>
+      <div class="tab" data-tab="tasks">Tasks</div>
+      <div class="tab" data-tab="resources">Resources</div>
+      <div class="tab" data-tab="lessons">Lessons</div>
+      <div class="tab" data-tab="sessions">Sessions</div>
+      <div class="tab" data-tab="notes">Notes</div>
+    </div>
+    
+    <!-- Profile Tab -->
+    <div class="tab-content active" id="profileTab">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Client Information</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <div class="form-input" id="detailName" style="background: #f9f9f9;">—</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <div class="form-input" id="detailEmail" style="background: #f9f9f9;">—</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <div class="form-input" id="detailPhone" style="background: #f9f9f9;">—</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Program</label>
+            <div class="form-input" id="detailProgram" style="background: #f9f9f9;">—</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Join Date</label>
+            <div class="form-input" id="detailJoinDate" style="background: #f9f9f9;">—</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <div class="form-input" id="detailStatus" style="background: #f9f9f9;">—</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Progress Overview</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Progress Notes</label>
+          <textarea class="form-textarea" id="progressNotes" placeholder="Add progress notes..."></textarea>
+        </div>
+        <button class="btn" onclick="saveProgressNotes()">Save Progress Notes</button>
+      </div>
+    </div>
+    
+    <!-- Tasks Tab -->
+    <div class="tab-content" id="tasksTab">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Study Tasks</div>
+          <button class="btn btn-success" onclick="openAddTaskModal()">Add Task</button>
+        </div>
+        <div id="tasksList">
+          <!-- Tasks will be loaded here -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- Resources Tab -->
+    <div class="tab-content" id="resourcesTab">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Learning Resources</div>
+          <button class="btn btn-success" onclick="openAddResourceModal()">Add Resource</button>
+        </div>
+        <div id="resourcesList">
+          <!-- Resources will be loaded here -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- NEW: Lessons Tab -->
+    <div class="tab-content" id="lessonsTab">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Course Lessons</div>
+          <button class="btn btn-success" onclick="openAddLessonModal()">Add Lesson</button>
+        </div>
+        <div id="lessonsList">
+          <!-- Lessons will be loaded here -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sessions Tab -->
+    <div class="tab-content" id="sessionsTab">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Session Schedule</div>
+          <button class="btn btn-success" onclick="openAddSessionModal()">Add Session</button>
+        </div>
+        <div id="sessionsList">
+          <!-- Sessions will be loaded here -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- Notes Tab -->
+    <div class="tab-content" id="notesTab">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Mentor Notes</div>
+          <button class="btn btn-success" onclick="openAddNoteModal()">Add Note</button>
+        </div>
+        <div id="notesList">
+          <!-- Notes will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<!-- ALL MODALS (hidden by default) -->
-<div class="client-details" id="clientDetailsModal"><div class="client-modal">...</div></div>
-<div class="client-details" id="addTaskModal"><div class="client-modal">...</div></div>
-<div class="client-details" id="addResourceModal"><div class="client-modal">...</div></div>
-<div class="client-details" id="addSessionModal"><div class="client-modal">...</div></div>
-<div class="client-details" id="addNoteModal"><div class="client-modal">...</div></div>
+<!-- Add Lesson Modal -->
+<div class="client-details" id="addLessonModal">
+  <div class="client-modal" style="max-width: 600px;">
+    <button class="close-modal" onclick="closeAddLessonModal()">×</button>
+    <h2 style="color: var(--gold-dark); margin-bottom: 20px;">Add New Lesson</h2>
+    
+    <div class="form-group">
+      <label class="form-label">Lesson Title *</label>
+      <input type="text" class="form-input" id="lessonTitle" placeholder="E.g., ICT Market Structure Basics, Liquidity Concepts...">
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Module/Chapter</label>
+      <input type="text" class="form-input" id="lessonModule" placeholder="E.g., Module 1: Foundation, Chapter 2...">
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Lesson Description</label>
+      <textarea class="form-textarea" id="lessonDescription" placeholder="Describe what this lesson covers, key concepts, learning objectives..."></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Difficulty Level</label>
+      <select class="form-input" id="lessonDifficulty">
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Estimated Duration (minutes)</label>
+      <input type="number" class="form-input" id="lessonDuration" placeholder="E.g., 45, 60, 90...">
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Lesson PDF *</label>
+      <div class="file-upload-area" id="pdfUploadArea" onclick="document.getElementById('lessonPdf').click()">
+        <div class="upload-icon">📄</div>
+        <div style="margin-bottom: 12px;">
+          <strong>Click to upload PDF</strong>
+        </div>
+        <div style="color: var(--muted); font-size: 0.9rem;">
+          or drag and drop your lesson PDF here
+        </div>
+        <input type="file" class="file-input" id="lessonPdf" accept=".pdf" onchange="handlePdfUpload(this)">
+      </div>
+      <div class="file-preview" id="pdfPreview">
+        <div class="file-info">
+          <div class="file-icon">📄</div>
+          <div class="file-details">
+            <div class="file-name" id="pdfFileName">No file selected</div>
+            <div class="file-size" id="pdfFileSize">—</div>
+          </div>
+          <button class="remove-file" onclick="removePdfFile()">×</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Additional Resources (Optional)</label>
+      <div class="file-upload-area" id="resourceUploadArea" onclick="document.getElementById('lessonResources').click()">
+        <div class="upload-icon">📎</div>
+        <div style="margin-bottom: 12px;">
+          <strong>Add supplementary files</strong>
+        </div>
+        <div style="color: var(--muted); font-size: 0.9rem;">
+          Worksheets, cheat sheets, etc. (multiple files allowed)
+        </div>
+        <input type="file" class="file-input" id="lessonResources" multiple onchange="handleResourceUpload(this)">
+      </div>
+      <div id="resourcesPreview">
+        <!-- Additional resources will be listed here -->
+      </div>
+    </div>
+    
+    <button class="btn" onclick="addLesson()" style="width: 100%; margin-top: 20px;">Create Lesson</button>
+  </div>
+</div>
+
+<!-- Add Task Modal -->
+<div class="client-details" id="addTaskModal">
+  <div class="client-modal" style="max-width: 500px;">
+    <button class="close-modal" onclick="closeAddTaskModal()">×</button>
+    <h2 style="color: var(--gold-dark); margin-bottom: 20px;">Add Study Task</h2>
+    
+    <div class="form-group">
+      <label class="form-label">Task Description</label>
+      <textarea class="form-textarea" id="taskDescription" placeholder="E.g., Watch module 1 before Friday, Practice ICT structure..."></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Due Date (Optional)</label>
+      <input type="date" class="form-input" id="taskDueDate">
+    </div>
+    
+    <button class="btn" onclick="addTask()" style="width: 100%;">Add Task</button>
+  </div>
+</div>
+
+<!-- Add Resource Modal -->
+<div class="client-details" id="addResourceModal">
+  <div class="client-modal" style="max-width: 500px;">
+    <button class="close-modal" onclick="closeAddResourceModal()">×</button>
+    <h2 style="color: var(--gold-dark); margin-bottom: 20px;">Add Learning Resource</h2>
+    
+    <div class="form-group">
+      <label class="form-label">Resource Title</label>
+      <input type="text" class="form-input" id="resourceTitle" placeholder="E.g., Trading Playbook, ICT Concepts PDF...">
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Resource Type</label>
+      <select class="form-input" id="resourceType">
+        <option value="pdf">PDF Document</option>
+        <option value="video">Video</option>
+        <option value="link">External Link</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Resource URL/File</label>
+      <input type="text" class="form-input" id="resourceUrl" placeholder="Paste URL or file path...">
+    </div>
+    
+    <button class="btn" onclick="addResource()" style="width: 100%;">Add Resource</button>
+  </div>
+</div>
+
+<!-- Add Session Modal -->
+<div class="client-details" id="addSessionModal">
+  <div class="client-modal" style="max-width: 500px;">
+    <button class="close-modal" onclick="closeAddSessionModal()">×</button>
+    <h2 style="color: var(--gold-dark); margin-bottom: 20px;">Add Session</h2>
+    
+    <div class="form-group">
+      <label class="form-label">Session Title</label>
+      <input type="text" class="form-input" id="sessionTitle" placeholder="E.g., Weekly Trading Review, ICT Concepts...">
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Session Date & Time</label>
+      <input type="datetime-local" class="form-input" id="sessionDateTime">
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Meeting Link</label>
+      <input type="text" class="form-input" id="sessionLink" placeholder="Paste Zoom/Meet link...">
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-textarea" id="sessionDescription" placeholder="Session agenda or notes..."></textarea>
+    </div>
+    
+    <button class="btn" onclick="addSession()" style="width: 100%;">Add Session</button>
+  </div>
+</div>
+
+<!-- Add Note Modal -->
+<div class="client-details" id="addNoteModal">
+  <div class="client-modal" style="max-width: 500px;">
+    <button class="close-modal" onclick="closeAddNoteModal()">×</button>
+    <h2 style="color: var(--gold-dark); margin-bottom: 20px;">Add Note</h2>
+    
+    <div class="form-group">
+      <label class="form-label">Note Type</label>
+      <select class="form-input" id="noteType">
+        <option value="general">General Note</option>
+        <option value="progress">Progress Update</option>
+        <option value="issue">Issue/Challenge</option>
+        <option value="strength">Strength/Observation</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Note Content</label>
+      <textarea class="form-textarea" id="noteContent" placeholder="E.g., Student struggling with liquidity concepts, Complete mastery on OB theory..."></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Visibility</label>
+      <select class="form-input" id="noteVisibility">
+        <option value="shared">Shared with Client</option>
+        <option value="private">Private (Mentors Only)</option>
+      </select>
+    </div>
+    
+    <button class="btn" onclick="addNote()" style="width: 100%;">Add Note</button>
+  </div>
+</div>
 
 <div class="mentor-app">
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="brand">Crown Trade</div>
     <div class="mentor-info">
-      <div style="font-weight:700">Elite Mentor</div>
-      <div style="color:var(--muted)">All Approved Clients</div>
+      <div id="mentorName" style="font-weight:700;">Mentor Dashboard</div>
+      <div id="mentorEmail" style="color:var(--muted);font-size:0.9rem;">Unified Client Portal</div>
+      <div id="mentorRole" style="color:var(--success);font-size:0.8rem;margin-top:5px;">● All Approved Clients</div>
     </div>
+    
     <nav class="nav">
-      <button data-tab="clients" class="active">All Clients</button>
-      <button data-tab="resources">Resources Library</button>
-      <button data-tab="sessions">Upcoming Sessions</button>
+      <button data-tab="clients" class="active">👥 All Clients</button>
+      <button data-tab="lessons">📚 Lessons Library</button>
+      <button data-tab="resources">📁 Resources</button>
+      <button data-tab="sessions">🕒 Upcoming Sessions</button>
     </nav>
-    <button class="btn" style="margin-top:auto;width:100%;background:var(--info);" onclick="loadAll()">Refresh All Data</button>
+    
+    <button class="btn" style="margin-top:30px;width:100%;background:var(--info);" onclick="refreshData()">Refresh Data</button>
   </aside>
 
+  <!-- Main Content -->
   <main class="main-content">
     <div class="topbar">
-      <div class="title">Mentor Command Center</div>
-      <div style="text-align:right">
-        <div style="font-weight:700">Crown Mentors</div>
-        <small>Approved clients: <span id="clientsCount">0</span></small>
+      <div class="title">Mentor Console</div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="text-align:right;">
+          <div id="topName" style="font-weight:700;">Mentor Team</div>
+          <small id="topEmail">All approved clients: <span id="clientsCount">0</span></small>
+        </div>
       </div>
     </div>
 
-    <!-- CLIENTS TAB -->
-    <div id="clients">
+    <!-- Clients Tab -->
+    <div id="clients" style="display:block;">
       <div class="search-box">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search by name, email, phone...">
+        <input type="text" class="search-input" id="clientSearch" placeholder="Search clients by name, email, or program...">
         <button class="btn" onclick="searchClients()">Search</button>
       </div>
+      
       <div class="card">
         <div class="card-header">
           <div class="card-title">Approved Clients</div>
           <button class="btn btn-info" onclick="loadClients()">Refresh</button>
         </div>
         <table class="table">
-          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Program</th><th>Joined</th><th>Action</th></tr></thead>
-          <tbody id="clientsTable"><tr><td colspan="6" style="text-align:center">Loading...</td></tr></tbody>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Program</th>
+              <th>Join Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="clientsTable">
+            <tr><td colspan="6" style="text-align:center;">Loading approved clients...</td></tr>
+          </tbody>
         </table>
       </div>
     </div>
 
-    <!-- RESOURCES TAB -->
-    <div id="resources" style="display:none">
+    <!-- NEW: Lessons Library Tab -->
+    <div id="lessons" style="display:none;">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">Global Resources Library</div>
-          <button class="btn btn-success" onclick="openAddResourceModal()">Upload New</button>
+          <div class="card-title">Course Lessons Library</div>
+          <button class="btn btn-success" onclick="openAddLessonModal()">Create New Lesson</button>
         </div>
-        <div id="globalResources"></div>
+        
+        <div class="search-box">
+          <input type="text" class="search-input" id="lessonSearch" placeholder="Search lessons by title, module, or description...">
+          <button class="btn" onclick="searchLessons()">Search</button>
+          <select class="form-input" id="lessonFilter" style="width: 150px;" onchange="filterLessons()">
+            <option value="all">All Levels</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+        
+        <div class="lessons-grid" id="lessonsGrid">
+          <!-- Lessons will be displayed here in grid format -->
+        </div>
       </div>
     </div>
 
-    <!-- SESSIONS TAB -->
-    <div id="sessions" style="display:none">
+    <!-- Resources Tab -->
+    <div id="resources" style="display:none;">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">Upcoming Group Sessions</div>
-          <button class="btn btn-success" onclick="openAddSessionModal()">Schedule New</button>
+          <div class="card-title">Resources Library</div>
+          <button class="btn btn-success" onclick="openAddGlobalResourceModal()">Add Global Resource</button>
         </div>
-        <div id="globalSessions"></div>
+        <div id="globalResourcesList">
+          <!-- Global resources will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Sessions Tab -->
+    <div id="sessions" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Upcoming Sessions</div>
+          <button class="btn btn-success" onclick="openAddGlobalSessionModal()">Add Global Session</button>
+        </div>
+        <div id="globalSessionsList">
+          <!-- Global sessions will be loaded here -->
+        </div>
       </div>
     </div>
   </main>
 </div>
 
-<button class="logout" onclick="localStorage.clear();location.href='mentor-login.html'">Logout</button>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const supabase = window.supabase.createClient(
-    'https://omrsywvfdhzeokmfdrfh.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o'
-  );
+// Supabase Configuration
+const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
 
-  let currentClient = null;
+// Initialize Supabase
+const { createClient } = window.supabase;
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // Notification
-  function notify(msg, type='success') {
-    const n = document.createElement('div');
-    n.className = `notification ${type}`;
-    n.textContent = msg;
-    document.body.appendChild(n);
-    setTimeout(() => n.remove(), 3500);
-  }
+let currentClientId = null;
+let clientsData = [];
+let lessonsData = [];
+let currentPdfFile = null;
+let currentResourceFiles = [];
 
-  // Tabs
-  document.querySelectorAll('.nav button').forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('#clients,#resources,#sessions').forEach(t => t.style.display='none');
-      document.getElementById(btn.dataset.tab).style.display = 'block';
-      if(btn.dataset.tab==='clients') loadClients();
-      if(btn.dataset.tab==='resources') loadResources();
-      if(btn.dataset.tab==='sessions') loadSessions();
-    }
-  });
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Mentor dashboard loading...');
+  setTimeout(() => {
+    initMentorDashboard();
+  }, 1000);
+});
 
-  // Load Approved Clients
-  async function loadClients() {
-    const { data, error } = await supabase
-      .from('registrations')
-      .select('*')
-      .eq('payment_status', 'approved')
-      .order('created_at', { ascending: false });
+// Notification System
+function showNotification(message, type = 'success') {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
 
-    if(error) { notify('Error loading clients', 'error'); console.error(error); return; }
-
-    document.getElementById('clientsCount').textContent = data.length;
-
-    document.getElementById('clientsTable').innerHTML = data.length === 0
-      ? '<tr><td colspan="6" style="text-align:center;color:#888">No approved clients yet</td></tr>'
-      : data.map(c => `
-        <tr style="cursor:pointer" onclick='openClient(${c.id},"${c.full_name}","${c.email}","${c.phone}","${c.client_type}")'>
-          <td><strong>${c.full_name}</strong></td>
-          <td>${c.email}</td>
-          <td>${c.phone}</td>
-          <td style="text-transform:capitalize">${c.client_type}</td>
-          <td>${new Date(c.created_at).toLocaleDateString()}</td>
-          <td><button class="btn btn-info" onclick="event.stopPropagation(); openClient(${c.id},'${c.full_name}','${c.email}','${c.phone}','${c.client_type}')">View</button></td>
-        </tr>
-      `).join('');
-  }
-
-  // Open Client Modal
-  function openClient(id, name, email, phone, program) {
-    currentClient = {id, name, email, phone, program};
-    document.getElementById('clientName').textContent = name;
-    document.getElementById('detailName').textContent = name;
-    document.getElementById('detailEmail').textContent = email;
-    document.getElementById('detailPhone').textContent = phone;
-    document.getElementById('detailProgram').textContent = program;
-    document.getElementById('detailJoinDate').textContent = new Date().toLocaleDateString();
-    document.getElementById('detailStatus').textContent = 'Approved';
-
-    // Reset tabs
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelector('[data-tab="profile"]').classList.add('active');
-    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-    document.getElementById('profileTab').classList.add('active');
-
-    loadClientTasks(); loadClientNotes(); // Add resources/sessions later
-    document.getElementById('clientDetailsModal').style.display = 'flex';
-  }
-
-  function closeClientModal() {
-    document.getElementById('clientDetailsModal').style.display = 'none';
-  }
-
-  // Add Task
-  async function addTask() {
-    const desc = document.getElementById('taskDescription').value.trim();
-    const due = document.getElementById('taskDueDate').value;
-    if(!desc) return notify('Enter task description', 'error');
-
-    const { error } = await supabase.from('tasks').insert({
-      client_id: currentClient.id,
-      task: desc,
-      due_date: due || null,
-      status: 'pending'
+// Sidebar Navigation
+function setupSidebarNavigation() {
+  const sidebarButtons = document.querySelectorAll('.nav button');
+  
+  sidebarButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      document.querySelectorAll('.nav button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      this.classList.add('active');
+      
+      document.querySelectorAll('#clients, #lessons, #resources, #sessions')
+        .forEach(tab => {
+          tab.style.display = 'none';
+        });
+      
+      const tabId = this.getAttribute('data-tab');
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) {
+        targetTab.style.display = 'block';
+        
+        switch(tabId) {
+          case 'clients':
+            loadClients();
+            break;
+          case 'lessons':
+            loadLessons();
+            break;
+          case 'resources':
+            loadGlobalResources();
+            break;
+          case 'sessions':
+            loadGlobalSessions();
+            break;
+        }
+      }
     });
+  });
+}
 
-    if(error) notify('Error', 'error'); else notify('Task added!');
-    closeAddTaskModal();
-    loadClientTasks();
+// Tab Navigation in Client Modal
+function setupModalTabs() {
+  const tabs = document.querySelectorAll('.tab');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const tabId = this.getAttribute('data-tab');
+      
+      // Update active tab
+      document.querySelectorAll('.tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      this.classList.add('active');
+      
+      // Show active tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(tabId + 'Tab').classList.add('active');
+      
+      // Load data for the selected tab
+      if (currentClientId) {
+        switch(tabId) {
+          case 'tasks':
+            loadClientTasks(currentClientId);
+            break;
+          case 'resources':
+            loadClientResources(currentClientId);
+            break;
+          case 'lessons':
+            loadClientLessons(currentClientId);
+            break;
+          case 'sessions':
+            loadClientSessions(currentClientId);
+            break;
+          case 'notes':
+            loadClientNotes(currentClientId);
+            break;
+        }
+      }
+    });
+  });
+}
+
+// Initialize Mentor Dashboard
+async function initMentorDashboard() {
+  document.getElementById('mentorName').textContent = 'Mentor Dashboard';
+  document.getElementById('mentorEmail').textContent = 'Unified Client Portal';
+  document.getElementById('mentorRole').textContent = '● All Approved Clients';
+  document.getElementById('topName').textContent = 'Mentor Team';
+  
+  setupSidebarNavigation();
+  setupModalTabs();
+  setupFileUploads();
+  
+  await loadClients();
+  await loadLessons();
+  showNotification('Mentor dashboard loaded successfully!');
+}
+
+// Setup file upload functionality
+function setupFileUploads() {
+  const uploadAreas = document.querySelectorAll('.file-upload-area');
+  
+  uploadAreas.forEach(area => {
+    area.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      this.classList.add('dragover');
+    });
+    
+    area.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      this.classList.remove('dragover');
+    });
+    
+    area.addEventListener('drop', function(e) {
+      e.preventDefault();
+      this.classList.remove('dragover');
+      
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        if (this.id === 'pdfUploadArea') {
+          handlePdfUpload({ files: [files[0]] });
+        } else if (this.id === 'resourceUploadArea') {
+          handleResourceUpload({ files: files });
+        }
+      }
+    });
+  });
+}
+
+// Handle PDF upload
+function handlePdfUpload(input) {
+  const file = input.files ? input.files[0] : null;
+  if (!file) return;
+  
+  if (file.type !== 'application/pdf') {
+    showNotification('Please upload a PDF file', 'error');
+    return;
   }
+  
+  currentPdfFile = file;
+  
+  // Update preview
+  document.getElementById('pdfFileName').textContent = file.name;
+  document.getElementById('pdfFileSize').textContent = formatFileSize(file.size);
+  document.getElementById('pdfPreview').classList.add('active');
+  
+  showNotification('PDF file ready for upload');
+}
 
-  // Load Client Tasks
-  async function loadClientTasks() {
-    const { data } = await supabase.from('tasks')
+// Handle resource files upload
+function handleResourceUpload(input) {
+  const files = input.files ? Array.from(input.files) : [];
+  if (files.length === 0) return;
+  
+  currentResourceFiles = [...currentResourceFiles, ...files];
+  updateResourcesPreview();
+  showNotification(`${files.length} resource file(s) added`);
+}
+
+// Update resources preview
+function updateResourcesPreview() {
+  const container = document.getElementById('resourcesPreview');
+  container.innerHTML = '';
+  
+  currentResourceFiles.forEach((file, index) => {
+    const div = document.createElement('div');
+    div.className = 'file-preview active';
+    div.style.marginTop = '8px';
+    div.innerHTML = `
+      <div class="file-info">
+        <div class="file-icon">${getFileIcon(file.type)}</div>
+        <div class="file-details">
+          <div class="file-name">${file.name}</div>
+          <div class="file-size">${formatFileSize(file.size)}</div>
+        </div>
+        <button class="remove-file" onclick="removeResourceFile(${index})">×</button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// Get file icon based on type
+function getFileIcon(fileType) {
+  if (fileType.includes('pdf')) return '📄';
+  if (fileType.includes('image')) return '🖼️';
+  if (fileType.includes('video')) return '🎬';
+  if (fileType.includes('audio')) return '🎵';
+  if (fileType.includes('zip') || fileType.includes('compressed')) return '📦';
+  return '📎';
+}
+
+// Format file size
+function formatFileSize(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// Remove PDF file
+function removePdfFile() {
+  currentPdfFile = null;
+  document.getElementById('pdfPreview').classList.remove('active');
+  document.getElementById('lessonPdf').value = '';
+}
+
+// Remove resource file
+function removeResourceFile(index) {
+  currentResourceFiles.splice(index, 1);
+  updateResourcesPreview();
+}
+
+// Load Clients
+async function loadClients() {
+  try {
+    // In a real app, this would filter by status = 'approved'
+    const { data: clients, error } = await supabase
+      .from('clients')
       .select('*')
-      .eq('client_id', currentClient.id)
-      .order('created_at', { ascending: false });
+      .eq('status', 'approved')
+      .order('join_date', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching clients:', error);
+      // Use mock data for demo
+      clientsData = [
+        { id: '1', name: 'John Doe', email: 'john@example.com', phone: '+254712345678', program: 'Premium Trading', join_date: '2023-10-15', status: 'approved' },
+        { id: '2', name: 'Jane Smith', email: 'jane@example.com', phone: '+254723456789', program: 'ICT Mastery', join_date: '2023-10-10', status: 'approved' },
+        { id: '3', name: 'Mike Wilson', email: 'mike@example.com', phone: '+254734567890', program: 'Forex Fundamentals', join_date: '2023-10-05', status: 'approved' },
+        { id: '4', name: 'Sarah Johnson', email: 'sarah@example.com', phone: '+254745678901', program: 'Options Trading', join_date: '2023-09-28', status: 'approved' }
+      ];
+    } else {
+      clientsData = clients || [];
+    }
+    
+    updateClientsTable(clientsData);
+    document.getElementById('clientsCount').textContent = clientsData.length;
+    
+  } catch (error) {
+    console.error('Error loading clients:', error);
+    document.getElementById('clientsTable').innerHTML = '<tr><td colspan="6" style="text-align:center;">Error loading clients</td></tr>';
+  }
+}
 
-    const html = (data||[]).map(t => `
-      <div class="task-item ${t.status==='done'?'task-done':''}">
-        <div>${t.task} ${t.due_date?`<small>Due: ${new Date(t.due_date).toLocaleDateString()}</small>`:''}</div>
+// Update Clients Table
+function updateClientsTable(clients) {
+  const clientsHTML = clients.map(client => `
+    <tr>
+      <td>${client.name}</td>
+      <td>${client.email}</td>
+      <td>${client.phone}</td>
+      <td>${client.program}</td>
+      <td>${new Date(client.join_date).toLocaleDateString()}</td>
+      <td>
+        <button class="btn btn-info" onclick="viewClientDetails('${client.id}')">View Details</button>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" style="text-align:center;">No approved clients found</td></tr>';
+  
+  document.getElementById('clientsTable').innerHTML = clientsHTML;
+}
+
+// Search Clients
+function searchClients() {
+  const searchTerm = document.getElementById('clientSearch').value.toLowerCase();
+  
+  if (!searchTerm) {
+    updateClientsTable(clientsData);
+    return;
+  }
+  
+  const filteredClients = clientsData.filter(client => 
+    client.name.toLowerCase().includes(searchTerm) ||
+    client.email.toLowerCase().includes(searchTerm) ||
+    client.program.toLowerCase().includes(searchTerm)
+  );
+  
+  updateClientsTable(filteredClients);
+}
+
+// View Client Details
+function viewClientDetails(clientId) {
+  const client = clientsData.find(c => c.id === clientId);
+  if (!client) return;
+  
+  currentClientId = clientId;
+  
+  // Populate client details
+  document.getElementById('clientName').textContent = client.name + ' - Details';
+  document.getElementById('detailName').textContent = client.name;
+  document.getElementById('detailEmail').textContent = client.email;
+  document.getElementById('detailPhone').textContent = client.phone;
+  document.getElementById('detailProgram').textContent = client.program;
+  document.getElementById('detailJoinDate').textContent = new Date(client.join_date).toLocaleDateString();
+  document.getElementById('detailStatus').textContent = client.status.charAt(0).toUpperCase() + client.status.slice(1);
+  
+  // Reset to profile tab
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  document.querySelector('[data-tab="profile"]').classList.add('active');
+  
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  document.getElementById('profileTab').classList.add('active');
+  
+  // Load client-specific data
+  loadClientTasks(clientId);
+  loadClientResources(clientId);
+  loadClientLessons(clientId);
+  loadClientSessions(clientId);
+  loadClientNotes(clientId);
+  
+  // Show modal
+  document.getElementById('clientDetailsModal').style.display = 'flex';
+}
+
+// Close Client Modal
+function closeClientModal() {
+  document.getElementById('clientDetailsModal').style.display = 'none';
+  currentClientId = null;
+}
+
+// Load Client Tasks
+async function loadClientTasks(clientId) {
+  try {
+    // In a real app, this would fetch from the database
+    // Using mock data for demo
+    const mockTasks = [
+      { id: '1', task: 'Watch module 1 - Introduction to ICT Concepts', status: 'pending', due_date: '2023-11-05' },
+      { id: '2', task: 'Practice drawing liquidity zones on 3 charts', status: 'done', due_date: '2023-11-01' },
+      { id: '3', task: 'Submit backtesting journal for week 1', status: 'pending', due_date: '2023-11-08' }
+    ];
+    
+    const tasksHTML = mockTasks.map(task => `
+      <div class="task-item ${task.status === 'done' ? 'task-done' : ''}">
         <div>
-          <span class="${t.status==='done'?'status-approved':'status-pending'}">${t.status.toUpperCase()}</span>
-          <button class="btn ${t.status==='done'?'btn-warning':'btn-success'}" onclick="toggleTask(${t.id},'${t.status}')">
-            ${t.status==='done'?'Undo':'Done'}
+          <div style="font-weight: 600;">${task.task}</div>
+          <div style="font-size: 0.8rem; color: var(--muted);">Due: ${new Date(task.due_date).toLocaleDateString()}</div>
+        </div>
+        <div>
+          <span class="status-${task.status}">${task.status === 'done' ? 'Completed' : 'Pending'}</span>
+          <button class="btn btn-success" style="margin-left: 10px;" onclick="toggleTaskStatus('${task.id}')">
+            ${task.status === 'done' ? 'Undo' : 'Mark Done'}
           </button>
         </div>
       </div>
-    `).join('') || '<p>No tasks yet</p>';
-
-    document.getElementById('tasksList').innerHTML = html;
+    `).join('') || '<div style="text-align: center; padding: 20px; color: var(--muted);">No tasks assigned yet</div>';
+    
+    document.getElementById('tasksList').innerHTML = tasksHTML;
+    
+  } catch (error) {
+    console.error('Error loading tasks:', error);
+    document.getElementById('tasksList').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--danger);">Error loading tasks</div>';
   }
+}
 
-  async function toggleTask(id, current) {
-    await supabase.from('tasks').update({status: current==='done'?'pending':'done'}).eq('id',id);
-    loadClientTasks();
-  }
-
-  // Resources Library (Global)
-  async function loadResources() {
-    const { data } = await supabase.from('resources').select().order('created_at', { ascending: false });
-    document.getElementById('globalResources').innerHTML = (data||[]).map(r => `
+// Load Client Resources
+async function loadClientResources(clientId) {
+  try {
+    // In a real app, this would fetch from the database
+    // Using mock data for demo
+    const mockResources = [
+      { id: '1', title: 'ICT Trading Playbook PDF', type: 'pdf', url: '/resources/ict-playbook.pdf', created_at: '2023-10-20' },
+      { id: '2', title: 'Market Structure Video Guide', type: 'video', url: 'https://youtube.com/watch?v=abc123', created_at: '2023-10-18' },
+      { id: '3', title: 'Backtesting Journal Template', type: 'pdf', url: '/resources/journal-template.pdf', created_at: '2023-10-15' }
+    ];
+    
+    const resourcesHTML = mockResources.map(resource => `
       <div class="resource-item">
-        <div><strong>${r.title}</strong></div>
-        <button class="btn btn-info" onclick="window.open('${r.file_url}','_blank')">Open</button>
+        <div>
+          <div style="font-weight: 600;">${resource.title}</div>
+          <div style="font-size: 0.8rem; color: var(--muted);">
+            ${resource.type.toUpperCase()} • Added: ${new Date(resource.created_at).toLocaleDateString()}
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-info" onclick="window.open('${resource.url}', '_blank')">View</button>
+        </div>
       </div>
-    `).join('') || '<p>No resources yet</p>';
+    `).join('') || '<div style="text-align: center; padding: 20px; color: var(--muted);">No resources added yet</div>';
+    
+    document.getElementById('resourcesList').innerHTML = resourcesHTML;
+    
+  } catch (error) {
+    console.error('Error loading resources:', error);
+    document.getElementById('resourcesList').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--danger);">Error loading resources</div>';
   }
+}
 
-  // Sessions (Global)
-  async function loadSessions() {
-    const { data } = await supabase.from('sessions').select().order('datetime');
-    document.getElementById('globalSessions').innerHTML = (data||[]).map(s => `
+// NEW: Load Client Lessons
+async function loadClientLessons(clientId) {
+  try {
+    // In a real app, this would fetch from the database
+    // Using mock data for demo
+    const mockLessons = [
+      { 
+        id: '1', 
+        title: 'ICT Market Structure Basics', 
+        module: 'Module 1: Foundation',
+        description: 'Learn the fundamental concepts of market structure including higher highs, lower lows, and swing points.',
+        difficulty: 'beginner',
+        duration: 45,
+        pdf_url: '/lessons/market-structure.pdf',
+        created_at: '2023-10-25'
+      },
+      { 
+        id: '2', 
+        title: 'Liquidity Concepts & Order Blocks', 
+        module: 'Module 2: Advanced Concepts',
+        description: 'Deep dive into liquidity pools, order blocks, and how to identify them on different timeframes.',
+        difficulty: 'intermediate',
+        duration: 60,
+        pdf_url: '/lessons/liquidity-concepts.pdf',
+        created_at: '2023-10-20'
+      }
+    ];
+    
+    const lessonsHTML = mockLessons.map(lesson => `
+      <div class="lesson-item">
+        <div class="lesson-header">
+          <div style="flex: 1;">
+            <div class="lesson-title">${lesson.title}</div>
+            <div class="lesson-meta">
+              ${lesson.module} • ${lesson.difficulty.charAt(0).toUpperCase() + lesson.difficulty.slice(1)} • ${lesson.duration} mins
+            </div>
+          </div>
+          <button class="btn btn-info" onclick="window.open('${lesson.pdf_url}', '_blank')">View PDF</button>
+        </div>
+        <div class="lesson-description">${lesson.description}</div>
+        <div class="lesson-meta">
+          Added: ${new Date(lesson.created_at).toLocaleDateString()}
+        </div>
+      </div>
+    `).join('') || '<div style="text-align: center; padding: 20px; color: var(--muted);">No lessons assigned yet</div>';
+    
+    document.getElementById('lessonsList').innerHTML = lessonsHTML;
+    
+  } catch (error) {
+    console.error('Error loading lessons:', error);
+    document.getElementById('lessonsList').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--danger);">Error loading lessons</div>';
+  }
+}
+
+// Load Client Sessions
+async function loadClientSessions(clientId) {
+  try {
+    // In a real app, this would fetch from the database
+    // Using mock data for demo
+    const mockSessions = [
+      { id: '1', title: 'Weekly Trading Review', datetime: '2023-11-03T14:00:00', link: 'https://zoom.us/j/123456789', description: 'Review of this week\'s trading performance and market analysis' },
+      { id: '2', title: 'ICT Concepts Deep Dive', datetime: '2023-11-10T15:00:00', link: 'https://zoom.us/j/987654321', description: 'In-depth session on ICT market structure and liquidity concepts' }
+    ];
+    
+    const sessionsHTML = mockSessions.map(session => `
       <div class="session-item">
-        <strong>${s.title}</strong><br>
-        ${new Date(s.datetime).toLocaleString()}<br>
-        <button class="btn btn-info" onclick="window.open('${s.link}','_blank')">Join Call</button>
+        <div style="font-weight: 600; margin-bottom: 8px;">${session.title}</div>
+        <div style="margin-bottom: 8px;">
+          <strong>When:</strong> ${new Date(session.datetime).toLocaleString()}
+        </div>
+        <div style="margin-bottom: 8px;">
+          <strong>Description:</strong> ${session.description}
+        </div>
+        <div>
+          <button class="btn btn-info" onclick="window.open('${session.link}', '_blank')">Join Session</button>
+        </div>
       </div>
-    `).join('') || '<p>No upcoming sessions</p>';
+    `).join('') || '<div style="text-align: center; padding: 20px; color: var(--muted);">No sessions scheduled yet</div>';
+    
+    document.getElementById('sessionsList').innerHTML = sessionsHTML;
+    
+  } catch (error) {
+    console.error('Error loading sessions:', error);
+    document.getElementById('sessionsList').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--danger);">Error loading sessions</div>';
   }
+}
 
-  // Upload Resource
-  async function uploadResource() {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.onchange = async e => {
-      const file = e.target.files[0];
-      const title = prompt('Resource title:');
-      if(!title || !file) return;
-
-      const fileName = `${Date.now()}_${file.name}`;
-      await supabase.storage.from('resources').upload(fileName, file);
-      const { data } = supabase.storage.from('resources').getPublicUrl(fileName);
-
-      await supabase.from('resources').insert({ title, file_url: data.publicUrl });
-      notify('Uploaded!');
-      loadResources();
-    };
-    fileInput.click();
+// Load Client Notes
+async function loadClientNotes(clientId) {
+  try {
+    // In a real app, this would fetch from the database
+    // Using mock data for demo
+    const mockNotes = [
+      { id: '1', type: 'progress', content: 'Student showing good understanding of market structure concepts.', visibility: 'shared', created_at: '2023-10-28' },
+      { id: '2', type: 'issue', content: 'Struggling with liquidity zone identification. Needs more practice.', visibility: 'private', created_at: '2023-10-25' },
+      { id: '3', type: 'strength', content: 'Excellent risk management in recent trades.', visibility: 'shared', created_at: '2023-10-20' }
+    ];
+    
+    const notesHTML = mockNotes.map(note => `
+      <div class="note-item">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="font-weight: 600; text-transform: capitalize;">${note.type}</span>
+          <span style="font-size: 0.8rem; color: var(--muted);">
+            ${new Date(note.created_at).toLocaleDateString()} • 
+            <span style="color: ${note.visibility === 'shared' ? 'var(--success)' : 'var(--warning)'};">
+              ${note.visibility === 'shared' ? 'Shared' : 'Private'}
+            </span>
+          </span>
+        </div>
+        <div>${note.content}</div>
+      </div>
+    `).join('') || '<div style="text-align: center; padding: 20px; color: var(--muted);">No notes added yet</div>';
+    
+    document.getElementById('notesList').innerHTML = notesHTML;
+    
+  } catch (error) {
+    console.error('Error loading notes:', error);
+    document.getElementById('notesList').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--danger);">Error loading notes</div>';
   }
+}
 
-  // Quick functions for modals
-  function openAddTaskModal(){ document.getElementById('addTaskModal').style.display='flex'; }
-  function closeAddTaskModal(){ document.getElementById('addTaskModal').style.display='none'; }
-  function openAddResourceModal(){ uploadResource(); }
-  function openAddSessionModal(){
-    const title = prompt('Session title:');
-    const datetime = prompt('Date & time (YYYY-MM-DDThh:mm):');
-    const link = prompt('Zoom/Meet link:');
-    if(title && datetime && link){
-      supabase.from('sessions').insert({title, datetime, link});
-      notify('Session scheduled!');
-      loadSessions();
+// NEW: Lesson Management Functions
+function openAddLessonModal() {
+  document.getElementById('addLessonModal').style.display = 'flex';
+  // Reset form
+  document.getElementById('lessonTitle').value = '';
+  document.getElementById('lessonModule').value = '';
+  document.getElementById('lessonDescription').value = '';
+  document.getElementById('lessonDifficulty').value = 'beginner';
+  document.getElementById('lessonDuration').value = '';
+  removePdfFile();
+  currentResourceFiles = [];
+  document.getElementById('resourcesPreview').innerHTML = '';
+}
+
+function closeAddLessonModal() {
+  document.getElementById('addLessonModal').style.display = 'none';
+}
+
+function addLesson() {
+  const title = document.getElementById('lessonTitle').value;
+  const module = document.getElementById('lessonModule').value;
+  const description = document.getElementById('lessonDescription').value;
+  const difficulty = document.getElementById('lessonDifficulty').value;
+  const duration = document.getElementById('lessonDuration').value;
+  
+  if (!title) {
+    showNotification('Please enter a lesson title', 'error');
+    return;
+  }
+  
+  if (!currentPdfFile) {
+    showNotification('Please upload a PDF file for the lesson', 'error');
+    return;
+  }
+  
+  // In a real app, this would:
+  // 1. Upload the PDF file to storage
+  // 2. Upload any additional resource files
+  // 3. Save lesson details to the database
+  
+  const newLesson = {
+    id: 'lesson-' + Date.now(),
+    title: title,
+    module: module,
+    description: description,
+    difficulty: difficulty,
+    duration: parseInt(duration) || 0,
+    pdf_url: '/lessons/' + currentPdfFile.name,
+    resource_files: currentResourceFiles.map(f => f.name),
+    created_at: new Date().toISOString()
+  };
+  
+  lessonsData.unshift(newLesson);
+  updateLessonsGrid(lessonsData);
+  
+  showNotification('Lesson created successfully!');
+  closeAddLessonModal();
+  
+  // If we're in a client view, reload their lessons too
+  if (currentClientId) {
+    loadClientLessons(currentClientId);
+  }
+}
+
+// Load Lessons for the main library
+async function loadLessons() {
+  try {
+    // In a real app, this would fetch from the database
+    // Using mock data for demo
+    if (lessonsData.length === 0) {
+      lessonsData = [
+        { 
+          id: '1', 
+          title: 'ICT Market Structure Basics', 
+          module: 'Module 1: Foundation',
+          description: 'Learn the fundamental concepts of market structure including higher highs, lower lows, and swing points.',
+          difficulty: 'beginner',
+          duration: 45,
+          pdf_url: '/lessons/market-structure.pdf',
+          resource_files: ['worksheet.pdf'],
+          created_at: '2023-10-25'
+        },
+        { 
+          id: '2', 
+          title: 'Liquidity Concepts & Order Blocks', 
+          module: 'Module 2: Advanced Concepts',
+          description: 'Deep dive into liquidity pools, order blocks, and how to identify them on different timeframes.',
+          difficulty: 'intermediate',
+          duration: 60,
+          pdf_url: '/lessons/liquidity-concepts.pdf',
+          resource_files: ['cheat-sheet.pdf', 'examples.zip'],
+          created_at: '2023-10-20'
+        },
+        { 
+          id: '3', 
+          title: 'Risk Management Framework', 
+          module: 'Module 3: Trading Psychology',
+          description: 'Comprehensive guide to position sizing, risk-reward ratios, and emotional control in trading.',
+          difficulty: 'beginner',
+          duration: 30,
+          pdf_url: '/lessons/risk-management.pdf',
+          resource_files: ['calculator.xlsx'],
+          created_at: '2023-10-18'
+        }
+      ];
     }
+    
+    updateLessonsGrid(lessonsData);
+    
+  } catch (error) {
+    console.error('Error loading lessons:', error);
+    document.getElementById('lessonsGrid').innerHTML = '<div style="text-align: center; padding: 40px; color: var(--danger);">Error loading lessons</div>';
   }
+}
 
-  // Search
-  function searchClients() {
-    const term = document.getElementById('searchInput').value.toLowerCase();
-    const rows = document.querySelectorAll('#clientsTable tr');
-    rows.forEach(row => {
-      const text = row.textContent.toLowerCase();
-      row.style.display = text.includes(term) ? '' : 'none';
+// Update Lessons Grid
+function updateLessonsGrid(lessons) {
+  const grid = document.getElementById('lessonsGrid');
+  
+  if (lessons.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--muted);">
+        <div style="font-size: 3rem; margin-bottom: 16px;">📚</div>
+        <h3 style="margin-bottom: 8px;">No Lessons Yet</h3>
+        <p style="margin-bottom: 20px;">Create your first lesson to get started</p>
+        <button class="btn btn-success" onclick="openAddLessonModal()">Create First Lesson</button>
+      </div>
+    `;
+    return;
+  }
+  
+  const lessonsHTML = lessons.map(lesson => `
+    <div class="lesson-card">
+      <div class="lesson-card-header">
+        <div style="flex: 1;">
+          <div class="lesson-card-title">${lesson.title}</div>
+          <div class="lesson-card-meta">
+            ${lesson.module} • ${lesson.difficulty.charAt(0).toUpperCase() + lesson.difficulty.slice(1)} • ${lesson.duration} mins
+          </div>
+        </div>
+        <span style="
+          background: ${getDifficultyColor(lesson.difficulty)};
+          color: white;
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-size: 0.7rem;
+          font-weight: 600;
+        ">
+          ${lesson.difficulty.toUpperCase()}
+        </span>
+      </div>
+      <div class="lesson-card-description">
+        ${lesson.description}
+      </div>
+      <div class="lesson-card-meta" style="margin-bottom: 16px;">
+        ${lesson.resource_files?.length || 0} resource files • Created: ${new Date(lesson.created_at).toLocaleDateString()}
+      </div>
+      <div class="lesson-actions">
+        <button class="btn btn-info" onclick="window.open('${lesson.pdf_url}', '_blank')">View PDF</button>
+        <button class="btn" onclick="editLesson('${lesson.id}')">Edit</button>
+        <button class="btn btn-danger" onclick="deleteLesson('${lesson.id}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+  
+  grid.innerHTML = lessonsHTML;
+}
+
+// Get color for difficulty level
+function getDifficultyColor(difficulty) {
+  switch(difficulty) {
+    case 'beginner': return var(--success);
+    case 'intermediate': return var(--warning);
+    case 'advanced': return var(--danger);
+    default: return var(--muted);
+  }
+}
+
+// Search Lessons
+function searchLessons() {
+  const searchTerm = document.getElementById('lessonSearch').value.toLowerCase();
+  const filter = document.getElementById('lessonFilter').value;
+  
+  let filteredLessons = lessonsData;
+  
+  if (searchTerm) {
+    filteredLessons = filteredLessons.filter(lesson => 
+      lesson.title.toLowerCase().includes(searchTerm) ||
+      lesson.module.toLowerCase().includes(searchTerm) ||
+      lesson.description.toLowerCase().includes(searchTerm)
+    );
+  }
+  
+  if (filter !== 'all') {
+    filteredLessons = filteredLessons.filter(lesson => lesson.difficulty === filter);
+  }
+  
+  updateLessonsGrid(filteredLessons);
+}
+
+// Filter Lessons
+function filterLessons() {
+  searchLessons(); // Reuse search function which handles both search and filter
+}
+
+// Edit Lesson
+function editLesson(lessonId) {
+  const lesson = lessonsData.find(l => l.id === lessonId);
+  if (!lesson) return;
+  
+  // In a real app, this would open an edit modal with pre-filled data
+  showNotification(`Edit functionality for "${lesson.title}" would open here`);
+}
+
+// Delete Lesson
+function deleteLesson(lessonId) {
+  const lesson = lessonsData.find(l => l.id === lessonId);
+  if (!lesson) return;
+  
+  if (confirm(`Are you sure you want to delete "${lesson.title}"?`)) {
+    lessonsData = lessonsData.filter(l => l.id !== lessonId);
+    updateLessonsGrid(lessonsData);
+    showNotification('Lesson deleted successfully');
+  }
+}
+
+// Task Management Functions
+function openAddTaskModal() {
+  document.getElementById('addTaskModal').style.display = 'flex';
+  document.getElementById('taskDescription').value = '';
+  document.getElementById('taskDueDate').value = '';
+}
+
+function closeAddTaskModal() {
+  document.getElementById('addTaskModal').style.display = 'none';
+}
+
+function addTask() {
+  const description = document.getElementById('taskDescription').value;
+  const dueDate = document.getElementById('taskDueDate').value;
+  
+  if (!description) {
+    showNotification('Please enter a task description', 'error');
+    return;
+  }
+  
+  // In a real app, this would save to the database
+  showNotification('Task added successfully!');
+  closeAddTaskModal();
+  loadClientTasks(currentClientId);
+}
+
+function toggleTaskStatus(taskId) {
+  // In a real app, this would update the task status in the database
+  showNotification('Task status updated!');
+  loadClientTasks(currentClientId);
+}
+
+// Resource Management Functions
+function openAddResourceModal() {
+  document.getElementById('addResourceModal').style.display = 'flex';
+  document.getElementById('resourceTitle').value = '';
+  document.getElementById('resourceType').value = 'pdf';
+  document.getElementById('resourceUrl').value = '';
+}
+
+function closeAddResourceModal() {
+  document.getElementById('addResourceModal').style.display = 'none';
+}
+
+function addResource() {
+  const title = document.getElementById('resourceTitle').value;
+  const type = document.getElementById('resourceType').value;
+  const url = document.getElementById('resourceUrl').value;
+  
+  if (!title || !url) {
+    showNotification('Please fill all required fields', 'error');
+    return;
+  }
+  
+  // In a real app, this would save to the database
+  showNotification('Resource added successfully!');
+  closeAddResourceModal();
+  loadClientResources(currentClientId);
+}
+
+// Session Management Functions
+function openAddSessionModal() {
+  document.getElementById('addSessionModal').style.display = 'flex';
+  document.getElementById('sessionTitle').value = '';
+  document.getElementById('sessionDateTime').value = '';
+  document.getElementById('sessionLink').value = '';
+  document.getElementById('sessionDescription').value = '';
+}
+
+function closeAddSessionModal() {
+  document.getElementById('addSessionModal').style.display = 'none';
+}
+
+function addSession() {
+  const title = document.getElementById('sessionTitle').value;
+  const datetime = document.getElementById('sessionDateTime').value;
+  const link = document.getElementById('sessionLink').value;
+  const description = document.getElementById('sessionDescription').value;
+  
+  if (!title || !datetime || !link) {
+    showNotification('Please fill all required fields', 'error');
+    return;
+  }
+  
+  // In a real app, this would save to the database
+  showNotification('Session added successfully!');
+  closeAddSessionModal();
+  loadClientSessions(currentClientId);
+}
+
+// Note Management Functions
+function openAddNoteModal() {
+  document.getElementById('addNoteModal').style.display = 'flex';
+  document.getElementById('noteType').value = 'general';
+  document.getElementById('noteContent').value = '';
+  document.getElementById('noteVisibility').value = 'shared';
+}
+
+function closeAddNoteModal() {
+  document.getElementById('addNoteModal').style.display = 'none';
+}
+
+function addNote() {
+  const type = document.getElementById('noteType').value;
+  const content = document.getElementById('noteContent').value;
+  const visibility = document.getElementById('noteVisibility').value;
+  
+  if (!content) {
+    showNotification('Please enter note content', 'error');
+    return;
+  }
+  
+  // In a real app, this would save to the database
+  showNotification('Note added successfully!');
+  closeAddNoteModal();
+  loadClientNotes(currentClientId);
+}
+
+// Progress Notes
+function saveProgressNotes() {
+  const notes = document.getElementById('progressNotes').value;
+  // In a real app, this would save to the database
+  showNotification('Progress notes saved!');
+}
+
+// Global Resources and Sessions
+async function loadGlobalResources() {
+  // In a real app, this would fetch from the database
+  const mockResources = [
+    { id: '1', title: 'Trading Psychology Guide', type: 'pdf', url: '/resources/psychology-guide.pdf', created_at: '2023-10-15' },
+    { id: '2', title: 'Risk Management Framework', type: 'pdf', url: '/resources/risk-management.pdf', created_at: '2023-10-10' },
+    { id: '3', title: 'Market Analysis Weekly', type: 'video', url: 'https://youtube.com/watch?v=weekly123', created_at: '2023-10-08' }
+  ];
+  
+  const resourcesHTML = mockResources.map(resource => `
+    <div class="resource-item">
+      <div>
+        <div style="font-weight: 600;">${resource.title}</div>
+        <div style="font-size: 0.8rem; color: var(--muted);">
+          ${resource.type.toUpperCase()} • Added: ${new Date(resource.created_at).toLocaleDateString()}
+        </div>
+      </div>
+      <div>
+        <button class="btn btn-info" onclick="window.open('${resource.url}', '_blank')">View</button>
+      </div>
+    </div>
+  `).join('') || '<div style="text-align: center; padding: 20px; color: var(--muted);">No global resources added yet</div>';
+  
+  document.getElementById('globalResourcesList').innerHTML = resourcesHTML;
+}
+
+async function loadGlobalSessions() {
+  // In a real app, this would fetch from the database
+  const mockSessions = [
+    { id: '1', title: 'Weekly Market Outlook', datetime: '2023-11-06T10:00:00', link: 'https://zoom.us/j/111111111', description: 'Weekly market analysis and trading opportunities' },
+    { id: '2', title: 'Q&A Session - All Mentors', datetime: '2023-11-08T16:00:00', link: 'https://zoom.us/j/222222222', description: 'Open Q&A session with all mentors' }
+  ];
+  
+  const sessionsHTML = mockSessions.map(session => `
+    <div class="session-item">
+      <div style="font-weight: 600; margin-bottom: 8px;">${session.title}</div>
+      <div style="margin-bottom: 8px;">
+        <strong>When:</strong> ${new Date(session.datetime).toLocaleString()}
+      </div>
+      <div style="margin-bottom: 8px;">
+        <strong>Description:</strong> ${session.description}
+      </div>
+      <div>
+        <button class="btn btn-info" onclick="window.open('${session.link}', '_blank')">Join Session</button>
+      </div>
+    </div>
+  `).join('') || '<div style="text-align: center; padding: 20px; color: var(--muted);">No global sessions scheduled yet</div>';
+  
+  document.getElementById('globalSessionsList').innerHTML = sessionsHTML;
+}
+
+function openAddGlobalResourceModal() {
+  // Implementation similar to client resource modal
+  showNotification('Global resource functionality would open here');
+}
+
+function openAddGlobalSessionModal() {
+  // Implementation similar to client session modal
+  showNotification('Global session functionality would open here');
+}
+
+// Refresh Data
+function refreshData() {
+  loadClients();
+  loadLessons();
+  loadGlobalResources();
+  loadGlobalSessions();
+  showNotification('Data refreshed!');
+}
+
+// Close modals when clicking outside
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('client-details')) {
+    e.target.style.display = 'none';
+  }
+});
+
+// Close modals with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.client-details').forEach(modal => {
+      modal.style.display = 'none';
     });
   }
+});
 
-  function loadAll() {
-    loadClients(); loadResources(); loadSessions();
-    notify('All data refreshed');
-  }
-
-  // Load everything on start
-  loadAll();
+console.log('Mentor dashboard JavaScript loaded successfully');
 </script>
 </body>
 </html>
