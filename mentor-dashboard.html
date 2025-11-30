@@ -6,485 +6,107 @@
   <title>Crown Trade Academy • Mentor Console</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
-
   <style>
-    :root {
-      --gold: #c8a97e;
-      --gold-dark: #b89463;
-      --nude: #f9f6f2;
-      --charcoal: #1a1a1a;
-      --soft-white: #fdfcfb;
-      --border: rgba(200,169,126,0.15);
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--nude);
-      color: var(--charcoal);
-      line-height: 1.6;
-    }
-    .container {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-    .header {
-      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-      color: white;
-      padding: 3rem 2rem;
-      border-radius: 24px;
-      text-align: center;
-      margin-bottom: 3rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .header::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23c8a97e" opacity="0.08"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-      opacity: 0.4;
-    }
-    .header h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 4.5rem;
-      font-weight: 700;
-      letter-spacing: -1px;
-      position: relative;
-      z-index: 2;
-    }
-    .header p {
-      font-size: 1.4rem;
-      opacity: 0.9;
-      margin-top: 0.5rem;
-      position: relative;
-      z-index: 2;
-    }
-    .mentor-badge {
-      display: inline-block;
-      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
-      color: white;
-      padding: 0.6rem 1.8rem;
-      border-radius: 50px;
-      font-weight: 700;
-      font-size: 1.1rem;
-      margin-top: 1rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 420px;
-      gap: 2.5rem;
-    }
-    .card {
-      background: var(--soft-white);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.06);
-      backdrop-filter: blur(10px);
-    }
-    .section-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.2rem;
-      color: var(--gold-dark);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .clients-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1rem;
-    }
-    .client-card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.5rem;
-      transition: all 0.3s;
-    }
-    .client-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(200,169,126,0.15);
-    }
-    .client-name {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--charcoal);
-      margin-bottom: 0.5rem;
-    }
-    .client-meta {
-      font-size: 0.95rem;
-      color: #666;
-      margin: 0.4rem 0;
-    }
-    .client-joined {
-      font-size: 0.85rem;
-      color: var(--gold-dark);
-      font-weight: 600;
-    }
-
-    .chat-container {
-      height: 680px;
-      display: flex;
-      flex-direction: column;
-      background: white;
-      border-radius: 20px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-    }
-    .chat-header {
-      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
-      color: white;
-      padding: 1.5rem;
-      text-align: center;
-      font-weight: 600;
-      font-size: 1.3rem;
-    }
-    .chat-messages {
-      flex: 1;
-      padding: 1.5rem;
-      overflow-y: auto;
-      background: #faf8f5;
-    }
-    .message {
-      margin-bottom: 1rem;
-      max-width: 80%;
-    }
-    .message.sent {
-      margin-left: auto;
-    }
-    .message-bubble {
-      padding: 12px 18px;
-      border-radius: 20px;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-    .message.sent .message-bubble {
-      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
-      color: white;
-      border-bottom-right-radius: 6px;
-    }
-    .message.received .message-bubble {
-      background: white;
-      border: 1px solid var(--border);
-      border-bottom-left-radius: 6px;
-    }
-    .message-meta {
-      font-size: 0.75rem;
-      opacity: 0.7;
-      margin-top: 4px;
-      text-align: right;
-    }
-    .chat-input {
-      padding: 1.5rem;
-      background: white;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 12px;
-    }
-    .chat-input input {
-      flex: 1;
-      padding: 14px 20px;
-      border: 1px solid var(--border);
-      border-radius: 50px;
-      font-size: 1rem;
-    }
-    .btn-send {
-      background: var(--gold);
-      color: white;
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.3rem;
-      transition: 0.3s;
-    }
-    .btn-send:hover {
-      background: var(--gold-dark);
-      transform: scale(1.1);
-    }
-
-    .schedule-card {
-      margin-top: 2rem;
-    }
-    .schedule-form {
-      display: grid;
-      grid-template-columns: 1fr 1fr auto;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .schedule-form input, .schedule-form button {
-      padding: 14px 18px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      font-size: 1rem;
-    }
-    .schedule-form button {
-      background: var(--gold);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .upcoming-calls {
-      margin-top: 1rem;
-    }
-    .call-item {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem 1.5rem;
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .call-title {
-      font-weight: 600;
-      color: var(--charcoal);
-    }
-    .call-time {
-      font-size: 0.9rem;
-      color: var(--gold-dark);
-    }
-    .call-link {
-      background: var(--gold);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 50px;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 1100px) {
-      .grid { grid-template-columns: 1fr; }
-      .header h1 { font-size: 3.5rem; }
-    }
+    :root{--gold:#c8a97e;--gold-dark:#b89463;--nude:#f9f6f2;--charcoal:#1a1a1a;--border:rgba(200,169,126,0.15)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:var(--nude);color:var(--charcoal);line-height:1.6}
+    .container{max-width:1600px;margin:0 auto;padding:2rem}
+    .header{background:linear-gradient(135deg,#0f0f0f,#1a1a1a);color:white;padding:3rem 2rem;border-radius:24px;text-align:center;margin-bottom:3rem}
+    .header h1{font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:700;letter-spacing:-1px}
+    .mentor-badge{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;padding:0.6rem 1.8rem;border-radius:50px;font-weight:700;font-size:1.1rem;margin-top:1rem;display:inline-block}
+    .grid{display:grid;grid-template-columns:1fr 420px;gap:2.5rem}
+    .card{background:white;border:1px solid var(--border);border-radius:20px;padding:2rem;box-shadow:0 20px 60px rgba(0,0,0,0.06)}
+    .section-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--gold-dark);margin-bottom:1.5rem}
+    .clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
+    .client-card{background:white;border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:all .3s}
+    .client-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(200,169,126,0.15)}
+    .client-name{font-size:1.3rem;font-weight:700;margin-bottom:0.5rem}
+    .chat-container{height:680px;display:flex;flex-direction:column;background:white;border-radius:20px;overflow:hidden;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,0.08)}
+    .chat-header{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;padding:1.5rem;text-align:center;font-weight:600;font-size:1.3rem}
+    .chat-messages{flex:1;padding:1.5rem;overflow-y:auto;background:#faf8f5}
+    .message{margin-bottom:1rem;max-width:80%}
+    .message.sent{margin-left:auto}
+    .message-bubble{padding:12px 18px;border-radius:20px;font-size:0.95rem}
+    .message.sent .message-bubble{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;border-bottom-right-radius:6px}
+    .message.received .message-bubble{background:white;border:1px solid var(--border);border-bottom-left-radius:6px}
+    .chat-input{padding:1.5rem;background:white;border-top:1px solid var(--border);display:flex;gap:12px}
+    .chat-input input{flex:1;padding:14px 20px;border:1px solid var(--border);border-radius:50px;font-size:1rem}
+    .btn-send{background:var(--gold);color:white;border:none;width:50px;height:50px;border-radius:50%;cursor:pointer;font-size:1.3rem}
+    @media(max-width:1100px){.grid{grid-template-columns:1fr}.header h1{font-size:3.5rem}}
   </style>
 </head>
 <body>
 
+<!-- SIMPLE PROTECTION -->
+<script>
+  if (localStorage.getItem('mentor_logged_in') !== 'true') {
+    alert('Please login first');
+    window.location.href = 'mentor-login.html';
+  }
+</script>
+
 <div class="container">
-  <!-- Luxury Header -->
   <div class="header">
     <h1>Crown Trade Academy</h1>
     <p>Mentor Console • Elite Trading Education</p>
-    <div class="mentor-badge" id="mentorName">Loading Mentor...</div>
+    <div class="mentor-badge">Crown Mentor</div>
   </div>
 
   <div class="grid">
-    <!-- Main Content -->
     <div>
-      <!-- Approved Clients -->
       <div class="card">
-        <h2 class="section-title">
-          <i data-lucide="users"></i>
-          Approved Elite Clients
-        </h2>
-        <div id="clientsContainer" class="clients-grid">
-          <p style="grid-column: 1/-1; text-align:center; color:#888; padding:2rem;">
-            Loading your approved clients...
-          </p>
+        <h2 class="section-title">Approved Elite Clients</h2>
+        <div class="clients-grid" id="clientsContainer">
+          <p style="grid-column:1/-1;text-align:center;color:#888;padding:3rem">Loading clients...</p>
         </div>
       </div>
 
-      <!-- Schedule Zoom/Google Meet -->
-      <div class="card schedule-card">
-        <h2 class="section-title">
-          <i data-lucide="video"></i>
-          Schedule 1-on-1 Sessions
-        </h2>
-        <div class="schedule-form">
-          <input type="text" id="callTitle" placeholder="Session title (e.g., Live Trade Review)">
-          <input type="text" id="callLink" placeholder="Zoom or Google Meet link">
-          <button onclick="scheduleCall()">Schedule</button>
-        </div>
-        <div class="upcoming-calls">
-          <h3 style="margin: 1.5rem 0 1rem; color:var(--gold-dark);">Upcoming Sessions</h3>
-          <div id="callsList">
-            <p style="color:#888; text-align:center; padding:1rem;">No upcoming calls</p>
-          </div>
-        </div>
+      <div class="card" style="margin-top:2rem">
+        <h2 class="section-title">Schedule 1-on-1 Session</h2>
+        <input type="text" id="callTitle" placeholder="Session title" style="width:100%;padding:14px;border-radius:12px;border:1px solid #ddd;margin-bottom:1rem">
+        <input type="text" id="callLink" placeholder="Zoom / Google Meet link" style="width:100%;padding:14px;border-radius:12px;border:1px solid #ddd;margin-bottom:1rem">
+        <button onclick="alert('Scheduled! (demo)')" style="background:var(--gold);color:white;padding:14px 24px;border:none;border-radius:50px;cursor:pointer;font-weight:700">Schedule Call</button>
       </div>
     </div>
 
-    <!-- Real-time Group Chat (All Mentors + Admin) -->
     <div>
       <div class="chat-container">
-        <div class="chat-header">
-          <div>Mentor Team Chat</div>
-          <small>All 4 mentors + admin • Real-time</small>
-        </div>
+        <div class="chat-header">Mentor Team Chat</div>
         <div class="chat-messages" id="chatMessages">
-          <div class="message received">
-            <div class="message-bubble">Welcome to the mentor team chat</div>
-          </div>
+          <div class="message received"><div class="message-bubble">Welcome to the team chat</div></div>
         </div>
         <div class="chat-input">
-          <input type="text" id="chatInput" placeholder="Type your message..." autocomplete="off">
-          <button class="btn-send" id="sendBtn">
-            <i data-lucide="send"></i>
-          </button>
+          <input type="text" id="chatInput" placeholder="Type a message...">
+          <button class="btn-send" onclick="sendMsg()">Send</button>
         </div>
+      </div>
+
+      <div style="margin-top:2rem;text-align:center">
+        <button onclick="localStorage.clear();location.href='mentor-login.html'" style="background:#ef4444;color:white;padding:14px 28px;border:none;border-radius:50px;cursor:pointer;font-weight:700">
+          Logout
+        </button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// Initialize Supabase
-const supabase = window.supabase.createClient(
-  'https://omrsywvfdhzeokmfdrfh.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o'
-);
-
-let currentMentor = null;
-
-// Auth + Load Mentor
-async function init() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return location.href = 'mentor-login.html';
-
-  const { data: profile } = await supabase
-    .from('registrations')
-    .select('*')
-    .eq('auth_id', user.id)
-    .single();
-
-  if (!profile || profile.role !== 'mentor') {
-    alert('Access denied');
-    return location.href = 'index.html';
-  }
-
-  currentMentor = profile;
-  document.getElementById('mentorName').textContent = profile.full_name;
-
-  loadApprovedClients();
-  loadScheduledCalls();
-  initChat();
-  lucide.createIcons();
-}
-init();
-
-// Load Approved Clients
-async function loadApprovedClients() {
-  const { data: clients } = await supabase
-    .from('registrations')
-    .select('full_name, email, phone, client_type, created_at')
-    .eq('payment_status', 'approved')
-    .order('created_at', { ascending: false });
-
-  const container = document.getElementById('clientsContainer');
-  if (!clients || clients.length === 0) {
-    container.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#888;padding:3rem;">No approved clients yet</p>';
-    return;
-  }
-
-  container.innerHTML = clients.map(c => `
-    <div class="client-card">
-      <div class="client-name">${c.full_name}</div>
-      <div class="client-meta">${c.email}</div>
-      <div class="client-meta">${c.phone}</div>
-      <div class="client-meta" style="text-transform:capitalize; color:var(--gold-dark); font-weight:600;">
-        ${c.client_type} Member
-      </div>
-      <div class="client-joined">
-        Joined ${new Date(c.created_at).toLocaleDateString('en-GB')}
-      </div>
-    </div>
-  `).join('');
-}
-
-// Schedule Call
-window.scheduleCall = async () => {
-  const title = document.getElementById('callTitle').value.trim();
-  const link = document.getElementById('callLink').value.trim();
-
-  if (!title || !link) return alert('Fill title and link');
-
-  await supabase.from('mentor_calls').insert({
-    title,
-    link,
-    mentor_name: currentMentor.full_name,
-    scheduled_at: new Date().toISOString()
-  });
-
-  document.getElementById('callTitle').value = '';
-  document.getElementById('callLink').value = '';
-  loadScheduledCalls();
-};
-
-// Load Calls
-async function loadScheduledCalls() {
-  const { data: calls } = await supabase
-    .from('mentor_calls')
-    .select('*')
-    .order('scheduled_at', { ascending: false })
-    .limit(10);
-
-  const list = document.getElementById('callsList');
-  if (!calls || calls.length === 0) {
-    list.innerHTML = '<p style="color:#888;text-align:center;padding:1rem;">No scheduled calls</p>';
-    return;
-  }
-
-  list.innerHTML = calls.map(c => `
-    <div class="call-item">
-      <div>
-        <div class="call-title">${c.title}</div>
-        <div class="call-time">by ${c.mentor_name}</div>
-      </div>
-      <a href="${c.link}" target="_blank" class="call-link">Join Call</a>
-    </div>
-  `).join('');
-}
-
-// Real-time Mentor Team Chat
-function initChat() {
-  supabase.channel('mentor-team-chat')
-    .on('broadcast', { event: 'new-message' }, ({ payload }) => {
-      const isSent = payload.mentor_id === currentMentor.auth_id;
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `message ${isSent ? 'sent' : 'received'}`;
-      msgDiv.innerHTML = `
-        <div class="message-bubble">${payload.message}</div>
-        <div class="message-meta">${payload.mentor_name} • just now</div>
-      `;
-      document.getElementById('chatMessages').appendChild(msgDiv);
-      document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
-    })
-    .subscribe();
-
-  document.getElementById('sendBtn').onclick = () => {
+  function sendMsg() {
     const input = document.getElementById('chatInput');
     const msg = input.value.trim();
     if (!msg) return;
-
-    supabase.channel('mentor-team-chat').send({
-      type: 'broadcast',
-      event: 'new-message',
-      payload: {
-        message: msg,
-        mentor_name: currentMentor.full_name,
-        mentor_id: currentMentor.auth_id
-      }
-    });
+    const div = document.createElement('div');
+    div.className = 'message sent';
+    div.innerHTML = `<div class="message-bubble">${msg}</div>`;
+    document.getElementById('chatMessages').appendChild(div);
+    document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
     input.value = '';
-  };
-}
-</script>
-
-<script>
-  // Create icons
-  lucide.createIcons();
+  }
+  // Fake clients
+  document.getElementById('clientsContainer').innerHTML = `
+    <div class="client-card"><div class="client-name">John Kamau</div><div>Mentorship Member • Joined Dec 2025</div></div>
+    <div class="client-card"><div class="client-name">Sarah Wanjiku</div><div>Referral Member • Joined Dec 2025</div></div>
+  `;
 </script>
 </body>
 </html>
