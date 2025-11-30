@@ -1,245 +1,372 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crown Trade • Mentor Portal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mentor Dashboard — Crown Trade</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
   <style>
-    :root{--gold:#c8a97e;--gold-dark:#b89463;--charcoal:#1a1a1a;--nude:#f9f6f2;--soft:#fdfcfb;--border:rgba(200,169,126,0.2)}
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Inter',sans-serif;background:var(--nude);color:var(--charcoal;line-height:1.6}
-    .container{max-width:1600px;margin:0 auto;padding:2rem}
-    .header{background:linear-gradient(135deg,#0a0a0a,#1a1a1a);color:white;padding:4rem 2rem;border-radius:32px;text-align:center;margin-bottom:3rem}
-    .header h1{font-family:'Cormorant Garamond',serif;font-size:5rem;letter-spacing:-2px}
-    .badge{background:linear-gradient(90deg,var(--gold),var(--gold-dark));padding:0.8rem 2rem;border-radius:50px;font-weight:700;display:inline-block;margin-top:1rem}
-    .grid{display:grid;grid-template-columns:1fr 480px;gap:3rem}
-    .card{background:var(--soft);border:1px solid var(--border);border-radius:24px;padding:2.5rem;box-shadow:0 20px 60px rgba(0,0,0,0.08);margin-bottom:2rem}
-    .title{font-family:'Cormorant Garamond',serif;font-size:2.6rem;color:var(--gold-dark);margin-bottom:2rem}
-    .btn{background:var(--gold);color:white;border:none;padding:14px 28px;border-radius:50px;font-weight:600;cursor:pointer;transition:.3s}
-    .btn:hover{background:var(--gold-dark);transform:translateY(-3px)}
-    .input{padding:14px 20px;border:1px solid var(--border);border-radius:16px;width:100%;margin:10px 0}
-    table{width:100%;border-collapse:collapse;margin-top:1rem}
-    th,td{padding:16px;text-align:left;border-bottom:1px solid var(--border)}
-    th{background:var(--soft);font-weight:600}
-    tr:hover{background:#f5f0e8}
-    .tab-btn{background:transparent;border:none;padding:12px 24px;border-radius:50px;font-weight:600;cursor:pointer;margin-right:1rem}
-    .tab-btn.active{background:var(--gold);color:white}
-    .hidden{display:none}
-    .logout{position:fixed;bottom:30px;right:30px;background:#ef4444;color:white;padding:16px 32px;border-radius:50px;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(239,68,68,0.4);z-index:100}
+    :root{
+      --bg:#F9F6F2; --gold:#C8A97E; --dark:#2e2e2e; --muted:#777;
+      --card:#fff;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:var(--bg);color:var(--dark);margin:0;padding:18px}
+    .wrap{max-width:1100px;margin:0 auto}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-weight:600;color:var(--gold);margin:0}
+    .controls{display:flex;gap:10px;align-items:center}
+    .btn{background:var(--gold);color:#fff;padding:8px 12px;border-radius:8px;border:none;font-weight:600;cursor:pointer}
+    .btn.secondary{background:#fff;color:var(--gold);border:1px solid rgba(0,0,0,0.06)}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px}
+    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.06);border:1px solid #eee}
+    .card h3{margin:0;font-size:0.95rem;color:var(--muted)}
+    .card .val{font-size:1.4rem;font-weight:700;color:var(--gold);margin-top:8px}
+    .searchRow{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+    input[type="search"]{padding:10px;border-radius:10px;border:1px solid #ddd;flex:1}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+    th{background:transparent;font-weight:600;color:var(--muted)}
+    .status-approved{color:green;font-weight:700}
+    .no-data{text-align:center;padding:18px;color:var(--muted)}
+    .grid-two{display:grid;grid-template-columns:1fr 360px;gap:12px}
+    @media(max-width:920px){ .grid-two{grid-template-columns:1fr} .stats{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))} }
+    .resource-list{max-height:300px;overflow:auto}
+    .small{font-size:0.9rem;color:var(--muted)}
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:999}
+    .modal.open{display:flex}
+    .modal .box{background:#fff;padding:16px;border-radius:10px;max-width:90%;max-height:90%;overflow:auto}
+    .note{background:#F6F9FF;padding:10px;border-radius:8px;border:1px solid #e6eefc}
   </style>
 </head>
 <body>
-
-<script>
-  if (localStorage.getItem('mentor_logged_in') !== 'true') {
-    window.location.href = 'mentor-login.html';
-  }
-</script>
-
-<div class="container">
-  <div class="header">
-    <h1>Crown Trade Academy</h1>
-    <p>Mentor Portal • Simple. Powerful. Elite.</p>
-    <div class="badge">Active Mentor</div>
-  </div>
-
-  <!-- Tabs -->
-  <div style="margin-bottom:2rem">
-    <button class="tab-btn active onclick="show('clients')">Clients</button>
-    <button class="tab-btn" onclick="show('resources')">Resources Library</button>
-    <button class="tab-btn" onclick="show('tasks')">Study Tasks</button>
-    <button class="tab-btn" onclick="show('sessions')">Sessions & Calls</button>
-  </div>
-
-  <div class="grid">
-    <!-- MAIN -->
-    <div>
-      <!-- CLIENTS LIST -->
-      <div id="clients" class="card">
-        <h2 class="title">Approved Clients</h2>
-        <input type="text" id="search" placeholder="Search by name, email, phone..." class="input" onkeyup="searchClients()">
-        <table id="clientsTable">
-          <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Program</th><th>Joined</th><th>Action</th></tr></thead>
-          <tbody id="clientsBody">Loading...</tbody>
-        </table>
+  <div class="wrap">
+    <header>
+      <h1>Mentor Panel — Crown Trade</h1>
+      <div class="controls">
+        <button class="btn" id="btn-refresh">Refresh</button>
+        <button class="btn secondary" id="btn-login-info">Config</button>
       </div>
+    </header>
 
-      <!-- CLIENT DETAILS (hidden until clicked) -->
-      <div id="clientDetails" class="card hidden">
-        <button onclick="show('clients')" style="margin-bottom:1rem;color:var(--gold)">← Back to List</button>
-        <h2 class="title" id="detailName">Client Name</h2>
-        <p><strong>Email:</strong> <span id="detailEmail"></span></p>
-        <p><strong>Phone:</strong> <span id="detailPhone"></span></p>
-        <p><strong>Program:</strong> <span id="detailProgram"></span></p>
-
-        <h3 style="margin:2rem 0 1rem">Add Task</h3>
-        <textarea class="input" id="newTask" placeholder="e.g. Watch Module 3 + submit backtest by Friday"></textarea>
-        <button class="btn" onclick="addTask()">Assign Task</button>
-
-        <h3 style="margin:2rem 0 1rem">Mentor Notes</h3>
-        <textarea class="input" id="mentorNote" placeholder="Private notes about this student..."></textarea>
-        <button class="btn" onclick="saveNote()">Save Note</button>
-
-        <h3 style="margin:2rem 0 1rem">Send Zoom Link</h3>
-        <input type="text" class="input" id="zoomLink" placeholder="Paste Zoom/Google Meet link">
-        <button class="btn" onclick="sendLink()">Send Call Link</button>
+    <section class="stats">
+      <div class="card">
+        <h3>Total Approved Clients</h3>
+        <div class="val" id="stat-count">—</div>
+        <div class="small">Only approved clients shown here</div>
       </div>
-
-      <!-- RESOURCES -->
-      <div id="resources" class="card hidden">
-        <h2 class="title">Resources Library</h2>
-        <input type="file" id="resourceFile" multiple accept=".pdf,video/*" style="display:none">
-        <input type="text" class="input" id="resourceTitle" placeholder="Title (e.g. ICT Mentorship 2024 Full Course)">
-        <button class="btn" onclick="document.getElementById('resourceFile').click()">Choose Files</button>
-        <button class="btn" onclick="uploadResource()">Upload to Library</button>
-        <div id="resourceList" style="margin-top:2rem"></div>
+      <div class="card">
+        <h3>Today's New</h3>
+        <div class="val" id="stat-today">—</div>
+        <div class="small">Approved today</div>
       </div>
-
-      <!-- TASKS -->
-      <div id="tasks" class="card hidden">
-        <h2 class="title">All Study Tasks</h2>
-        <div id="tasksList">Loading tasks...</div>
+      <div class="card">
+        <h3>Search</h3>
+        <div class="small">Use the search box below</div>
       </div>
+    </section>
 
-      <!-- SESSIONS -->
-      <div id="sessions" class="card hidden">
-        <h2 class="title">Weekly Calls & Sessions</h2>
-        <textarea class="input" id="sessionInfo" placeholder="e.g. Weekly Group Call - Every Saturday 8PM EAT"></textarea>
-        <input type="text" class="input" id="sessionLink" placeholder="Zoom Link">
-        <button class="btn" onclick="publishSession()">Publish Session</button>
-        <div id="sessionList" style="margin-top:2rem"></div>
-      </div>
+    <div class="searchRow">
+      <input id="search" type="search" placeholder="Search by name / email / phone" />
+      <select id="filter-program" style="padding:10px;border-radius:8px;border:1px solid #ddd">
+        <option value="">All programs</option>
+        <option value="bronze">Bronze</option>
+        <option value="silver">Silver</option>
+        <option value="gold">Gold</option>
+      </select>
     </div>
 
-    <!-- SIDEBAR CHAT -->
-    <div>
-      <div class="card" style="height:800px;display:flex;flex-direction:column">
-        <div style="background:var(--gold);color:white;padding:1.5rem;text-align:center;border-radius:24px 24px 0 0">
-          <h3>Mentor Team Chat</h3>
+    <div class="grid-two">
+      <div>
+        <div class="card" style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h3 style="margin:0">Approved Clients</h3>
+            <div class="small" id="last-loaded">—</div>
+          </div>
+          <div style="margin-top:10px">
+            <table>
+              <thead>
+                <tr><th>Name</th><th>Program</th><th>Joined</th><th>Status</th></tr>
+              </thead>
+              <tbody id="clientsTable">
+                <tr><td colspan="4" class="no-data">Loading clients...</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div id="chatMessages" style="flex:1;overflow-y:auto;padding:2rem;background:#f8f5f0"></div>
-        <div style="padding:1.5rem;border-top:1px solid var(--border);display:flex;gap:gap:1rem">
-          <input type="text" id="chatInput" placeholder="Message team..." style="flex:1" onkeypress="if(event.key==='Enter')sendChat()">
-          <button class="btn" onclick="sendChat()">Send</button>
+
+        <div class="card">
+          <h3>Quick Actions</h3>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" id="btn-new-resource">Upload resource</button>
+            <button class="btn secondary" id="btn-view-resources">View resources</button>
+          </div>
         </div>
       </div>
-    </div>
+
+      <aside>
+        <div class="card">
+          <h3>Selected Client</h3>
+          <div id="clientDetails" style="margin-top:10px">Pick a client from the list.</div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Resources</h3>
+          <div class="resource-list" id="resourcesList"><div class="no-data">No resources</div></div>
+          <div style="margin-top:10px">
+            <small class="small">Mentors can upload files (links) and share with clients</small>
+          </div>
+        </div>
+      </aside>
     </div>
   </div>
-</div>
 
-<button class="logout" onclick="localStorage.clear();location.href='mentor-login.html'">Logout</button>
+  <!-- simple modal -->
+  <div id="modal" class="modal"><div class="box" id="modalBox"></div></div>
 
-<script>
-  const supabase = window.supabase.createClient(
-    'https://omrsywvfdhzeokmfdrfh.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o'
-  );
+  <!-- Supabase + config -->
+  <script type="module">
+    // -------------- CONFIG PATTERN --------------
+    // Put your keys into admin-config.js (recommended) OR
+    // set SUPABASE_URL and SUPABASE_ANON_KEY below before deploying.
+    // admin-config.js example:
+    // export const SUPABASE_URL = 'https://xyz.supabase.co';
+    // export const SUPABASE_ANON_KEY = 'eyJ...';
+    //
+    // NOTE: if you create admin-config.js, commit it only if you're OK with anon key being public.
+    // (anon key is for client-side access only — never use service_role on client.)
+    // -------------------------------------------
 
-  let currentClientId = null;
+    // try import admin-config.js if present
+    let SUPABASE_URL = null;
+    let SUPABASE_ANON_KEY = null;
 
-  // Tabs
-  function show(tab) {
-    document.querySelectorAll('#clients,#resources,#tasks,#sessions,#clientDetails').forEach(el => el.classList.add('hidden'));
-    document.getElementById(tab).classList.remove('hidden');
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
-    if (tab === 'clients') loadClients();
-    if (tab === 'resources') loadResources();
-    if (tab === 'tasks') loadTasks();
-    if (tab === 'sessions') loadSessions();
-  }
+    async function tryLoadConfig() {
+      try {
+        // admin-config.js must export SUPABASE_URL and SUPABASE_ANON_KEY
+        const cfg = await import('./admin-config.js').catch(()=>null);
+        if (cfg && cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY) {
+          SUPABASE_URL = cfg.SUPABASE_URL;
+          SUPABASE_ANON_KEY = cfg.SUPABASE_ANON_KEY;
+        }
+      } catch(e){ /* ignore */ }
+    }
+    await tryLoadConfig();
 
-  // Load Clients
-  async function loadClients() {
-    const { data } = await supabase
-      .from('registrations')
-      .select('*')
-      .eq('payment_status', 'approved')
-      .order('created_at', { ascending: false });
+    // fallback: look for keys in URL hash (helpful for testing temporarily)
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      const hash = new URLSearchParams(location.hash.replace(/^#/,''));
+      if (hash.get('supabase_url') && hash.get('supabase_key')) {
+        SUPABASE_URL = hash.get('supabase_url');
+        SUPABASE_ANON_KEY = hash.get('supabase_key');
+        console.warn('Using keys from URL hash — remove after testing.');
+      }
+    }
 
-    const tbody = document.getElementById('clientsBody');
-    tbody.innerHTML = data.map(c => `
-      <tr style="cursor:pointer" onclick="openClient(${c.id},'${c.full_name}','${c.email}','${c.phone}','${c.client_type}')">
-        <td><strong>${c.full_name}</strong></td>
-        <td>${c.phone}</td>
-        <td>${c.email}</td>
-        <td style="text-transform:capitalize">${c.client_type}</td>
-        <td>${new Date(c.created_at).toLocaleDateString()}</td>
-        <td><button class="btn" style="padding:8px 16px;font-size:0.9rem">Open</button></td>
-      </tr>
-    `).join('');
-  }
+    // final sanity
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      // show friendly message and stop
+      document.getElementById('clientsTable').innerHTML = '<tr><td colspan="4" class="no-data">No Supabase config found. Create admin-config.js or add keys to URL hash for testing.</td></tr>';
+      console.warn('No SUPABASE_URL / SUPABASE_ANON_KEY provided.');
+      // still allow showing modal with instructions
+    }
 
-  // Open Client Details
-  function openClient(id, name, email, phone, program) {
-    currentClientId = id;
-    document.getElementById('detailName').textContent = name;
-    document.getElementById('detailEmail').textContent = email;
-    document.getElementById('detailPhone').textContent = phone;
-    document.getElementById('detailProgram').textContent = program;
-    show('clientDetails');
-  }
+    // Import supabase client from CDN esm
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-  // Add Task
-  async function addTask() {
-    const task = document.getElementById('newTask').value.trim();
-    if (!task || !currentClientId) return alert('Add task text');
-    await supabase.from('tasks').insert({ client_id: currentClientId, task, status: 'pending' });
-    alert('Task assigned!');
-    document.getElementById('newTask').value = '';
-  }
+    let supabase = null;
+    if (SUPABASE_URL && SUPABASE_ANON_KEY) supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // Upload Resource
-  async function uploadResource() {
-    const fileInput = document.getElementById('resourceFile');
-    const title = document.getElementById('resourceTitle').value;
-    if (!fileInput.files[0] || !title) return alert('Add title + file');
+    // ---- utilities ----
+    const $ = id => document.getElementById(id);
+    function formatDate(d){ if(!d) return '—'; const dt=new Date(d); return dt.toLocaleDateString() }
+    function showModal(html){ $('modal').classList.add('open'); $('modalBox').innerHTML = html + '<div style="margin-top:8px;text-align:right"><button class="btn" onclick="document.getElementById(\\'modal\\').classList.remove(\\'open\\')">Close</button></div>'; }
+    window.addEventListener('click', e => { if(e.target.id === 'modal') $('modal').classList.remove('open'); });
 
-    const file = fileInput.files[0];
-    const fileName = `${Date.now()}_${file.name}`;
-    await supabase.storage.from('resources').upload(fileName, file);
-    const { data: url } = supabase.storage.from('resources').getPublicUrl(fileName);
+    // ---- main app ----
+    let allClients = [];
+    let resources = [];
 
-    await supabase.from('resources').insert({ title, file_url: url.publicUrl });
-    alert('Uploaded!');
-    loadResources();
-  }
+    async function loadClients() {
+      if (!supabase) return;
+      $('clientsTable').innerHTML = '<tr><td colspan="4" class="no-data">Loading...</td></tr>';
+      try {
+        // only approved clients: status = 'approved'
+        const { data, error } = await supabase
+          .from('clients')
+          .select('*')
+          .eq('status','approved')
+          .order('created_at',{ ascending: false })
+          .limit(500);
 
-  async function loadResources() {
-    const { data } = await supabase.from('resources').select().order('created_at', { ascending: false });
-    document.getElementById('resourceList').innerHTML = data.map(r => `
-      <div style="padding:1rem;background:white;border-radius:16px;margin-bottom:1rem">
-        <strong>${r.title}</strong><br>
-        <a href="${r.file_url}" target="_blank" style="color:var(--gold)">Open File →</a>
-      </div>
-    `).join('');
-  }
+        if (error) throw error;
+        allClients = data || [];
+        renderClients();
+        updateStats();
+        $('last-loaded').textContent = 'Loaded: ' + new Date().toLocaleTimeString();
+      } catch (err) {
+        console.error(err);
+        $('clientsTable').innerHTML = '<tr><td colspan="4" class="no-data">Error loading clients — check console</td></tr>';
+      }
+    }
 
-  // Real-time Chat
-  const channel = supabase.channel('mentor-chat');
-  channel.on('broadcast', { event: 'msg' }, ({ payload }) => {
-    const div = document.createElement('div');
-    div.innerHTML = `<strong>${payload.name}:</strong> ${payload.text}`;
-    div.style.marginBottom = '1rem';
-    document.getElementById('chatMessages').appendChild(div);
-    div.scrollIntoView();
-  }).subscribe();
+    function renderClients() {
+      const q = $('search').value.trim().toLowerCase();
+      const program = $('filter-program').value;
+      const rows = allClients.filter(c => {
+        if (program && (c.program||'').toLowerCase() !== program) return false;
+        if (!q) return true;
+        return (c.name||'').toLowerCase().includes(q) || (c.email||'').toLowerCase().includes(q) || (c.phone||'').toLowerCase().includes(q);
+      });
 
-  function sendChat() {
-    const input = document.getElementById('chatInput');
-    const text = input.value.trim();
-    if (!text) return;
-    channel.send({ type: 'broadcast', event: 'msg', payload: { name: 'Mentor', text } });
-    input.value = '';
-  }
+      if (!rows.length) {
+        $('clientsTable').innerHTML = '<tr><td colspan="4" class="no-data">No clients found</td></tr>';
+        return;
+      }
 
-  // Load on start
-  loadClients();
-  loadResources();
-</script>
+      $('clientsTable').innerHTML = rows.map(c => `
+        <tr data-id="${c.id}" style="cursor:pointer" onclick="selectClient('${c.id}')">
+          <td>${escapeHtml(c.name || '—')}</td>
+          <td>${escapeHtml(c.program || '—')}</td>
+          <td>${formatDate(c.created_at)}</td>
+          <td class="status-approved">Approved</td>
+        </tr>
+      `).join('');
+    }
+
+    function updateStats(){
+      $('stat-count').textContent = allClients.length;
+      const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+      const todayCount = allClients.filter(c => new Date(c.created_at) >= todayStart).length;
+      $('stat-today').textContent = todayCount;
+    }
+
+    window.selectClient = function(id){
+      const c = allClients.find(x => x.id === id);
+      if (!c) return;
+      $('clientDetails').innerHTML = `
+        <div style="font-weight:700">${escapeHtml(c.name || '—')}</div>
+        <div class="small">${escapeHtml(c.email || '—')} • ${escapeHtml(c.phone || '—')}</div>
+        <div style="margin-top:8px"><strong>Program:</strong> ${escapeHtml(c.program || '—')}</div>
+        <div style="margin-top:8px"><strong>Notes:</strong><div class="note" style="margin-top:6px">${escapeHtml(c.notes || 'No notes')}</div></div>
+        <div style="margin-top:10px"><button class="btn" onclick="openSendTask('${escapeJs(id)}')">Assign Task</button></div>
+      `;
+    };
+
+    function openSendTask(clientId){
+      // simple task modal
+      showModal(`
+        <h3>Assign Task</h3>
+        <div style="margin-top:8px">
+          <textarea id="taskText" rows="4" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd" placeholder="Describe the task..."></textarea>
+          <div style="margin-top:8px;text-align:right">
+            <button class="btn" id="sendTaskBtn">Send</button>
+          </div>
+        </div>
+      `);
+      document.getElementById('sendTaskBtn').addEventListener('click', async ()=>{
+        const txt = document.getElementById('taskText').value.trim();
+        if(!txt){ alert('Write a task'); return; }
+        await saveTask(clientId, txt);
+        document.getElementById('modal').classList.remove('open');
+        alert('Task saved (visible in DB).');
+      });
+    }
+
+    async function saveTask(clientId, text){
+      if (!supabase) { console.warn('no supabase'); return; }
+      // lightweight tasks table: tasks(client_id, text, status, created_at)
+      const { error } = await supabase.from('tasks').insert([{ client_id: clientId, text, status: 'pending', created_at: new Date().toISOString() }]);
+      if (error) console.error('save task', error);
+    }
+
+    // resources
+    async function loadResources(){
+      if (!supabase) return;
+      try {
+        const { data, error } = await supabase.from('resources').select('*').order('created_at',{ascending:false}).limit(200);
+        if (error) throw error;
+        resources = data || [];
+        renderResources();
+      } catch(err){
+        console.error(err);
+        $('resourcesList').innerHTML = '<div class="no-data">Error loading resources</div>';
+      }
+    }
+    function renderResources(){
+      if (!resources.length) {
+        $('resourcesList').innerHTML = '<div class="no-data">No resources</div>';
+        return;
+      }
+      $('resourcesList').innerHTML = resources.map(r => `
+        <div style="padding:8px;border-bottom:1px dashed #eee">
+          <div style="font-weight:600">${escapeHtml(r.title || 'Untitled')}</div>
+          <div class="small">${escapeHtml(r.description || '')}</div>
+          <div style="margin-top:6px">
+            ${r.url ? `<a href="${escapeHtmlAttr(r.url)}" target="_blank">Open</a>` : ''}
+            <span class="small" style="float:right">${new Date(r.created_at).toLocaleString()}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // upload resource (simple link)
+    async function uploadResource(){
+      showModal(`
+        <h3>Upload Resource (link)</h3>
+        <div style="margin-top:8px">
+          <input id="resTitle" placeholder="Title" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd" />
+          <input id="resUrl" placeholder="https://..." style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd;margin-top:8px" />
+          <textarea id="resDesc" rows="3" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd;margin-top:8px" placeholder="Optional description"></textarea>
+          <div style="margin-top:8px;text-align:right"><button class="btn" id="saveRes">Save</button></div>
+        </div>
+      `);
+      document.getElementById('saveRes').addEventListener('click', async ()=>{
+        const title = document.getElementById('resTitle').value.trim();
+        const url = document.getElementById('resUrl').value.trim();
+        const desc = document.getElementById('resDesc').value.trim();
+        if(!title || !url){ alert('Title and URL required'); return; }
+        if (!supabase) return alert('No supabase');
+        const { error } = await supabase.from('resources').insert([{ title, url, description: desc, created_at: new Date().toISOString() }]);
+        if (error) {
+          console.error(error); alert('Error saving'); return;
+        }
+        document.getElementById('modal').classList.remove('open');
+        await loadResources();
+      });
+    }
+
+    // helpers
+    function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function escapeHtmlAttr(s){ return (s||'').replace(/"/g,'&quot;'); }
+    function escapeJs(s){ return (s||'').replace(/'/g,"\\'") }
+
+    // wire UI
+    $('btn-refresh').addEventListener('click', () => { loadClients(); loadResources(); });
+    $('filter-program').addEventListener('change', renderClients);
+    $('search').addEventListener('input', debounce(renderClients, 200));
+    $('btn-new-resource').addEventListener('click', uploadResource);
+    $('btn-view-resources').addEventListener('click', ()=> showModal('<h3>Resources</h3>' + document.getElementById('resourcesList').innerHTML));
+
+    $('btn-login-info').addEventListener('click', ()=>{
+      showModal(`<h3>Supabase config</h3>
+        <div class="small">This page reads your keys from <code>admin-config.js</code> (recommended) or from the URL hash (temporary).</div>
+        <div style="margin-top:8px"><strong>Example admin-config.js (place in same folder):</strong>
+        <pre style="background:#f4f4f4;padding:8px;border-radius:6px">export const SUPABASE_URL = '${SUPABASE_URL||'https://your-project.supabase.co'}';\nexport const SUPABASE_ANON_KEY = 'eyJ...';</pre></div>`);
+    });
+
+    // debounce util
+    function debounce(fn, wait=250){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), wait) } }
+
+    // initial load
+    if (supabase) {
+      await Promise.all([loadClients(), loadResources()]);
+    } else {
+      // nothing configured yet
+    }
+
+  </script>
 </body>
 </html>
