@@ -7,40 +7,65 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    :root{--gold:#c8a97e;--gold-dark:#b89463;--nude:#f9f6f2;--charcoal:#1a1a1a;--border:rgba(200,169,126,0.15)}
+    :root{
+      --gold:#c8a97e;--gold-dark:#b89463;--nude:#f9f6f2;--charcoal:#1a1a1a;--soft:#fdfcfb;
+      --border:rgba(200,169,126,0.18);
+    }
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Inter',sans-serif;background:var(--nude);color:var(--charcoal);line-height:1.6}
-    .container{max-width:1600px;margin:0 auto;padding:2rem}
-    .header{background:linear-gradient(135deg,#0f0f0f,#1a1a1a);color:white;padding:3rem 2rem;border-radius:24px;text-align:center;margin-bottom:3rem}
-    .header h1{font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:700;letter-spacing:-1px}
-    .mentor-badge{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;padding:0.6rem 1.8rem;border-radius:50px;font-weight:700;font-size:1.1rem;margin-top:1rem;display:inline-block}
-    .grid{display:grid;grid-template-columns:1fr 420px;gap:2.5rem}
-    .card{background:white;border:1px solid var(--border);border-radius:20px;padding:2rem;box-shadow:0 20px 60px rgba(0,0,0,0.06)}
-    .section-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--gold-dark);margin-bottom:1.5rem}
-    .clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
-    .client-card{background:white;border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:all .3s}
-    .client-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(200,169,126,0.15)}
-    .client-name{font-size:1.3rem;font-weight:700;margin-bottom:0.5rem}
-    .chat-container{height:680px;display:flex;flex-direction:column;background:white;border-radius:20px;overflow:hidden;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,0.08)}
-    .chat-header{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;padding:1.5rem;text-align:center;font-weight:600;font-size:1.3rem}
-    .chat-messages{flex:1;padding:1.5rem;overflow-y:auto;background:#faf8f5}
-    .message{margin-bottom:1rem;max-width:80%}
+    .container{max-width:1700px;margin:0 auto;padding:2rem}
+    .header{background:linear-gradient(135deg,#0a0a0a,#1a1a1a);color:white;padding:4rem 2rem;border-radius:32px;text-align:center;margin-bottom:3rem;position:relative;overflow:hidden}
+    .header::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 30% 50%,rgba(200,169,126,0.15),transparent 60%);pointer-events:none}
+    .header h1{font-family:'Cormorant Garamond',serif;font-size:5.5rem;letter-spacing:-2px;font-weight:700}
+    .header p{font-size:1.5rem;opacity:0.9;margin-top:1rem}
+    .mentor-badge{background:linear-gradient(90deg,var(--gold),var(--gold-dark));padding:0.8rem 2.2rem;border-radius:50px;font-weight:800;font-size:1.3rem;margin-top:1.5rem;display:inline-block;box-shadow:0 10px 30px rgba(200,169,126,0.3)}
+
+    .grid{display:grid;grid-template-columns:1fr 460px;gap:3rem}
+    .card{background:var(--soft);border:1px solid var(--border);border-radius:24px;padding:2.5rem;box-shadow:0 25px 70px rgba(0,0,0,0.08);backdrop-filter:blur(12px);margin-bottom:2rem}
+    .section-title{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--gold-dark);margin-bottom:2rem;display:flex;align-items:center;gap:16px}
+
+    /* Stats */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.8rem;margin-bottom:3rem}
+    .stat-box{background:white;padding:2rem;border-radius:20px;text-align:center;box-shadow:0 15px 40px rgba(0,0,0,0.06)}
+    .stat-num{font-size:3.8rem;font-weight:800;color:var(--gold-dark);font-family:'Cormorant Garamond'}
+    .stat-label{font-size:1.1rem;color:#666;margin-top:0.5rem;letter-spacing:1px}
+
+    /* Clients */
+    .clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2rem}
+    .client-card{background:white;padding:2rem;border-radius:20px;border:2px solid transparent;transition:all .4s;box-shadow:0 15px 40px rgba(0,0,0,0.05)}
+    .client-card.premium{border-color:var(--gold)}
+    .client-name{font-size:1.5rem;font-weight:700;margin-bottom:0.8rem}
+    .client-type{background:var(--gold);color:white;padding:0.4rem 1rem;border-radius:50px;font-size:0.9rem;display:inline-block}
+    .client-meta{margin:0.6rem 0;color:#555}
+
+    /* Schedule */
+    .schedule-item{background:white;padding:1.8rem;border-radius:18px;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,0.05)}
+    .schedule-title{font-weight:700;font-size:1.3rem}
+    .schedule-link{background:var(--gold);color:white;padding:12px 24px;border-radius:50px;text-decoration:none;font-weight:600}
+
+    /* Chat */
+    .chat-container{height:780px;display:flex;flex-direction:column;background:white;border-radius:24px;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,0.1)}
+    .chat-header{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;padding:2rem;text-align:center}
+    .chat-header h3{font-size:1.8rem;margin-bottom:0.5rem}
+    .chat-messages{flex:1;padding:2rem;overflow-y:auto;background:#f8f5f0}
+    .message{margin-bottom:1.5rem;max-width:78%}
     .message.sent{margin-left:auto}
-    .message-bubble{padding:12px 18px;border-radius:20px;font-size:0.95rem}
-    .message.sent .message-bubble{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;border-bottom-right-radius:6px}
-    .message.received .message-bubble{background:white;border:1px solid var(--border);border-bottom-left-radius:6px}
-    .chat-input{padding:1.5rem;background:white;border-top:1px solid var(--border);display:flex;gap:12px}
-    .chat-input input{flex:1;padding:14px 20px;border:1px solid var(--border);border-radius:50px;font-size:1rem}
-    .btn-send{background:var(--gold);color:white;border:none;width:50px;height:50px;border-radius:50%;cursor:pointer;font-size:1.3rem}
-    @media(max-width:1100px){.grid{grid-template-columns:1fr}.header h1{font-size:3.5rem}}
+    .message-bubble{padding:16px 22px;border-radius:24px;font-size:1.05rem}
+    .message.sent .message-bubble{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white}
+    .message.received .message-bubble{background:white;border:1px solid var(--border)}
+    .chat-input{padding:2rem;background:white;border-top:1px solid var(--border);display:flex;gap:16px}
+    .chat-input input{flex:1;padding:18px 24px;border-radius:50px;border:1px solid var(--border);font-size:1.1rem}
+    .btn-send{background:var(--gold);color:white;border:none;width:60px;height:60px;border-radius:50%;cursor:pointer;font-size:1.6rem}
+
+    .logout-btn{position:fixed;bottom:30px;right:30px;background:#ef4444;color:white;padding:16px 32px;border-radius:50px;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(239,68,68,0.4);z-index:100}
+    @media(max-width:1200px){.grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr 1fr}}
   </style>
 </head>
 <body>
 
-<!-- SIMPLE PROTECTION -->
+<!-- PROTECTION -->
 <script>
   if (localStorage.getItem('mentor_logged_in') !== 'true') {
-    alert('Please login first');
     window.location.href = 'mentor-login.html';
   }
 </script>
@@ -48,50 +73,92 @@
 <div class="container">
   <div class="header">
     <h1>Crown Trade Academy</h1>
-    <p>Mentor Console • Elite Trading Education</p>
+    <p>Elite Forex & Synthetic Indices Mentorship • Mentor Command Center</p>
     <div class="mentor-badge">Crown Mentor</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-box"><div class="stat-num">127</div><div class="stat-label">Total Clients</div></div>
+    <div class="stat-box"><div class="stat-num">89</div><div class="stat-label">Active This Week</div></div>
+    <div class="stat-box"><div class="stat-num">KSh 1.8M</div><div class="stat-label">Revenue Generated</div></div>
+    <div class="stat-box"><div class="stat-num">4.9</div><div class="stat-label">Mentor Rating</div></div>
   </div>
 
   <div class="grid">
     <div>
+      <!-- Approved Clients -->
       <div class="card">
         <h2 class="section-title">Approved Elite Clients</h2>
-        <div class="clients-grid" id="clientsContainer">
-          <p style="grid-column:1/-1;text-align:center;color:#888;padding:3rem">Loading clients...</p>
+        <div class="clients-grid">
+          <div class="client-card premium">
+            <div class="client-name">Michael Otieno</div>
+            <div class="client-type">Mentorship Member</div>
+            <div class="client-meta">Paid KSh 9,997 • Joined 2 days ago</div>
+          </div>
+          <div class="client-card">
+            <div class="client-name">Grace Wambui</div>
+            <div class="client-type">Referral Partner</div>
+            <div class="client-meta">Earned KSh 4,500 • 3 referrals</div>
+          </div>
+          <div class="client-card premium">
+            <div class="client-name">David Kimani</div>
+            <div class="client-type">Mentorship Member</div>
+            <div class="client-meta">Top performer • 87% win rate</div>
+          </div>
+          <div class="client-card">
+            <div class="client-name">Fatuma Ali</div>
+            <div class="client-type">Referral Partner</div>
+            <div class="client-meta">Joined today</div>
+          </div>
         </div>
       </div>
 
-      <div class="card" style="margin-top:2rem">
-        <h2 class="section-title">Schedule 1-on-1 Session</h2>
-        <input type="text" id="callTitle" placeholder="Session title" style="width:100%;padding:14px;border-radius:12px;border:1px solid #ddd;margin-bottom:1rem">
-        <input type="text" id="callLink" placeholder="Zoom / Google Meet link" style="width:100%;padding:14px;border-radius:12px;border:1px solid #ddd;margin-bottom:1rem">
-        <button onclick="alert('Scheduled! (demo)')" style="background:var(--gold);color:white;padding:14px 24px;border:none;border-radius:50px;cursor:pointer;font-weight:700">Schedule Call</button>
+      <!-- Schedule -->
+      <div class="card">
+        <h2 class="section-title">Upcoming 1-on-1 Sessions</h2>
+        <div class="schedule-item">
+          <div>
+            <div class="schedule-title">Live Trade Review – Michael Otieno</div>
+            <div style="color:#666;margin-top:0.5rem">Tomorrow • 3:00 PM EAT</div>
+          </div>
+          <a href="#" class="schedule-link">Join Zoom</a>
+        </div>
+        <div class="schedule-item">
+          <div>
+            <div class="schedule-title">Strategy Deep Dive – David Kimani</div>
+            <div style="color:#666;margin-top:0.5rem">Friday • 7:00 PM EAT</div>
+          </div>
+          <a href="#" class="schedule-link">Join Zoom</a>
+        </div>
       </div>
     </div>
 
+    <!-- Team Chat -->
     <div>
       <div class="chat-container">
-        <div class="chat-header">Mentor Team Chat</div>
+        <div class="chat-header">
+          <h3>Mentor Team Chat</h3>
+          <div>All 4 mentors + admin • Real-time</div>
+        </div>
         <div class="chat-messages" id="chatMessages">
-          <div class="message received"><div class="message-bubble">Welcome to the team chat</div></div>
+          <div class="message received"><div class="message-bubble">Good morning team. New client just joined mentorship</div></div>
+          <div class="message sent"><div class="message-bubble">Noted. I’ll schedule his first call</div></div>
+          <div class="message received"><div class="message-bubble">Let’s do a group session this Saturday</div></div>
         </div>
         <div class="chat-input">
-          <input type="text" id="chatInput" placeholder="Type a message...">
-          <button class="btn-send" onclick="sendMsg()">Send</button>
+          <input type="text" id="chatInput" placeholder="Type your message...">
+          <button class="btn-send" onclick="send()">Send</button>
         </div>
-      </div>
-
-      <div style="margin-top:2rem;text-align:center">
-        <button onclick="localStorage.clear();location.href='mentor-login.html'" style="background:#ef4444;color:white;padding:14px 28px;border:none;border-radius:50px;cursor:pointer;font-weight:700">
-          Logout
-        </button>
       </div>
     </div>
   </div>
 </div>
 
+<button class="logout-btn" onclick="localStorage.clear();location.href='mentor-login.html'">Logout</button>
+
 <script>
-  function sendMsg() {
+  function send() {
     const input = document.getElementById('chatInput');
     const msg = input.value.trim();
     if (!msg) return;
@@ -102,11 +169,7 @@
     document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
     input.value = '';
   }
-  // Fake clients
-  document.getElementById('clientsContainer').innerHTML = `
-    <div class="client-card"><div class="client-name">John Kamau</div><div>Mentorship Member • Joined Dec 2025</div></div>
-    <div class="client-card"><div class="client-name">Sarah Wanjiku</div><div>Referral Member • Joined Dec 2025</div></div>
-  `;
+  document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key === 'Enter') send(); });
 </script>
 </body>
 </html>
