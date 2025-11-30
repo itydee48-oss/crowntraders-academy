@@ -3,67 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crown Trade Academy • Mentor Console</title>
+  <title>Crown Trade • Mentor Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    :root{
-      --gold:#c8a97e;--gold-dark:#b89463;--nude:#f9f6f2;--charcoal:#1a1a1a;--soft:#fdfcfb;
-      --border:rgba(200,169,126,0.18);
-    }
+    :root{--gold:#c8a97e;--gold-dark:#b89463;--nude:#f9f6f2;--charcoal:#1a1a1a;--soft:#fdfcfb;--border:rgba(200,169,126,0.18)}
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Inter',sans-serif;background:var(--nude);color:var(--charcoal);line-height:1.6}
+    body{font-family:'Inter',sans-serif;background:var(--nude);color:var(--charcoal);min-height:100vh}
     .container{max-width:1700px;margin:0 auto;padding:2rem}
-    .header{background:linear-gradient(135deg,#0a0a0a,#1a1a1a);color:white;padding:4rem 2rem;border-radius:32px;text-align:center;margin-bottom:3rem;position:relative;overflow:hidden}
-    .header::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 30% 50%,rgba(200,169,126,0.15),transparent 60%);pointer-events:none}
-    .header h1{font-family:'Cormorant Garamond',serif;font-size:5.5rem;letter-spacing:-2px;font-weight:700}
-    .header p{font-size:1.5rem;opacity:0.9;margin-top:1rem}
-    .mentor-badge{background:linear-gradient(90deg,var(--gold),var(--gold-dark));padding:0.8rem 2.2rem;border-radius:50px;font-weight:800;font-size:1.3rem;margin-top:1.5rem;display:inline-block;box-shadow:0 10px 30px rgba(200,169,126,0.3)}
-
+    .header{background:linear-gradient(135deg,#0a0a0a,#1a1a1a);color:white;padding:4rem 2rem;border-radius:32px;text-align:center;margin-bottom:3rem}
+    .header h1{font-family:'Cormorant Garamond',serif;font-size:5.5rem;letter-spacing:-2px}
+    .mentor-badge{background:linear-gradient(90deg,var(--gold),var(--gold-dark));padding:0.8rem 2.2rem;border-radius:50px;font-weight:800;font-size:1.3rem;margin-top:1rem;display:inline-block}
     .grid{display:grid;grid-template-columns:1fr 460px;gap:3rem}
-    .card{background:var(--soft);border:1px solid var(--border);border-radius:24px;padding:2.5rem;box-shadow:0 25px 70px rgba(0,0,0,0.08);backdrop-filter:blur(12px);margin-bottom:2rem}
-    .section-title{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--gold-dark);margin-bottom:2rem;display:flex;align-items:center;gap:16px}
-
-    /* Stats */
-    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.8rem;margin-bottom:3rem}
-    .stat-box{background:white;padding:2rem;border-radius:20px;text-align:center;box-shadow:0 15px 40px rgba(0,0,0,0.06)}
+    .card{background:var(--soft);border:1px solid var(--border);border-radius:24px;padding:2.5rem;box-shadow:0 25px 70px rgba(0,0,0,0.08);margin-bottom:2rem}
+    .section-title{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--gold-dark);margin-bottom:2rem}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1.8rem;margin-bottom:3rem}
+    .stat{background:white;padding:2rem;border-radius:20px;text-align:center;box-shadow:0 15px 40px rgba(0,0,0,0.06)}
     .stat-num{font-size:3.8rem;font-weight:800;color:var(--gold-dark);font-family:'Cormorant Garamond'}
-    .stat-label{font-size:1.1rem;color:#666;margin-top:0.5rem;letter-spacing:1px}
-
-    /* Clients */
+    .upload-zone{border:3px dashed var(--gold);border-radius:20px;padding:4rem;text-align:center;cursor:pointer;margin-bottom:2rem}
+    .upload-zone:hover{background:var(--gold);color:white}
     .clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2rem}
-    .client-card{background:white;padding:2rem;border-radius:20px;border:2px solid transparent;transition:all .4s;box-shadow:0 15px 40px rgba(0,0,0,0.05)}
-    .client-card.premium{border-color:var(--gold)}
-    .client-name{font-size:1.5rem;font-weight:700;margin-bottom:0.8rem}
-    .client-type{background:var(--gold);color:white;padding:0.4rem 1rem;border-radius:50px;font-size:0.9rem;display:inline-block}
-    .client-meta{margin:0.6rem 0;color:#555}
-
-    /* Schedule */
-    .schedule-item{background:white;padding:1.8rem;border-radius:18px;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,0.05)}
-    .schedule-title{font-weight:700;font-size:1.3rem}
-    .schedule-link{background:var(--gold);color:white;padding:12px 24px;border-radius:50px;text-decoration:none;font-weight:600}
-
-    /* Chat */
+    .client-card{background:white;padding:2rem;border-radius:20px;box-shadow:0 15px 40px rgba(0,0,0,0.05)}
+    .client-card.premium{border:2px solid var(--gold)}
     .chat-container{height:780px;display:flex;flex-direction:column;background:white;border-radius:24px;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,0.1)}
     .chat-header{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;padding:2rem;text-align:center}
-    .chat-header h3{font-size:1.8rem;margin-bottom:0.5rem}
     .chat-messages{flex:1;padding:2rem;overflow-y:auto;background:#f8f5f0}
     .message{margin-bottom:1.5rem;max-width:78%}
     .message.sent{margin-left:auto}
     .message-bubble{padding:16px 22px;border-radius:24px;font-size:1.05rem}
-    .message.sent .message-bubble{background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white}
-    .message.received .message-bubble{background:white;border:1px solid var(--border)}
+    .message.sent .message-bubble{background:var(--gold);color:white}
     .chat-input{padding:2rem;background:white;border-top:1px solid var(--border);display:flex;gap:16px}
-    .chat-input input{flex:1;padding:18px 24px;border-radius:50px;border:1px solid var(--border);font-size:1.1rem}
+    .chat-input input{flex:1;padding:18px 24px;border-radius:50px;border:1px solid var(--border)}
     .btn-send{background:var(--gold);color:white;border:none;width:60px;height:60px;border-radius:50%;cursor:pointer;font-size:1.6rem}
-
-    .logout-btn{position:fixed;bottom:30px;right:30px;background:#ef4444;color:white;padding:16px 32px;border-radius:50px;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(239,68,68,0.4);z-index:100}
-    @media(max-width:1200px){.grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr 1fr}}
+    .logout{position:fixed;bottom:30px;right:30px;background:#ef4444;color:white;padding:16px 32px;border-radius:50px;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(239,68,68,0.4);z-index:100}
   </style>
 </head>
 <body>
 
-<!-- PROTECTION -->
 <script>
   if (localStorage.getItem('mentor_logged_in') !== 'true') {
     window.location.href = 'mentor-login.html';
@@ -73,103 +49,142 @@
 <div class="container">
   <div class="header">
     <h1>Crown Trade Academy</h1>
-    <p>Elite Forex & Synthetic Indices Mentorship • Mentor Command Center</p>
+    <p>Elite Forex & Synthetic Indices Mentorship</p>
     <div class="mentor-badge">Crown Mentor</div>
   </div>
 
-  <!-- Stats -->
-  <div class="stats-grid">
-    <div class="stat-box"><div class="stat-num">127</div><div class="stat-label">Total Clients</div></div>
-    <div class="stat-box"><div class="stat-num">89</div><div class="stat-label">Active This Week</div></div>
-    <div class="stat-box"><div class="stat-num">KSh 1.8M</div><div class="stat-label">Revenue Generated</div></div>
-    <div class="stat-box"><div class="stat-num">4.9</div><div class="stat-label">Mentor Rating</div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="totalClients">0</div><div>Total Clients</div></div>
+    <div class="stat"><div class="stat-num" id="mentorshipCount">0</div><div>Mentorship</div></div>
+    <div class="stat"><div class="stat-num" id="referralCount">0</div><div>Referral</div></div>
+    <div class="stat"><div class="stat-num" id="totalRevenue">KSh 0</div><div>Revenue</div></div>
   </div>
 
   <div class="grid">
     <div>
+      <!-- Upload Lessons -->
+      <div class="card">
+        <h2 class="section-title">Upload Lessons (Videos & PDFs)</h2>
+        <div class="upload-zone" id="dropZone">
+          <i class="fas fa-cloud-upload-alt" style="font-size:4rem;color:var(--gold);margin-bottom:1rem;"></i>
+          <p><strong>Drag & drop files here</strong></p>
+          <input type="file" id="fileInput" multiple accept="video/*,.pdf" style="display:none">
+        </div>
+        <div id="uploadStatus"></div>
+      </div>
+
       <!-- Approved Clients -->
       <div class="card">
         <h2 class="section-title">Approved Elite Clients</h2>
-        <div class="clients-grid">
-          <div class="client-card premium">
-            <div class="client-name">Michael Otieno</div>
-            <div class="client-type">Mentorship Member</div>
-            <div class="client-meta">Paid KSh 9,997 • Joined 2 days ago</div>
-          </div>
-          <div class="client-card">
-            <div class="client-name">Grace Wambui</div>
-            <div class="client-type">Referral Partner</div>
-            <div class="client-meta">Earned KSh 4,500 • 3 referrals</div>
-          </div>
-          <div class="client-card premium">
-            <div class="client-name">David Kimani</div>
-            <div class="client-type">Mentorship Member</div>
-            <div class="client-meta">Top performer • 87% win rate</div>
-          </div>
-          <div class="client-card">
-            <div class="client-name">Fatuma Ali</div>
-            <div class="client-type">Referral Partner</div>
-            <div class="client-meta">Joined today</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Schedule -->
-      <div class="card">
-        <h2 class="section-title">Upcoming 1-on-1 Sessions</h2>
-        <div class="schedule-item">
-          <div>
-            <div class="schedule-title">Live Trade Review – Michael Otieno</div>
-            <div style="color:#666;margin-top:0.5rem">Tomorrow • 3:00 PM EAT</div>
-          </div>
-          <a href="#" class="schedule-link">Join Zoom</a>
-        </div>
-        <div class="schedule-item">
-          <div>
-            <div class="schedule-title">Strategy Deep Dive – David Kimani</div>
-            <div style="color:#666;margin-top:0.5rem">Friday • 7:00 PM EAT</div>
-          </div>
-          <a href="#" class="schedule-link">Join Zoom</a>
+        <div class="clients-grid" id="clientsList">
+          Loading clients...
         </div>
       </div>
     </div>
 
-    <!-- Team Chat -->
+    <!-- Chat -->
     <div>
       <div class="chat-container">
         <div class="chat-header">
           <h3>Mentor Team Chat</h3>
-          <div>All 4 mentors + admin • Real-time</div>
+          <small>All 4 mentors • Real-time</small>
         </div>
-        <div class="chat-messages" id="chatMessages">
-          <div class="message received"><div class="message-bubble">Good morning team. New client just joined mentorship</div></div>
-          <div class="message sent"><div class="message-bubble">Noted. I’ll schedule his first call</div></div>
-          <div class="message received"><div class="message-bubble">Let’s do a group session this Saturday</div></div>
-        </div>
+        <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input">
-          <input type="text" id="chatInput" placeholder="Type your message...">
-          <button class="btn-send" onclick="send()">Send</button>
+          <input type="text" id="chatInput" placeholder="Type message...">
+          <button class="btn-send" onclick="sendChat()">Send</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<button class="logout-btn" onclick="localStorage.clear();location.href='mentor-login.html'">Logout</button>
+<button class="logout" onclick="localStorage.clear();location.href='mentor-login.html'">Logout</button>
 
+<!-- SUPABASE CONNECTION -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  function send() {
+  const supabase = window.supabase.createClient(
+    'https://omrsywvfdhzeokmfdrfh.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o'
+  );
+
+  // Load Clients
+  async function loadClients() {
+    const { data, error } = await supabase
+      .from('registrations')
+      .select('*')
+      .eq('payment_status', 'approved')
+      .order('created_at', { ascending: false });
+
+    if (error) return console.error(error);
+
+    document.getElementById('totalClients').textContent = data.length;
+    document.getElementById('mentorshipCount').textContent = data.filter(c => c.client_type === 'mentorship').length;
+    document.getElementById('referralCount').textContent = data.filter(c => c.client_type === 'referral').length;
+    document.getElementById('totalRevenue').textContent = 'KSh ' + data.reduce((a,c) => a + (c.amount_paid || 0), 0).toLocaleString();
+
+    const list = document.getElementById('clientsList');
+    list.innerHTML = data.map(c => `
+      <div class="client-card ${c.client_type === 'mentorship' ? 'premium' : ''}">
+        <div style="font-size:1.5rem;font-weight:700">${c.full_name}</div>
+        <div style="margin:0.5rem 0;color:#666">${c.email} • ${c.phone}</div>
+        <div style="background:var(--gold);color:white;padding:0.4rem 1rem;border-radius:50px;display:inline-block;font-size:0.9rem">
+          ${c.client_type.toUpperCase()} • KSh ${c.amount_paid?.toLocaleString()}
+        </div>
+        <div style="margin-top:0.5rem;color:#888;font-size:0.9rem">
+          Joined ${new Date(c.created_at).toLocaleDateString()}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Upload Files
+  const dropZone = document.getElementById('dropZone');
+  dropZone.onclick = () => document.getElementById('fileInput').click();
+  dropZone.ondrop = e => { e.preventDefault(); uploadFiles(e.dataTransfer.files); };
+  dropZone.ondragover = e => e.preventDefault();
+  document.getElementById('fileInput').onchange = e => uploadFiles(e.target.files);
+
+  async function uploadFiles(files) {
+    for (let file of files) {
+      const fileName = `${Date.now()}_${file.name}`;
+      const { error } = await supabase.storage
+        .from('lessons')
+        .upload(fileName, file);
+
+      if (error) alert('Upload failed: ' + error.message);
+      else document.getElementById('uploadStatus').innerHTML += `<p>Uploaded: ${file.name}</p>`;
+    }
+    alert('All files uploaded!');
+  }
+
+  // Real-time Chat
+  const channel = supabase.channel('mentor-chat');
+  channel
+    .on('broadcast', { event: 'message' }, ({ payload }) => {
+      const div = document.createElement('div');
+      div.className = payload.self ? 'message sent' : 'message received';
+      div.innerHTML = `<div class="message-bubble">${payload.msg}</div>`;
+      document.getElementById('chatMessages').appendChild(div);
+      div.scrollIntoView();
+    })
+    .subscribe();
+
+  function sendChat() {
     const input = document.getElementById('chatInput');
     const msg = input.value.trim();
     if (!msg) return;
-    const div = document.createElement('div');
-    div.className = 'message sent';
-    div.innerHTML = `<div class="message-bubble">${msg}</div>`;
-    document.getElementById('chatMessages').appendChild(div);
-    document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+    channel.send({
+      type: 'broadcast',
+      event: 'message',
+      payload: { msg, self: true }
+    });
     input.value = '';
   }
-  document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key === 'Enter') send(); });
+
+  // Load on start
+  loadClients();
 </script>
 </body>
 </html>
