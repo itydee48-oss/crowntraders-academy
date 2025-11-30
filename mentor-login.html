@@ -11,15 +11,14 @@
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0f0f0f,#1a1a1a);color:white;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
     .box{background:rgba(26,26,26,.95);backdrop-filter:blur(20px);border:1px solid rgba(200,169,126,.3);border-radius:28px;padding:4rem 3rem;max-width:460px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6)}
-    .crown{font-size:5.5rem;color:var(--gold);margin-bottom:.5rem}
-    .title{font-family:'Cormorant Garamond',serif;font-size:4rem;background:linear-gradient(90deg,var(--gold),var(--gold-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}
-    .subtitle{font-size:1.3rem;opacity:.9;margin-bottom:3rem}
+    .crown{font-size:5.5rem;color:var(--gold)}
+    .title{font-family:'Cormorant Garamond',serif;font-size:4rem;background:linear-gradient(90deg,var(--gold),var(--gold-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .subtitle{font-size:1.3rem;opacity:.9;margin:2rem 0}
     input{width:100%;padding:1.1rem 1.4rem;margin:1rem 0;background:rgba(255,255,255,.08);border:1px solid rgba(200,169,126,.4);border-radius:16px;color:white;font-size:1.1rem}
     input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,169,126,.2)}
-    .btn{width:100%;padding:1.3rem;background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;border:none;border-radius:50px;font-size:1.3rem;font-weight:700;cursor:pointer;margin-top:1.5rem;transition:.3s}
+    .btn{width:100%;padding:1.3rem;background:linear-gradient(90deg,var(--gold),var(--gold-dark));color:white;border:none;border-radius:50px;font-size:1.3rem;font-weight:700;cursor:pointer;margin-top:1rem;transition:.3s}
     .btn:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(200,169,126,.4)}
-    .status{margin-top:1.5rem;min-height:28px}
-    .hint{margin-top:2rem;font-size:.9rem;opacity:.7}
+    .status{margin-top:1rem;min-height:28px;font-weight:600}
   </style>
 </head>
 <body>
@@ -31,39 +30,27 @@
   <form id="loginForm">
     <input type="email" id="email" placeholder="Email" required>
     <input type="password" id="password" placeholder="Password" required>
-    <button type="submit" class="btn" id="loginBtn">Enter Mentor Console</button>
+    <button type="submit" class="btn">Enter Mentor Console</button>
   </form>
 
   <div class="status" id="status"></div>
-
-  <div class="hint">
-    Use:<br>
-    <strong>crowntradeacademy@gmail.com</strong><br>
-    <strong>crown2025</strong>
-  </div>
+  <small style="margin-top:2rem;opacity:0.7;display:block">
+    Email: crowntradeacademy@gmail.com<br>
+    Password: crown2025
+  </small>
 </div>
 
 <script>
-  const CORRECT_EMAIL = "crowntradeacademy@gmail.com";
-  const CORRECT_PASS  = "crown2025";
-
   document.getElementById('loginForm').onsubmit = function(e) {
     e.preventDefault();
     const email = document.getElementById('email').value.trim();
-    const pass  = document.getElementById('password').value;
+    const pass = document.getElementById('password').value;
     const status = document.getElementById('status');
-    const btn = document.getElementById('loginBtn');
 
-    if (email === CORRECT_EMAIL && pass === CORRECT_PASS) {
-      // Save login state in localStorage
+    if (email === "crowntradeacademy@gmail.com" && pass === "crown2025") {
       localStorage.setItem('mentor_logged_in', 'true');
-      localStorage.setItem('mentor_name', 'Crown Mentor');
-
       status.textContent = "Welcome back!";
       status.style.color = "#10b981";
-      btn.textContent = "Entering...";
-      btn.disabled = true;
-
       setTimeout(() => {
         window.location.href = "mentor-dashboard.html";
       }, 800);
@@ -75,30 +62,3 @@
 </script>
 </body>
 </html>
-
-### 2. `mentor-dashboard.html` – UPDATED (no more redirect)
-
-Replace the entire `<script>` section at the bottom of your current dashboard with **this one** (everything else stays the same):
-
-```html
-<script>
-// SIMPLE PROTECTION — ONLY CHECK LOCALSTORAGE
-if (localStorage.getItem('mentor_logged_in') !== 'true') {
-  alert('Access denied. Please login first.');
-  window.location.href = 'mentor-login.html';
-  throw new Error('Stop execution'); // prevents rest of script
-}
-
-// You're in! Show mentor name from localStorage
-document.getElementById('mentorName').textContent = localStorage.getItem('mentor_name') || 'Crown Mentor';
-
-// Optional: Logout button (add this button somewhere in your dashboard if you want)
-document.getElementById('logoutBtn')?.addEventListener('click', () => {
-  localStorage.removeItem('mentor_logged_in');
-  localStorage.removeItem('mentor_name');
-  window.location.href = 'mentor-login.html';
-});
-
-// Rest of your existing dashboard code continues here...
-// (load clients, chat, schedule, etc.)
-</script>
