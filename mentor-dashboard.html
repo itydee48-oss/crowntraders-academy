@@ -1,54 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Crown Trade — Mentor Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
 <style>
-  :root{--nude:#F9F6F2;--gold:#C8A97E;--gold-dark:#B89463;--charcoal:#2e2e2e;--muted:#777;--success:#10B981;--danger:#EF4444;--info:#3B82F6;--light:#ffffff;}
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Montserrat',sans-serif;background:var(--nude);color:var(--charcoal);min-height:100vh;overflow:hidden;}
-  .app{display:grid;grid-template-columns:280px 1fr;height:100vh;}
-  .sidebar{background:var(--light);border-right:1px solid rgba(200,169,126,0.3);padding:32px;box-shadow:8px 0 30px rgba(0,0,0,0.05);}
-  .brand{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--gold-dark);font-weight:700;}
-  .tagline{font-size:0.95rem;color:var(--muted);margin:8px 0 30px;}
-  .nav button{width:100%;padding:16px 20px;margin:8px 0;border-radius:12px;background:transparent;color:var(--charcoal);border:none;font-weight:600;text-align:left;cursor:pointer;transition:.3s;display:flex;align-items:center;gap:12px;}
-  .nav button:hover,.nav button.active{background:var(--gold);color:white;}
-  .main{background:var(--light);padding:40px;overflow-y:auto;}
-  .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;}
-  .title{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--gold-dark);}
-  .card{background:white;padding:28px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.06);border:1px solid #eee;margin-bottom:24px;}
-  .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
-  .card-title{font-size:1.5rem;color:var(--gold-dark);font-weight:600;}
-  .btn{background:var(--gold);color:white;border:none;padding:12px 24px;border-radius:10px;cursor:pointer;font-weight:600;transition:.3s;}
-  .btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(200,169,126,0.3);}
-  .btn-success{background:var(--success);}
-  .btn-info{background:var(--info);}
-  .table{width:100%;border-collapse:collapse;}
-  .table th,.table td{padding:16px;text-align:left;border-bottom:1px solid #eee;}
-  .table th{background:var(--nude);font-weight:600;}
+  :root {
+    --nude: #F9F6F2;
+    --gold: #C8A97E;
+    --gold-dark: #B89463;
+    --charcoal: #2e2e2e;
+    --muted: #777;
+    --success: #10B981;
+    --danger: #EF4444;
+    --info: #3B82F6;
+    --light: #ffffff;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--nude);
+    color: var(--charcoal);
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  .app {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    height: 100vh;
+  }
+  .sidebar {
+    background: var(--light);
+    border-right: 1px solid rgba(200, 169, 126, 0.3);
+    padding: 32px;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.05);
+  }
+  .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    color: var(--gold-dark);
+    font-weight: 700;
+  }
+  .tagline {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin: 8px 0 30px;
+  }
+  .nav button {
+    width: 100%;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--charcoal);
+    border: none;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .nav button:hover,
+  .nav button.active {
+    background: var(--gold);
+    color: white;
+  }
+  .main {
+    background: var(--light);
+    padding: 40px;
+    overflow-y: auto;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+  .title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    color: var(--gold-dark);
+  }
+  .card {
+    background: white;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eee;
+    margin-bottom: 24px;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-size: 1.5rem;
+    color: var(--gold-dark);
+    font-weight: 600;
+  }
+  .btn {
+    background: var(--gold);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(200, 169, 126, 0.3);
+  }
+  .btn-success {
+    background: var(--success);
+  }
+  .btn-info {
+    background: var(--info);
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .table th,
+  .table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  .table th {
+    background: var(--nude);
+    font-weight: 600;
+  }
 
-  .floating-btn{position:fixed;bottom:30px;right:30px;width:70px;height:70px;background:var(--gold-dark);color:white;border-radius:50%;box-shadow:0 15px 40px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:2.2rem;cursor:pointer;z-index:1000;}
-  .chat-container{position:fixed;bottom:30px;right:30px;width:420px;height:600px;background:white;border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,0.25);display:none;flex-direction:column;z-index:9999;border:1px solid rgba(200,169,126,0.4);overflow:hidden;}
-  .chat-header{background:var(--gold-dark);color:white;padding:20px;font-weight:600;font-size:1.2rem;display:flex;justify-content:space-between;align-items:center;}
-  .chat-body{flex:1;overflow-y:auto;padding:20px;background:#f8f7f5;}
-  .message{margin:12px 0;max-width:80%;padding:14px 18px;border-radius:20px;position:relative;}
-  .message.own{background:var(--gold);color:white;align-self:flex-end;margin-left:auto;border-bottom-right-radius:6px;}
-  .message.other{background:#f0f0f0;color:var(--charcoal);align-self:flex-start;border-bottom-left-radius:6px;}
-  .message strong{display:block;margin-bottom:4px;}
-  .message time{font-size:0.75rem;opacity:0.8;position:absolute;bottom:6px;right:12px;}
-  .chat-input-area{padding:16px;background:white;border-top:1px solid #eee;display:flex;gap:12px;}
-  .chat-input{flex:1;padding:14px 18px;border-radius:30px;border:1px solid #ddd;font-size:1rem;}
-  .chat-input:focus{outline:none;border-color:var(--gold);}
-  .send-btn{width:50px;height:50px;border-radius:50%;background:var(--gold-dark);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.4rem;}
-  .notification{position:fixed;top:20px;right:20px;padding:16px 32px;border-radius:12px;color:white;font-weight:600;z-index:10000;animation:slide .4s;}
-  .notification.success{background:var(--success);}
-  @keyframes slide{from{transform:translateY(-100px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .floating-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 70px;
+    height: 70px;
+    background: var(--gold-dark);
+    color: white;
+    border-radius: 50%;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    cursor: pointer;
+    z-index: 1000;
+  }
+  .chat-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 420px;
+    height: 600px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+    display: none;
+    flex-direction: column;
+    z-index: 9999;
+    border: 1px solid rgba(200, 169, 126, 0.4);
+    overflow: hidden;
+  }
+  .chat-header {
+    background: var(--gold-dark);
+    color: white;
+    padding: 20px;
+    font-weight: 600;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background: #f8f7f5;
+  }
+  .message {
+    margin: 12px 0;
+    max-width: 80%;
+    padding: 14px 18px;
+    border-radius: 20px;
+    position: relative;
+  }
+  .message.own {
+    background: var(--gold);
+    color: white;
+    align-self: flex-end;
+    margin-left: auto;
+    border-bottom-right-radius: 6px;
+  }
+  .message.other {
+    background: #f0f0f0;
+    color: var(--charcoal);
+    align-self: flex-start;
+    border-bottom-left-radius: 6px;
+  }
+  .message strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+  .message time {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    position: absolute;
+    bottom: 6px;
+    right: 12px;
+  }
+  .chat-input-area {
+    padding: 16px;
+    background: white;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 12px;
+  }
+  .chat-input {
+    flex: 1;
+    padding: 14px 18px;
+    border-radius: 30px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+  }
+  .chat-input:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .send-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--gold-dark);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.4rem;
+  }
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 32px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    z-index: 10000;
+    animation: slide 0.4s;
+  }
+  .notification.success {
+    background: var(--success);
+  }
+  @keyframes slide {
+    from {
+      transform: translateY(-100px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 </style>
 </head>
 <body>
-
 <div class="floating-btn" onclick="toggleChat()">Chat</div>
 
 <div class="chat-container" id="chatBox">
@@ -60,7 +289,13 @@
     <div style="text-align:center;padding:60px;color:var(--muted);">Loading messages...</div>
   </div>
   <div class="chat-input-area">
-    <input type="text" class="chat-input" id="chatInput" placeholder="Send a message..." onkeydown="if(event.key==='Enter')sendMessage()">
+    <input
+      type="text"
+      class="chat-input"
+      id="chatInput"
+      placeholder="Send a message..."
+      onkeydown="if(event.key==='Enter')sendMessage()"
+    />
     <div class="send-btn" onclick="sendMessage()">Send</div>
   </div>
 </div>
@@ -84,7 +319,7 @@
       <div class="title">Mentor Command Center</div>
       <div style="text-align:right;">
         <div style="font-weight:700;font-size:1.3rem;">Elite Mentor</div>
-        <div style="color:var(--muted);">Active clients: <strong id="clientsCount">0</strong></div>
+        <div style="color:var(--muted)">Active clients: <strong id="clientsCount">0</strong></div>
       </div>
     </div>
 
@@ -95,9 +330,20 @@
           <button class="btn btn-info" onclick="loadClients()">Refresh</button>
         </div>
         <table class="table">
-          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Program</th><th>Joined</th><th>Action</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Program</th>
+              <th>Joined</th>
+              <th>Action</th>
+            </tr>
+          </thead>
           <tbody id="clientsTable">
-            <tr><td colspan="6" style="text-align:center;padding:60px;color:var(--muted);">Loading...</td></tr>
+            <tr style="text-align:center;padding:60px;color:var(--muted)">
+              <td colspan="6">Loading...</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -109,8 +355,12 @@
           <div class="card-title">Upload Materials</div>
         </div>
         <div style="text-align:center;padding:60px 0;">
-          <input type="file" id="fileUpload" multiple style="display:none;">
-          <button class="btn btn-success" style="padding:18px 50px;font-size:1.2rem;" onclick="document.getElementById('fileUpload').click()">
+          <input type="file" id="fileUpload" multiple style="display:none;" />
+          <button
+            class="btn btn-success"
+            style="padding:18px 50px;font-size:1.2rem"
+            onclick="document.getElementById('fileUpload').click()"
+          >
             Upload Videos, PDFs, Images, ZIPs
           </button>
           <div id="uploadStatus" style="margin-top:30px;font-size:1.1rem;font-weight:600;"></div>
@@ -119,123 +369,152 @@
       </div>
     </section>
 
-    <section id="lessons" style="display:none;"><div class="card"><h2>Lessons</h2><p>Coming soon...</p></div></section>
-    <section id="sessions" style="display:none;"><div class="card"><h2>Sessions</h2><p>Coming soon...</p></div></section>
+    <section id="lessons" style="display:none;">
+      <div class="card">
+        <h2>Lessons</h2>
+        <p>Coming soon...</p>
+      </div>
+    </section>
+
+    <section id="sessions" style="display:none;">
+      <div class="card">
+        <h2>Sessions</h2>
+        <p>Coming soon...</p>
+      </div>
+    </section>
   </main>
 </div>
 
-<!-- ONLY ONE SUPABASE SCRIPT + CORRECT INITIALIZATION -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// THIS IS THE FIX — createClient comes from the loaded script
-const { createClient } = window.supabase;
-const supabase = createClient(
-  'https://pzxkrtwxecqivlndqutg.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6eGtydHd4ZWNxaXZsbmRxdXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk0MDgwMDAsImV4cCI6MjA1NDk4NDAwMH0.L2iW8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8'
-);
+  const { createClient } = window.supabase;
+  const supabase = createClient(
+    'https://pzxkrtwxecqivlndqutg.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6eGtydHd4ZWNxaXZsbmRxdXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk0MDgwMDAsImV4cCI6MjA1NDk4NDAwMH0.L2iW8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8'
+  );
 
-const mentorName = "Elite Mentor";
+  const mentorName = "Elite Mentor";
 
-// Tab Navigation
-document.querySelectorAll('.nav button[data-tab]').forEach(b => {
-  b.addEventListener('click', () => {
-    document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    document.querySelectorAll('section').forEach(s => s.style.display = 'none');
-    document.getElementById(b.dataset.tab).style.display = 'block';
+  // Tab Navigation
+  document.querySelectorAll('.nav button[data-tab]').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      document.querySelectorAll('section').forEach(s => (s.style.display = 'none'));
+      document.getElementById(b.dataset.tab).style.display = 'block';
+    });
   });
-});
 
-// Load Clients
-async function loadClients() {
-  const { data } = await supabase.from('clients').select('*').eq('status', 'approved');
-  document.getElementById('clientsCount').textContent = data?.length || 0;
-  document.getElementById('clientsTable').innerHTML = !data || data.length === 0
-    ? `<tr><td colspan="6" style="text-align:center;padding:60px;color:var(--muted);">No approved clients yet</td></tr>`
-    : data.map(c => `
-      <tr>
-        <td><strong>${c.name}</strong></td>
-        <td>${c.email}</td>
-        <td>${c.phone || '—'}</td>
-        <td>${c.program}</td>
-        <td>${new Date(c.join_date).toLocaleDateString()}</td>
-        <td><button class="btn btn-info">View</button></td>
-      </tr>
-    `).join('');
-}
-
-// Upload Files
-document.getElementById('fileUpload').onchange = async e => {
-  const files = e.target.files;
-  if (!files.length) return;
-  document.getElementById('uploadStatus').textContent = `Uploading ${files.length} file(s)...`;
-  document.getElementById('uploadStatus').style.color = 'orange';
-
-  for (let file of files) {
-    const path = `materials/${Date.now()}_${file.name}`;
-    const { error } = await supabase.storage.from('materials').upload(path, file);
-    if (!error || error.statusCode === 409) {
-      const { data } = supabase.storage.from('materials').getPublicUrl(path);
-      const div = document.createElement('div');
-      div.innerHTML = `${file.name} — <a href="${data.publicUrl}" target="_blank">Open</a>`;
-      div.style = 'padding:12px;background:#f0f9ff;border-radius:8px;margin:10px 0;';
-      document.getElementById('uploadedFiles').prepend(div);
-    }
+  // Load Clients
+  async function loadClients() {
+    const { data } = await supabase.from('clients').select('*').eq('status', 'approved');
+    document.getElementById('clientsCount').textContent = data?.length || 0;
+    document.getElementById('clientsTable').innerHTML =
+      !data || data.length === 0
+        ? `<tr><td colspan="6" style="text-align:center;padding:60px;color:var(--muted)">No approved clients yet</td></tr>`
+        : data
+            .map(
+              c => `
+        <tr>
+          <td><strong>${c.name}</strong></td>
+          <td>${c.email}</td>
+          <td>${c.phone || '—'}</td>
+          <td>${c.program}</td>
+          <td>${new Date(c.join_date).toLocaleDateString()}</td>
+          <td><button class="btn btn-info">View</button></td>
+        </tr>
+      `
+            )
+            .join('');
   }
-  document.getElementById('uploadStatus').textContent = 'All uploaded!';
-  document.getElementById('uploadStatus').style.color = 'green';
-};
 
-// Chat
-async function loadChat() {
-  const { data } = await supabase.from('community_chat').select('*').order('created_at', { ascending: true });
-  const body = document.getElementById('chatBody');
-  body.innerHTML = '';
-  (data || []).forEach(m => {
-    const msg = document.createElement('div');
-    msg.className = `message ${m.sender === mentorName ? 'own' : 'other'}`;
-    msg.innerHTML = `<strong>${m.sender}</strong><div>${m.message}</div><time>${new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</time>`;
-    body.appendChild(msg);
-  });
-  body.scrollTop = body.scrollHeight;
-}
+  // Upload Files
+  document.getElementById('fileUpload').onchange = async e => {
+    const files = e.target.files;
+    if (!files.length) return;
+    document.getElementById('uploadStatus').textContent = `Uploading ${files.length} file(s)...`;
+    document.getElementById('uploadStatus').style.color = 'orange';
 
-async function sendMessage() {
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if (!text) return;
-  await supabase.from('community_chat').insert({ sender: mentorName, message: text });
-  input.value = '';
-  loadChat();
-}
+    for (let file of files) {
+      const path = `materials/${Date.now()}_${file.name}`;
+      const { error } = await supabase.storage.from('materials').upload(path, file);
+      if (!error || error.statusCode === 409) {
+        const { data } = supabase.storage.from('materials').getPublicUrl(path);
+        const div = document.createElement('div');
+        div.innerHTML = `${file.name} — <a href="${data.publicUrl}" target="_blank">Open</a>`;
+        div.style = 'padding:12px;background:#f0f9ff;border-radius:8px;margin:10px 0;';
+        document.getElementById('uploadedFiles').prepend(div);
+      }
+    }
+    document.getElementById('uploadStatus').textContent = 'All uploaded!';
+    document.getElementById('uploadStatus').style.color = 'green';
+  };
 
-// Real-time chat
-supabase.channel('chat')
-  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_chat' }, () => loadChat())
-  .subscribe();
+  // Load Chat Messages
+  async function loadChat() {
+    const { data } = await supabase
+      .from('community_chat')
+      .select('*')
+      .order('created_at', { ascending: true });
+    const body = document.getElementById('chatBody');
+    body.innerHTML = '';
+    (data || []).forEach(m => {
+      const msg = document.createElement('div');
+      msg.className = `message ${m.sender === mentorName ? 'own' : 'other'}`;
+      msg.innerHTML = `<strong>${m.sender}</strong><div>${m.message}</div><time>${new Date(
+        m.created_at
+      ).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time>`;
+      body.appendChild(msg);
+    });
+    body.scrollTop = body.scrollHeight;
+  }
 
-function toggleChat() {
-  const box = document.getElementById('chatBox');
-  box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-  if (box.style.display === 'flex') loadChat();
-}
+  // Send Message
+  async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    await supabase.from('community_chat').insert({ sender: mentorName, message: text });
+    input.value = '';
+    loadChat();
+  }
 
-function loadAll() {
+  // Comment out realtime subscription due to plan limitations
+  /*
+  supabase
+    .channel('chat')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_chat' }, () =>
+      loadChat()
+    )
+    .subscribe();
+  */
+
+  // Polling to refresh chat every 5 seconds
+  setInterval(() => {
+    loadChat();
+  }, 5000);
+
+  function toggleChat() {
+    const box = document.getElementById('chatBox');
+    box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+    if (box.style.display === 'flex') loadChat();
+  }
+
+  function loadAll() {
+    loadClients();
+    showNotification('Dashboard refreshed');
+  }
+
+  function showNotification(message, type = 'success') {
+    const notif = document.createElement('div');
+    notif.className = `notification ${type}`;
+    notif.textContent = message;
+    document.body.appendChild(notif);
+    setTimeout(() => notif.remove(), 2500);
+  }
+
+  // Initial load
   loadClients();
-  showNotification('Dashboard refreshed');
-}
-
-function showNotification(msg) {
-  const n = document.createElement('div');
-  n.className = 'notification success';
-  n.textContent = msg;
-  document.body.appendChild(n);
-  setTimeout(() => n.remove(), 3000);
-}
-
-// Start everything
-loadClients();
-showNotification('Crown Trade — Fully Loaded & Working');
 </script>
 </body>
 </html>
