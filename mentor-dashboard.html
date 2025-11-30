@@ -6,73 +6,73 @@
 <title>Crown Trade — Mentor Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-  :root{--nude:#F9F6F2;--gold:#C8A97E;--gold-dark:#B89463;--charcoal:#2e2e2e;--muted:#777;--success:#10B981;--danger:#EF4444;--info:#3B82F6;}
+  :root{
+    --nude:#F9F6F2;--gold:#C8A97E;--gold-dark:#B89463;--charcoal:#2e2e2e;--muted:#777;
+    --success:#10B981;--danger:#EF4444;--info:#3B82F6;--light:#ffffff;
+  }
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Montserrat',sans-serif;background:var(--nude);color:var(--charcoal);min-height:100vh;}
-  .mentor-app{display:grid;grid-template-columns:280px 1fr;gap:24px;padding:24px;height:100vh;}
-  .sidebar{background:rgba(255,255,255,0.95);border:1px solid rgba(200,169,126,0.4);border-radius:16px;padding:30px;box-shadow:0 20px 60px rgba(0,0,0,0.06);}
-  .brand{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--gold-dark);margin-bottom:12px;}
-  .nav button{width:100%;padding:16px 20px;margin:10px 0;border:none;border-radius:12px;background:transparent;color:var(--charcoal);font-weight:600;text-align:left;cursor:pointer;transition:.3s;font-size:1rem;}
+  body{font-family:'Montserrat',sans-serif;background:var(--nude);color:var(--charcoal);min-height:100vh;overflow:hidden;}
+  .app{display:grid;grid-template-columns:280px 1fr;height:100vh;}
+  .sidebar{background:var(--light);border-right:1px solid rgba(200,169,126,0.3);padding:32px;box-shadow:8px 0 30px rgba(0,0,0,0.05);}
+  .brand{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--gold-dark);font-weight:700;letter-spacing:1px;}
+  .tagline{font-size:0.95rem;color:var(--muted);margin:8px 0 30px;}
+  .nav button{width:100%;padding:16px 20px;margin:8px 0;border-radius:12px;background:transparent;color:var(--charcoal);border:none;font-weight:600;text-align:left;cursor:pointer;transition:.3s;display:flex;align-items:center;gap:12px;font-size:1rem;}
   .nav button:hover,.nav button.active{background:var(--gold);color:white;}
-  .main-content{background:rgba(255,255,255,0.95);border-radius:16px;padding:30px;overflow:auto;border:1px solid rgba(200,169,126,0.3);}
-  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;padding-bottom:20px;border-bottom:2px solid var(--nude);}
-  .title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--gold-dark);}
-  .card{background:white;padding:24px;border-radius:14px;margin-bottom:20px;box-shadow:0 10px 30px rgba(0,0,0,0.05);border:1px solid #eee;}
-  .table{width:100%;border-collapse:collapse;}
-  .table th,.table td{padding:14px;text-align:left;border-bottom:1px solid #eee;}
-  .table th{background:var(--nude);font-weight:600;}
-  .btn{background:var(--gold);color:white;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:600;transition:.3s;}
-  .btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.15);}
+  .main{background:var(--light);padding:40px;overflow-y:auto;}
+  .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;}
+  .title{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--gold-dark);}
+  .card{background:white;padding:28px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.06);border:1px solid #eee;margin-bottom:24px;}
+  .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+  .card-title{font-size:1.5rem;color:var(--gold-dark);font-weight:600;}
+  .btn{background:var(--gold);color:white;border:none;padding:12px 24px;border-radius:10px;cursor:pointer;font-weight:600;transition:.3s;}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(200,169,126,0.3);}
   .btn-success{background:var(--success);}
   .btn-info{background:var(--info);}
-  .btn-danger{background:var(--danger);}
+  .table{width:100%;border-collapse:collapse;}
+  .table th,.table td{padding:16px;text-align:left;border-bottom:1px solid #eee;}
+  .table th{background:var(--nude);font-weight:600;color:var(--charcoal);}
 
-  /* CHAT */
-  .floating-chat-btn{position:fixed;bottom:30px;right:30px;width:64px;height:64px;background:var(--gold-dark);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.3);z-index:1000;}
-  .chat-container{position:fixed;bottom:20px;right:20px;width:400px;height:560px;background:white;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,0.2);display:none;flex-direction:column;z-index:999;border:1px solid rgba(200,169,126,0.4);}
-  .chat-header{background:var(--gold-dark);color:white;padding:18px;border-radius:18px 18px 0 0;font-weight:600;display:flex;justify-content:space-between;align-items:center;}
-  .chat-body{flex:1;overflow-y:auto;padding:16px;background:#f9f9f9;}
-  .chat-message{margin-bottom:14px;max-width:80%;padding:12px 16px;border-radius:18px;word-wrap:break-word;}
-  .chat-message.own{background:var(--gold);color:white;align-self:flex-end;margin-left:auto;border-bottom-right-radius:4px;}
-  .chat-message.other{background:#e5e7eb;color:#111;align-self:flex-start;border-bottom-left-radius:4px;}
-  .chat-message-meta{font-size:0.75rem;opacity:0.8;margin-top:6px;}
-  .chat-input-area{padding:14px;background:white;border-top:1px solid #eee;display:flex;gap:12px;}
-  .chat-input{flex:1;padding:14px;border-radius:30px;border:1px solid #ddd;font-size:1rem;}
+  /* Chat */
+  .chat-container{position:fixed;bottom:30px;right:30px;width:420px;height:600px;background:white;border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,0.25);display:none;flex-direction:column;z-index:9999;border:1px solid rgba(200,169,126,0.4);overflow:hidden;}
+  .chat-header{background:var(--gold-dark);color:white;padding:20px;font-weight:600;font-size:1.2rem;display:flex;justify-content:space-between;align-items:center;}
+  .chat-body{flex:1;overflow-y:auto;padding:20px;background:#f8f7f5;}
+  .message{margin:12px 0;max-width:80%;padding:14px 18px;border-radius:20px;position:relative;}
+  .message.own{background:var(--gold);color:white;align-self:flex-end;margin-left:auto;border-bottom-right-radius:6px;}
+  .message.other{background:#f0f0f0;color:var(--charcoal);align-self:flex-start;border-bottom-left-radius:6px;}
+  .message strong{display:block;margin-bottom:4px;}
+  .message time{font-size:0.75rem;opacity:0.8;position:absolute;bottom:6px;right:12px;}
+  .chat-input-area{padding:16px;background:white;border-top:1px solid #eee;display:flex;gap:12px;}
+  .chat-input{flex:1;padding:14px 18px;border-radius:30px;border:1px solid #ddd;font-size:1rem;}
   .chat-input:focus{outline:none;border-color:var(--gold);}
-  .send-btn{width:48px;height:48px;border-radius:50%;background:var(--gold);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.2rem;}
+  .send-btn{width:50px;height:50px;border-radius:50%;background:var(--gold-dark);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.4rem;}
+  .floating-btn{position:fixed;bottom:30px;right:30px;width:70px;height:70px;background:var(--gold-dark);color:white;border-radius:50%;box-shadow:0 15px 40px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:2.2rem;cursor:pointer;z-index:1000;}
 
-  .notification{position:fixed;top:20px;right:20px;padding:16px 28px;border-radius:10px;color:white;font-weight:600;z-index:10000;animation:slideIn .4s;box-shadow:0 10px 30px rgba(0,0,0,0.3);}
+  .notification{position:fixed;top:20px;right:20px;padding:16px 32px;border-radius:12px;color:white;font-weight:600;z-index:10000;animation:slide .4s;}
   .notification.success{background:var(--success);}
   .notification.error{background:var(--danger);}
-  @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-  @media(max-width:1000px){.mentor-app{grid-template-columns:1fr;}.chat-container{width:100%;height:100%;border-radius:0;bottom:0;right:0;}}
+  @keyframes slide{from{transform:translateY(-100px);opacity:0}to{transform:translateY(0);opacity:1}}
 </style>
 </head>
 <body>
 
-<!-- Floating Chat Button -->
-<div class="floating-chat-btn" onclick="toggleChat()">Chat</div>
+<div class="floating-btn" onclick="toggleChat()">Chat</div>
 
-<!-- Community Chat -->
 <div class="chat-container" id="chatBox">
   <div class="chat-header">
     <div>Crown Trade Community</div>
     <button style="background:none;border:none;color:white;font-size:1.8rem;cursor:pointer;" onclick="toggleChat()">×</button>
   </div>
-  <div class="chat-body" id="chatBody"><div style="text-align:center;padding:40px;color:var(--muted);">Loading messages...</div></div>
+  <div class="chat-body" id="chatBody"></div>
   <div class="chat-input-area">
-    <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendMessage()">
+    <input type="text" class="chat-input" id="chatInput" placeholder="Send a message..." onkeydown="if(event.key==='Enter')sendMessage()">
     <div class="send-btn" onclick="sendMessage()">Send</div>
   </div>
 </div>
 
-<div class="mentor-app">
+<div class="app">
   <aside class="sidebar">
     <div class="brand">Crown Trade</div>
-    <div style="margin-bottom:30px;color:var(--muted);">
-      <div style="font-weight:700;font-size:1.1rem;">Elite Mentor</div>
-      <div style="font-size:0.9rem;">Community Portal</div>
-    </div>
+    <div class="tagline">Elite Mentorship Portal</div>
     <nav class="nav">
       <button data-tab="clients" class="active">All Clients</button>
       <button data-tab="lessons">Lessons Library</button>
@@ -80,103 +80,77 @@
       <button data-tab="sessions">Sessions</button>
       <button onclick="toggleChat()">Community Chat</button>
     </nav>
-    <button class="btn" style="margin-top:40px;width:100%;background:var(--info);" onclick="loadClients()">Refresh Dashboard</button>
+    <button class="btn" style="margin-top:auto;width:100%;background:var(--info);" onclick="loadAll()">Refresh All Data</button>
   </aside>
 
-  <main class="main-content">
-    <div class="topbar">
+  <main class="main">
+    <div class="header">
       <div class="title">Mentor Command Center</div>
       <div style="text-align:right;">
-        <div style="font-weight:700;">Crown Mentors</div>
-        <small>Approved clients: <span id="clientsCount">0</span></small>
+        <div style="font-weight:700;font-size:1.3rem;">Crown Mentors</div>
+        <div style="color:var(--muted);">Active clients: <strong id="clientsCount">—</strong></div>
       </div>
     </div>
 
     <!-- Clients Tab -->
-    <div id="clients">
+    <section id="clients">
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <div class="card-header">
           <div class="card-title">Approved Clients</div>
-          <button class="btn btn-info" onclick="loadClients()">Refresh List</button>
+          <button class="btn btn-info" onclick="loadClients()">Refresh</button>
         </div>
         <table class="table">
-          <thead>
-            <tr><th>Name</th><th>Email</th><th>Phone</th><th>Program</th><th>Joined</th><th>Action</th></tr>
-          </thead>
-          <tbody id="clientsTable">
-            <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted);">Loading clients...</td></tr>
-          </tbody>
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Program</th><th>Joined</th><th>Action</th></tr></thead>
+          <tbody id="clientsTable"><tr><td colspan="6" style="text-align:center;padding:60px;color:var(--muted);">Loading clients...</td></tr></tbody>
         </table>
       </div>
-    </div>
+    </section>
 
-    <!-- Placeholder tabs (you can expand later) -->
-    <div id="lessons" style="display:none;"><div class="card"><div class="card-title">Lessons Library</div><p>Coming soon...</p></div></div>
-    <div id="resources" style="display:none;"><div class="card"><div class="card-title">Resources</div><p>Coming soon...</p></div></div>
-    <div id="sessions" style="display:none;"><div class="card"><div class="card-title">Sessions</div><p>Coming soon...</p></div></div>
+    <!-- Resources Tab -->
+    <section id="resources" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Upload Materials</div>
+        </div>
+        <div style="text-align:center;padding:40px 0;">
+          <div style="font-size:5rem;margin-bottom:20px;">Upload</div>
+          <input type="file" id="fileUpload" multiple style="display:none;" accept=".pdf,.mp4,.mov,.jpg,.png,.zip">
+          <button class="btn btn-success" style="padding:16px 40px;font-size:1.1rem;" onclick="document.getElementById('fileUpload').click()">
+            Choose Files (PDF, Video, Images, ZIP)
+          </button>
+          <div id="uploadStatus" style="margin-top:20px;font-weight:600;"></div>
+        </div>
+        <div id="uploadedFiles"></div>
+      </div>
+    </section>
+
+    <!-- Placeholder Tabs -->
+    <section id="lessons" style="display:none;"><div class="card"><div class="card-title">Lessons Library</div><p>Coming soon...</p></div></section>
+    <section id="sessions" style="display:none;"><div class="card"><div class="card-title">Sessions</div><p>Coming soon...</p></div></section>
   </main>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  // USE YOUR REAL SUPABASE URL AND KEY HERE
   const supabase = window.supabase.createClient(
-    'https://eygjxxdgxzatchqgwvep.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg'
+    'https://YOUR-PROJECT.supabase.co',
+    'your-anon-key'
   );
 
-  const mentorName = "Elite Mentor";  // Change this to real name later
+  const mentorName = "Elite Mentor";
 
-  // === CHAT SYSTEM - FULLY WORKING ===
-  async function loadChat() {
-    const { data } = await supabase.from('community_chat').select('*').order('created_at', { ascending: true });
-    const chatBody = document.getElementById('chatBody');
-    chatBody.innerHTML = '';
-    if (!data || data.length === 0) {
-      chatBody.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">No messages yet. Start the conversation!</div>';
-      return;
-    }
-    data.forEach(msg => addMessage(msg));
-  }
+  // Tab system
+  document.querySelectorAll('.nav button[data-tab]').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+      document.getElementById(b.dataset.tab).style.display = 'block';
+    });
+  });
 
-  function addMessage(msg) {
-    const div = document.createElement('div');
-    div.className = `chat-message ${msg.sender === mentorName ? 'own' : 'other'}`;
-    div.innerHTML = `<strong>${msg.sender}</strong><br>${msg.message}
-      <div class="chat-message-meta">${new Date(msg.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>`;
-    document.getElementById('chatBody').appendChild(div);
-    div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  async function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const message = input.value.trim();
-    if (!message) return;
-
-    const { error } = await supabase
-      .from('community_chat')
-      .insert({ sender: mentorName, message });
-
-    if (error) {
-      showNotification('Failed to send message', 'error');
-    } else {
-      input.value = '';
-    }
-  }
-
-  // Real-time listener
-  supabase.channel('chat')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_chat' }, payload => {
-      addMessage(payload.new);
-    })
-    .subscribe();
-
-  function toggleChat() {
-    const chat = document.getElementById('chatBox');
-    chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
-    if (chat.style.display === 'flex') loadChat();
-  }
-
-  // === CLIENTS - FULLY WORKING ===
+  // Load Clients
   async function loadClients() {
     const { data, error } = await supabase
       .from('clients')
@@ -184,45 +158,88 @@
       .eq('status', 'approved')
       .order('join_date', { ascending: false });
 
-    if (error) {
-      document.getElementById('clientsTable').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--danger);">Error loading clients</td></tr>`;
-      console.error(error);
-      return;
-    }
+    if (error) { console.error(error); return; }
 
     document.getElementById('clientsCount').textContent = data.length;
-
-    if (data.length === 0) {
-      document.getElementById('clientsTable').innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted);">No approved clients yet</td></tr>`;
-      return;
-    }
-
-    document.getElementById('clientsTable').innerHTML = data.map(c => `
-      <tr>
-        <td><strong>${c.name}</strong></td>
-        <td>${c.email}</td>
-        <td>${c.phone || '—'}</td>
-        <td>${c.program}</td>
-        <td>${new Date(c.join_date).toLocaleDateString()}</td>
-        <td><button class="btn btn-info" onclick="alert('Client profile for ${c.name} would open here')">View</button></td>
-      </tr>
-    `).join('');
+    const tbody = document.getElementById('clientsTable');
+    tbody.innerHTML = data.length === 0 
+      ? `<tr><td colspan="6" style="text-align:center;padding:60px;color:var(--muted);">No clients yet</td></tr>`
+      : data.map(c => `
+        <tr>
+          <td><strong>${c.name}</strong></td>
+          <td>${c.email}</td>
+          <td>${c.phone || '—'}</td>
+          <td>${c.program}</td>
+          <td>${new Date(c.join_date).toLocaleDateString()}</td>
+          <td><button class="btn btn-info">View</button></td>
+        </tr>
+      `).join('');
   }
 
-  // === SIDEBAR NAVIGATION - FIXED ===
-  document.querySelectorAll('.nav button[data-tab]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('#clients, #lessons, #resources, #sessions').forEach(tab => {
-        tab.style.display = 'none';
-      });
-      document.getElementById(btn.dataset.tab).style.display = 'block';
-    });
+  // Upload Files
+  document.getElementById('fileUpload').addEventListener('change', async e => {
+    const files = e.target.files;
+    if (files.length === 0) return;
+
+    document.getElementById('uploadStatus').textContent = `Uploading ${files.length} file(s)...`;
+    document.getElementById('uploadStatus').style.color = 'orange';
+
+    for (let file of files) {
+      const filePath = `public/${Date.now()}_${file.name}`;
+      const { error } = await supabase.storage.from('materials').upload(filePath, file);
+
+      if (error) {
+        console.error(error);
+      } else {
+        const { data: url } = supabase.storage.from('materials').getPublicUrl(filePath);
+        const div = document.createElement('div');
+        div.className = 'resource-item';
+        div.innerHTML = `${file.name} — <a href="${url.publicUrl}" target="_blank">View</a>`;
+        document.getElementById('uploadedFiles').prepend(div);
+      }
+    }
+    document.getElementById('uploadStatus').textContent = 'All files uploaded!';
+    document.getElementById('uploadStatus').style.color = 'green';
   });
 
-  // === NOTIFICATION ===
-  function showNotification(msg, type = 'success') {
+  // Chat
+  async function loadChat() {
+    const { data } = await supabase.from('community_chat').select('*').order('created_at');
+    const body = document.getElementById('chatBody');
+    body.innerHTML = '';
+    data?.forEach(m => {
+      const msg = document.createElement('div');
+      msg.className = `message ${m.sender === mentorName ? 'own' : 'other'}`;
+      msg.innerHTML = `<strong>${m.sender}</strong>${m.message}<time>${new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</time>`;
+      body.appendChild(msg);
+    });
+    body.scrollTop = body.scrollHeight;
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    await supabase.from('community_chat').insert({ sender: mentorName, message: text });
+    input.value = '';
+  }
+
+  supabase.channel('chat')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_chat' }, () => loadChat())
+    .subscribe();
+
+  function toggleChat() {
+    const box = document.getElementById('chatBox');
+    box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+    if (box.style.display === 'flex') loadChat();
+  }
+
+  function loadAll() {
+    loadClients();
+    showNotification('Refreshed');
+  }
+
+  function showNotification(msg, type='success') {
     const n = document.createElement('div');
     n.className = `notification ${type}`;
     n.textContent = msg;
@@ -230,11 +247,9 @@
     setTimeout(() => n.remove(), 3000);
   }
 
-  // === ON LOAD ===
-  window.onload = () => {
-    loadClients();
-    showNotification('Crown Trade Mentor Dashboard Loaded!');
-  };
+  // Init
+  loadClients();
+  showNotification('Crown Trade Dashboard Ready');
 </script>
 </body>
 </html>
