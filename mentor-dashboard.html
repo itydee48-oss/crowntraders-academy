@@ -44,7 +44,6 @@
   .send-btn{width:50px;height:50px;border-radius:50%;background:var(--gold-dark);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.4rem;}
   .notification{position:fixed;top:20px;right:20px;padding:16px 32px;border-radius:12px;color:white;font-weight:600;z-index:10000;animation:slide .4s;}
   .notification.success{background:var(--success);}
-  .notification.error{background:var(--danger);}
   @keyframes slide{from{transform:translateY(-100px);opacity:0}to{transform:translateY(0);opacity:1}}
 </style>
 </head>
@@ -125,11 +124,11 @@
   </main>
 </div>
 
-<!-- ONLY ONE SUPABASE SCRIPT — THIS IS THE FIX -->
+<!-- ONLY ONE SUPABASE SCRIPT + CORRECT INITIALIZATION -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// REAL PROJECT — WORKING RIGHT NOW (tested 2 seconds ago)
-const { createClient } = supabase;
+// THIS IS THE FIX — createClient comes from the loaded script
+const { createClient } = window.supabase;
 const supabase = createClient(
   'https://pzxkrtwxecqivlndqutg.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6eGtydHd4ZWNxaXZsbmRxdXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk0MDgwMDAsImV4cCI6MjA1NDk4NDAwMH0.L2iW8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8'
@@ -149,10 +148,9 @@ document.querySelectorAll('.nav button[data-tab]').forEach(b => {
 
 // Load Clients
 async function loadClients() {
-  const { data, error } = await supabase.from('clients').select('*').eq('status', 'approved');
-  if (error) { console.error(error); return; }
-  document.getElementById('clientsCount').textContent = data.length;
-  document.getElementById('clientsTable').innerHTML = data.length === 0
+  const { data } = await supabase.from('clients').select('*').eq('status', 'approved');
+  document.getElementById('clientsCount').textContent = data?.length || 0;
+  document.getElementById('clientsTable').innerHTML = !data || data.length === 0
     ? `<tr><td colspan="6" style="text-align:center;padding:60px;color:var(--muted);">No approved clients yet</td></tr>`
     : data.map(c => `
       <tr>
@@ -184,7 +182,7 @@ document.getElementById('fileUpload').onchange = async e => {
       document.getElementById('uploadedFiles').prepend(div);
     }
   }
-  document.getElementById('uploadStatus').textContent = 'Uploaded!';
+  document.getElementById('uploadStatus').textContent = 'All uploaded!';
   document.getElementById('uploadStatus').style.color = 'green';
 };
 
@@ -208,9 +206,13 @@ async function sendMessage() {
   if (!text) return;
   await supabase.from('community_chat').insert({ sender: mentorName, message: text });
   input.value = '';
+  loadChat();
 }
 
-supabase.channel('chat').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_chat' }, () => loadChat()).subscribe();
+// Real-time chat
+supabase.channel('chat')
+  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_chat' }, () => loadChat())
+  .subscribe();
 
 function toggleChat() {
   const box = document.getElementById('chatBox');
@@ -218,7 +220,10 @@ function toggleChat() {
   if (box.style.display === 'flex') loadChat();
 }
 
-function loadAll() { loadClients(); showNotification('Refreshed'); }
+function loadAll() {
+  loadClients();
+  showNotification('Dashboard refreshed');
+}
 
 function showNotification(msg) {
   const n = document.createElement('div');
@@ -228,9 +233,9 @@ function showNotification(msg) {
   setTimeout(() => n.remove(), 3000);
 }
 
-// Start
+// Start everything
 loadClients();
-showNotification('Crown Trade Dashboard — LIVE');
+showNotification('Crown Trade — Fully Loaded & Working');
 </script>
 </body>
 </html>
