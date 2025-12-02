@@ -1,520 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Crown Trade — Mentor Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --nude: #F9F6F2;
-    --gold: #C8A97E;
-    --gold-dark: #B89463;
-    --charcoal: #2e2e2e;
-    --muted: #777;
-    --success: #10B981;
-    --danger: #EF4444;
-    --info: #3B82F6;
-    --light: #ffffff;
-  }
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background: var(--nude);
-    color: var(--charcoal);
-    min-height: 100vh;
-    overflow: hidden;
-  }
-  .app {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    height: 100vh;
-  }
-  .sidebar {
-    background: var(--light);
-    border-right: 1px solid rgba(200, 169, 126, 0.3);
-    padding: 32px;
-    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.05);
-  }
-  .brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.8rem;
-    color: var(--gold-dark);
-    font-weight: 700;
-  }
-  .tagline {
-    font-size: 0.95rem;
-    color: var(--muted);
-    margin: 8px 0 30px;
-  }
-  .nav button {
-    width: 100%;
-    padding: 16px 20px;
-    margin: 8px 0;
-    border-radius: 12px;
-    background: transparent;
-    color: var(--charcoal);
-    border: none;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .nav button:hover,
-  .nav button.active {
-    background: var(--gold);
-    color: white;
-  }
-  .main {
-    background: var(--light);
-    padding: 40px;
-    overflow-y: auto;
-  }
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 40px;
-  }
-  .title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.4rem;
-    color: var(--gold-dark);
-  }
-  .card {
-    background: white;
-    padding: 28px;
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
-    border: 1px solid #eee;
-    margin-bottom: 24px;
-  }
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  .card-title {
-    font-size: 1.5rem;
-    color: var(--gold-dark);
-    font-weight: 600;
-  }
-  .btn {
-    background: var(--gold);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: 0.3s;
-  }
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(200, 169, 126, 0.3);
-  }
-  .btn-success {
-    background: var(--success);
-  }
-  .btn-info {
-    background: var(--info);
-  }
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .table th,
-  .table td {
-    padding: 16px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
-  .table th {
-    background: var(--nude);
-    font-weight: 600;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mentor Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f5f7fa;
+      color: #333;
+    }
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      background: #0f172a;
+      padding: 20px;
+      color: white;
+      position: fixed;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .sidebar h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .sidebar button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background: #1e293b;
+      color: white;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .sidebar button:hover {
+      background: #334155;
+    }
 
-  .floating-btn {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 70px;
-    height: 70px;
-    background: var(--gold-dark);
-    color: white;
-    border-radius: 50%;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.2rem;
-    cursor: pointer;
-    z-index: 1000;
-  }
-  .chat-container {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 420px;
-    height: 600px;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
-    display: none;
-    flex-direction: column;
-    z-index: 9999;
-    border: 1px solid rgba(200, 169, 126, 0.4);
-    overflow: hidden;
-  }
-  .chat-header {
-    background: var(--gold-dark);
-    color: white;
-    padding: 20px;
-    font-weight: 600;
-    font-size: 1.2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .chat-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    background: #f8f7f5;
-  }
-  .message {
-    margin: 12px 0;
-    max-width: 80%;
-    padding: 14px 18px;
-    border-radius: 20px;
-    position: relative;
-  }
-  .message.own {
-    background: var(--gold);
-    color: white;
-    align-self: flex-end;
-    margin-left: auto;
-    border-bottom-right-radius: 6px;
-  }
-  .message.other {
-    background: #f0f0f0;
-    color: var(--charcoal);
-    align-self: flex-start;
-    border-bottom-left-radius: 6px;
-  }
-  .message strong {
-    display: block;
-    margin-bottom: 4px;
-  }
-  .message time {
-    font-size: 0.75rem;
-    opacity: 0.8;
-    position: absolute;
-    bottom: 6px;
-    right: 12px;
-  }
-  .chat-input-area {
-    padding: 16px;
-    background: white;
-    border-top: 1px solid #eee;
-    display: flex;
-    gap: 12px;
-  }
-  .chat-input {
-    flex: 1;
-    padding: 14px 18px;
-    border-radius: 30px;
-    border: 1px solid #ddd;
-    font-size: 1rem;
-  }
-  .chat-input:focus {
-    outline: none;
-    border-color: var(--gold);
-  }
-  .send-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--gold-dark);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.4rem;
-  }
-  .notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 16px 32px;
-    border-radius: 12px;
-    color: white;
-    font-weight: 600;
-    z-index: 10000;
-    animation: slide 0.4s;
-  }
-  .notification.success {
-    background: var(--success);
-  }
-  @keyframes slide {
-    from {
-      transform: translateY(-100px);
-      opacity: 0;
+    .content {
+      margin-left: 260px;
+      padding: 30px;
     }
-    to {
-      transform: translateY(0);
-      opacity: 1;
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
     }
-  }
-</style>
+
+    .clients-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .client-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: 0.25s;
+    }
+    .client-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .chat-box {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 350px;
+      height: 480px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-header {
+      background: #0f172a;
+      color: white;
+      padding: 14px;
+      font-size: 17px;
+      border-radius: 18px 18px 0 0;
+      text-align: center;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+    }
+    .chat-input {
+      padding: 12px;
+      border-top: 1px solid #ddd;
+      display: flex;
+      gap: 10px;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .chat-input button {
+      background: #0f172a;
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .floating-chat-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #0f172a;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+  </style>
 </head>
 <body>
-<div class="floating-btn" onclick="toggleChat()">Chat</div>
 
-<div class="chat-container" id="chatBox">
-  <div class="chat-header">
-    <div>Crown Trade Community</div>
-    <button style="background:none;border:none;color:white;font-size:1.8rem;cursor:pointer;" onclick="toggleChat()">×</button>
+<div class="sidebar">
+  <h2>Mentor Panel</h2>
+  <button onclick="showSection('clients')">Approved Clients</button>
+  <button onclick="showSection('tasks')">Tasks</button>
+  <button onclick="showSection('resources')">Resources</button>
+</div>
+
+<div class="content" id="main-content">
+  <div id="clients-section" class="card">
+    <h2>Approved Clients</h2>
+    <div class="clients-grid" id="clients-list"></div>
   </div>
-  <div class="chat-body" id="chatBody">
-    <div style="text-align:center;padding:60px;color:var(--muted);">Loading messages...</div>
+
+  <div id="tasks-section" class="card" style="display:none;">
+    <h2>Tasks</h2>
+    <p>Mentor tasks will load here.</p>
   </div>
-  <div class="chat-input-area">
-    <input
-      type="text"
-      class="chat-input"
-      id="chatInput"
-      placeholder="Send a message..."
-      onkeydown="if(event.key==='Enter')sendMessage()"
-    />
-    <div class="send-btn" onclick="sendMessage()">Send</div>
+
+  <div id="resources-section" class="card" style="display:none;">
+    <h2>Resources</h2>
+    <p>Your learning resources will appear here.</p>
   </div>
 </div>
 
-<div class="app">
-  <aside class="sidebar">
-    <div class="brand">Crown Trade</div>
-    <div class="tagline">Elite Mentorship Portal</div>
-    <nav class="nav">
-      <button data-tab="clients" class="active">All Clients</button>
-      <button data-tab="resources">Resources</button>
-      <button data-tab="lessons">Lessons</button>
-      <button data-tab="sessions">Sessions</button>
-      <button onclick="toggleChat()">Community Chat</button>
-    </nav>
-    <button class="btn" style="margin-top:auto;width:100%;background:var(--info);" onclick="loadAll()">Refresh All</button>
-  </aside>
+<div class="floating-chat-btn" onclick="toggleChat()">💬</div>
 
-  <main class="main">
-    <div class="header">
-      <div class="title">Mentor Command Center</div>
-      <div style="text-align:right;">
-        <div style="font-weight:700;font-size:1.3rem;">Elite Mentor</div>
-        <div style="color:var(--muted)">Active clients: <strong id="clientsCount">0</strong></div>
-      </div>
-    </div>
-
-    <section id="clients">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Approved Clients</div>
-          <button class="btn btn-info" onclick="loadClients()">Refresh</button>
-        </div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Program</th>
-              <th>Joined</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="clientsTable">
-            <tr style="text-align:center;padding:60px;color:var(--muted)">
-              <td colspan="6">Loading...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="resources" style="display:none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Upload Materials</div>
-        </div>
-        <div style="text-align:center;padding:60px 0;">
-          <input type="file" id="fileUpload" multiple style="display:none;" />
-          <button
-            class="btn btn-success"
-            style="padding:18px 50px;font-size:1.2rem"
-            onclick="document.getElementById('fileUpload').click()"
-          >
-            Upload Videos, PDFs, Images, ZIPs
-          </button>
-          <div id="uploadStatus" style="margin-top:30px;font-size:1.1rem;font-weight:600;"></div>
-          <div id="uploadedFiles" style="margin-top:30px;"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="lessons" style="display:none;">
-      <div class="card">
-        <h2>Lessons</h2>
-        <p>Coming soon...</p>
-      </div>
-    </section>
-
-    <section id="sessions" style="display:none;">
-      <div class="card">
-        <h2>Sessions</h2>
-        <p>Coming soon...</p>
-      </div>
-    </section>
-  </main>
+<div class="chat-box" id="chat-box">
+  <div class="chat-header">Community Chat</div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input">
+    <input id="chat-text" placeholder="Type message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const { createClient } = window.supabase;
-  const supabase = createClient(
-    'https://pzxkrtwxecqivlndqutg.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6eGtydHd4ZWNxaXZsbmRxdXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk0MDgwMDAsImV4cCI6MjA1NDk4NDAwMH0.L2iW8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8'
-  );
+  const supabase = supabase.createClient("https://omrsywvfdhzeokmfdrfh.supabase.co", "YOUR_PUBLIC_ANON_KEY");
 
-  const mentorName = "Elite Mentor";
-
-  // Tab Navigation
-  document.querySelectorAll('.nav button[data-tab]').forEach(b => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-      document.querySelectorAll('section').forEach(s => (s.style.display = 'none'));
-      document.getElementById(b.dataset.tab).style.display = 'block';
-    });
-  });
-
-  // Load Clients
   async function loadClients() {
-    const { data } = await supabase.from('clients').select('*').eq('status', 'approved');
-    document.getElementById('clientsCount').textContent = data?.length || 0;
-    document.getElementById('clientsTable').innerHTML =
-      !data || data.length === 0
-        ? `<tr><td colspan="6" style="text-align:center;padding:60px;color:var(--muted)">No approved clients yet</td></tr>`
-        : data
-            .map(
-              c => `
-        <tr>
-          <td><strong>${c.name}</strong></td>
-          <td>${c.email}</td>
-          <td>${c.phone || '—'}</td>
-          <td>${c.program}</td>
-          <td>${new Date(c.join_date).toLocaleDateString()}</td>
-          <td><button class="btn btn-info">View</button></td>
-        </tr>
-      `
-            )
-            .join('');
-  }
+    let { data, error } = await supabase.from('clients').select('*').eq('status', 'approved');
+    const container = document.getElementById('clients-list');
+    container.innerHTML = '';
 
-  // Upload Files
-  document.getElementById('fileUpload').onchange = async e => {
-    const files = e.target.files;
-    if (!files.length) return;
-    document.getElementById('uploadStatus').textContent = `Uploading ${files.length} file(s)...`;
-    document.getElementById('uploadStatus').style.color = 'orange';
-
-    for (let file of files) {
-      const path = `materials/${Date.now()}_${file.name}`;
-      const { error } = await supabase.storage.from('materials').upload(path, file);
-      if (!error || error.statusCode === 409) {
-        const { data } = supabase.storage.from('materials').getPublicUrl(path);
-        const div = document.createElement('div');
-        div.innerHTML = `${file.name} — <a href="${data.publicUrl}" target="_blank">Open</a>`;
-        div.style = 'padding:12px;background:#f0f9ff;border-radius:8px;margin:10px 0;';
-        document.getElementById('uploadedFiles').prepend(div);
-      }
+    if (error) {
+      container.innerHTML = '<p>Error loading clients.</p>';
+      return;
     }
-    document.getElementById('uploadStatus').textContent = 'All uploaded!';
-    document.getElementById('uploadStatus').style.color = 'green';
-  };
 
-  // Load Chat Messages
-  async function loadChat() {
-    const { data } = await supabase
-      .from('community_chat')
-      .select('*')
-      .order('created_at', { ascending: true });
-    const body = document.getElementById('chatBody');
-    body.innerHTML = '';
-    (data || []).forEach(m => {
-      const msg = document.createElement('div');
-      msg.className = `message ${m.sender === mentorName ? 'own' : 'other'}`;
-      msg.innerHTML = `<strong>${m.sender}</strong><div>${m.message}</div><time>${new Date(
-        m.created_at
-      ).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time>`;
-      body.appendChild(msg);
+    data.forEach(c => {
+      container.innerHTML += `
+        <div class="client-card">
+          <h3>${c.full_name}</h3>
+          <p>Email: ${c.email}</p>
+        </div>
+      `;
     });
-    body.scrollTop = body.scrollHeight;
   }
 
-  // Send Message
-  async function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const text = input.value.trim();
-    if (!text) return;
-    await supabase.from('community_chat').insert({ sender: mentorName, message: text });
-    input.value = '';
-    loadChat();
+  function showSection(section) {
+    document.getElementById('clients-section').style.display = 'none';
+    document.getElementById('tasks-section').style.display = 'none';
+    document.getElementById('resources-section').style.display = 'none';
+
+    document.getElementById(section + '-section').style.display = 'block';
   }
-
-  // Comment out realtime subscription due to plan limitations
-  /*
-  supabase
-    .channel('chat')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_chat' }, () =>
-      loadChat()
-    )
-    .subscribe();
-  */
-
-  // Polling to refresh chat every 5 seconds
-  setInterval(() => {
-    loadChat();
-  }, 5000);
 
   function toggleChat() {
-    const box = document.getElementById('chatBox');
+    const box = document.getElementById('chat-box');
     box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-    if (box.style.display === 'flex') loadChat();
   }
 
-  function loadAll() {
-    loadClients();
-    showNotification('Dashboard refreshed');
+  async function loadChat() {
+    let { data } = await supabase.from('community_chat').select('*').order('created_at', { ascending: true });
+    const chat = document.getElementById('chat-messages');
+    chat.innerHTML = '';
+
+    data?.forEach(m => {
+      chat.innerHTML += `<p><strong>${m.sender}</strong>: ${m.message}</p>`;
+    });
+
+    chat.scrollTop = chat.scrollHeight;
   }
 
-  function showNotification(message, type = 'success') {
-    const notif = document.createElement('div');
-    notif.className = `notification ${type}`;
-    notif.textContent = message;
-    document.body.appendChild(notif);
-    setTimeout(() => notif.remove(), 2500);
+  async function sendMessage() {
+    const text = document.getElementById('chat-text').value;
+    if (!text.trim()) return;
+
+    await supabase.from('community_chat').insert({ sender: 'Mentor', message: text });
+    document.getElementById('chat-text').value = '';
+    loadChat();
   }
 
-  // Initial load
+  setInterval(loadChat, 5000);
   loadClients();
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Dashboard</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+    <div class="flex">
+        <aside class="w-64 bg-white shadow-lg min-h-screen p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Mentor Panel</h2>
+            <nav class="space-y-4">
+                <button class="w-full text-left text-gray-700 hover:text-blue-600 font-medium">Dashboard</button>
+                <button class="w-full text-left text-gray-700 hover:text-blue-600 font-medium">Approved Clients</button>
+                <button class="w-full text-left text-gray-700 hover:text-blue-600 font-medium">Community Chat</button>
+                <button class="w-full text-left text-gray-700 hover:text-blue-600 font-medium">Tasks</button>
+                <button class="w-full text-left text-gray-700 hover:text-blue-600 font-medium">Resources</button>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-10">
+            <h1 class="text-3xl font-bold text-gray-900 mb-8">Welcome, Mentor</h1>
+
+            <!-- Clients Section -->
+            <section id="clientsSection" class="mb-12">
+                <h2 class="text-xl font-semibold mb-4">Your Approved Clients</h2>
+                <div id="clientsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </section>
+
+            <!-- Chat Section -->
+            <section id="chatSection" class="mb-12">
+                <h2 class="text-xl font-semibold mb-4">Community Chat</h2>
+                <div class="bg-white shadow-md rounded-lg p-6 h-96 overflow-y-auto" id="chatMessages"></div>
+
+                <div class="mt-4 flex gap-3">
+                    <input id="chatInput" class="flex-1 p-3 border rounded-lg" placeholder="Type a message..." />
+                    <button id="sendBtn" class="px-5 py-3 bg-blue-600 text-white rounded-lg">Send</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+<script>
+    const SUPABASE_URL = "https://omrsywvfdhzeokmfdrfh.supabase.co";
+    const SUPABASE_KEY = "YOUR_PUBLIC_ANON_KEY";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function loadClients() {
+        const { data, error } = await supabase
+            .from('clients')
+            .select('*')
+            .eq('status', 'approved');
+
+        if (error) {
+            console.error(error);
+            return;
+        }
+
+        const container = document.getElementById('clientsList');
+        container.innerHTML = '';
+
+        data.forEach(client => {
+            const card = document.createElement('div');
+            card.className = "bg-white shadow-md p-6 rounded-lg";
+            card.innerHTML = `
+                <h3 class="text-lg font-bold text-gray-800">${client.name}</h3>
+                <p class="text-gray-600">${client.email}</p>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    async function loadChat() {
+        const { data, error } = await supabase
+            .from('community_chat')
+            .select('*')
+            .order('created_at', { ascending: true });
+
+        if (error) return;
+
+        const chatBox = document.getElementById('chatMessages');
+        chatBox.innerHTML = '';
+
+        data.forEach(msg => {
+            const bubble = document.createElement('div');
+            bubble.className = "mb-4";
+            bubble.innerHTML = `
+                <p class="text-gray-800 font-semibold">${msg.sender}</p>
+                <p class="text-gray-700 bg-gray-200 p-3 rounded-lg inline-block">${msg.message}</p>
+            `;
+            chatBox.appendChild(bubble);
+        });
+    }
+
+    document.getElementById('sendBtn').addEventListener('click', async () => {
+        const message = document.getElementById('chatInput').value.trim();
+        if (!message) return;
+
+        await supabase.from('community_chat').insert([
+            { sender: 'Mentor', message }
+        ]);
+
+        document.getElementById('chatInput').value = '';
+        loadChat();
+    });
+
+    loadClients();
+    loadChat();
 </script>
 </body>
 </html>
