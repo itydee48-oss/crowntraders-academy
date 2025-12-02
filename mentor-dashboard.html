@@ -286,6 +286,9 @@
   .notification.success {
     background: var(--success);
   }
+  .notification.danger {
+    background: var(--danger);
+  }
   @keyframes slide {
     from {
       transform: translateY(-100px);
@@ -520,123 +523,133 @@
   function escapeHTML(text) {
     if (!text) return '';
     return text.replace(/[&<>"']/g, function(m) {
-      return ({'&
-  function escapeHTML(text) {
-    if (!text) return '';
-    return text.replace(/[&<>"']/g, function(m) {
       return {
         '&': '&amp;',
         '<': '&lt;',
         '>': '&gt;',
         '"': '&quot;',
-        "'": '&#39;'
+        "'": '&#39;',
       }[m];
     });
   }
 
-  // View client detail (placeholder)
-  function viewClient(clientId) {
-    alert(`View details for client ID: ${clientId}`);
-    // You can add modal or navigation to client detail page here
+  // Placeholder for viewing client details
+  function viewClient(id) {
+    alert(`Open client details for ID: ${id}`);
   }
 
-  // Notification system
-  function showNotification(message, type = 'success') {
-    const notif = document.createElement('div');
-    notif.className = `notification ${type === 'danger' ? 'danger' : 'success'}`;
-    notif.textContent = message;
-    document.body.appendChild(notif);
-    setTimeout(() => notif.remove(), 3000);
-  }
+  // Upload resources handling
+  const fileInput = document.getElementById('fileUpload');
+  fileInput.addEventListener('change', async () => {
+    if (!fileInput.files.length) return;
+    const statusDiv = document.getElementById('uploadStatus');
+    const uploadedDiv = document.getElementById('uploadedFiles');
+    statusDiv.textContent = 'Uploading...';
+    uploadedDiv.innerHTML = '';
 
-  // Chat toggle
-  function toggleChat() {
-    const chat = document.getElementById('chatBox');
-    if (chat.style.display === 'flex') {
-      chat.style.display = 'none';
-    } else {
-      chat.style.display = 'flex';
-      loadChatMessages();
-    }
-  }
-
-  // Placeholder chat messages loader
-  async function loadChatMessages() {
-    const chatBody = document.getElementById('chatBody');
-    chatBody.innerHTML = `<div style="text-align:center;padding:60px;color:var(--muted);">No messages yet.</div>`;
-    // Implement real-time or historical messages fetching here
-  }
-
-  // Send chat message (placeholder)
-  function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const message = input.value.trim();
-    if (!message) return;
-    // Append message locally for demo
-    const chatBody = document.getElementById('chatBody');
-    const msgDiv = document.createElement('div');
-    msgDiv.className = 'message own';
-    msgDiv.innerHTML = `<strong>${mentorName}</strong>${escapeHTML(message)}<time>${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</time>`;
-    chatBody.appendChild(msgDiv);
-    chatBody.scrollTop = chatBody.scrollHeight;
-    input.value = '';
-
-    // TODO: send to backend
-  }
-
-  // Upload materials handling
-  const fileUploadInput = document.getElementById('fileUpload');
-  fileUploadInput.addEventListener('change', async (event) => {
-    const files = event.target.files;
-    if (!files.length) return;
-    document.getElementById('uploadStatus').textContent = 'Uploading...';
-
-    let allSuccess = true;
-    let uploadedFilesHtml = '';
-
-    for (const file of files) {
+    for (const file of fileInput.files) {
+      const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
       try {
-        const filePath = `${Date.now()}_${file.name}`;
-        const { data, error } = await supabase.storage.from('materials').upload(filePath, file, {
+        const { data, error } = await supabase.storage.from('uploads').upload(fileName, file, {
           cacheControl: '3600',
           upsert: false,
-          contentType: file.type
         });
         if (error) throw error;
 
-        // Get public URL for uploaded file
-        const { data: publicUrlData } = supabase.storage.from('materials').getPublicUrl(filePath);
-        uploadedFilesHtml += `<div><a href="${publicUrlData.publicUrl}" target="_blank" rel="noopener noreferrer">${escapeHTML(file.name)}</a></div>`;
-      } catch (error) {
-        allSuccess = false;
-        console.error('Upload error:', error);
+        const publicURL = supabase.storage.from('uploads').getPublicUrl(fileName).data.publicUrl;
+        uploadedDiv.innerHTML += `<p><a href="${publicURL}" target="_blank">${file.name}</a> uploaded successfully.</p>`;
+      } catch (err) {
+        uploadedDiv.innerHTML += `<p style="color: var(--danger);">Failed to upload ${file.name}</p>`;
+        console.error(err);
       }
     }
-
-    if (allSuccess) {
-      showNotification('All files uploaded successfully!');
-      document.getElementById('uploadStatus').textContent = '';
-      document.getElementById('uploadedFiles').innerHTML = uploadedFilesHtml;
-    } else {
-      showNotification('Some files failed to upload.', 'danger');
-      document.getElementById('uploadStatus').textContent = 'Upload encountered errors.';
-    }
-
-    // Reset file input to allow re-uploading same files if needed
-    fileUploadInput.value = '';
+    statusDiv.textContent = 'Upload complete.';
+    fileInput.value = '';
   });
 
-  // Load all main data (clients, etc.)
-  function loadAll() {
-    loadClients();
-    // Add other loaders here as you build
+  // Notification system
+  function showNotification(message, type = 'success') {
+    if(document.querySelector('.notification')) {
+      document.querySelector('.notification').remove();
+    }
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 3500);
   }
 
-  // Initial load on page ready
-  document.addEventListener('DOMContentLoaded', () => {
-    loadAll();
-  });
-</script>
+  // Chat toggle logic
+  const chatBox = document.getElementById('chatBox');
+  function toggleChat() {
+    if (chatBox.style.display === 'flex') {
+      chatBox.style.display = 'none';
+    } else {
+      chatBox.style.display = 'flex';
+      loadMessages();
+    }
+  }
 
+  // Escape input for chat
+  function sanitize(text) {
+    if (!text) return '';
+    return text.replace(/[&<>"']/g, m => {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+    });
+  }
+
+  // Load chat messages from Supabase
+  async function loadMessages() {
+    const chatBody = document.getElementById('chatBody');
+    chatBody.innerHTML = '<div style="text-align:center;padding:60px;color:var(--muted);">Loading messages...</div>';
+    try {
+      const { data, error } = await supabase.from('community_chat').select('*').order('created_at', { ascending: true }).limit(50);
+      if (error) throw error;
+      if (!data.length) {
+        chatBody.innerHTML = '<div style="text-align:center;padding:60px;color:var(--muted);">No messages yet</div>';
+        return;
+      }
+      chatBody.innerHTML = data.map(msg => {
+        const isOwn = msg.sender === mentorName;
+        return `
+          <div class="message ${isOwn ? 'own' : 'other'}" aria-label="${isOwn ? 'Your message' : 'Message from ' + escapeHTML(msg.sender)}">
+            <strong>${escapeHTML(msg.sender)}</strong>
+            <span>${sanitize(msg.message)}</span>
+            <time>${new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</time>
+          </div>
+        `;
+      }).join('');
+      chatBody.scrollTop = chatBody.scrollHeight;
+    } catch (err) {
+      chatBody.innerHTML = `<div style="color: var(--danger); text-align:center; padding:60px;">Failed to load messages</div>`;
+      console.error(err);
+    }
+  }
+
+  // Send chat message
+  async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    input.value = '';
+    try {
+      const { error } = await supabase.from('community_chat').insert([
+        { sender: mentorName, message: msg }
+      ]);
+      if (error) throw error;
+      loadMessages();
+    } catch (err) {
+      showNotification('Failed to send message', 'danger');
+      console.error(err);
+    }
+  }
+
+  // Initial load of clients on page load
+  async function loadAll() {
+    await loadClients();
+    // Other loads can be added here if needed
+  }
+  window.onload = loadAll;
+</script>
 </body>
 </html>
