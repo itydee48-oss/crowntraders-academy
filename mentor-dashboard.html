@@ -1,354 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mentor Dashboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #f5f7fa;
-      color: #333;
-    }
-    .sidebar {
-      width: 260px;
-      height: 100vh;
-      background: #0f172a;
-      padding: 20px;
-      color: white;
-      position: fixed;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    .sidebar h2 {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 600;
-    }
-    .sidebar button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      background: #1e293b;
-      color: white;
-      border-radius: 10px;
-      font-size: 15px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .sidebar button:hover {
-      background: #334155;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mentor Dashboard</title>
 
-    .content {
-      margin-left: 260px;
-      padding: 30px;
-    }
+    <!-- TailwindCSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-      margin-bottom: 25px;
-    }
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
-    .clients-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-    }
-
-    .client-card {
-      background: #ffffff;
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-      transition: 0.25s;
-    }
-    .client-card:hover {
-      transform: translateY(-3px);
-    }
-
-    .chat-box {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 350px;
-      height: 480px;
-      background: white;
-      border-radius: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-      display: flex;
-      flex-direction: column;
-    }
-    .chat-header {
-      background: #0f172a;
-      color: white;
-      padding: 14px;
-      font-size: 17px;
-      border-radius: 18px 18px 0 0;
-      text-align: center;
-    }
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 15px;
-    }
-    .chat-input {
-      padding: 12px;
-      border-top: 1px solid #ddd;
-      display: flex;
-      gap: 10px;
-    }
-    .chat-input input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    .chat-input button {
-      background: #0f172a;
-      color: white;
-      border: none;
-      padding: 10px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .floating-chat-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #0f172a;
-      color: white;
-      padding: 15px 20px;
-      border-radius: 50%;
-      font-size: 20px;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    }
-
-  </style>
+    <style>
+        body {
+            background: #fdf8f5; /* Nude aesthetic */
+            font-family: 'Inter', sans-serif;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(12px);
+        }
+        .section-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen flex">
+    <!-- Sidebar -->
+    <aside class="w-72 h-screen p-6 glass shadow-lg flex flex-col gap-6 fixed">
+        <h2 class="text-3xl font-bold text-gray-800 tracking-tight">Mentor Panel</h2>
 
-<div class="sidebar">
-  <h2>Mentor Panel</h2>
-  <button onclick="showSection('clients')">Approved Clients</button>
-  <button onclick="showSection('tasks')">Tasks</button>
-  <button onclick="showSection('resources')">Resources</button>
-</div>
+        <nav class="flex flex-col gap-4 text-lg font-medium text-gray-700">
+            <button onclick="showSection('dashboard')" class="hover:text-black">Dashboard</button>
+            <button onclick="showSection('clients')" class="hover:text-black">Clients</button>
+            <button onclick="showSection('chat')" class="hover:text-black">Community Chat</button>
+            <button onclick="showSection('tasks')" class="hover:text-black">Tasks</button>
+            <button onclick="showSection('resources')" class="hover:text-black">Resources</button>
+            <button onclick="showSection('calendar')" class="hover:text-black">Mentor Calendar</button>
+        </nav>
+    </aside>
 
-<div class="content" id="main-content">
-  <div id="clients-section" class="card">
-    <h2>Approved Clients</h2>
-    <div class="clients-grid" id="clients-list"></div>
-  </div>
+    <!-- Main Content -->
+    <main class="flex-1 ml-72 p-10">
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-8">Welcome Mentor</h1>
 
-  <div id="tasks-section" class="card" style="display:none;">
-    <h2>Tasks</h2>
-    <p>Mentor tasks will load here.</p>
-  </div>
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Overview</h2>
+            <p class="text-gray-600">Your activity summary will appear here.</p>
+        </section>
 
-  <div id="resources-section" class="card" style="display:none;">
-    <h2>Resources</h2>
-    <p>Your learning resources will appear here.</p>
-  </div>
-</div>
+        <!-- Clients Section -->
+        <section id="clients" class="section-card hidden">
+            <h2 class="text-2xl font-semibold mb-6">Approved Clients</h2>
+            <div id="clientsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
 
-<div class="floating-chat-btn" onclick="toggleChat()">💬</div>
+        <!-- Chat Section -->
+        <section id="chat" class="section-card hidden">
+            <h2 class="text-2xl font-semibold mb-6">Community Chat</h2>
+            <div id="chatMessages" class="h-96 overflow-y-auto p-4 bg-gray-100 rounded-lg mb-4"></div>
 
-<div class="chat-box" id="chat-box">
-  <div class="chat-header">Community Chat</div>
-  <div class="chat-messages" id="chat-messages"></div>
-  <div class="chat-input">
-    <input id="chat-text" placeholder="Type message..." />
-    <button onclick="sendMessage()">Send</button>
-  </div>
-</div>
+            <div class="flex gap-3">
+                <input id="chatInput" class="flex-1 p-3 border rounded-lg" placeholder="Type a message..." />
+                <button id="sendBtn" class="px-5 py-3 bg-black text-white rounded-lg">Send</button>
+            </div>
+        </section>
+
+        <!-- Tasks Section -->
+        <section id="tasks" class="section-card hidden">
+            <h2 class="text-2xl font-semibold mb-4">Tasks</h2>
+            <p class="text-gray-600">This will allow mentors to assign tasks.</p>
+        </section>
+
+        <!-- Resources Upload Section -->
+        <section id="resources" class="section-card hidden">
+            <h2 class="text-2xl font-semibold mb-6">Upload Study Materials</h2>
+
+            <input type="file" id="fileUpload" class="mb-4" />
+            <button onclick="uploadFile()" class="px-5 py-3 bg-black text-white rounded-lg">Upload</button>
+
+            <h3 class="text-xl font-semibold mt-6 mb-3">Available Materials</h3>
+            <div id="materialsList" class="space-y-3"></div>
+        </section>
+
+        <!-- Calendar Section -->
+        <section id="calendar" class="section-card hidden">
+            <h2 class="text-2xl font-semibold mb-6">Mentor Availability Calendar</h2>
+            <p class="mb-4 text-gray-700">Clients can schedule calls based on available slots.</p>
+
+            <input type="datetime-local" id="availabilityPicker" class="border p-3 rounded-lg" />
+            <button onclick="addAvailability()" class="px-4 py-2 bg-black text-white rounded-lg ml-2">Add Slot</button>
+
+            <h3 class="text-xl font-semibold mt-6 mb-3">Available Slots</h3>
+            <ul id="slotList" class="list-disc pl-6"></ul>
+        </section>
+    </main>
 
 <script>
-  const supabase = supabase.createClient("https://omrsywvfdhzeokmfdrfh.supabase.co", "YOUR_PUBLIC_ANON_KEY");
+// Initialize Supabase **ONCE**
+const supabaseClient = supabase.createClient(
+    "https://omrsywvfdhzeokmfdrfh.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o"
+);
 
-  async function loadClients() {
-    let { data, error } = await supabase.from('clients').select('*').eq('status', 'approved');
-    const container = document.getElementById('clients-list');
+function showSection(id) {
+    document.querySelectorAll('main section').forEach(sec => sec.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+}
+
+// Load Approved Clients
+async function loadClients() {
+    const { data } = await supabaseClient
+        .from('clients')
+        .select('*')
+        .eq('status', 'approved');
+
+    const container = document.getElementById('clientsList');
     container.innerHTML = '';
 
-    if (error) {
-      container.innerHTML = '<p>Error loading clients.</p>';
-      return;
-    }
-
-    data.forEach(c => {
-      container.innerHTML += `
-        <div class="client-card">
-          <h3>${c.full_name}</h3>
-          <p>Email: ${c.email}</p>
-        </div>
-      `;
+    data?.forEach(client => {
+        const box = document.createElement('div');
+        box.className = 'p-6 bg-white rounded-lg shadow-md';
+        box.innerHTML = `<h3 class='font-bold text-lg'>${client.name}</h3><p>${client.email}</p>`;
+        container.appendChild(box);
     });
-  }
+}
 
-  function showSection(section) {
-    document.getElementById('clients-section').style.display = 'none';
-    document.getElementById('tasks-section').style.display = 'none';
-    document.getElementById('resources-section').style.display = 'none';
+// Chat System
+async function loadChat() {
+    const { data } = await supabaseClient
+        .from('community_chat')
+        .select('*')
+        .order('created_at', { ascending: true });
 
-    document.getElementById(section + '-section').style.display = 'block';
-  }
-
-  function toggleChat() {
-    const box = document.getElementById('chat-box');
-    box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-  }
-
-  async function loadChat() {
-    let { data } = await supabase.from('community_chat').select('*').order('created_at', { ascending: true });
-    const chat = document.getElementById('chat-messages');
-    chat.innerHTML = '';
+    const area = document.getElementById('chatMessages');
+    area.innerHTML = '';
 
     data?.forEach(m => {
-      chat.innerHTML += `<p><strong>${m.sender}</strong>: ${m.message}</p>`;
+        const bubble = document.createElement('div');
+        bubble.className = 'mb-4';
+        bubble.innerHTML = `<p class='font-semibold'>${m.sender}</p><p class='p-3 bg-gray-200 rounded-lg inline-block'>${m.message}</p>`;
+        area.appendChild(bubble);
     });
+}
 
-    chat.scrollTop = chat.scrollHeight;
-  }
+document.getElementById('sendBtn').onclick = async () => {
+    const v = document.getElementById('chatInput').value.trim();
+    if (!v) return;
 
-  async function sendMessage() {
-    const text = document.getElementById('chat-text').value;
-    if (!text.trim()) return;
+    await supabaseClient.from('community_chat').insert([
+        { sender: 'Mentor', message: v }
+    ]);
 
-    await supabase.from('community_chat').insert({ sender: 'Mentor', message: text });
-    document.getElementById('chat-text').value = '';
+    document.getElementById('chatInput').value = '';
     loadChat();
-  }
+};
 
-  setInterval(loadChat, 5000);
-  loadClients();
-</script>
+// File Upload (PDF, videos, etc.)
+async function uploadFile() {
+    const file = document.getElementById('fileUpload').files[0];
+    if (!file) return alert("Choose a file first");
 
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mentor Dashboard</title>
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 min-h-screen font-sans">
-    <div class="flex">
-        <aside class="w-64 bg-white shadow-lg min-h-screen p-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Mentor Panel</h2>
-            <nav class="space-y-4">
-                <button class="w-full text-left text-gray-700 hover:text-blue-600 font-medium">Dashboard</button>
-                <button class="w-full text-left text-gray-700 hover:text-blue-600 font-medium">Approved Clients</button>
-                <button class="w-full text-left text-gray-700 hover:text-blue-600 font-medium">Community Chat</button>
-                <button class="w-full text-left text-gray-700 hover:text-blue-600 font-medium">Tasks</button>
-                <button class="w-full text-left text-gray-700 hover:text-blue-600 font-medium">Resources</button>
-            </nav>
-        </aside>
+    const { data, error } = await supabaseClient.storage
+        .from('materials')
+        .upload(`files/${Date.now()}_${file.name}`, file);
 
-        <main class="flex-1 p-10">
-            <h1 class="text-3xl font-bold text-gray-900 mb-8">Welcome, Mentor</h1>
+    if (error) return alert("Upload failed");
 
-            <!-- Clients Section -->
-            <section id="clientsSection" class="mb-12">
-                <h2 class="text-xl font-semibold mb-4">Your Approved Clients</h2>
-                <div id="clientsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            </section>
+    alert('Uploaded');
+    loadMaterials();
+}
 
-            <!-- Chat Section -->
-            <section id="chatSection" class="mb-12">
-                <h2 class="text-xl font-semibold mb-4">Community Chat</h2>
-                <div class="bg-white shadow-md rounded-lg p-6 h-96 overflow-y-auto" id="chatMessages"></div>
+async function loadMaterials() {
+    const { data } = await supabaseClient.storage
+        .from('materials')
+        .list('files');
 
-                <div class="mt-4 flex gap-3">
-                    <input id="chatInput" class="flex-1 p-3 border rounded-lg" placeholder="Type a message..." />
-                    <button id="sendBtn" class="px-5 py-3 bg-blue-600 text-white rounded-lg">Send</button>
-                </div>
-            </section>
+    const box = document.getElementById('materialsList');
+    box.innerHTML = '';
 
-        </main>
-    </div>
-
-<script>
-    const SUPABASE_URL = "https://omrsywvfdhzeokmfdrfh.supabase.co";
-    const SUPABASE_KEY = "YOUR_PUBLIC_ANON_KEY";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    async function loadClients() {
-        const { data, error } = await supabase
-            .from('clients')
-            .select('*')
-            .eq('status', 'approved');
-
-        if (error) {
-            console.error(error);
-            return;
-        }
-
-        const container = document.getElementById('clientsList');
-        container.innerHTML = '';
-
-        data.forEach(client => {
-            const card = document.createElement('div');
-            card.className = "bg-white shadow-md p-6 rounded-lg";
-            card.innerHTML = `
-                <h3 class="text-lg font-bold text-gray-800">${client.name}</h3>
-                <p class="text-gray-600">${client.email}</p>
-            `;
-            container.appendChild(card);
-        });
-    }
-
-    async function loadChat() {
-        const { data, error } = await supabase
-            .from('community_chat')
-            .select('*')
-            .order('created_at', { ascending: true });
-
-        if (error) return;
-
-        const chatBox = document.getElementById('chatMessages');
-        chatBox.innerHTML = '';
-
-        data.forEach(msg => {
-            const bubble = document.createElement('div');
-            bubble.className = "mb-4";
-            bubble.innerHTML = `
-                <p class="text-gray-800 font-semibold">${msg.sender}</p>
-                <p class="text-gray-700 bg-gray-200 p-3 rounded-lg inline-block">${msg.message}</p>
-            `;
-            chatBox.appendChild(bubble);
-        });
-    }
-
-    document.getElementById('sendBtn').addEventListener('click', async () => {
-        const message = document.getElementById('chatInput').value.trim();
-        if (!message) return;
-
-        await supabase.from('community_chat').insert([
-            { sender: 'Mentor', message }
-        ]);
-
-        document.getElementById('chatInput').value = '';
-        loadChat();
+    data?.forEach(item => {
+        const url = supabaseClient.storage.from('materials').getPublicUrl('files/' + item.name).data.publicUrl;
+        box.innerHTML += `<a href='${url}' target='_blank' class='block text-blue-600'>${item.name}</a>`;
     });
+}
 
-    loadClients();
-    loadChat();
+// Calendar System
+async function addAvailability() {
+    const time = document.getElementById('availabilityPicker').value;
+    if (!time) return alert('Pick a time');
+
+    await supabaseClient.from('availability').insert([{ slot: time }]);
+    loadSlots();
+}
+
+async function loadSlots() {
+    const { data } = await supabaseClient.from('availability').select('*');
+    const list = document.getElementById('slotList');
+    list.innerHTML = '';
+
+    data?.forEach(s => {
+        list.innerHTML += `<li>${s.slot}</li>`;
+    });
+}
+
+// Startup
+loadClients();
+loadChat();
+loadMaterials();
+loadSlots();
 </script>
 </body>
 </html>
