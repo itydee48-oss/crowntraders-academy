@@ -17,8 +17,6 @@
     --info: #3B82F6;
     --light: #ffffff;
   }
-
-  /* Reset and base */
   * {
     margin: 0;
     padding: 0;
@@ -28,32 +26,22 @@
     font-family: 'Montserrat', sans-serif;
     background: var(--nude);
     color: var(--charcoal);
-    line-height: 1.5;
     min-height: 100vh;
-    overflow-x: hidden;
-    padding: 20px 30px;
   }
-
-  /* Layout */
   .app {
     display: flex;
-    gap: 30px;
-    min-height: 90vh;
-    max-width: 1200px;
-    margin: 0 auto;
+    flex-direction: row;
+    min-height: 100vh;
   }
   .sidebar {
-    background: var(--light);
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(200, 169, 126, 0.25);
-    padding: 40px 30px;
     width: 280px;
+    background: var(--light);
+    border-right: 1px solid rgba(200, 169, 126, 0.3);
+    padding: 32px 24px;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
   }
-
-  /* Branding */
   .brand {
     font-family: 'Cormorant Garamond', serif;
     font-size: 2.8rem;
@@ -64,159 +52,116 @@
   .tagline {
     font-size: 0.95rem;
     color: var(--muted);
-    margin-bottom: 40px;
-    font-weight: 500;
+    margin-bottom: 30px;
   }
-
-  /* Nav buttons */
   .nav button {
+    width: 100%;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border-radius: 12px;
     background: transparent;
     color: var(--charcoal);
-    border-radius: 12px;
-    padding: 18px 22px;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
-    margin-bottom: 12px;
     border: none;
+    font-weight: 600;
+    text-align: left;
     cursor: pointer;
+    transition: 0.3s;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
   }
   .nav button:hover,
   .nav button.active {
     background: var(--gold);
     color: white;
-    box-shadow: 0 6px 18px rgba(200, 169, 126, 0.5);
   }
-
-  /* Sidebar refresh button */
-  .sidebar > .btn {
+  .btn {
+    background: var(--gold);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
     margin-top: auto;
-    width: 100%;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(200, 169, 126, 0.3);
+  }
+  .btn-success {
+    background: var(--success);
+  }
+  .btn-info {
     background: var(--info);
-    font-weight: 700;
-    font-size: 1.1rem;
-    padding: 16px 0;
-    border-radius: 14px;
-    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.4);
   }
-  .sidebar > .btn:hover {
-    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.6);
-  }
-
-  /* Main area */
   .main {
     flex: 1;
     background: var(--light);
-    border-radius: 16px;
-    padding: 40px 35px;
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.06);
+    padding: 40px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
   }
-
-  /* Header */
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 40px;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 10px;
   }
   .title {
     font-family: 'Cormorant Garamond', serif;
     font-size: 2.4rem;
     color: var(--gold-dark);
-    font-weight: 700;
+    flex: 1;
   }
-  .header > div:last-child {
+  .user-info {
     text-align: right;
-    min-width: 160px;
+    min-width: 150px;
   }
-  .header > div:last-child > div:first-child {
+  .user-info div {
     font-weight: 700;
     font-size: 1.3rem;
-    margin-bottom: 4px;
   }
-  .header > div:last-child > div:last-child {
+  .user-info small {
     color: var(--muted);
-    font-weight: 600;
   }
-
-  /* Cards */
   .card {
     background: white;
-    padding: 30px;
+    padding: 28px;
     border-radius: 16px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
     border: 1px solid #eee;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
   }
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 26px;
+    margin-bottom: 20px;
   }
   .card-title {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     color: var(--gold-dark);
     font-weight: 600;
   }
-
-  /* Tables */
   .table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 12px;
+    border-collapse: collapse;
   }
   .table th,
   .table td {
-    padding: 18px 20px;
-    background: white;
-    border-radius: 12px;
+    padding: 16px;
     text-align: left;
-    color: var(--charcoal);
-    font-weight: 500;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    transition: background 0.3s;
-    vertical-align: middle;
+    border-bottom: 1px solid #eee;
   }
   .table th {
     background: var(--nude);
-    font-weight: 700;
-    box-shadow: none;
+    font-weight: 600;
   }
-  .table tr:hover td {
-    background: var(--nude);
-  }
-
-  /* Buttons */
-  .btn {
-    padding: 14px 28px;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: 1.1rem;
-    cursor: pointer;
-    border: none;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(200, 169, 126, 0.35);
-  }
-  .btn-info {
-    background-color: var(--info);
-    color: white;
-  }
-  .btn-success {
-    background-color: var(--success);
-    color: white;
-  }
-
-  /* Floating chat button */
   .floating-btn {
     position: fixed;
     bottom: 30px;
@@ -233,17 +178,10 @@
     font-size: 2.2rem;
     cursor: pointer;
     z-index: 1000;
-    user-select: none;
-    transition: background-color 0.3s;
   }
-  .floating-btn:hover {
-    background-color: var(--gold);
-  }
-
-  /* Chat container */
   .chat-container {
     position: fixed;
-    bottom: 110px;
+    bottom: 30px;
     right: 30px;
     width: 420px;
     height: 600px;
@@ -255,7 +193,6 @@
     z-index: 9999;
     border: 1px solid rgba(200, 169, 126, 0.4);
     overflow: hidden;
-    user-select: text;
   }
   .chat-header {
     background: var(--gold-dark);
@@ -272,7 +209,6 @@
     overflow-y: auto;
     padding: 20px;
     background: #f8f7f5;
-    scroll-behavior: smooth;
   }
   .message {
     margin: 12px 0;
@@ -280,8 +216,7 @@
     padding: 14px 18px;
     border-radius: 20px;
     position: relative;
-    font-size: 0.95rem;
-    line-height: 1.3;
+    word-wrap: break-word;
   }
   .message.own {
     background: var(--gold);
@@ -298,12 +233,11 @@
   }
   .message strong {
     display: block;
-    margin-bottom: 6px;
-    font-weight: 700;
+    margin-bottom: 4px;
   }
   .message time {
-    font-size: 0.7rem;
-    opacity: 0.75;
+    font-size: 0.75rem;
+    opacity: 0.8;
     position: absolute;
     bottom: 6px;
     right: 12px;
@@ -321,7 +255,6 @@
     border-radius: 30px;
     border: 1px solid #ddd;
     font-size: 1rem;
-    transition: border-color 0.3s;
   }
   .chat-input:focus {
     outline: none;
@@ -338,13 +271,7 @@
     justify-content: center;
     cursor: pointer;
     font-size: 1.4rem;
-    transition: background-color 0.3s;
   }
-  .send-btn:hover {
-    background-color: var(--gold);
-  }
-
-  /* Notifications */
   .notification {
     position: fixed;
     top: 20px;
@@ -355,13 +282,9 @@
     font-weight: 600;
     z-index: 10000;
     animation: slide 0.4s;
-    user-select: none;
   }
   .notification.success {
     background: var(--success);
-  }
-  .notification.error {
-    background: var(--danger);
   }
   @keyframes slide {
     from {
@@ -373,102 +296,68 @@
       opacity: 1;
     }
   }
-
-  /* Upload section tweaks */
-  #uploadStatus {
-    font-weight: 600;
-    font-size: 1.1rem;
-  }
-  #uploadedFiles div {
-    padding: 14px 18px;
-    background: #f0f9ff;
-    border-radius: 12px;
-    margin: 10px 0;
-    box-shadow: 0 3px 10px rgba(0, 130, 255, 0.1);
-  }
-  #uploadedFiles a {
-    color: var(--info);
-    font-weight: 700;
-    text-decoration: none;
-  }
-  #uploadedFiles a:hover {
-    text-decoration: underline;
-  }
-
+  
   /* Responsive */
   @media (max-width: 900px) {
     .app {
       flex-direction: column;
-      padding: 0 15px;
     }
     .sidebar {
       width: 100%;
-      padding: 25px 20px;
-      border-radius: 12px;
-      margin-bottom: 30px;
+      padding: 20px;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      overflow-x: auto;
+      box-shadow: none;
+      border-bottom: 1px solid rgba(200, 169, 126, 0.3);
     }
     .nav button {
-      font-size: 1.15rem;
-      padding: 16px;
-    }
-    .main {
-      padding: 30px 25px;
-      border-radius: 12px;
-      max-height: 70vh;
-      overflow-y: auto;
-    }
-    .table th,
-    .table td {
+      flex: 1;
+      margin: 0 8px;
       padding: 12px 10px;
       font-size: 0.9rem;
+      border-radius: 8px;
     }
-    .floating-btn {
-      width: 60px;
-      height: 60px;
-      font-size: 1.8rem;
-      bottom: 20px;
-      right: 20px;
-    }
-    .chat-container {
-      width: 95vw;
-      height: 60vh;
-      right: 2.5vw;
-      bottom: 80px;
-      border-radius: 14px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .nav button {
-      font-size: 1rem;
-      padding: 14px;
+    .main {
+      padding: 20px;
     }
     .header {
       flex-direction: column;
       align-items: flex-start;
-      gap: 10px;
     }
-    .header > div:last-child {
+    .user-info {
       text-align: left;
-      min-width: auto;
       width: 100%;
+      margin-top: 10px;
+    }
+    .chat-container {
+      width: 100%;
+      height: 400px;
+      bottom: 0;
+      right: 0;
+      border-radius: 0;
+    }
+    .floating-btn {
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      font-size: 1.8rem;
     }
   }
 </style>
 </head>
 <body>
-<div class="floating-btn" onclick="toggleChat()" title="Open Community Chat">💬</div>
 
-<div class="chat-container" id="chatBox" role="dialog" aria-modal="true" aria-label="Community Chat Window">
+<div class="floating-btn" onclick="toggleChat()">💬</div>
+
+<div class="chat-container" id="chatBox">
   <div class="chat-header">
     <div>Crown Trade Community</div>
-    <button
-      style="background:none;border:none;color:white;font-size:1.8rem;cursor:pointer;"
-      onclick="toggleChat()"
-      aria-label="Close chat window"
-    >×</button>
+    <button style="background:none;border:none;color:white;font-size:1.8rem;cursor:pointer;" onclick="toggleChat()">×</button>
   </div>
-  <div class="chat-body" id="chatBody" role="log" aria-live="polite" aria-relevant="additions">
+  <div class="chat-body" id="chatBody">
     <div style="text-align:center;padding:60px;color:var(--muted);">Loading messages...</div>
   </div>
   <div class="chat-input-area">
@@ -477,237 +366,277 @@
       class="chat-input"
       id="chatInput"
       placeholder="Send a message..."
-      onkeydown="if(event.key==='Enter')sendMessage()"
-      aria-label="Message input"
-      autocomplete="off"
-      spellcheck="false"
+      onkeydown="if(event.key==='Enter') sendMessage()"
     />
-    <button class="send-btn" onclick="sendMessage()" aria-label="Send message">➡️</button>
+    <div class="send-btn" onclick="sendMessage()">➤</div>
   </div>
 </div>
 
-<div class="app" role="main" aria-label="Mentor Dashboard">
-  <aside class="sidebar" role="navigation" aria-label="Sidebar navigation">
+<div class="app">
+  <aside class="sidebar">
     <div class="brand">Crown Trade</div>
     <div class="tagline">Elite Mentorship Portal</div>
-    <nav class="nav" role="tablist" aria-label="Dashboard Sections">
-      <button data-tab="clients" class="active" role="tab" aria-selected="true" tabindex="0">All Clients</button>
-      <button data-tab="resources" role="tab" aria-selected="false" tabindex="-1">Resources</button>
-      <button data-tab="lessons" role="tab" aria-selected="false" tabindex="-1">Lessons</button>
-      <button data-tab="sessions" role="tab" aria-selected="false" tabindex="-1">Sessions</button>
-      <button onclick="toggleChat()" role="button" aria-label="Open Community Chat">Community Chat</button>
+    <nav class="nav" role="tablist" aria-label="Main Navigation">
+      <button data-tab="clients" class="active" role="tab" aria-selected="true">All Clients</button>
+      <button data-tab="resources" role="tab" aria-selected="false">Resources</button>
+      <button data-tab="lessons" role="tab" aria-selected="false">Lessons</button>
+      <button data-tab="sessions" role="tab" aria-selected="false">Sessions</button>
+      <button onclick="toggleChat()" style="margin-top:20px;">Community Chat</button>
     </nav>
-    <button class="btn" style="margin-top:auto;" onclick="loadAll()">Refresh All</button>
+    <button class="btn btn-info" onclick="loadAll()">Refresh All</button>
   </aside>
 
-  <main class="main">
+  <main class="main" role="main">
     <div class="header">
       <div class="title">Mentor Command Center</div>
-      <div>
+      <div class="user-info">
         <div>Elite Mentor</div>
-        <div style="color: var(--muted); font-weight:600;">Active clients: <strong id="clientsCount">0</strong></div>
+        <small>Active clients: <strong id="clientsCount">0</strong></small>
       </div>
     </div>
 
-    <section id="clients" role="tabpanel" aria-labelledby="tab-clients">
+    <!-- Clients Tab -->
+    <section id="clients" role="tabpanel">
       <div class="card">
         <div class="card-header">
           <div class="card-title">Approved Clients</div>
           <button class="btn btn-info" onclick="loadClients()">Refresh</button>
         </div>
-        <table class="table" aria-describedby="clients-desc">
-          <caption id="clients-desc" style="text-align:left;padding-bottom:8px;font-weight:600;">List of approved clients</caption>
+        <table class="table" aria-describedby="Approved clients list">
           <thead>
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Phone</th>
-              <th scope="col">Program</th>
-              <th scope="col">Joined</th>
-              <th scope="col">Action</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Program</th>
+              <th>Joined</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody id="clientsTable">
-            <tr style="text-align:center;padding:60px;color:var(--muted)">
-              <td colspan="6">Loading...</td>
+            <tr style="text-align:center;color:var(--muted)">
+              <td colspan="6" style="padding:60px 0;">Loading...</td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="resources" style="display:none;" role="tabpanel" aria-labelledby="tab-resources">
+    <!-- Resources Tab -->
+    <section id="resources" role="tabpanel" style="display:none;">
       <div class="card">
         <div class="card-header">
           <div class="card-title">Upload Materials</div>
         </div>
-        <div style="text-align:center;padding:60px 0;">
-          <input type="file" id="fileUpload" multiple style="display:none;" aria-label="Upload files" />
+        <div style="text-align:center; padding: 60px 0;">
+          <input type="file" id="fileUpload" multiple style="display:none;" />
           <button
             class="btn btn-success"
             style="padding:18px 50px;font-size:1.2rem"
             onclick="document.getElementById('fileUpload').click()"
-            aria-label="Upload videos, PDFs, images, ZIPs"
           >
             Upload Videos, PDFs, Images, ZIPs
           </button>
-          <div id="uploadStatus" style="margin-top: 20px; font-weight: 600;"></div>
-          <div id="uploadedFiles" style="margin-top: 30px;"></div>
+          <div id="uploadStatus" style="margin-top:30px;font-size:1.1rem;font-weight:600;"></div>
+          <div id="uploadedFiles" style="margin-top:30px;"></div>
         </div>
       </div>
     </section>
 
-    <section id="lessons" style="display:none;" role="tabpanel" aria-labelledby="tab-lessons">
+    <!-- Lessons Tab -->
+    <section id="lessons" role="tabpanel" style="display:none;">
       <div class="card">
-        <div class="card-header">
-          <div class="card-title">Your Lessons</div>
-        </div>
-        <p style="color: var(--muted); font-style: italic;">Coming soon: Interactive lesson management.</p>
+        <h2>Lessons</h2>
+        <p>Coming soon...</p>
       </div>
     </section>
 
-    <section id="sessions" style="display:none;" role="tabpanel" aria-labelledby="tab-sessions">
+    <!-- Sessions Tab -->
+    <section id="sessions" role="tabpanel" style="display:none;">
       <div class="card">
-        <div class="card-header">
-          <div class="card-title">Schedule & Availability</div>
-        </div>
-        <div id="calendarContainer" aria-live="polite" aria-label="Mentor calendar and scheduling">
-          <p style="color: var(--muted); font-style: italic;">Coming soon: Calendar & meeting scheduler integration.</p>
-        </div>
+        <h2>Sessions</h2>
+        <p>Coming soon...</p>
       </div>
     </section>
   </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // Tab navigation with accessibility
+  // Initialize Supabase client (replace keys accordingly)
+  const SUPABASE_URL = 'https://pzxkrtwxecqivlndqutg.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6eGtydHd4ZWNxaXZsbmRxdXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk0MDgwMDAsImV4cCI6MjA1NDk4NDAwMH0.L2iW8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8';
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const mentorName = "Elite Mentor";
+
+  // Handle tab switching
   const tabs = document.querySelectorAll('.nav button[data-tab]');
-  const sections = document.querySelectorAll('main section[role="tabpanel"]');
-
-  tabs.forEach((tab, idx) => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => {
-        t.classList.remove('active');
-        t.setAttribute('aria-selected', 'false');
-        t.setAttribute('tabindex', '-1');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
       });
-      tab.classList.add('active');
-      tab.setAttribute('aria-selected', 'true');
-      tab.setAttribute('tabindex', '0');
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
 
-      sections.forEach(s => s.style.display = 'none');
-      const activeSection = document.getElementById(tab.dataset.tab);
-      activeSection.style.display = 'block';
+      const tabName = btn.dataset.tab;
+      document.querySelectorAll('section[role="tabpanel"]').forEach(s => {
+        s.style.display = s.id === tabName ? 'block' : 'none';
+      });
     });
   });
 
-  // Simulated data for clients
-  const clientsData = [
-    {name: 'John Doe', email: 'john@example.com', phone: '+254700123456', program: 'Trading 101', joined: '2025-09-01'},
-    {name: 'Jane Smith', email: 'jane@example.com', phone: '+254711654321', program: 'Advanced Forex', joined: '2025-08-15'},
-    {name: 'Mary Johnson', email: 'maryj@example.com', phone: '+254722987654', program: 'Beginner's Trading', joined: '2025-10-03'}
-  ];
-
-  function loadClients() {
-    const tbody = document.getElementById('clientsTable');
-    tbody.innerHTML = '';
-    if (clientsData.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--muted)">No clients approved yet.</td></tr>`;
-      document.getElementById('clientsCount').textContent = '0';
+  // Load approved clients
+  async function loadClients() {
+    const { data, error } = await supabase.from('clients').select('*').eq('status', 'approved');
+    if (error) {
+      showNotification('Error loading clients', 'danger');
+      console.error(error);
       return;
     }
-    clientsData.forEach(c => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${c.name}</td>
-        <td><a href="mailto:${c.email}" style="color: var(--info);">${c.email}</a></td>
-        <td>${c.phone}</td>
-        <td>${c.program}</td>
-        <td>${new Date(c.joined).toLocaleDateString()}</td>
-        <td><button class="btn btn-info" onclick="alert('Contacting ${c.name}')">Message</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-    document.getElementById('clientsCount').textContent = clientsData.length;
+    const count = data?.length || 0;
+    document.getElementById('clientsCount').textContent = count;
+
+    const tableBody = document.getElementById('clientsTable');
+    if (!data || data.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:60px;color:var(--muted)">No approved clients yet</td></tr>`;
+      return;
+    }
+    tableBody.innerHTML = data.map(c => `
+      <tr>
+        <td><strong>${escapeHTML(c.name)}</strong></td>
+        <td>${escapeHTML(c.email)}</td>
+        <td>${escapeHTML(c.phone || '—')}</td>
+        <td>${escapeHTML(c.program)}</td>
+        <td>${new Date(c.join_date).toLocaleDateString()}</td>
+        <td><button class="btn btn-info" onclick="viewClient('${c.id}')">View</button></td>
+      </tr>
+    `).join('');
   }
 
-  // Call once on load
-  loadClients();
+  // Escape HTML to prevent injection
+  function escapeHTML(text) {
+    if (!text) return '';
+    return text.replace(/[&<>"']/g, function(m) {
+      return ({'&
+  function escapeHTML(text) {
+    if (!text) return '';
+    return text.replace(/[&<>"']/g, function(m) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[m];
+    });
+  }
 
-  // Upload handling for resources section
-  const fileInput = document.getElementById('fileUpload');
-  const uploadStatus = document.getElementById('uploadStatus');
-  const uploadedFiles = document.getElementById('uploadedFiles');
+  // View client detail (placeholder)
+  function viewClient(clientId) {
+    alert(`View details for client ID: ${clientId}`);
+    // You can add modal or navigation to client detail page here
+  }
 
-  fileInput.addEventListener('change', async () => {
-    if (fileInput.files.length === 0) return;
-    uploadStatus.textContent = 'Uploading... Please wait.';
-    for (const file of fileInput.files) {
+  // Notification system
+  function showNotification(message, type = 'success') {
+    const notif = document.createElement('div');
+    notif.className = `notification ${type === 'danger' ? 'danger' : 'success'}`;
+    notif.textContent = message;
+    document.body.appendChild(notif);
+    setTimeout(() => notif.remove(), 3000);
+  }
+
+  // Chat toggle
+  function toggleChat() {
+    const chat = document.getElementById('chatBox');
+    if (chat.style.display === 'flex') {
+      chat.style.display = 'none';
+    } else {
+      chat.style.display = 'flex';
+      loadChatMessages();
+    }
+  }
+
+  // Placeholder chat messages loader
+  async function loadChatMessages() {
+    const chatBody = document.getElementById('chatBody');
+    chatBody.innerHTML = `<div style="text-align:center;padding:60px;color:var(--muted);">No messages yet.</div>`;
+    // Implement real-time or historical messages fetching here
+  }
+
+  // Send chat message (placeholder)
+  function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message) return;
+    // Append message locally for demo
+    const chatBody = document.getElementById('chatBody');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'message own';
+    msgDiv.innerHTML = `<strong>${mentorName}</strong>${escapeHTML(message)}<time>${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</time>`;
+    chatBody.appendChild(msgDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+    input.value = '';
+
+    // TODO: send to backend
+  }
+
+  // Upload materials handling
+  const fileUploadInput = document.getElementById('fileUpload');
+  fileUploadInput.addEventListener('change', async (event) => {
+    const files = event.target.files;
+    if (!files.length) return;
+    document.getElementById('uploadStatus').textContent = 'Uploading...';
+
+    let allSuccess = true;
+    let uploadedFilesHtml = '';
+
+    for (const file of files) {
       try {
-        // Simulated upload delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        // Normally, you'd upload to Supabase here and get URL back
-        const fakeUrl = URL.createObjectURL(file);
-        const div = document.createElement('div');
-        div.innerHTML = `<a href="${fakeUrl}" target="_blank" rel="noopener noreferrer">${file.name}</a>`;
-        uploadedFiles.appendChild(div);
-      } catch (e) {
-        uploadStatus.textContent = `Failed to upload ${file.name}`;
-        return;
+        const filePath = `${Date.now()}_${file.name}`;
+        const { data, error } = await supabase.storage.from('materials').upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.type
+        });
+        if (error) throw error;
+
+        // Get public URL for uploaded file
+        const { data: publicUrlData } = supabase.storage.from('materials').getPublicUrl(filePath);
+        uploadedFilesHtml += `<div><a href="${publicUrlData.publicUrl}" target="_blank" rel="noopener noreferrer">${escapeHTML(file.name)}</a></div>`;
+      } catch (error) {
+        allSuccess = false;
+        console.error('Upload error:', error);
       }
     }
-    uploadStatus.textContent = `Upload complete.`;
-    fileInput.value = '';
+
+    if (allSuccess) {
+      showNotification('All files uploaded successfully!');
+      document.getElementById('uploadStatus').textContent = '';
+      document.getElementById('uploadedFiles').innerHTML = uploadedFilesHtml;
+    } else {
+      showNotification('Some files failed to upload.', 'danger');
+      document.getElementById('uploadStatus').textContent = 'Upload encountered errors.';
+    }
+
+    // Reset file input to allow re-uploading same files if needed
+    fileUploadInput.value = '';
   });
 
-  // Floating chat toggle
-  const chatBox = document.getElementById('chatBox');
-  const chatBody = document.getElementById('chatBody');
-  const chatInput = document.getElementById('chatInput');
-
-  function toggleChat() {
-    if (chatBox.style.display === 'flex') {
-      chatBox.style.display = 'none';
-    } else {
-      chatBox.style.display = 'flex';
-      chatInput.focus();
-      // Simulate loading chat history
-      if (chatBody.innerHTML.trim().includes('Loading')) {
-        chatBody.innerHTML = `
-          <div class="message other"><strong>Jane Smith</strong> Welcome to the Crown Trade community! 👋 <time>10:00 AM</time></div>
-          <div class="message own"><strong>You</strong> Thanks, excited to learn! <time>10:01 AM</time></div>
-        `;
-      }
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }
-  }
-
-  // Simulated send message
-  function sendMessage() {
-    const msg = chatInput.value.trim();
-    if (!msg) return;
-    const div = document.createElement('div');
-    div.className = 'message own';
-    div.innerHTML = `<strong>You</strong> ${escapeHTML(msg)} <time>${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</time>`;
-    chatBody.appendChild(div);
-    chatBody.scrollTop = chatBody.scrollHeight;
-    chatInput.value = '';
-  }
-
-  // Simple HTML escape
-  function escapeHTML(text) {
-    return text.replace(/[&<>"']/g, function (m) {
-      return {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[m];
-    });
-  }
-
-  // Dummy Refresh All
+  // Load all main data (clients, etc.)
   function loadAll() {
     loadClients();
-    uploadStatus.textContent = '';
-    uploadedFiles.innerHTML = '';
-    alert('Dashboard refreshed!');
+    // Add other loaders here as you build
   }
+
+  // Initial load on page ready
+  document.addEventListener('DOMContentLoaded', () => {
+    loadAll();
+  });
 </script>
+
 </body>
 </html>
