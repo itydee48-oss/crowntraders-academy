@@ -1,850 +1,1103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referral Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f9f5f0;
-            color: #5a4d41;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            border-bottom: 1px solid #e0d6cc;
-            margin-bottom: 30px;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .logo i {
-            font-size: 28px;
-            color: #c8a97e;
-        }
-        
-        .logo h1 {
-            font-size: 24px;
-            font-weight: 600;
-            color: #8b7355;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #d4c1a6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #5a4d41;
-            font-weight: bold;
-        }
-        
-        .dashboard-title {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .dashboard-title h2 {
-            font-size: 32px;
-            font-weight: 300;
-            margin-bottom: 10px;
-            color: #8b7355;
-        }
-        
-        .dashboard-title p {
-            color: #a08c72;
-            font-size: 16px;
-        }
-        
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-        
-        .stat-card {
-            background: #fff;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(139, 115, 85, 0.1);
-            border: 1px solid #e8dfd3;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(139, 115, 85, 0.15);
-        }
-        
-        .stat-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            font-size: 28px;
-            background: #f5f0e8;
-            color: #c8a97e;
-        }
-        
-        .stat-value {
-            font-size: 32px;
-            font-weight: 700;
-            margin: 10px 0;
-            color: #8b7355;
-        }
-        
-        .stat-label {
-            color: #a08c72;
-            font-size: 16px;
-        }
-        
-        .actions-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-        
-        .action-card {
-            background: #fff;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(139, 115, 85, 0.1);
-            border: 1px solid #e8dfd3;
-            transition: transform 0.3s ease;
-        }
-        
-        .action-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .action-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .action-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            background: #f5f0e8;
-            color: #c8a97e;
-        }
-        
-        .action-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #8b7355;
-        }
-        
-        .referral-link-container {
-            display: flex;
-            margin-bottom: 20px;
-        }
-        
-        .referral-link {
-            flex: 1;
-            background: #f9f5f0;
-            border: 1px solid #e0d6cc;
-            border-radius: 8px 0 0 8px;
-            padding: 12px 15px;
-            color: #5a4d41;
-            font-size: 14px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-        
-        .copy-btn {
-            background: #c8a97e;
-            border: none;
-            border-radius: 0 8px 8px 0;
-            padding: 0 20px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .copy-btn:hover {
-            background: #b89768;
-        }
-        
-        .share-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .share-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #e0d6cc;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: white;
-            color: #8b7355;
-        }
-        
-        .share-btn:hover {
-            background: #f5f0e8;
-            transform: translateY(-2px);
-        }
-        
-        .withdrawal-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .form-group label {
-            font-weight: 500;
-            color: #8b7355;
-        }
-        
-        .form-control {
-            background: #f9f5f0;
-            border: 1px solid #e0d6cc;
-            border-radius: 8px;
-            padding: 12px 15px;
-            color: #5a4d41;
-            font-size: 16px;
-        }
-        
-        .withdraw-btn {
-            background: #c8a97e;
-            border: none;
-            border-radius: 8px;
-            padding: 14px;
-            color: white;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-        
-        .withdraw-btn:hover {
-            background: #b89768;
-            transform: translateY(-2px);
-        }
-        
-        .referrals-list {
-            background: #fff;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(139, 115, 85, 0.1);
-            border: 1px solid #e8dfd3;
-            margin-bottom: 40px;
-        }
-        
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .section-title {
-            font-size: 22px;
-            font-weight: 600;
-            color: #8b7355;
-        }
-        
-        .view-all {
-            color: #c8a97e;
-            text-decoration: none;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .referrals-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .referrals-table th {
-            text-align: left;
-            padding: 15px 10px;
-            border-bottom: 1px solid #e0d6cc;
-            color: #c8a97e;
-            font-weight: 600;
-        }
-        
-        .referrals-table td {
-            padding: 15px 10px;
-            border-bottom: 1px solid #f0e9df;
-        }
-        
-        .status {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .status.active {
-            background: #e8f5e8;
-            color: #5cb85c;
-        }
-        
-        .status.pending {
-            background: #fff8e1;
-            color: #f0ad4e;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            border-top: 1px solid #e0d6cc;
-            color: #a08c72;
-            font-size: 14px;
-        }
-        
-        /* Program Selection Page Styles */
-        .program-selection {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .program-container {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .program-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        
-        .program-header h2 {
-            color: #8b7355;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        
-        .program-header p {
-            color: #a08c72;
-        }
-        
-        .programs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-        
-        .program-card {
-            background: #f9f5f0;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .program-card:hover {
-            border-color: #c8a97e;
-            transform: translateY(-5px);
-        }
-        
-        .program-card.selected {
-            border-color: #c8a97e;
-            background: #f5f0e8;
-        }
-        
-        .program-icon {
-            font-size: 40px;
-            color: #c8a97e;
-            margin-bottom: 15px;
-        }
-        
-        .program-name {
-            font-weight: 600;
-            color: #8b7355;
-            margin-bottom: 10px;
-        }
-        
-        .program-desc {
-            color: #a08c72;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-        
-        .program-reward {
-            font-weight: 600;
-            color: #c8a97e;
-        }
-        
-        .program-actions {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .program-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .program-btn.primary {
-            background: #c8a97e;
-            color: white;
-        }
-        
-        .program-btn.primary:hover {
-            background: #b89768;
-        }
-        
-        .program-btn.secondary {
-            background: #f5f0e8;
-            color: #8b7355;
-            border: 1px solid #e0d6cc;
-        }
-        
-        .program-btn.secondary:hover {
-            background: #e8dfd3;
-        }
-        
-        .referral-code {
-            background: #f9f5f0;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .referral-code p {
-            margin-bottom: 10px;
-            color: #8b7355;
-        }
-        
-        .code {
-            font-size: 18px;
-            font-weight: 700;
-            color: #c8a97e;
-            letter-spacing: 2px;
-        }
-        
-        @media (max-width: 768px) {
-            .stats-container, .actions-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .share-buttons {
-                flex-direction: column;
-            }
-            
-            .referral-link-container {
-                flex-direction: column;
-            }
-            
-            .referral-link {
-                border-radius: 8px 8px 0 0;
-            }
-            
-            .copy-btn {
-                border-radius: 0 0 8px 8px;
-                padding: 12px;
-            }
-            
-            .programs-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crown Trade — My Referrals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --nude: #F9F6F2;
+      --gold: #C8A97E;
+      --gold-dark: #B89463;
+      --charcoal: #2e2e2e;
+      --muted: #777;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --info: #3B82F6;
+      --purple: #8B5CF6;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Montserrat', sans-serif; background: var(--nude); color: var(--charcoal); min-height: 100vh; }
+    
+    .referral-app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      padding: 24px;
+      height: 100vh;
+    }
+    
+    .sidebar {
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(200,169,126,0.4);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+    }
+    
+    .brand { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--gold-dark); margin-bottom: 8px; }
+    .user-info { margin: 20px 0; font-size: 0.95rem; color: var(--muted); }
+    
+    .nav button {
+      width: 100%;
+      padding: 14px 18px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--charcoal);
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    
+    .nav button:hover, .nav button.active {
+      background: var(--gold);
+      color: white;
+    }
+    
+    .main-content {
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      padding: 30px;
+      overflow: auto;
+      border: 1px solid rgba(200,169,126,0.3);
+    }
+    
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--nude);
+    }
+    
+    .title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--gold-dark); }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .stat-value { font-size: 2.5rem; font-weight: 700; color: var(--gold-dark); margin: 10px 0; }
+    .stat-label { color: var(--muted); font-size: 0.9rem; }
+    
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .card-title { font-size: 1.4rem; color: var(--gold-dark); font-weight: 600; }
+    
+    .referral-link-container {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+      border: 2px dashed #bae6fd;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .referral-link {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .referral-link input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+    }
+    
+    .referral-link input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    
+    .copy-btn {
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .copy-btn:hover {
+      background: #0da271;
+      transform: translateY(-2px);
+    }
+    
+    .share-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .share-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      min-width: 120px;
+    }
+    
+    .share-btn.whatsapp { background: #25D366; color: white; }
+    .share-btn.facebook { background: #1877F2; color: white; }
+    .share-btn.twitter { background: #1DA1F2; color: white; }
+    .share-btn.telegram { background: #0088cc; color: white; }
+    .share-btn.email { background: var(--gold); color: white; }
+    
+    .share-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .btn {
+      background: var(--gold);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 2px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .btn-success { background: var(--success); }
+    .btn-danger { background: var(--danger); }
+    .btn-warning { background: var(--warning); }
+    .btn-info { background: var(--info); }
+    .btn-purple { background: var(--purple); }
+    
+    .table { width: 100%; border-collapse: collapse; }
+    .table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+    .table th { background: var(--nude); font-weight: 600; color: var(--charcoal); }
+    
+    .referral-status {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .status-pending { background: #FEF3C7; color: #92400E; }
+    .status-completed { background: #D1FAE5; color: #065F46; }
+    .status-paid { background: #DBEAFE; color: #1E40AF; }
+    
+    .profile-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    
+    .profile-card {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
+    }
+    
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    
+    .profile-details .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--charcoal);
+      font-size: 0.9rem;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      background: #f9f9f9;
+    }
+    
+    .form-input:read-only {
+      background: #f0f0f0;
+      cursor: not-allowed;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(200,169,126,0.1);
+    }
+    
+    .qr-container {
+      text-align: center;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #eee;
+    }
+    
+    .qr-code {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: var(--muted);
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+    }
+    
+    .notification.success { background: var(--success); }
+    .notification.error { background: var(--danger); }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    .badge {
+      background: var(--danger);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      margin-left: 8px;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+    
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+    
+    @media (max-width: 1000px) {
+      .referral-app { grid-template-columns: 1fr; }
+      .profile-section { grid-template-columns: 1fr; }
+    }
+    
+    @media (max-width: 768px) {
+      .referral-link { flex-direction: column; }
+      .share-buttons { flex-direction: column; }
+      .share-btn { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-user-friends"></i>
-                <h1>ReferralHub</h1>
-            </div>
-            <div class="user-info">
-                <div class="user-avatar">JD</div>
-                <div>
-                    <div style="font-weight: 600; color: #8b7355;">John Doe</div>
-                    <div style="font-size: 14px; color: #a08c72;">Gold Member</div>
-                </div>
-            </div>
-        </header>
-        
-        <section class="dashboard-title">
-            <h2>Your Referral Dashboard</h2>
-            <p>Track your referrals and earnings in real-time</p>
-        </section>
-        
-        <section class="stats-container">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-value">24</div>
-                <div class="stat-label">Total Referrals</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-coins"></i>
-                </div>
-                <div class="stat-value">$1,250</div>
-                <div class="stat-label">Total Earnings</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="stat-value">$350</div>
-                <div class="stat-label">Pending Withdrawal</div>
-            </div>
-        </section>
-        
-        <section class="actions-container">
-            <div class="action-card">
-                <div class="action-header">
-                    <div class="action-icon">
-                        <i class="fas fa-link"></i>
-                    </div>
-                    <div class="action-title">Your Referral Link</div>
-                </div>
-                <p style="margin-bottom: 15px; color: #a08c72;">Share your unique link and earn rewards for every successful referral</p>
-                <div class="referral-link-container">
-                    <div class="referral-link" id="referralLink">https://referralhub.com/ref/johndoe889</div>
-                    <button class="copy-btn" id="copyBtn">Copy</button>
-                </div>
-                <div class="share-buttons">
-                    <button class="share-btn" id="whatsappBtn">
-                        <i class="fab fa-whatsapp"></i> WhatsApp
-                    </button>
-                    <button class="share-btn" id="facebookBtn">
-                        <i class="fab fa-facebook-f"></i> Facebook
-                    </button>
-                    <button class="share-btn" id="twitterBtn">
-                        <i class="fab fa-twitter"></i> Twitter
-                    </button>
-                </div>
-                <div style="margin-top: 20px; text-align: center;">
-                    <button class="withdraw-btn" id="testLinkBtn" style="background: #8b7355; width: 100%;">
-                        <i class="fas fa-external-link-alt"></i> Test Your Referral Link
-                    </button>
-                </div>
-            </div>
-            
-            <div class="action-card">
-                <div class="action-header">
-                    <div class="action-icon">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <div class="action-title">Request Withdrawal</div>
-                </div>
-                <p style="margin-bottom: 15px; color: #a08c72;">Withdraw your earnings to your preferred payment method</p>
-                <form class="withdrawal-form">
-                    <div class="form-group">
-                        <label for="amount">Amount to Withdraw</label>
-                        <input type="number" id="amount" class="form-control" placeholder="Enter amount" min="10" max="1250">
-                    </div>
-                    <div class="form-group">
-                        <label for="method">Payment Method</label>
-                        <select id="method" class="form-control">
-                            <option value="">Select payment method</option>
-                            <option value="paypal">PayPal</option>
-                            <option value="bank">Bank Transfer</option>
-                            <option value="crypto">Cryptocurrency</option>
-                        </select>
-                    </div>
-                    <button type="button" class="withdraw-btn">Request Withdrawal</button>
-                </form>
-            </div>
-        </section>
-        
-        <section class="referrals-list">
-            <div class="section-header">
-                <div class="section-title">Recent Referrals</div>
-                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
-            </div>
-            <table class="referrals-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Date Joined</th>
-                        <th>Status</th>
-                        <th>Earned</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Sarah Johnson</td>
-                        <td>Oct 12, 2023</td>
-                        <td><span class="status active">Active</span></td>
-                        <td>$50</td>
-                    </tr>
-                    <tr>
-                        <td>Michael Chen</td>
-                        <td>Oct 10, 2023</td>
-                        <td><span class="status active">Active</span></td>
-                        <td>$50</td>
-                    </tr>
-                    <tr>
-                        <td>Emma Wilson</td>
-                        <td>Oct 5, 2023</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td>$25</td>
-                    </tr>
-                    <tr>
-                        <td>Robert Brown</td>
-                        <td>Oct 1, 2023</td>
-                        <td><span class="status active">Active</span></td>
-                        <td>$50</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-        
-        <footer>
-            <p>&copy; 2023 ReferralHub. All rights reserved. | <a href="#" style="color: #c8a97e;">Privacy Policy</a> | <a href="#" style="color: #c8a97e;">Terms of Service</a></p>
-        </footer>
-    </div>
 
-    <!-- Program Selection Page -->
-    <div class="program-selection" id="programSelection">
-        <div class="program-container">
-            <div class="program-header">
-                <h2>Choose Your Program</h2>
-                <p>Select a program to join through your referral</p>
-            </div>
-            
-            <div class="referral-code">
-                <p>You were referred by: <strong>John Doe</strong></p>
-                <div class="code">JOHNDOE889</div>
-            </div>
-            
-            <div class="programs-grid">
-                <div class="program-card" data-program="basic">
-                    <div class="program-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div class="program-name">Basic Program</div>
-                    <div class="program-desc">Perfect for getting started with our platform</div>
-                    <div class="program-reward">Referrer gets $25</div>
-                </div>
-                
-                <div class="program-card" data-program="premium">
-                    <div class="program-icon">
-                        <i class="fas fa-crown"></i>
-                    </div>
-                    <div class="program-name">Premium Program</div>
-                    <div class="program-desc">Full access to all features and benefits</div>
-                    <div class="program-reward">Referrer gets $50</div>
-                </div>
-                
-                <div class="program-card" data-program="enterprise">
-                    <div class="program-icon">
-                        <i class="fas fa-building"></i>
-                    </div>
-                    <div class="program-name">Enterprise Program</div>
-                    <div class="program-desc">For businesses and power users</div>
-                    <div class="program-reward">Referrer gets $100</div>
-                </div>
-            </div>
-            
-            <div class="program-actions">
-                <button class="program-btn secondary" id="cancelProgram">Cancel</button>
-                <button class="program-btn primary" id="selectProgram" disabled>Select Program</button>
-            </div>
+<!-- Success Notification -->
+<div id="notification" class="notification" style="display: none;"></div>
+
+<div class="referral-app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">Crown Trade</div>
+    <div class="user-info">
+      <div id="userName" style="font-weight:700;color:var(--charcoal);">Loading...</div>
+      <div id="userEmail" style="color:var(--muted);font-size:0.9rem;">—</div>
+      <div id="userStatus" style="color:var(--success);font-size:0.8rem;margin-top:5px;">● Active Member</div>
+      <div id="userReferralCode" style="margin-top:10px;padding:8px 12px;background:#f0f9f0;border-radius:8px;font-size:0.9rem;color:var(--success);">
+        Referral Code: <strong id="referralCode">Loading...</strong>
+      </div>
+    </div>
+    
+    <nav class="nav">
+      <button data-tab="dashboard" class="active">📊 Referral Dashboard</button>
+      <button data-tab="referrals">👥 My Referrals</button>
+      <button data-tab="earnings">💰 Earnings</button>
+      <button data-tab="profile">👤 My Profile</button>
+    </nav>
+    
+    <div style="margin-top:30px;">
+      <div style="font-size:0.9rem;color:var(--muted);margin-bottom:10px;">Referral Program</div>
+      <div style="background:#f8f5f0;padding:12px;border-radius:8px;border-left:4px solid var(--gold);">
+        <div style="font-weight:600;color:var(--gold-dark);">Earn KSh 200</div>
+        <div style="font-size:0.8rem;color:var(--muted);">for every successful referral</div>
+      </div>
+    </div>
+    
+    <button class="btn" style="margin-top:30px;width:100%;background:var(--info);" onclick="refreshData()">🔄 Refresh Data</button>
+    <button class="btn" style="margin-top:10px;width:100%;background:var(--danger);" onclick="logout()">Logout</button>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="topbar">
+      <div class="title">Referral Program</div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="text-align:right;">
+          <div id="topName" style="font-weight:700;">Loading...</div>
+          <small id="topBalance">Total Earnings: KSh 0</small>
         </div>
+      </div>
     </div>
 
-    <script>
-        // Copy referral link functionality
-        document.getElementById('copyBtn').addEventListener('click', function() {
-            const referralLink = document.getElementById('referralLink');
-            const textArea = document.createElement('textarea');
-            textArea.value = referralLink.textContent;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
+    <!-- Dashboard Tab -->
+    <div id="dashboard" style="display:block;">
+      <!-- Statistics -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Referrals</div>
+          <div class="stat-value" id="totalReferrals">0</div>
+          <div style="color:var(--success);font-size:0.9rem;">Active referrals</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Earnings</div>
+          <div class="stat-value" id="totalEarnings">KSh 0</div>
+          <div style="color:var(--success);font-size:0.9rem;">Lifetime earnings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Payout</div>
+          <div class="stat-value" id="pendingPayout">KSh 0</div>
+          <div style="color:var(--warning);font-size:0.9rem;">Available for withdrawal</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">This Month</div>
+          <div class="stat-value" id="monthlyEarnings">KSh 0</div>
+          <div style="color:var(--info);font-size:0.9rem;">Earnings this month</div>
+        </div>
+      </div>
+
+      <!-- Referral Link Section -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Your Referral Link</div>
+          <span class="badge pulse">Share & Earn</span>
+        </div>
+        
+        <div class="referral-link-container">
+          <div style="margin-bottom:15px;">
+            <strong style="color:var(--gold-dark);">Share this link with friends & earn KSh 200 for each successful referral!</strong>
+            <p style="color:var(--muted);font-size:0.9rem;margin-top:5px;">Friends must complete payment to qualify.</p>
+          </div>
+          
+          <div class="referral-link">
+            <input type="text" id="referralLink" readonly value="Loading referral link...">
+            <button class="copy-btn" onclick="copyReferralLink()">📋 Copy Link</button>
+          </div>
+          
+          <div class="share-buttons">
+            <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
+              <span>📱</span> WhatsApp
+            </button>
+            <button class="share-btn facebook" onclick="shareOnFacebook()">
+              <span>👤</span> Facebook
+            </button>
+            <button class="share-btn twitter" onclick="shareOnTwitter()">
+              <span>🐦</span> Twitter
+            </button>
+            <button class="share-btn telegram" onclick="shareOnTelegram()">
+              <span>✈️</span> Telegram
+            </button>
+            <button class="share-btn email" onclick="shareViaEmail()">
+              <span>📧</span> Email
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Referral Performance</div>
+          <button class="btn btn-info" onclick="loadReferralStats()">Refresh</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;">
+          <div style="text-align:center;padding:15px;background:#f9f9f9;border-radius:8px;">
+            <div style="font-size:0.9rem;color:var(--muted);">Conversion Rate</div>
+            <div style="font-size:1.8rem;font-weight:700;color:var(--success);">65%</div>
+          </div>
+          <div style="text-align:center;padding:15px;background:#f9f9f9;border-radius:8px;">
+            <div style="font-size:0.9rem;color:var(--muted);">Avg. Time to Convert</div>
+            <div style="font-size:1.8rem;font-weight:700;color:var(--info);">2.5 days</div>
+          </div>
+          <div style="text-align:center;padding:15px;background:#f9f9f9;border-radius:8px;">
+            <div style="font-size:0.9rem;color:var(--muted);">Top Referring Source</div>
+            <div style="font-size:1.8rem;font-weight:700;color:var(--purple);">WhatsApp</div>
+          </div>
+          <div style="text-align:center;padding:15px;background:#f9f9f9;border-radius:8px;">
+            <div style="font-size:0.9rem;color:var(--muted);">Next Payout Date</div>
+            <div style="font-size:1.8rem;font-weight:700;color:var(--gold-dark);">15th</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Referrals Tab -->
+    <div id="referrals" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">My Referred Clients</div>
+          <button class="btn btn-info" onclick="loadReferrals()">Refresh</button>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Join Date</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th>Earned</th>
+            </tr>
+          </thead>
+          <tbody id="referralsTable">
+            <tr><td colspan="6" style="text-align:center;">Loading referrals...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- How It Works -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">How to Maximize Earnings</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;">
+          <div style="padding:15px;border:1px solid #eee;border-radius:8px;">
+            <div style="font-size:2rem;margin-bottom:10px;">1️⃣</div>
+            <div style="font-weight:600;margin-bottom:8px;color:var(--gold-dark);">Share Your Link</div>
+            <div style="color:var(--muted);font-size:0.9rem;">Copy and share your unique link with friends, family, and on social media.</div>
+          </div>
+          <div style="padding:15px;border:1px solid #eee;border-radius:8px;">
+            <div style="font-size:2rem;margin-bottom:10px;">2️⃣</div>
+            <div style="font-weight:600;margin-bottom:8px;color:var(--gold-dark);">Track Referrals</div>
+            <div style="color:var(--muted);font-size:0.9rem;">Monitor when someone signs up using your link. You'll see them appear here.</div>
+          </div>
+          <div style="padding:15px;border:1px solid #eee;border-radius:8px;">
+            <div style="font-size:2rem;margin-bottom:10px;">3️⃣</div>
+            <div style="font-weight:600;margin-bottom:8px;color:var(--gold-dark);">Get Paid</div>
+            <div style="color:var(--muted);font-size:0.9rem;">Earn KSh 200 when your referral completes their payment. Payouts are monthly.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Earnings Tab -->
+    <div id="earnings" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Earnings History</div>
+          <button class="btn btn-success" onclick="requestPayout()">💰 Request Payout</button>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Referral</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Payout Date</th>
+            </tr>
+          </thead>
+          <tbody id="earningsTable">
+            <tr><td colspan="6" style="text-align:center;">Loading earnings history...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Payout Info -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Payout Information</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div>
+            <div class="form-group">
+              <label class="form-label">Total Available for Payout</label>
+              <input type="text" class="form-input" id="availablePayout" value="KSh 0" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Next Payout Date</label>
+              <input type="text" class="form-input" id="nextPayoutDate" value="15th of each month" readonly>
+            </div>
+          </div>
+          <div>
+            <div class="form-group">
+              <label class="form-label">Preferred Payment Method</label>
+              <select class="form-input" id="paymentMethod">
+                <option value="mpesa">M-Pesa</option>
+                <option value="bank">Bank Transfer</option>
+                <option value="paypal">PayPal</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Minimum Payout Amount</label>
+              <input type="text" class="form-input" value="KSh 500" readonly>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-purple" onclick="updatePaymentMethod()" style="margin-top:15px;">Update Payment Method</button>
+      </div>
+    </div>
+
+    <!-- Profile Tab -->
+    <div id="profile" style="display:none;">
+      <div class="profile-section">
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="avatar" id="userAvatar">JD</div>
+            <div>
+              <div style="font-size:1.4rem;font-weight:700;color:var(--charcoal);" id="profileName">John Doe</div>
+              <div style="color:var(--muted);font-size:0.9rem;" id="profileEmail">john@example.com</div>
+              <div style="margin-top:8px;">
+                <span class="status-completed referral-status">Premium Member</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="profile-details">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" id="profileFullName" value="John Doe" readonly>
+            </div>
             
-            // Change button text temporarily
-            const originalText = this.textContent;
-            this.textContent = 'Copied!';
-            this.style.background = '#5cb85c';
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="profileEmailInput" value="john@example.com" readonly>
+            </div>
             
-            setTimeout(() => {
-                this.textContent = originalText;
-                this.style.background = '';
-            }, 2000);
-        });
-        
-        // Withdrawal request functionality
-        document.querySelector('.withdraw-btn').addEventListener('click', function() {
-            const amount = document.getElementById('amount').value;
-            const method = document.getElementById('method').value;
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-input" id="profilePhone" value="+254712345678" readonly>
+            </div>
             
-            if (!amount || !method) {
-                alert('Please fill in all fields');
-                return;
-            }
+            <div class="form-group">
+              <label class="form-label">Membership Plan</label>
+              <input type="text" class="form-input" value="Premium Trading" readonly>
+            </div>
             
-            if (amount < 10) {
-                alert('Minimum withdrawal amount is $10');
-                return;
-            }
+            <div class="form-group">
+              <label class="form-label">Join Date</label>
+              <input type="text" class="form-input" value="October 15, 2023" readonly>
+            </div>
             
-            // In a real app, this would send a request to the server
-            alert(`Withdrawal request for $${amount} via ${method} has been submitted!`);
-            document.getElementById('amount').value = '';
-            document.getElementById('method').value = '';
-        });
+            <div class="form-group">
+              <label class="form-label">Referral Code</label>
+              <div style="display:flex;gap:10px;">
+                <input type="text" class="form-input" id="profileReferralCode" value="JOHNDOE25" readonly style="flex:1;">
+                <button class="btn btn-info" onclick="regenerateReferralCode()">Regenerate</button>
+              </div>
+            </div>
+          </div>
+        </div>
         
-        // Share buttons functionality
-        document.getElementById('whatsappBtn').addEventListener('click', function() {
-            const link = document.getElementById('referralLink').textContent;
-            const text = "Join me on ReferralHub and start earning rewards!";
-            const url = `https://wa.me/?text=${encodeURIComponent(text + " " + link)}`;
-            window.open(url, '_blank', 'width=600,height=400');
+        <div class="profile-card">
+          <div class="qr-container">
+            <div class="qr-code">
+              <!-- QR Code would be generated here -->
+              <div style="text-align:center;">
+                <div style="font-size:3rem;">📱</div>
+                <div style="font-size:0.8rem;color:var(--muted);margin-top:10px;">Scan to join</div>
+              </div>
+            </div>
+            <div style="color:var(--muted);font-size:0.9rem;margin-bottom:15px;">
+              Scan this QR code to quickly access your referral link
+            </div>
+            <button class="btn" onclick="downloadQRCode()">Download QR Code</button>
+          </div>
+          
+          <div style="margin-top:30px;">
+            <div class="card-title" style="margin-bottom:15px;">Account Security</div>
+            <button class="btn" style="width:100%;margin-bottom:10px;" onclick="changePassword()">Change Password</button>
+            <button class="btn btn-warning" style="width:100%;margin-bottom:10px;" onclick="enable2FA()">Enable Two-Factor Auth</button>
+            <button class="btn btn-danger" style="width:100%;" onclick="deactivateAccount()">Deactivate Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Supabase Configuration
+const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
+
+// Initialize Supabase
+const { createClient } = window.supabase;
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Current user data
+let currentUser = null;
+let referralData = {
+  totalReferrals: 0,
+  totalEarnings: 0,
+  pendingPayout: 0,
+  monthlyEarnings: 0,
+  referrals: [],
+  earnings: []
+};
+
+// Base URL for referral links
+const BASE_URL = window.location.origin;
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Referral dashboard loading...');
+  // Check if user is logged in
+  checkAuthStatus();
+  setTimeout(() => {
+    initReferralDashboard();
+  }, 1000);
+});
+
+// Check authentication status
+function checkAuthStatus() {
+  // In a real app, check Supabase auth session
+  // For demo, we'll use localStorage
+  const userId = localStorage.getItem('user_id');
+  const userEmail = localStorage.getItem('user_email');
+  const userName = localStorage.getItem('user_name');
+  
+  if (!userId || !userEmail || !userName) {
+    // Redirect to login if not authenticated
+    window.location.href = 'login.html';
+    return false;
+  }
+  
+  currentUser = {
+    id: userId,
+    email: userEmail,
+    name: userName,
+    referralCode: localStorage.getItem('referral_code') || generateReferralCode(userName)
+  };
+  
+  return true;
+}
+
+// Generate referral code from name
+function generateReferralCode(name) {
+  const cleanName = name.replace(/\s+/g, '').toUpperCase();
+  const randomNum = Math.floor(Math.random() * 90) + 10; // 10-99
+  return cleanName.substring(0, 6) + randomNum;
+}
+
+// Notification System
+function showNotification(message, type = 'success') {
+  const notification = document.getElementById('notification');
+  notification.textContent = message;
+  notification.className = `notification ${type}`;
+  notification.style.display = 'block';
+  
+  setTimeout(() => {
+    notification.style.display = 'none';
+  }, 3000);
+}
+
+// Sidebar Navigation
+function setupSidebarNavigation() {
+  const sidebarButtons = document.querySelectorAll('.nav button');
+  
+  sidebarButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      document.querySelectorAll('.nav button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      this.classList.add('active');
+      
+      document.querySelectorAll('#dashboard, #referrals, #earnings, #profile')
+        .forEach(tab => {
+          tab.style.display = 'none';
         });
+      
+      const tabId = this.getAttribute('data-tab');
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) {
+        targetTab.style.display = 'block';
         
-        document.getElementById('facebookBtn').addEventListener('click', function() {
-            const link = document.getElementById('referralLink').textContent;
-            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
-            window.open(url, '_blank', 'width=600,height=400');
-        });
-        
-        document.getElementById('twitterBtn').addEventListener('click', function() {
-            const link = document.getElementById('referralLink').textContent;
-            const text = "Join me on ReferralHub and start earning rewards!";
-            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`;
-            window.open(url, '_blank', 'width=600,height=400');
-        });
-        
-        // Test referral link functionality
-        document.getElementById('testLinkBtn').addEventListener('click', function() {
-            document.getElementById('programSelection').style.display = 'flex';
-        });
-        
-        // Program selection functionality
-        let selectedProgram = null;
-        const programCards = document.querySelectorAll('.program-card');
-        
-        programCards.forEach(card => {
-            card.addEventListener('click', function() {
-                // Remove selected class from all cards
-                programCards.forEach(c => c.classList.remove('selected'));
-                
-                // Add selected class to clicked card
-                this.classList.add('selected');
-                
-                // Enable select button
-                document.getElementById('selectProgram').disabled = false;
-                
-                // Store selected program
-                selectedProgram = this.getAttribute('data-program');
-            });
-        });
-        
-        // Cancel program selection
-        document.getElementById('cancelProgram').addEventListener('click', function() {
-            document.getElementById('programSelection').style.display = 'none';
-            programCards.forEach(c => c.classList.remove('selected'));
-            document.getElementById('selectProgram').disabled = true;
-            selectedProgram = null;
-        });
-        
-        // Select program
-        document.getElementById('selectProgram').addEventListener('click', function() {
-            if (!selectedProgram) return;
-            
-            // In a real app, this would redirect to the actual registration page
-            // with the selected program as a parameter
-            
-            alert(`You've selected the ${selectedProgram.toUpperCase()} program! Redirecting to registration...`);
-            
-            // Simulate redirect after a short delay
-            setTimeout(() => {
-                document.getElementById('programSelection').style.display = 'none';
-                programCards.forEach(c => c.classList.remove('selected'));
-                document.getElementById('selectProgram').disabled = true;
-                selectedProgram = null;
-            }, 1500);
-        });
-    </script>
+        switch(tabId) {
+          case 'dashboard':
+            loadDashboardData();
+            break;
+          case 'referrals':
+            loadReferrals();
+            break;
+          case 'earnings':
+            loadEarnings();
+            break;
+          case 'profile':
+            loadProfile();
+            break;
+        }
+      }
+    });
+  });
+}
+
+// Initialize Referral Dashboard
+async function initReferralDashboard() {
+  if (!currentUser) return;
+  
+  // Update user info
+  document.getElementById('userName').textContent = currentUser.name;
+  document.getElementById('userEmail').textContent = currentUser.email;
+  document.getElementById('referralCode').textContent = currentUser.referralCode;
+  document.getElementById('topName').textContent = currentUser.name;
+  
+  // Update referral link
+  const referralLink = `${BASE_URL}/signup?ref=${currentUser.referralCode}`;
+  document.getElementById('referralLink').value = referralLink;
+  document.getElementById('profileReferralCode').value = currentUser.referralCode;
+  
+  // Set avatar initials
+  const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+  document.getElementById('userAvatar').textContent = initials;
+  
+  // Setup navigation
+  setupSidebarNavigation();
+  
+  // Load data
+  await loadDashboardData();
+  showNotification('Welcome to your referral dashboard!');
+}
+
+// Load Dashboard Data
+async function loadDashboardData() {
+  try {
+    // In a real app, fetch from Supabase
+    // For demo, we'll use mock data
+    referralData = {
+      totalReferrals: 8,
+      totalEarnings: 1600,
+      pendingPayout: 400,
+      monthlyEarnings: 600,
+      referrals: [
+        { id: 1, name: 'Jane Smith', email: 'jane@example.com', date: '2023-11-01', status: 'completed', payment: 'paid', earned: 200 },
+        { id: 2, name: 'Mike Johnson', email: 'mike@example.com', date: '2023-10-28', status: 'completed', payment: 'paid', earned: 200 },
+        { id: 3, name: 'Sarah Wilson', email: 'sarah@example.com', date: '2023-10-25', status: 'pending', payment: 'pending', earned: 0 },
+        { id: 4, name: 'David Brown', email: 'david@example.com', date: '2023-10-20', status: 'completed', payment: 'paid', earned: 200 },
+        { id: 5, name: 'Lisa Taylor', email: 'lisa@example.com', date: '2023-10-15', status: 'completed', payment: 'paid', earned: 200 }
+      ],
+      earnings: [
+        { id: 1, date: '2023-11-01', description: 'Referral Commission', referral: 'Jane Smith', amount: 200, status: 'paid', payoutDate: '2023-11-05' },
+        { id: 2, date: '2023-10-28', description: 'Referral Commission', referral: 'Mike Johnson', amount: 200, status: 'paid', payoutDate: '2023-11-05' },
+        { id: 3, date: '2023-10-25', description: 'Referral Commission', referral: 'David Brown', amount: 200, status: 'paid', payoutDate: '2023-10-30' },
+        { id: 4, date: '2023-10-15', description: 'Referral Commission', referral: 'Lisa Taylor', amount: 200, status: 'paid', payoutDate: '2023-10-30' },
+        { id: 5, date: '2023-10-10', description: 'Referral Commission', referral: 'Robert Lee', amount: 200, status: 'paid', payoutDate: '2023-10-15' }
+      ]
+    };
+    
+    // Update stats
+    document.getElementById('totalReferrals').textContent = referralData.totalReferrals;
+    document.getElementById('totalEarnings').textContent = `KSh ${referralData.totalEarnings.toLocaleString()}`;
+    document.getElementById('pendingPayout').textContent = `KSh ${referralData.pendingPayout.toLocaleString()}`;
+    document.getElementById('monthlyEarnings').textContent = `KSh ${referralData.monthlyEarnings.toLocaleString()}`;
+    document.getElementById('topBalance').textContent = `Total Earnings: KSh ${referralData.totalEarnings.toLocaleString()}`;
+    document.getElementById('availablePayout').value = `KSh ${referralData.pendingPayout.toLocaleString()}`;
+    
+  } catch (error) {
+    console.error('Error loading dashboard data:', error);
+    showNotification('Error loading data', 'error');
+  }
+}
+
+// Load Referrals
+async function loadReferrals() {
+  try {
+    const referralsHTML = referralData.referrals.map(ref => `
+      <tr>
+        <td>${ref.name}</td>
+        <td>${ref.email}</td>
+        <td>${new Date(ref.date).toLocaleDateString()}</td>
+        <td>
+          <span class="referral-status status-${ref.status}">
+            ${ref.status.charAt(0).toUpperCase() + ref.status.slice(1)}
+          </span>
+        </td>
+        <td>
+          <span class="referral-status ${ref.payment === 'paid' ? 'status-paid' : 'status-pending'}">
+            ${ref.payment === 'paid' ? 'Paid' : 'Pending'}
+          </span>
+        </td>
+        <td>KSh ${ref.earned}</td>
+      </tr>
+    `).join('') || '<tr><td colspan="6" style="text-align:center;">No referrals yet</td></tr>';
+    
+    document.getElementById('referralsTable').innerHTML = referralsHTML;
+    
+  } catch (error) {
+    console.error('Error loading referrals:', error);
+    document.getElementById('referralsTable').innerHTML = '<tr><td colspan="6" style="text-align:center;">Error loading referrals</td></tr>';
+  }
+}
+
+// Load Earnings
+async function loadEarnings() {
+  try {
+    const earningsHTML = referralData.earnings.map(earning => `
+      <tr>
+        <td>${new Date(earning.date).toLocaleDateString()}</td>
+        <td>${earning.description}</td>
+        <td>${earning.referral}</td>
+        <td>KSh ${earning.amount}</td>
+        <td>
+          <span class="referral-status ${earning.status === 'paid' ? 'status-paid' : 'status-pending'}">
+            ${earning.status === 'paid' ? 'Paid' : 'Pending'}
+          </span>
+        </td>
+        <td>${earning.payoutDate ? new Date(earning.payoutDate).toLocaleDateString() : '—'}</td>
+      </tr>
+    `).join('') || '<tr><td colspan="6" style="text-align:center;">No earnings yet</td></tr>';
+    
+    document.getElementById('earningsTable').innerHTML = earningsHTML;
+    
+  } catch (error) {
+    console.error('Error loading earnings:', error);
+    document.getElementById('earningsTable').innerHTML = '<tr><td colspan="6" style="text-align:center;">Error loading earnings</td></tr>';
+  }
+}
+
+// Load Profile
+function loadProfile() {
+  if (!currentUser) return;
+  
+  document.getElementById('profileName').textContent = currentUser.name;
+  document.getElementById('profileEmail').textContent = currentUser.email;
+  document.getElementById('profileEmailInput').value = currentUser.email;
+  document.getElementById('profileFullName').value = currentUser.name;
+  document.getElementById('profilePhone').value = '+254712345678';
+  document.getElementById('profileReferralCode').value = currentUser.referralCode;
+}
+
+// Copy Referral Link
+function copyReferralLink() {
+  const referralLink = document.getElementById('referralLink');
+  referralLink.select();
+  referralLink.setSelectionRange(0, 99999); // For mobile devices
+  document.execCommand('copy');
+  
+  showNotification('Referral link copied to clipboard!');
+}
+
+// Share on WhatsApp
+function shareOnWhatsApp() {
+  const message = `Join Crown Trade with me! Use my referral link: ${document.getElementById('referralLink').value}`;
+  const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+}
+
+// Share on Facebook
+function shareOnFacebook() {
+  const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(document.getElementById('referralLink').value)}`;
+  window.open(url, '_blank');
+}
+
+// Share on Twitter
+function shareOnTwitter() {
+  const text = 'Join Crown Trade with my referral link!';
+  const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(document.getElementById('referralLink').value)}`;
+  window.open(url, '_blank');
+}
+
+// Share on Telegram
+function shareOnTelegram() {
+  const text = 'Join Crown Trade with my referral link!';
+  const url = `https://t.me/share/url?url=${encodeURIComponent(document.getElementById('referralLink').value)}&text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
+}
+
+// Share via Email
+function shareViaEmail() {
+  const subject = 'Join Crown Trade with my referral link';
+  const body = `Hi there,\n\nI wanted to share Crown Trade with you. It's an amazing trading platform!\n\nUse my referral link to join: ${document.getElementById('referralLink').value}\n\nBest regards,\n${currentUser.name}`;
+  const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = url;
+}
+
+// Request Payout
+function requestPayout() {
+  if (referralData.pendingPayout < 500) {
+    showNotification(`Minimum payout amount is KSh 500. You have KSh ${referralData.pendingPayout} available.`, 'error');
+    return;
+  }
+  
+  if (confirm(`Request payout of KSh ${referralData.pendingPayout}?`)) {
+    // In a real app, this would make an API call
+    showNotification('Payout request submitted! You will receive your payment within 3-5 business days.', 'success');
+  }
+}
+
+// Update Payment Method
+function updatePaymentMethod() {
+  const method = document.getElementById('paymentMethod').value;
+  showNotification(`Payment method updated to ${method.toUpperCase()}`, 'success');
+}
+
+// Regenerate Referral Code
+function regenerateReferralCode() {
+  if (confirm('Are you sure you want to generate a new referral code? Your old links will stop working.')) {
+    const newCode = generateReferralCode(currentUser.name);
+    currentUser.referralCode = newCode;
+    localStorage.setItem('referral_code', newCode);
+    
+    // Update display
+    document.getElementById('referralCode').textContent = newCode;
+    document.getElementById('profileReferralCode').value = newCode;
+    
+    // Update referral link
+    const newLink = `${BASE_URL}/signup?ref=${newCode}`;
+    document.getElementById('referralLink').value = newLink;
+    
+    showNotification('New referral code generated!');
+  }
+}
+
+// Download QR Code
+function downloadQRCode() {
+  // In a real app, generate and download actual QR code
+  showNotification('QR code download would be implemented here', 'info');
+}
+
+// Change Password
+function changePassword() {
+  const newPassword = prompt('Enter new password:');
+  if (newPassword && newPassword.length >= 6) {
+    showNotification('Password changed successfully!', 'success');
+  } else {
+    showNotification('Password must be at least 6 characters', 'error');
+  }
+}
+
+// Enable 2FA
+function enable2FA() {
+  showNotification('Two-factor authentication enabled!', 'success');
+}
+
+// Deactivate Account
+function deactivateAccount() {
+  if (confirm('Are you sure you want to deactivate your account? This action cannot be undone.')) {
+    showNotification('Account deactivation request submitted', 'info');
+  }
+}
+
+// Refresh Data
+function refreshData() {
+  loadDashboardData();
+  showNotification('Data refreshed!');
+}
+
+// Logout
+function logout() {
+  if (confirm('Are you sure you want to logout?')) {
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('user_email');
+    localStorage.removeItem('user_name');
+    localStorage.removeItem('referral_code');
+    window.location.href = 'login.html';
+  }
+}
+
+// Load Referral Stats
+function loadReferralStats() {
+  showNotification('Stats refreshed!');
+}
+
+console.log('Referral dashboard JavaScript loaded successfully');
+</script>
 </body>
 </html>
