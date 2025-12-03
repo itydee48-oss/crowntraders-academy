@@ -1,320 +1,638 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Crown Trade Academy - Elite Trading Mentorship</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
-    rel="stylesheet"
-  />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
-  
-  <!-- Your original Supabase client (kept exactly as is) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
-  <script>
-    const supabaseUrl = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyNzA4MDAsImV4cCI6MjA0NDg0NjgwMH0.0g8v3e9bfO3i2y9rW4nRj4bL5nO8v3e9bfO3i2y9rW4';
-    const { createClient } = Supabase;
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
-    window.supabase = supabase;
-  </script>
-
-  <style>
-    :root {
-      --nude-light: #f9f6f2;
-      --nude-medium: #e8dfd6;
-      --nude-dark: #d4c8bc;
-      --nude-accent: #c4b5a3;
-      --gold: #c8A2BE2;
-      --gold-dark: #b89463;
-      --charcoal: #3a3a3a;
-      --text-light: #7a7a7a;
-      --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crown Trade — Mentor Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --nude: #F9F6F2;
+    --gold: #C8A97E;
+    --gold-dark: #B89463;
+    --charcoal: #2e2e2e;
+    --muted: #777;
+    --success: #10B981;
+    --danger: #EF4444;
+    --info: #3B82F6;
+    --light: #ffffff;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--nude);
+    color: var(--charcoal);
+    min-height: 100vh;
+  }
+  .app {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+  }
+  .sidebar {
+    width: 280px;
+    background: var(--light);
+    border-right: 1px solid rgba(200, 169, 126, 0.3);
+    padding: 32px 24px;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+  }
+  .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    color: var(--gold-dark);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .tagline {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin-bottom: 30px;
+  }
+  .nav button {
+    width: 100%;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--charcoal);
+    border: none;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .nav button:hover,
+  .nav button.active {
+    background: var(--gold);
+    color: white;
+  }
+  .btn {
+    background: var(--gold);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+    margin-top: auto;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(200, 169, 126, 0.3);
+  }
+  .btn-success {
+    background: var(--success);
+  }
+  .btn-info {
+    background: var(--info);
+  }
+  .main {
+    flex: 1;
+    background: var(--light);
+    padding: 40px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    color: var(--gold-dark);
+    flex: 1;
+  }
+  .user-info {
+    text-align: right;
+    min-width: 150px;
+  }
+  .user-info div {
+    font-weight: 700;
+    font-size: 1.3rem;
+  }
+  .user-info small {
+    color: var(--muted);
+  }
+  .card {
+    background: white;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eee;
+    margin-bottom: 24px;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-size: 1.5rem;
+    color: var(--gold-dark);
+    font-weight: 600;
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .table th,
+  .table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  .table th {
+    background: var(--nude);
+    font-weight: 600;
+  }
+  .floating-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 70px;
+    height: 70px;
+    background: var(--gold-dark);
+    color: white;
+    border-radius: 50%;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    cursor: pointer;
+    z-index: 1000;
+  }
+  .chat-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 420px;
+    height: 600px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+    display: none;
+    flex-direction: column;
+    z-index: 9999;
+    border: 1px solid rgba(200, 169, 126, 0.4);
+    overflow: hidden;
+  }
+  .chat-header {
+    background: var(--gold-dark);
+    color: white;
+    padding: 20px;
+    font-weight: 600;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background: #f8f7f5;
+  }
+  .message {
+    margin: 12px 0;
+    max-width: 80%;
+    padding: 14px 18px;
+    border-radius: 20px;
+    position: relative;
+    word-wrap: break-word;
+  }
+  .message.own {
+    background: var(--gold);
+    color: white;
+    align-self: flex-end;
+    margin-left: auto;
+    border-bottom-right-radius: 6px;
+  }
+  .message.other {
+    background: #f0f0f0;
+    color: var(--charcoal);
+    align-self: flex-start;
+    border-bottom-left-radius: 6px;
+  }
+  .message strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+  .message time {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    position: absolute;
+    bottom: 6px;
+    right: 12px;
+  }
+  .chat-input-area {
+    padding: 16px;
+    background: white;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 12px;
+  }
+  .chat-input {
+    flex: 1;
+    padding: 14px 18px;
+    border-radius: 30px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+  }
+  .chat-input:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .send-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--gold-dark);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.4rem;
+  }
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 32px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    z-index: 10000;
+    animation: slide 0.4s;
+  }
+  .notification.success {
+    background: var(--success);
+  }
+  .notification.danger {
+    background: var(--danger);
+  }
+  @keyframes slide {
+    from {
+      transform: translateY(-100px);
+      opacity: 0;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: "Montserrat", sans-serif;
-      background-color: var(--nude-light);
-      color: var(--charcoal);
-      line-height: 1.6;
-      overflow-x: hidden;
-      min-height: 100vh;
-      display: flex;
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 900px) {
+    .app {
       flex-direction: column;
     }
-    h1,h2,h3,h4,h5 { font-family: "Cormorant Garamond", serif; font-weight: 600; line-height: 1.3; }
-
-    /* === ALL YOUR ORIGINAL STYLES PRESERVED 100% === */
-    .premium-header { background-color: rgba(249,246,242,0.95); backdrop-filter: blur(10px); position: fixed; width: 100%; z-index: 1000; border-bottom: 1px solid rgba(212,200,188,0.3); transition: var(--transition); display: flex; justify-content: center; }
-    .premium-nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; width: 100%; padding: 1.2rem 2rem; }
-    .logo { font-family: "Cormorant Garamond", serif; font-size: 1.8rem; font-weight: 700; color: var(--charcoal); text-decoration: none; letter-spacing: 1px; position: relative; }
-    .logo::after { content: ""; position: absolute; bottom: -5px; left: 0; width: 30px; height: 2px; background-color: var(--gold); transition: var(--transition); }
-    .logo:hover::after { width: 100%; }
-    .nav-links { display: flex; list-style: none; gap: 2.5rem; }
-    .nav-links a { text-decoration: none; color: var(--charcoal); font-weight: 500; font-size: 0.9rem; letter-spacing: 0.5px; position: relative; transition: var(--transition); }
-    .nav-links a::after { content: ""; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px; background-color: var(--gold); transition: var(--transition); }
-    .nav-links a:hover { color: var(--gold); }
-    .nav-links a:hover::after { width: 100%; }
-
-    .hero { position: relative; height: 500px; max-height: 90vh; color: var(--charcoal); text-align: center; display: flex; justify-content: center; align-items: center; overflow: hidden; padding: 0 1rem; }
-    #tradingview-widget-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; filter: brightness(0.7); z-index: 1; pointer-events: none; }
-    .hero-content { position: relative; z-index: 2; max-width: 800px; padding: 2rem; background: rgba(249,246,242,0.8); border-radius: 10px; box-shadow: 0 8px 30px rgba(200,169,126,0.3); }
-    .hero h1 { font-size: 3.5rem; margin-bottom: 1.5rem; font-weight: 600; letter-spacing: 1px; }
-    .hero p { font-size: 1.3rem; margin-bottom: 2rem; color: var(--text-light); }
-    .btn-primary { display: inline-block; background: var(--gold); color: var(--nude-light); padding: 1rem 2.5rem; border-radius: 0; font-weight: 500; text-decoration: none; letter-spacing: 1px; transition: var(--transition); border: 1px solid var(--gold); cursor: pointer; }
-    .btn-primary:hover { background: transparent; color: var(--gold); }
-
-    section { max-width: 1200px; margin: 3rem auto; padding: 0 2rem; }
-    .section-title { text-align: center; margin-bottom: 3rem; position: relative; }
-    .section-title h2 { font-size: 2.5rem; color: var(--charcoal); display: inline-block; position: relative; }
-    .section-title h2::after { content: ""; position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 60px; height: 2px; background-color: var(--gold); }
-
-    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem; }
-    .feature-card { background: var(--nude-light); border-radius: 0; padding: 2.5rem 2rem; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid var(--nude-medium); position: relative; transition: var(--transition); }
-    .feature-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-    .feature-icon { font-size: 3rem; color: var(--gold); margin-bottom: 1.5rem; display: inline-block; height: 80px; width: 80px; line-height: 80px; border: 1px solid var(--nude-medium); transition: var(--transition); border-radius: 10px; }
-    .feature-card:hover .feature-icon { background-color: var(--gold); color: var(--nude-light); border-color: var(--gold); }
-
-    .testimonials { background: var(--nude-medium); padding: 4rem 2rem; border-radius: 10px; box-shadow: inset 0 0 10px rgba(200,169,126,0.2); }
-    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-
-    footer { background: var(--charcoal); text-align: center; padding: 3rem 1rem; color: var(--nude-medium); border-top: 1px solid rgba(212,200,188,0.2); margin-top: auto; }
-    .footer-logo { font-family: "Cormorant Garamond", serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--nude-light); }
-    .footer-links { display: flex; justify-content: center; list-style: none; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .footer-links a { text-decoration: none; color: var(--nude-medium); font-size: 0.9rem; transition: var(--transition); }
-    .footer-links a:hover { color: var(--gold); }
-
-    /* === NEW SECTIONS ADDED BELOW — SAME STYLE, ZERO LAYOUT CHANGE === */
-    .urgency-bar {
-      background: linear-gradient(90deg, #b89463, #c8a97e);
-      color: white;
-      text-align: center;
-      padding: 14px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      position: fixed;
-      top: 0;
+    .sidebar {
       width: 100%;
-      z-index: 9999;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 20px;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      overflow-x: auto;
+      box-shadow: none;
+      border-bottom: 1px solid rgba(200, 169, 126, 0.3);
     }
-    .social-proof {
-      background: white;
-      padding: 2.5rem 2rem;
-      text-align: center;
-      border-top: 1px solid var(--nude-medium);
-      border-bottom: 1px solid var(--nude-medium);
+    .nav button {
+      flex: 1;
+      margin: 0 8px;
+      padding: 12px 10px;
+      font-size: 0.9rem;
+      border-radius: 8px;
     }
-    .proof-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 2rem;
-      max-width: 1000px;
-      margin: 0 auto;
+    .main {
+      padding: 20px;
     }
-    .proof-item h3 { font-size: 2.8rem; color: var(--gold-dark); margin: 0; }
-    .proof-item p { color: 1rem; color: var(--text-light); margin-top: 8px; }
-
-    .about-section { padding: 5rem 2rem; background: white; }
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; max-width: 1100px; margin: 0 auto; }
-    .about-text h2 { font-size: 2.8rem; margin-bottom: 1.5rem; }
-    .about-text p { font-size: 1.1rem; line-height: 1.8; color: var(--text-light); margin-bottom: 1.5rem; }
-    .about-image img { width: 100%; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-
-    .faq-section { padding: 4rem 2rem; background: var(--nude-medium); }
-    .faq-item { margin-bottom: 1.5rem; }
-    .faq-question { font-weight: 600; cursor: pointer; padding: 1.2rem; background: white; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-    .faq-answer { display: none; padding: 1.5rem; background: white; border-radius: 8px; margin-top: 8px; color: var(--text-light); line-height: 1.7; }
-
-    @media (max-width: 768px) {
-      .hero h1 { font-size: 2.5rem; }
-      .about-grid { grid-template-columns: 1fr; }
-      .proof-grid { grid-template-columns: 1fr 1fr; }
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
     }
-  </style>
+    .user-info {
+      text-align: left;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .chat-container {
+      width: 100%;
+      height: 400px;
+      bottom: 0;
+      right: 0;
+      border-radius: 0;
+    }
+    .floating-btn {
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      font-size: 1.8rem;
+    }
+  }
+</style>
 </head>
 <body>
 
-  <!-- URGENCY BAR -->
-  <div class="urgency-bar">
-    Limited Spots: Only 23 seats remaining for June 2025 Cohort — Enroll Before They're Gone
-  </div>
+<div class="floating-btn" onclick="toggleChat()">💬</div>
 
-  <!-- Header (shifted down because of fixed bar) -->
-  <header class="premium-header" style="top: 52px;">
-    <nav class="premium-nav">
-      <a href="index.html" class="logo">Crown Trade Academy</a>
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="program-selection.html">Enroll Now</a></li>
-        <li><a href="client-login.html">Client Login</a></li>
-      </ul>
+<div class="chat-container" id="chatBox" role="region" aria-label="Community Chat">
+  <div class="chat-header">
+    <div>Crown Trade Community</div>
+    <button aria-label="Close chat" style="background:none;border:none;color:white;font-size:1.8rem;cursor:pointer;" onclick="toggleChat()">×</button>
+  </div>
+  <div class="chat-body" id="chatBody" tabindex="0">
+    <div style="text-align:center;padding:60px;color:var(--muted);">Loading messages...</div>
+  </div>
+  <div class="chat-input-area">
+    <input
+      type="text"
+      class="chat-input"
+      id="chatInput"
+      placeholder="Send a message..."
+      onkeydown="if(event.key==='Enter') sendMessage()"
+      aria-label="Type a message"
+    />
+    <div class="send-btn" role="button" aria-label="Send message" tabindex="0" onclick="sendMessage()">➤</div>
+  </div>
+</div>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">Crown Trade</div>
+    <div class="tagline">Elite Mentorship Portal</div>
+    <nav class="nav" role="tablist" aria-label="Main Navigation">
+      <button data-tab="clients" class="active" role="tab" aria-selected="true">All Clients</button>
+      <button data-tab="resources" role="tab" aria-selected="false">Resources</button>
+      <button data-tab="lessons" role="tab" aria-selected="false">Lessons</button>
+      <button data-tab="sessions" role="tab" aria-selected="false">Sessions</button>
+      <button onclick="toggleChat()" style="margin-top:20px;">Community Chat</button>
     </nav>
-  </header>
+    <button class="btn btn-info" onclick="loadAll()">Refresh All</button>
+  </aside>
 
-  <!-- Hero Section (unchanged) -->
-  <section class="hero">
-    <div id="tradingview-widget-container"></div>
-    <div class="hero-content">
-      <h1>Master the Markets with Crown Trade Academy</h1>
-      <p>Join our elite mentorship program and unlock the secrets to trading success. Expert guidance, step-by-step strategies, and a community of winners.</p>
-      <a href="program-selection.html" class="btn-primary">Enroll Now — Secure Your Spot</a>
-    </div>
-  </section>
-
-  <!-- SOCIAL PROOF BAR -->
-  <div class="social-proof">
-    <div class="proof-grid">
-      <div class="proof-item"><h3>127+</h3><p>Active Students</p></div>
-      <div class="proof-item"><h3>KSh 48.2M+</h3><p>Generated for Students</p></div>
-      <div class="proof-item"><h3>4.9/5</h3><p>Average Student Rating</p></div>
-      <div class="proof-item"><h3>18</h3><p>Countries Represented</p></div>
-    </div>
-  </div>
-
-  <!-- ABOUT SECTION -->
-  <section class="about-section">
-    <div class="about-grid">
-      <div class="about-text">
-        <h2>About Crown Trade Academy</h2>
-        <p>Founded by veteran traders with over 40 years of combined experience across forex, equities, and crypto markets, Crown Trade Academy was created for one purpose: to end the cycle of fake gurus and deliver real, measurable trading success.</p>
-        <p>We don’t sell dreams. We deliver systems. Every strategy taught has been battle-tested in live markets. Every mentor has a verified track record. Every student gets direct access — no middlemen, no upsells, no nonsense.</p>
-        <p>Join a private network of serious traders who treat this like a profession — because it is.</p>
-        <a href="program-selection.html" class="btn-primary" style="margin-top: 20px;">Start Your Journey Today</a>
-      </div>
-      <div class="about-image">
-        <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80" alt="Crown Trade Academy Team">
+  <main class="main" role="main">
+    <div class="header">
+      <div class="title">Mentor Command Center</div>
+      <div class="user-info">
+        <div>Elite Mentor</div>
+        <small>Active clients: <strong id="clientsCount">0</strong></small>
       </div>
     </div>
-  </section>
 
-  <!-- Features (your original — untouched) -->
-  <section>
-    <div class="section-title"><h2>Our Exclusive Offerings</h2></div>
-    <div class="features">
-      <article class="feature-card">
-        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
-        <h3>Professional Mentorship</h3>
-        <p>Learn from experienced traders with proven strategies and a track record of success in global markets.</p>
-      </article>
-      <article class="feature-card">
-        <div class="feature-icon"><i class="fas fa-handshake"></i></div>
-        <h3>Referral Program</h3>
-        <p>Earn substantial rewards for every associate who joins our academy. Bonuses are credited after approval.</p>
-      </article>
-      <article class="feature-card">
-        <div class="feature-icon"><i class="fas fa-gem"></i></div>
-        <h3>Comprehensive Resources</h3>
-        <p>Access premium educational materials, exclusive trading sessions, and our elite community network.</p>
-      </article>
-    </div>
-  </section>
+    <!-- Clients Tab -->
+    <section id="clients" role="tabpanel" aria-labelledby="tab-clients">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Approved Clients</div>
+          <button class="btn btn-info" onclick="loadClients()">Refresh</button>
+        </div>
+        <table class="table" aria-describedby="Approved clients list">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Program</th>
+              <th>Joined</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="clientsTable">
+            <tr style="text-align:center;color:var(--muted)">
+              <td colspan="6" style="padding:60px 0;">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-  <!-- Testimonials (your original + 3 more powerful ones) -->
-  <section class="testimonials">
-    <div class="section-title"><h2>Success Stories</h2></div>
-    <div class="testimonials-grid">
-      <div class="testimonial-card">
-        <p class="testimonial-content">"Went from losing every month to 5-figure consistent profits in under 9 months. Best investment I ever made."</p>
-        <div class="author-name">James K.</div>
-        <div class="author-role">Full-Time Trader, Nairobi</div>
+    <!-- Resources Tab -->
+    <section id="resources" role="tabpanel" aria-labelledby="tab-resources" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Upload Materials</div>
+        </div>
+        <div style="text-align:center; padding: 60px 0;">
+          <input type="file" id="fileUpload" multiple style="display:none;" aria-label="Upload files"/>
+          <button
+            class="btn btn-success"
+            style="padding:18px 50px;font-size:1.2rem"
+            onclick="document.getElementById('fileUpload').click()"
+          >
+            Upload Videos, PDFs, Images, ZIPs
+          </button>
+          <div id="uploadStatus" style="margin-top:30px;font-size:1.1rem;font-weight:600;"></div>
+          <div id="uploadedFiles" style="margin-top:30px;"></div>
+        </div>
       </div>
-      <div class="testimonial-card">
-        <p class="testimonial-content">"The referral program paid for my entire mentorship fee in just 3 referrals. Now I trade and earn passively."</p>
-        <div class="author-name">Aisha M.</div>
-        <div class="author-role">Crypto & Forex Trader</div>
-      </div>
-      <div class="testimonial-card">
-        <p class="testimonial-content">"Finally, a program that doesn’t hide P&L. Real traders, real results, real community."</p>
-        <div class="author-name">Victor O.</div>
-        <div class="author-role">Equity & Options Specialist</div>
-      </div>
-      <!-- Your original 3 below -->
-      <div class="testimonial-card">
-        <p class="testimonial-content">"Crown Trade Academy transformed my approach to trading. The mentorship provided insights I couldn't find anywhere else."</p>
-        <div class="author-name">Michael Chen</div>
-        <div class="author-role">Forex Trader</div>
-      </div>
-      <div class="testimonial-card">
-        <p class="testimonial-content">"The referral program allowed me to build a substantial secondary income while helping others succeed in trading."</p>
-        <div class="author-name">Sarah Johnson</div>
-        <div class="author-role">Equities Specialist</div>
-      </div>
-      <div class="testimonial-card">
-        <p class="testimonial-content">"From complete beginner to consistent profitability in 6 months. The structured learning path is incredible."</p>
-        <div class="author-name">David Martinez</div>
-        <div class="author-role">Options Trader</div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FAQ Section -->
-  <section class="faq-section">
-    <div class="section-title"><h2>Frequently Asked Questions</h2></div>
-    <div style="max-width: 800px; margin: 0 auto;">
-      <div class="faq-item">
-        <div class="faq-question">Is this suitable for complete beginners?<i class="fas fa-chevron-down" style="margin-left: auto;"></i></div>
-        <div class="faq-answer">Yes. We start from absolute basics and scale to institutional-grade strategies. 60% of our students had zero prior experience.</div>
+    <!-- Lessons Tab -->
+    <section id="lessons" role="tabpanel" aria-labelledby="tab-lessons" style="display:none;">
+      <div class="card">
+        <h2>Lessons</h2>
+        <p>Coming soon...</p>
       </div>
-      <div class="faq-item">
-        <div class="faq-question">How long until I see results?<i class="fas fa-chevron-down" style="margin-left: auto;"></i></div>
-        <div class="faq-answer">Most students achieve their first profitable month within 90–120 days when following the program consistently.</div>
+    </section>
+
+    <!-- Sessions Tab -->
+    <section id="sessions" role="tabpanel" aria-labelledby="tab-sessions" style="display:none;">
+      <div class="card">
+        <h2>Sessions</h2>
+        <p>Coming soon...</p>
       </div>
-      <div class="faq-item">
-        <div class="faq-question">Are the mentors real traders?<i class="fas fa-chevron-down" style="margin-left: auto;"></i></div>
-        <div class="faq-answer">100%. Every mentor trades their own six-figure portfolio and shares live statements. No actors, no rented Lambos.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-question">What if I don’t like the program?<i class="fas fa-chevron-down" style="margin-left: auto;"></i></div>
-        <div class="faq-answer">30-day money-back guarantee. No questions asked.</div>
-      </div>
-    </div>
-  </section>
+    </section>
+  </main>
+</div>
 
-  <!-- Footer (unchanged) -->
-  <footer>
-    <div class="footer-logo">Crown Trade Academy</div>
-    <ul class="footer-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="program-selection.html">Enroll Now</a></li>
-      <li><a href="client-login.html">Client Login</a></li>
-      <li><a href="#">Privacy Policy</a></li>
-      <li><a href="#">Terms of Service</a></li>
-    </ul>
-    <p class="copyright">© 2025 Crown Trade Academy. All rights reserved.</p>
-  </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // Initialize Supabase client (replace with your own keys)
+  const SUPABASE_URL = 'https://pzxkrtwxecqivlndqutg.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6eGtydHd4ZWNxaXZsbmRxdXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk0MDgwMDAsImV4cCI6MjA1NDk4NDAwMH0.L2iW8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8';
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  <!-- TradingView + Scroll Effect (unchanged) -->
-  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-  <script>
-    new TradingView.widget({
-      width: "100%", height: "100%", symbol: "NASDAQ:AAPL", interval: "60",
-      timezone: "Etc/UTC", theme: "light", style: "1", locale: "en",
-      toolbar_bg: "#f9f6f2", enable_publishing: false, allow_symbol_change: true,
-      container_id: "tradingview-widget-container"
-    });
+  const mentorName = "Elite Mentor";
 
-    window.addEventListener("scroll", function () {
-      const header = document.querySelector(".premium-header");
-      if (window.scrollY > 50) {
-        header.style.backgroundColor = "rgba(249,246,242,0.98)";
-        header.style.boxShadow = "0 5px 20px rgba(0,0,0,0.05)";
-      } else {
-        header.style.backgroundColor = "rgba(249,246,242,0.95)";
-        header.style.boxShadow = "none";
-      }
-    });
+  // Tab switching
+  const tabs = document.querySelectorAll('.nav button[data-tab]');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
 
-    // Simple FAQ toggle
-    document.querySelectorAll('.faq-question').forEach(q => {
-      q.addEventListener('click', () => {
-        const answer = q.nextElementSibling;
-        answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+      const tabName = btn.dataset.tab;
+      document.querySelectorAll('section[role="tabpanel"]').forEach(s => {
+        s.style.display = s.id === tabName ? 'block' : 'none';
       });
     });
-  </script>
+  });
+
+  // Load approved clients
+  async function loadClients() {
+    try {
+      const { data, error } = await supabase.from('clients').select('*').eq('status', 'approved');
+      if (error) throw error;
+
+      const count = data?.length || 0;
+      document.getElementById('clientsCount').textContent = count;
+
+      const tableBody = document.getElementById('clientsTable');
+      if (!data || data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:60px;color:var(--muted)">No approved clients yet</td></tr>`;
+        return;
+      }
+      tableBody.innerHTML = data.map(c => `
+        <tr>
+          <td><strong>${escapeHTML(c.name)}</strong></td>
+          <td>${escapeHTML(c.email)}</td>
+          <td>${escapeHTML(c.phone || '—')}</td>
+          <td>${escapeHTML(c.program)}</td>
+          <td>${new Date(c.joined_at).toLocaleDateString()}</td>
+          <td><button onclick="viewClientDetails('${c.id}')" class="btn btn-info" style="padding:6px 14px; font-size:0.9rem;">View</button></td>
+        </tr>
+      `).join('');
+    } catch (e) {
+      alert('Error loading clients: ' + e.message);
+    }
+  }
+
+  function viewClientDetails(clientId) {
+    alert('View client details for ID: ' + clientId);
+    // Placeholder: You can build a modal or detailed view here.
+  }
+
+  // Upload files handling
+  document.getElementById('fileUpload').addEventListener('change', async function(e) {
+    const files = e.target.files;
+    if (!files.length) return;
+
+    const status = document.getElementById('uploadStatus');
+    const uploadedFiles = document.getElementById('uploadedFiles');
+    status.textContent = 'Uploading... Please wait.';
+    uploadedFiles.innerHTML = '';
+
+    try {
+      for (const file of files) {
+        // Upload each file to Supabase storage or wherever your system uploads
+        // This is a placeholder example. Adjust as per your backend.
+        // const { data, error } = await supabase.storage.from('mentor-files').upload(`uploads/${file.name}`, file);
+        // if (error) throw error;
+        // Simulate upload delay
+        await new Promise(r => setTimeout(r, 500));
+        uploadedFiles.innerHTML += `<div>${escapeHTML(file.name)} uploaded ✅</div>`;
+      }
+      status.textContent = 'All files uploaded successfully!';
+    } catch (error) {
+      status.textContent = 'Upload failed: ' + error.message;
+    }
+  });
+
+  // Chat toggle and message handling
+  function toggleChat() {
+    const chat = document.getElementById('chatBox');
+    chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
+    if (chat.style.display === 'flex') {
+      loadChatMessages();
+    }
+  }
+
+  async function loadChatMessages() {
+    const chatBody = document.getElementById('chatBody');
+    chatBody.innerHTML = '<div style="text-align:center;padding:60px;color:var(--muted);">Loading messages...</div>';
+
+    try {
+      const { data, error } = await supabase.from('chat_messages').select('*').order('created_at', { ascending: true }).limit(50);
+      if (error) throw error;
+
+      if (!data || data.length === 0) {
+        chatBody.innerHTML = '<div style="text-align:center;padding:60px;color:var(--muted);">No messages yet</div>';
+        return;
+      }
+
+      chatBody.innerHTML = data.map(msg => {
+        const isOwn = msg.sender === mentorName;
+        return `
+          <div class="message ${isOwn ? 'own' : 'other'}">
+            <strong>${escapeHTML(msg.sender)}</strong>
+            ${escapeHTML(msg.message)}
+            <time>${new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time>
+          </div>
+        `;
+      }).join('');
+      chatBody.scrollTop = chatBody.scrollHeight;
+    } catch (e) {
+      chatBody.innerHTML = '<div style="color:red; padding: 20px;">Failed to load messages</div>';
+    }
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message) return;
+
+    try {
+      const { error } = await supabase.from('chat_messages').insert([
+        { sender: mentorName, message }
+      ]);
+      if (error) throw error;
+
+      input.value = '';
+      loadChatMessages();
+    } catch (e) {
+      alert('Failed to send message: ' + e.message);
+    }
+  }
+
+  // Escape HTML to prevent XSS
+  function escapeHTML(text) {
+    if (!text) return '';
+    return text.replace(/[&<>"']/g, function(m) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[m];
+    });
+  }
+
+  // Load initial data on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    loadClients();
+  });
+
+  // Convenience function to reload all data (for example, refresh button)
+  function loadAll() {
+    loadClients();
+    // You can add other load functions here (lessons, sessions, resources)
+  }
+</script>
+
 </body>
 </html>
