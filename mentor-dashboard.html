@@ -465,6 +465,473 @@
   </main>
 </div>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crown Trade — Mentor Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --nude: #F9F6F2;
+    --gold: #C8A97E;
+    --gold-dark: #B89463;
+    --charcoal: #2e2e2e;
+    --muted: #777;
+    --success: #10B981;
+    --danger: #EF4444;
+    --info: #3B82F6;
+    --light: #ffffff;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--nude);
+    color: var(--charcoal);
+    min-height: 100vh;
+  }
+  .app {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+  }
+  .sidebar {
+    width: 280px;
+    background: var(--light);
+    border-right: 1px solid rgba(200, 169, 126, 0.3);
+    padding: 32px 24px;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+  }
+  .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    color: var(--gold-dark);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .tagline {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin-bottom: 30px;
+  }
+  .nav button {
+    width: 100%;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--charcoal);
+    border: none;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .nav button:hover,
+  .nav button.active {
+    background: var(--gold);
+    color: white;
+  }
+  .btn {
+    background: var(--gold);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+    margin-top: auto;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(200, 169, 126, 0.3);
+  }
+  .btn-success {
+    background: var(--success);
+  }
+  .btn-info {
+    background: var(--info);
+  }
+  .main {
+    flex: 1;
+    background: var(--light);
+    padding: 40px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    color: var(--gold-dark);
+    flex: 1;
+  }
+  .user-info {
+    text-align: right;
+    min-width: 150px;
+  }
+  .user-info div {
+    font-weight: 700;
+    font-size: 1.3rem;
+  }
+  .user-info small {
+    color: var(--muted);
+  }
+  .card {
+    background: white;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eee;
+    margin-bottom: 24px;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-size: 1.5rem;
+    color: var(--gold-dark);
+    font-weight: 600;
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .table th,
+  .table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  .table th {
+    background: var(--nude);
+    font-weight: 600;
+  }
+  .floating-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 70px;
+    height: 70px;
+    background: var(--gold-dark);
+    color: white;
+    border-radius: 50%;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    cursor: pointer;
+    z-index: 1000;
+  }
+  .chat-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 420px;
+    height: 600px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+    display: none;
+    flex-direction: column;
+    z-index: 9999;
+    border: 1px solid rgba(200, 169, 126, 0.4);
+    overflow: hidden;
+  }
+  .chat-header {
+    background: var(--gold-dark);
+    color: white;
+    padding: 20px;
+    font-weight: 600;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background: #f8f7f5;
+  }
+  .message {
+    margin: 12px 0;
+    max-width: 80%;
+    padding: 14px 18px;
+    border-radius: 20px;
+    position: relative;
+    word-wrap: break-word;
+  }
+  .message.own {
+    background: var(--gold);
+    color: white;
+    align-self: flex-end;
+    margin-left: auto;
+    border-bottom-right-radius: 6px;
+  }
+  .message.other {
+    background: #f0f0f0;
+    color: var(--charcoal);
+    align-self: flex-start;
+    border-bottom-left-radius: 6px;
+  }
+  .message strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+  .message time {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    position: absolute;
+    bottom: 6px;
+    right: 12px;
+  }
+  .chat-input-area {
+    padding: 16px;
+    background: white;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 12px;
+  }
+  .chat-input {
+    flex: 1;
+    padding: 14px 18px;
+    border-radius: 30px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+  }
+  .chat-input:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .send-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--gold-dark);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.4rem;
+  }
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 32px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    z-index: 10000;
+    animation: slide 0.4s;
+  }
+  .notification.success {
+    background: var(--success);
+  }
+  .notification.danger {
+    background: var(--danger);
+  }
+  @keyframes slide {
+    from {
+      transform: translateY(-100px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 900px) {
+    .app {
+      flex-direction: column;
+    }
+    .sidebar {
+      width: 100%;
+      padding: 20px;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      overflow-x: auto;
+      box-shadow: none;
+      border-bottom: 1px solid rgba(200, 169, 126, 0.3);
+    }
+    .nav button {
+      flex: 1;
+      margin: 0 8px;
+      padding: 12px 10px;
+      font-size: 0.9rem;
+      border-radius: 8px;
+    }
+    .main {
+      padding: 20px;
+    }
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .user-info {
+      text-align: left;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .chat-container {
+      width: 100%;
+      height: 400px;
+      bottom: 0;
+      right: 0;
+      border-radius: 0;
+    }
+    .floating-btn {
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      font-size: 1.8rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="floating-btn" onclick="toggleChat()">💬</div>
+
+<div class="chat-container" id="chatBox" role="region" aria-label="Community Chat">
+  <div class="chat-header">
+    <div>Crown Trade Community</div>
+    <button aria-label="Close chat" style="background:none;border:none;color:white;font-size:1.8rem;cursor:pointer;" onclick="toggleChat()">×</button>
+  </div>
+  <div class="chat-body" id="chatBody" tabindex="0">
+    <div style="text-align:center;padding:60px;color:var(--muted);">Loading messages...</div>
+  </div>
+  <div class="chat-input-area">
+    <input
+      type="text"
+      class="chat-input"
+      id="chatInput"
+      placeholder="Send a message..."
+      onkeydown="if(event.key==='Enter') sendMessage()"
+      aria-label="Type a message"
+    />
+    <div class="send-btn" role="button" aria-label="Send message" tabindex="0" onclick="sendMessage()">➤</div>
+  </div>
+</div>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">Crown Trade</div>
+    <div class="tagline">Elite Mentorship Portal</div>
+    <nav class="nav" role="tablist" aria-label="Main Navigation">
+      <button data-tab="clients" class="active" role="tab" aria-selected="true">All Clients</button>
+      <button data-tab="resources" role="tab" aria-selected="false">Resources</button>
+      <button data-tab="lessons" role="tab" aria-selected="false">Lessons</button>
+      <button data-tab="sessions" role="tab" aria-selected="false">Sessions</button>
+      <button onclick="toggleChat()" style="margin-top:20px;">Community Chat</button>
+    </nav>
+    <button class="btn btn-info" onclick="loadAll()">Refresh All</button>
+  </aside>
+
+  <main class="main" role="main">
+    <div class="header">
+      <div class="title">Mentor Command Center</div>
+      <div class="user-info">
+        <div>Elite Mentor</div>
+        <small>Active clients: <strong id="clientsCount">0</strong></small>
+      </div>
+    </div>
+
+    <!-- Clients Tab -->
+    <section id="clients" role="tabpanel" aria-labelledby="tab-clients">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Approved Clients</div>
+          <button class="btn btn-info" onclick="loadClients()">Refresh</button>
+        </div>
+        <table class="table" aria-describedby="Approved clients list">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Program</th>
+              <th>Joined</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="clientsTable">
+            <tr style="text-align:center;color:var(--muted)">
+              <td colspan="6" style="padding:60px 0;">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Resources Tab -->
+    <section id="resources" role="tabpanel" aria-labelledby="tab-resources" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Upload Materials</div>
+        </div>
+        <div style="text-align:center; padding: 60px 0;">
+          <input type="file" id="fileUpload" multiple style="display:none;" aria-label="Upload files"/>
+          <button
+            class="btn btn-success"
+            style="padding:18px 50px;font-size:1.2rem"
+            onclick="document.getElementById('fileUpload').click()"
+          >
+            Upload Videos, PDFs, Images, ZIPs
+          </button>
+          <div id="uploadStatus" style="margin-top:30px;font-size:1.1rem;font-weight:600;"></div>
+          <div id="uploadedFiles" style="margin-top:30px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lessons Tab -->
+    <section id="lessons" role="tabpanel" aria-labelledby="tab-lessons" style="display:none;">
+      <div class="card">
+        <h2>Lessons</h2>
+        <p>Coming soon...</p>
+      </div>
+    </section>
+
+    <!-- Sessions Tab -->
+    <section id="sessions" role="tabpanel" aria-labelledby="tab-sessions" style="display:none;">
+      <div class="card">
+        <h2>Sessions</h2>
+        <p>Coming soon...</p>
+      </div>
+    </section>
+  </main>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // Initialize Supabase client (replace with your own keys)
