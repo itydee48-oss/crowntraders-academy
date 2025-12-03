@@ -393,11 +393,11 @@
   <aside class="sidebar">
     <div class="brand">Crown Trade</div>
     <div class="user-info">
-      <div id="userName" style="font-weight:700;color:var(--charcoal);">Loading...</div>
-      <div id="userEmail" style="color:var(--muted);font-size:0.9rem;">—</div>
-      <div id="userStatus" style="color:var(--success);font-size:0.8rem;margin-top:5px;">● Active Member</div>
+      <div id="userName" style="font-weight:700;color:var(--charcoal);">John Doe</div>
+      <div id="userEmail" style="color:var(--muted);font-size:0.9rem;">john@example.com</div>
+      <div id="userStatus" style="color:var(--success);font-size:0.8rem;margin-top:5px;">● Premium Member</div>
       <div id="userReferralCode" style="margin-top:10px;padding:8px 12px;background:#f0f9f0;border-radius:8px;font-size:0.9rem;color:var(--success);">
-        Referral Code: <strong id="referralCode">Loading...</strong>
+        Referral Code: <strong id="referralCode">JOHNDOE25</strong>
       </div>
     </div>
     
@@ -417,7 +417,7 @@
     </div>
     
     <button class="btn" style="margin-top:30px;width:100%;background:var(--info);" onclick="refreshData()">🔄 Refresh Data</button>
-    <button class="btn" style="margin-top:10px;width:100%;background:var(--danger);" onclick="logout()">Logout</button>
+    <button class="btn" style="margin-top:10px;width:100%;background:var(--danger);" onclick="window.location.href='index.html'">← Back to Home</button>
   </aside>
 
   <!-- Main Content -->
@@ -426,8 +426,8 @@
       <div class="title">Referral Program</div>
       <div style="display:flex;align-items:center;gap:14px;">
         <div style="text-align:right;">
-          <div id="topName" style="font-weight:700;">Loading...</div>
-          <small id="topBalance">Total Earnings: KSh 0</small>
+          <div id="topName" style="font-weight:700;">John Doe</div>
+          <small id="topBalance">Total Earnings: KSh 1,600</small>
         </div>
       </div>
     </div>
@@ -438,22 +438,22 @@
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-label">Total Referrals</div>
-          <div class="stat-value" id="totalReferrals">0</div>
+          <div class="stat-value" id="totalReferrals">8</div>
           <div style="color:var(--success);font-size:0.9rem;">Active referrals</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Total Earnings</div>
-          <div class="stat-value" id="totalEarnings">KSh 0</div>
+          <div class="stat-value" id="totalEarnings">KSh 1,600</div>
           <div style="color:var(--success);font-size:0.9rem;">Lifetime earnings</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Pending Payout</div>
-          <div class="stat-value" id="pendingPayout">KSh 0</div>
+          <div class="stat-value" id="pendingPayout">KSh 400</div>
           <div style="color:var(--warning);font-size:0.9rem;">Available for withdrawal</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">This Month</div>
-          <div class="stat-value" id="monthlyEarnings">KSh 0</div>
+          <div class="stat-value" id="monthlyEarnings">KSh 600</div>
           <div style="color:var(--info);font-size:0.9rem;">Earnings this month</div>
         </div>
       </div>
@@ -472,7 +472,7 @@
           </div>
           
           <div class="referral-link">
-            <input type="text" id="referralLink" readonly value="Loading referral link...">
+            <input type="text" id="referralLink" readonly value="https://crowntrade.com/signup?ref=JOHNDOE25">
             <button class="copy-btn" onclick="copyReferralLink()">📋 Copy Link</button>
           </div>
           
@@ -542,7 +542,7 @@
             </tr>
           </thead>
           <tbody id="referralsTable">
-            <tr><td colspan="6" style="text-align:center;">Loading referrals...</td></tr>
+            <!-- Data will be loaded here -->
           </tbody>
         </table>
       </div>
@@ -591,7 +591,7 @@
             </tr>
           </thead>
           <tbody id="earningsTable">
-            <tr><td colspan="6" style="text-align:center;">Loading earnings history...</td></tr>
+            <!-- Data will be loaded here -->
           </tbody>
         </table>
       </div>
@@ -605,7 +605,7 @@
           <div>
             <div class="form-group">
               <label class="form-label">Total Available for Payout</label>
-              <input type="text" class="form-input" id="availablePayout" value="KSh 0" readonly>
+              <input type="text" class="form-input" id="availablePayout" value="KSh 400" readonly>
             </div>
             <div class="form-group">
               <label class="form-label">Next Payout Date</label>
@@ -709,70 +709,50 @@
   </main>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Supabase Configuration
-const SUPABASE_URL = 'https://eygjxxdgxzatchqgwvep.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNocWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODUyODIsImV4cCI6MjA3Nzk2MTI4Mn0.USOvTWBQ_kW-ty5XkTehYmPJKXeD2_hGGGM40G55tqg';
-
-// Initialize Supabase
-const { createClient } = window.supabase;
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// Current user data
-let currentUser = null;
-let referralData = {
-  totalReferrals: 0,
-  totalEarnings: 0,
-  pendingPayout: 0,
-  monthlyEarnings: 0,
-  referrals: [],
-  earnings: []
+// Remove all authentication - just demo data
+const currentUser = {
+  id: 'demo_user_001',
+  email: 'john@example.com',
+  name: 'John Doe',
+  referralCode: 'JOHNDOE25'
 };
 
-// Base URL for referral links
-const BASE_URL = window.location.origin;
+// Mock data
+const referralData = {
+  totalReferrals: 8,
+  totalEarnings: 1600,
+  pendingPayout: 400,
+  monthlyEarnings: 600,
+  referrals: [
+    { id: 1, name: 'Jane Smith', email: 'jane@example.com', date: '2023-11-01', status: 'completed', payment: 'paid', earned: 200 },
+    { id: 2, name: 'Mike Johnson', email: 'mike@example.com', date: '2023-10-28', status: 'completed', payment: 'paid', earned: 200 },
+    { id: 3, name: 'Sarah Wilson', email: 'sarah@example.com', date: '2023-10-25', status: 'pending', payment: 'pending', earned: 0 },
+    { id: 4, name: 'David Brown', email: 'david@example.com', date: '2023-10-20', status: 'completed', payment: 'paid', earned: 200 },
+    { id: 5, name: 'Lisa Taylor', email: 'lisa@example.com', date: '2023-10-15', status: 'completed', payment: 'paid', earned: 200 },
+    { id: 6, name: 'Robert Lee', email: 'robert@example.com', date: '2023-10-10', status: 'completed', payment: 'paid', earned: 200 },
+    { id: 7, name: 'Maria Garcia', email: 'maria@example.com', date: '2023-10-05', status: 'completed', payment: 'paid', earned: 200 },
+    { id: 8, name: 'James Miller', email: 'james@example.com', date: '2023-10-01', status: 'completed', payment: 'paid', earned: 200 }
+  ],
+  earnings: [
+    { id: 1, date: '2023-11-01', description: 'Referral Commission', referral: 'Jane Smith', amount: 200, status: 'paid', payoutDate: '2023-11-05' },
+    { id: 2, date: '2023-10-28', description: 'Referral Commission', referral: 'Mike Johnson', amount: 200, status: 'paid', payoutDate: '2023-11-05' },
+    { id: 3, date: '2023-10-25', description: 'Referral Commission', referral: 'Sarah Wilson', amount: 0, status: 'pending', payoutDate: null },
+    { id: 4, date: '2023-10-20', description: 'Referral Commission', referral: 'David Brown', amount: 200, status: 'paid', payoutDate: '2023-10-30' },
+    { id: 5, date: '2023-10-15', description: 'Referral Commission', referral: 'Lisa Taylor', amount: 200, status: 'paid', payoutDate: '2023-10-30' },
+    { id: 6, date: '2023-10-10', description: 'Referral Commission', referral: 'Robert Lee', amount: 200, status: 'paid', payoutDate: '2023-10-15' },
+    { id: 7, date: '2023-10-05', description: 'Referral Commission', referral: 'Maria Garcia', amount: 200, status: 'paid', payoutDate: '2023-10-15' },
+    { id: 8, date: '2023-10-01', description: 'Referral Commission', referral: 'James Miller', amount: 200, status: 'paid', payoutDate: '2023-10-15' }
+  ]
+};
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Referral dashboard loading...');
-  // Check if user is logged in
-  checkAuthStatus();
   setTimeout(() => {
     initReferralDashboard();
-  }, 1000);
+  }, 500);
 });
-
-// Check authentication status
-function checkAuthStatus() {
-  // In a real app, check Supabase auth session
-  // For demo, we'll use localStorage
-  const userId = localStorage.getItem('user_id');
-  const userEmail = localStorage.getItem('user_email');
-  const userName = localStorage.getItem('user_name');
-  
-  if (!userId || !userEmail || !userName) {
-    // Redirect to login if not authenticated
-    window.location.href = 'login.html';
-    return false;
-  }
-  
-  currentUser = {
-    id: userId,
-    email: userEmail,
-    name: userName,
-    referralCode: localStorage.getItem('referral_code') || generateReferralCode(userName)
-  };
-  
-  return true;
-}
-
-// Generate referral code from name
-function generateReferralCode(name) {
-  const cleanName = name.replace(/\s+/g, '').toUpperCase();
-  const randomNum = Math.floor(Math.random() * 90) + 10; // 10-99
-  return cleanName.substring(0, 6) + randomNum;
-}
 
 // Notification System
 function showNotification(message, type = 'success') {
@@ -830,9 +810,7 @@ function setupSidebarNavigation() {
 }
 
 // Initialize Referral Dashboard
-async function initReferralDashboard() {
-  if (!currentUser) return;
-  
+function initReferralDashboard() {
   // Update user info
   document.getElementById('userName').textContent = currentUser.name;
   document.getElementById('userEmail').textContent = currentUser.email;
@@ -840,7 +818,7 @@ async function initReferralDashboard() {
   document.getElementById('topName').textContent = currentUser.name;
   
   // Update referral link
-  const referralLink = `${BASE_URL}/signup?ref=${currentUser.referralCode}`;
+  const referralLink = `https://crowntrade.com/signup?ref=${currentUser.referralCode}`;
   document.getElementById('referralLink').value = referralLink;
   document.getElementById('profileReferralCode').value = currentUser.referralCode;
   
@@ -852,110 +830,71 @@ async function initReferralDashboard() {
   setupSidebarNavigation();
   
   // Load data
-  await loadDashboardData();
+  loadDashboardData();
+  loadReferrals();
+  loadEarnings();
+  loadProfile();
+  
   showNotification('Welcome to your referral dashboard!');
 }
 
 // Load Dashboard Data
-async function loadDashboardData() {
-  try {
-    // In a real app, fetch from Supabase
-    // For demo, we'll use mock data
-    referralData = {
-      totalReferrals: 8,
-      totalEarnings: 1600,
-      pendingPayout: 400,
-      monthlyEarnings: 600,
-      referrals: [
-        { id: 1, name: 'Jane Smith', email: 'jane@example.com', date: '2023-11-01', status: 'completed', payment: 'paid', earned: 200 },
-        { id: 2, name: 'Mike Johnson', email: 'mike@example.com', date: '2023-10-28', status: 'completed', payment: 'paid', earned: 200 },
-        { id: 3, name: 'Sarah Wilson', email: 'sarah@example.com', date: '2023-10-25', status: 'pending', payment: 'pending', earned: 0 },
-        { id: 4, name: 'David Brown', email: 'david@example.com', date: '2023-10-20', status: 'completed', payment: 'paid', earned: 200 },
-        { id: 5, name: 'Lisa Taylor', email: 'lisa@example.com', date: '2023-10-15', status: 'completed', payment: 'paid', earned: 200 }
-      ],
-      earnings: [
-        { id: 1, date: '2023-11-01', description: 'Referral Commission', referral: 'Jane Smith', amount: 200, status: 'paid', payoutDate: '2023-11-05' },
-        { id: 2, date: '2023-10-28', description: 'Referral Commission', referral: 'Mike Johnson', amount: 200, status: 'paid', payoutDate: '2023-11-05' },
-        { id: 3, date: '2023-10-25', description: 'Referral Commission', referral: 'David Brown', amount: 200, status: 'paid', payoutDate: '2023-10-30' },
-        { id: 4, date: '2023-10-15', description: 'Referral Commission', referral: 'Lisa Taylor', amount: 200, status: 'paid', payoutDate: '2023-10-30' },
-        { id: 5, date: '2023-10-10', description: 'Referral Commission', referral: 'Robert Lee', amount: 200, status: 'paid', payoutDate: '2023-10-15' }
-      ]
-    };
-    
-    // Update stats
-    document.getElementById('totalReferrals').textContent = referralData.totalReferrals;
-    document.getElementById('totalEarnings').textContent = `KSh ${referralData.totalEarnings.toLocaleString()}`;
-    document.getElementById('pendingPayout').textContent = `KSh ${referralData.pendingPayout.toLocaleString()}`;
-    document.getElementById('monthlyEarnings').textContent = `KSh ${referralData.monthlyEarnings.toLocaleString()}`;
-    document.getElementById('topBalance').textContent = `Total Earnings: KSh ${referralData.totalEarnings.toLocaleString()}`;
-    document.getElementById('availablePayout').value = `KSh ${referralData.pendingPayout.toLocaleString()}`;
-    
-  } catch (error) {
-    console.error('Error loading dashboard data:', error);
-    showNotification('Error loading data', 'error');
-  }
+function loadDashboardData() {
+  // Update stats
+  document.getElementById('totalReferrals').textContent = referralData.totalReferrals;
+  document.getElementById('totalEarnings').textContent = `KSh ${referralData.totalEarnings.toLocaleString()}`;
+  document.getElementById('pendingPayout').textContent = `KSh ${referralData.pendingPayout.toLocaleString()}`;
+  document.getElementById('monthlyEarnings').textContent = `KSh ${referralData.monthlyEarnings.toLocaleString()}`;
+  document.getElementById('topBalance').textContent = `Total Earnings: KSh ${referralData.totalEarnings.toLocaleString()}`;
+  document.getElementById('availablePayout').value = `KSh ${referralData.pendingPayout.toLocaleString()}`;
 }
 
 // Load Referrals
-async function loadReferrals() {
-  try {
-    const referralsHTML = referralData.referrals.map(ref => `
-      <tr>
-        <td>${ref.name}</td>
-        <td>${ref.email}</td>
-        <td>${new Date(ref.date).toLocaleDateString()}</td>
-        <td>
-          <span class="referral-status status-${ref.status}">
-            ${ref.status.charAt(0).toUpperCase() + ref.status.slice(1)}
-          </span>
-        </td>
-        <td>
-          <span class="referral-status ${ref.payment === 'paid' ? 'status-paid' : 'status-pending'}">
-            ${ref.payment === 'paid' ? 'Paid' : 'Pending'}
-          </span>
-        </td>
-        <td>KSh ${ref.earned}</td>
-      </tr>
-    `).join('') || '<tr><td colspan="6" style="text-align:center;">No referrals yet</td></tr>';
-    
-    document.getElementById('referralsTable').innerHTML = referralsHTML;
-    
-  } catch (error) {
-    console.error('Error loading referrals:', error);
-    document.getElementById('referralsTable').innerHTML = '<tr><td colspan="6" style="text-align:center;">Error loading referrals</td></tr>';
-  }
+function loadReferrals() {
+  const referralsHTML = referralData.referrals.map(ref => `
+    <tr>
+      <td>${ref.name}</td>
+      <td>${ref.email}</td>
+      <td>${new Date(ref.date).toLocaleDateString()}</td>
+      <td>
+        <span class="referral-status status-${ref.status}">
+          ${ref.status.charAt(0).toUpperCase() + ref.status.slice(1)}
+        </span>
+      </td>
+      <td>
+        <span class="referral-status ${ref.payment === 'paid' ? 'status-paid' : 'status-pending'}">
+          ${ref.payment === 'paid' ? 'Paid' : 'Pending'}
+        </span>
+      </td>
+      <td>KSh ${ref.earned}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" style="text-align:center;">No referrals yet</td></tr>';
+  
+  document.getElementById('referralsTable').innerHTML = referralsHTML;
 }
 
 // Load Earnings
-async function loadEarnings() {
-  try {
-    const earningsHTML = referralData.earnings.map(earning => `
-      <tr>
-        <td>${new Date(earning.date).toLocaleDateString()}</td>
-        <td>${earning.description}</td>
-        <td>${earning.referral}</td>
-        <td>KSh ${earning.amount}</td>
-        <td>
-          <span class="referral-status ${earning.status === 'paid' ? 'status-paid' : 'status-pending'}">
-            ${earning.status === 'paid' ? 'Paid' : 'Pending'}
-          </span>
-        </td>
-        <td>${earning.payoutDate ? new Date(earning.payoutDate).toLocaleDateString() : '—'}</td>
-      </tr>
-    `).join('') || '<tr><td colspan="6" style="text-align:center;">No earnings yet</td></tr>';
-    
-    document.getElementById('earningsTable').innerHTML = earningsHTML;
-    
-  } catch (error) {
-    console.error('Error loading earnings:', error);
-    document.getElementById('earningsTable').innerHTML = '<tr><td colspan="6" style="text-align:center;">Error loading earnings</td></tr>';
-  }
+function loadEarnings() {
+  const earningsHTML = referralData.earnings.map(earning => `
+    <tr>
+      <td>${new Date(earning.date).toLocaleDateString()}</td>
+      <td>${earning.description}</td>
+      <td>${earning.referral}</td>
+      <td>KSh ${earning.amount}</td>
+      <td>
+        <span class="referral-status ${earning.status === 'paid' ? 'status-paid' : 'status-pending'}">
+          ${earning.status === 'paid' ? 'Paid' : 'Pending'}
+        </span>
+      </td>
+      <td>${earning.payoutDate ? new Date(earning.payoutDate).toLocaleDateString() : '—'}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" style="text-align:center;">No earnings yet</td></tr>';
+  
+  document.getElementById('earningsTable').innerHTML = earningsHTML;
 }
 
 // Load Profile
 function loadProfile() {
-  if (!currentUser) return;
-  
   document.getElementById('profileName').textContent = currentUser.name;
   document.getElementById('profileEmail').textContent = currentUser.email;
   document.getElementById('profileEmailInput').value = currentUser.email;
@@ -969,9 +908,13 @@ function copyReferralLink() {
   const referralLink = document.getElementById('referralLink');
   referralLink.select();
   referralLink.setSelectionRange(0, 99999); // For mobile devices
-  document.execCommand('copy');
-  
-  showNotification('Referral link copied to clipboard!');
+  navigator.clipboard.writeText(referralLink.value).then(() => {
+    showNotification('Referral link copied to clipboard!');
+  }).catch(err => {
+    // Fallback for older browsers
+    document.execCommand('copy');
+    showNotification('Referral link copied to clipboard!');
+  });
 }
 
 // Share on WhatsApp
@@ -979,12 +922,14 @@ function shareOnWhatsApp() {
   const message = `Join Crown Trade with me! Use my referral link: ${document.getElementById('referralLink').value}`;
   const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank');
+  showNotification('Opening WhatsApp...');
 }
 
 // Share on Facebook
 function shareOnFacebook() {
   const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(document.getElementById('referralLink').value)}`;
   window.open(url, '_blank');
+  showNotification('Opening Facebook...');
 }
 
 // Share on Twitter
@@ -992,6 +937,7 @@ function shareOnTwitter() {
   const text = 'Join Crown Trade with my referral link!';
   const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(document.getElementById('referralLink').value)}`;
   window.open(url, '_blank');
+  showNotification('Opening Twitter...');
 }
 
 // Share on Telegram
@@ -999,6 +945,7 @@ function shareOnTelegram() {
   const text = 'Join Crown Trade with my referral link!';
   const url = `https://t.me/share/url?url=${encodeURIComponent(document.getElementById('referralLink').value)}&text=${encodeURIComponent(text)}`;
   window.open(url, '_blank');
+  showNotification('Opening Telegram...');
 }
 
 // Share via Email
@@ -1017,8 +964,10 @@ function requestPayout() {
   }
   
   if (confirm(`Request payout of KSh ${referralData.pendingPayout}?`)) {
-    // In a real app, this would make an API call
     showNotification('Payout request submitted! You will receive your payment within 3-5 business days.', 'success');
+    // Reset pending payout after request
+    referralData.pendingPayout = 0;
+    loadDashboardData();
   }
 }
 
@@ -1031,16 +980,15 @@ function updatePaymentMethod() {
 // Regenerate Referral Code
 function regenerateReferralCode() {
   if (confirm('Are you sure you want to generate a new referral code? Your old links will stop working.')) {
-    const newCode = generateReferralCode(currentUser.name);
+    const newCode = 'NEW' + Math.floor(Math.random() * 10000);
     currentUser.referralCode = newCode;
-    localStorage.setItem('referral_code', newCode);
     
     // Update display
     document.getElementById('referralCode').textContent = newCode;
     document.getElementById('profileReferralCode').value = newCode;
     
     // Update referral link
-    const newLink = `${BASE_URL}/signup?ref=${newCode}`;
+    const newLink = `https://crowntrade.com/signup?ref=${newCode}`;
     document.getElementById('referralLink').value = newLink;
     
     showNotification('New referral code generated!');
@@ -1049,47 +997,29 @@ function regenerateReferralCode() {
 
 // Download QR Code
 function downloadQRCode() {
-  // In a real app, generate and download actual QR code
-  showNotification('QR code download would be implemented here', 'info');
+  showNotification('QR code download functionality would be implemented here', 'info');
 }
 
 // Change Password
 function changePassword() {
-  const newPassword = prompt('Enter new password:');
-  if (newPassword && newPassword.length >= 6) {
-    showNotification('Password changed successfully!', 'success');
-  } else {
-    showNotification('Password must be at least 6 characters', 'error');
-  }
+  showNotification('Password change functionality would be implemented here', 'info');
 }
 
 // Enable 2FA
 function enable2FA() {
-  showNotification('Two-factor authentication enabled!', 'success');
+  showNotification('Two-factor authentication functionality would be implemented here', 'info');
 }
 
 // Deactivate Account
 function deactivateAccount() {
-  if (confirm('Are you sure you want to deactivate your account? This action cannot be undone.')) {
-    showNotification('Account deactivation request submitted', 'info');
+  if (confirm('Are you sure you want to deactivate your account? This is just a demo.')) {
+    showNotification('Account deactivation would be implemented in a real application', 'info');
   }
 }
 
 // Refresh Data
 function refreshData() {
-  loadDashboardData();
-  showNotification('Data refreshed!');
-}
-
-// Logout
-function logout() {
-  if (confirm('Are you sure you want to logout?')) {
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('user_email');
-    localStorage.removeItem('user_name');
-    localStorage.removeItem('referral_code');
-    window.location.href = 'login.html';
-  }
+  showNotification('Dashboard refreshed!');
 }
 
 // Load Referral Stats
@@ -1097,7 +1027,7 @@ function loadReferralStats() {
   showNotification('Stats refreshed!');
 }
 
-console.log('Referral dashboard JavaScript loaded successfully');
+console.log('Referral dashboard loaded successfully - No authentication required!');
 </script>
 </body>
 </html>
