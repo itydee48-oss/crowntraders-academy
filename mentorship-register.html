@@ -7,15 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-  <!-- SUPABASE CLIENT - FIXED & WORKING -->
+  <!-- SUPABASE CLIENT -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
   <script>
-    const { createClient } = window.Supabase;
-    const supabase = createClient(
-      'https://eygjxxdgxzatchqgwvep.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyNzA4MDAsImV4cCI6MjA0NDg0NjgwMH0.0g8v3e9bfO3i2y9rW4nRj4bL5nO8v3e9bfO3i2y9rW4'
+    const supabase = window.Supabase.createClient(
+      "https://eygjxxdgxzatchqgwvep.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyNzA4MDAsImV4cCI6MjA0NDg0NjgwMH0.0g8v3e9bfO3i2y9rW4nRj4bL5nO8v3e9bfO3i2y9rW4"
     );
-    window.supabase = supabase;
   </script>
 
   <style>
@@ -57,53 +55,60 @@
 
 <script>
   async function registerMentorship() {
-    const name = document.getElementById('fullName').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const password = document.getElementById('password').value;
+    const name = document.getElementById("fullName").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const password = document.getElementById("password").value.trim();
 
     if (!name || !email || !phone || password.length < 6) {
-      alert("Please fill all fields correctly. Password must be 6+ characters.");
+      alert("Please fill all fields correctly.");
       return;
     }
 
-    const btn = document.querySelector('.btn');
+    const btn = document.querySelector(".btn");
     btn.disabled = true;
     btn.textContent = "Creating Account...";
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      // STEP 1 — CREATE AUTH USER
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { full_name: name, phone } }
+        options: {
+          data: { full_name: name, phone, client_type: "mentorship" }
+        }
       });
 
-      if (error) throw error;
+      if (signUpError) throw signUpError;
 
+      const userId = signUpData.user.id;
+
+      // STEP 2 — INSERT INTO PROFILES TABLE
       const { error: profileError } = await supabase
-        .from('profiles')
+        .from("profiles")
         .insert({
-          id: data.user.id,
+          id: userId,
           full_name: name,
           email,
           phone,
-          client_type: 'mentorship',
-          role: 'client',
-          payment_status: 'pending',
+          client_type: "mentorship",
+          role: "client",
+          payment_status: "pending",
           created_at: new Date().toISOString()
         });
 
       if (profileError) throw profileError;
 
-      alert("Account created successfully! Check your email to confirm.");
-      location.href = 'mentorship-payment.html';
+      alert("Account created successfully! Please verify your email.");
+      window.location.href = "mentorship-payment.html";
 
-    } catch (err) {
-      alert("Error: " + err.message);
+    } catch (error) {
+      alert("Error: " + error.message);
       btn.disabled = false;
       btn.textContent = "Create Account & Proceed to Payment";
     }
   }
 </script>
+
 </body>
 </html>
