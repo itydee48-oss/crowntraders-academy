@@ -1,638 +1,334 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Crown Trade — Mentor Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --nude: #F9F6F2;
-    --gold: #C8A97E;
-    --gold-dark: #B89463;
-    --charcoal: #2e2e2e;
-    --muted: #777;
-    --success: #10B981;
-    --danger: #EF4444;
-    --info: #3B82F6;
-    --light: #ffffff;
-  }
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background: var(--nude);
-    color: var(--charcoal);
-    min-height: 100vh;
-  }
-  .app {
-    display: flex;
-    flex-direction: row;
-    min-height: 100vh;
-  }
-  .sidebar {
-    width: 280px;
-    background: var(--light);
-    border-right: 1px solid rgba(200, 169, 126, 0.3);
-    padding: 32px 24px;
-    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-  }
-  .brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.8rem;
-    color: var(--gold-dark);
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .tagline {
-    font-size: 0.95rem;
-    color: var(--muted);
-    margin-bottom: 30px;
-  }
-  .nav button {
-    width: 100%;
-    padding: 16px 20px;
-    margin: 8px 0;
-    border-radius: 12px;
-    background: transparent;
-    color: var(--charcoal);
-    border: none;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .nav button:hover,
-  .nav button.active {
-    background: var(--gold);
-    color: white;
-  }
-  .btn {
-    background: var(--gold);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: 0.3s;
-    margin-top: auto;
-  }
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(200, 169, 126, 0.3);
-  }
-  .btn-success {
-    background: var(--success);
-  }
-  .btn-info {
-    background: var(--info);
-  }
-  .main {
-    flex: 1;
-    background: var(--light);
-    padding: 40px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-  }
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.4rem;
-    color: var(--gold-dark);
-    flex: 1;
-  }
-  .user-info {
-    text-align: right;
-    min-width: 150px;
-  }
-  .user-info div {
-    font-weight: 700;
-    font-size: 1.3rem;
-  }
-  .user-info small {
-    color: var(--muted);
-  }
-  .card {
-    background: white;
-    padding: 28px;
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
-    border: 1px solid #eee;
-    margin-bottom: 24px;
-  }
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  .card-title {
-    font-size: 1.5rem;
-    color: var(--gold-dark);
-    font-weight: 600;
-  }
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .table th,
-  .table td {
-    padding: 16px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
-  .table th {
-    background: var(--nude);
-    font-weight: 600;
-  }
-  .floating-btn {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 70px;
-    height: 70px;
-    background: var(--gold-dark);
-    color: white;
-    border-radius: 50%;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.2rem;
-    cursor: pointer;
-    z-index: 1000;
-  }
-  .chat-container {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 420px;
-    height: 600px;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
-    display: none;
-    flex-direction: column;
-    z-index: 9999;
-    border: 1px solid rgba(200, 169, 126, 0.4);
-    overflow: hidden;
-  }
-  .chat-header {
-    background: var(--gold-dark);
-    color: white;
-    padding: 20px;
-    font-weight: 600;
-    font-size: 1.2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .chat-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    background: #f8f7f5;
-  }
-  .message {
-    margin: 12px 0;
-    max-width: 80%;
-    padding: 14px 18px;
-    border-radius: 20px;
-    position: relative;
-    word-wrap: break-word;
-  }
-  .message.own {
-    background: var(--gold);
-    color: white;
-    align-self: flex-end;
-    margin-left: auto;
-    border-bottom-right-radius: 6px;
-  }
-  .message.other {
-    background: #f0f0f0;
-    color: var(--charcoal);
-    align-self: flex-start;
-    border-bottom-left-radius: 6px;
-  }
-  .message strong {
-    display: block;
-    margin-bottom: 4px;
-  }
-  .message time {
-    font-size: 0.75rem;
-    opacity: 0.8;
-    position: absolute;
-    bottom: 6px;
-    right: 12px;
-  }
-  .chat-input-area {
-    padding: 16px;
-    background: white;
-    border-top: 1px solid #eee;
-    display: flex;
-    gap: 12px;
-  }
-  .chat-input {
-    flex: 1;
-    padding: 14px 18px;
-    border-radius: 30px;
-    border: 1px solid #ddd;
-    font-size: 1rem;
-  }
-  .chat-input:focus {
-    outline: none;
-    border-color: var(--gold);
-  }
-  .send-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--gold-dark);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.4rem;
-  }
-  .notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 16px 32px;
-    border-radius: 12px;
-    color: white;
-    font-weight: 600;
-    z-index: 10000;
-    animation: slide 0.4s;
-  }
-  .notification.success {
-    background: var(--success);
-  }
-  .notification.danger {
-    background: var(--danger);
-  }
-  @keyframes slide {
-    from {
-      transform: translateY(-100px);
-      opacity: 0;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crown Trade Academy – Master Your Future</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+  <style>
+    :root {
+      --gold:#c8a97e;
+      --gold-dark:#b89463;
+      --nude:#f9f6f2;
+      --charcoal:#3a3a3a;
     }
-    to {
-      transform: translateY(0);
-      opacity: 1;
+
+    body {
+      margin:0;
+      background:var(--nude);
+      font-family:Montserrat, sans-serif;
+      color:var(--charcoal);
+      overflow-x:hidden;
     }
-  }
-  
-  /* Responsive */
-  @media (max-width: 900px) {
-    .app {
-      flex-direction: column;
+
+    /* ---------------- HEADER ---------------- */
+    header {
+      position:fixed;
+      top:0;
+      width:100%;
+      z-index:1000;
+      background:rgba(249,246,242,0.96);
+      border-bottom:1px solid rgba(200,169,126,0.3);
+      backdrop-filter:blur(8px);
     }
-    .sidebar {
-      width: 100%;
-      padding: 20px;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      overflow-x: auto;
-      box-shadow: none;
-      border-bottom: 1px solid rgba(200, 169, 126, 0.3);
+
+    .nav {
+      max-width:1250px;
+      margin:auto;
+      padding:1.4rem 2rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
     }
-    .nav button {
-      flex: 1;
-      margin: 0 8px;
-      padding: 12px 10px;
-      font-size: 0.9rem;
-      border-radius: 8px;
+
+    .logo {
+      font-family:'Cormorant Garamond';
+      font-size:2rem;
+      font-weight:700;
+      color:var(--charcoal);
+      text-decoration:none;
     }
-    .main {
-      padding: 20px;
+
+    .nav-btn {
+      background:var(--gold);
+      color:white;
+      padding:0.9rem 1.9rem;
+      border-radius:50px;
+      text-decoration:none;
+      font-weight:600;
+      transition:.3s;
     }
-    .header {
-      flex-direction: column;
-      align-items: flex-start;
+
+    .nav-btn:hover {
+      background:var(--gold-dark);
     }
-    .user-info {
-      text-align: left;
-      width: 100%;
-      margin-top: 10px;
+
+    /* ---------------- HERO ---------------- */
+    .hero {
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:7rem 2rem 4rem;
     }
-    .chat-container {
-      width: 100%;
-      height: 400px;
-      bottom: 0;
-      right: 0;
-      border-radius: 0;
+
+    .hero h1 {
+      font-family:'Cormorant Garamond';
+      font-size:4rem;
+      color:var(--charcoal);
+      margin-bottom:1rem;
     }
-    .floating-btn {
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      font-size: 1.8rem;
+
+    .hero p {
+      max-width:700px;
+      margin:auto;
+      font-size:1.2rem;
+      color:#555;
+      line-height:1.7;
     }
-  }
-</style>
+
+    .cta-btn {
+      margin-top:2.8rem;
+      background:var(--gold);
+      color:white;
+      padding:1.2rem 3rem;
+      border-radius:50px;
+      font-size:1.3rem;
+      font-weight:700;
+      text-decoration:none;
+      transition:0.3s;
+      display:inline-block;
+    }
+
+    .cta-btn:hover {
+      background:var(--gold-dark);
+    }
+
+    /* ---------------- FEATURES ---------------- */
+    .features {
+      max-width:1200px;
+      margin:5rem auto;
+      padding:1rem 2rem;
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+      gap:2.5rem;
+    }
+
+    .feature-box {
+      background:white;
+      border-radius:20px;
+      padding:2.5rem 2rem;
+      text-align:center;
+      box-shadow:0 20px 50px rgba(0,0,0,0.07);
+      border:2px solid transparent;
+      transition:.3s;
+    }
+
+    .feature-box:hover {
+      border-color:var(--gold);
+      transform:translateY(-8px);
+    }
+
+    .feature-box i {
+      font-size:2.5rem;
+      color:var(--gold-dark);
+      margin-bottom:1rem;
+    }
+
+    .feature-box h3 {
+      font-family:'Cormorant Garamond';
+      font-size:1.8rem;
+      margin:.8rem 0;
+    }
+
+    .feature-box p {
+      color:#666;
+      font-size:1rem;
+      line-height:1.6;
+    }
+
+    /* ---------------- PROGRAM SECTION ---------------- */
+    .programs {
+      max-width:1200px;
+      margin:5rem auto;
+      padding:1rem 2rem;
+      text-align:center;
+    }
+
+    .programs h2 {
+      font-family:'Cormorant Garamond';
+      font-size:3rem;
+      margin-bottom:3rem;
+    }
+
+    .program-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+      gap:2.5rem;
+    }
+
+    .program-card {
+      background:white;
+      padding:3rem 2.5rem;
+      border-radius:20px;
+      box-shadow:0 20px 60px rgba(0,0,0,.08);
+      border:2px solid transparent;
+      transition:.3s;
+    }
+
+    .program-card:hover {
+      border-color:var(--gold);
+      transform:translateY(-10px);
+    }
+
+    .program-card h3 {
+      font-family:'Cormorant Garamond';
+      font-size:2.2rem;
+      color:var(--gold-dark);
+      margin-bottom:1rem;
+    }
+
+    .program-card .price {
+      font-size:2.4rem;
+      font-weight:700;
+      color:var(--charcoal);
+      margin:1rem 0;
+    }
+
+    .program-card ul {
+      list-style:none;
+      padding:0;
+      margin:1.5rem 0;
+      text-align:left;
+    }
+
+    .program-card li {
+      margin:.7rem 0;
+      font-size:1rem;
+    }
+
+    .program-card i {
+      color:var(--gold);
+      margin-right:8px;
+    }
+
+    .program-btn {
+      background:var(--gold);
+      color:white;
+      padding:1rem 2.5rem;
+      border:none;
+      border-radius:50px;
+      cursor:pointer;
+      font-size:1.1rem;
+      font-weight:600;
+      margin-top:1.5rem;
+      transition:.3s;
+    }
+
+    .program-btn:hover {
+      background:var(--gold-dark);
+    }
+
+    /* ---------------- FOOTER ---------------- */
+    footer {
+      background:var(--charcoal);
+      color:#ccc;
+      text-align:center;
+      padding:2rem;
+      margin-top:4rem;
+    }
+
+  </style>
 </head>
 <body>
 
-<div class="floating-btn" onclick="toggleChat()">💬</div>
-
-<div class="chat-container" id="chatBox" role="region" aria-label="Community Chat">
-  <div class="chat-header">
-    <div>Crown Trade Community</div>
-    <button aria-label="Close chat" style="background:none;border:none;color:white;font-size:1.8rem;cursor:pointer;" onclick="toggleChat()">×</button>
+<!-- HEADER -->
+<header>
+  <div class="nav">
+    <a class="logo" href="index.html">Crown Trade Academy</a>
+    <a class="nav-btn" href="program-selection.html">Enroll Now</a>
   </div>
-  <div class="chat-body" id="chatBody" tabindex="0">
-    <div style="text-align:center;padding:60px;color:var(--muted);">Loading messages...</div>
-  </div>
-  <div class="chat-input-area">
-    <input
-      type="text"
-      class="chat-input"
-      id="chatInput"
-      placeholder="Send a message..."
-      onkeydown="if(event.key==='Enter') sendMessage()"
-      aria-label="Type a message"
-    />
-    <div class="send-btn" role="button" aria-label="Send message" tabindex="0" onclick="sendMessage()">➤</div>
-  </div>
-</div>
+</header>
 
-<div class="app">
-  <aside class="sidebar">
-    <div class="brand">Crown Trade</div>
-    <div class="tagline">Elite Mentorship Portal</div>
-    <nav class="nav" role="tablist" aria-label="Main Navigation">
-      <button data-tab="clients" class="active" role="tab" aria-selected="true">All Clients</button>
-      <button data-tab="resources" role="tab" aria-selected="false">Resources</button>
-      <button data-tab="lessons" role="tab" aria-selected="false">Lessons</button>
-      <button data-tab="sessions" role="tab" aria-selected="false">Sessions</button>
-      <button onclick="toggleChat()" style="margin-top:20px;">Community Chat</button>
-    </nav>
-    <button class="btn btn-info" onclick="loadAll()">Refresh All</button>
-  </aside>
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <h1>Master Trading. Own Your Future.</h1>
+    <p>Join East Africa’s most premium trading academy. Whether you want mentorship, trading mastery, or passive earnings through referrals — your journey begins here.</p>
+    <a href="program-selection.html" class="cta-btn">Enroll Now</a>
+  </div>
+</section>
 
-  <main class="main" role="main">
-    <div class="header">
-      <div class="title">Mentor Command Center</div>
-      <div class="user-info">
-        <div>Elite Mentor</div>
-        <small>Active clients: <strong id="clientsCount">0</strong></small>
-      </div>
+<!-- FEATURES -->
+<section class="features">
+  <div class="feature-box">
+    <i class="fas fa-chalkboard-teacher"></i>
+    <h3>Expert Mentorship</h3>
+    <p>Learn from experienced traders with proven results and a powerful, structured blueprint.</p>
+  </div>
+
+  <div class="feature-box">
+    <i class="fas fa-users"></i>
+    <h3>Powerful Referral System</h3>
+    <p>Earn big through a fully automated referral dashboard with weekly payouts.</p>
+  </div>
+
+  <div class="feature-box">
+    <i class="fas fa-book"></i>
+    <h3>Lifetime Access</h3>
+    <p>One-time payment. Lifetime updates. No hidden fees. No subscriptions.</p>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section class="programs">
+  <h2>Our Programs</h2>
+
+  <div class="program-grid">
+
+    <div class="program-card">
+      <i class="fas fa-crown" style="font-size:3.5rem;color:var(--gold);"></i>
+      <h3>Elite Mentorship</h3>
+
+      <div class="price">KSh 3,500</div>
+
+      <ul>
+        <li><i class="fas fa-check"></i>1-on-1 Mentorship Calls</li>
+        <li><i class="fas fa-check"></i>Lifetime Strategy Blueprint</li>
+        <li><i class="fas fa-check"></i>Private Signals Group</li>
+        <li><i class="fas fa-check"></i>Direct Mentor Support</li>
+      </ul>
+
+      <button class="program-btn" onclick="location.href='mentorship-register.html'">Join Mentorship</button>
     </div>
 
-    <!-- Clients Tab -->
-    <section id="clients" role="tabpanel" aria-labelledby="tab-clients">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Approved Clients</div>
-          <button class="btn btn-info" onclick="loadClients()">Refresh</button>
-        </div>
-        <table class="table" aria-describedby="Approved clients list">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Program</th>
-              <th>Joined</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="clientsTable">
-            <tr style="text-align:center;color:var(--muted)">
-              <td colspan="6" style="padding:60px 0;">Loading...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+    <div class="program-card">
+      <i class="fas fa-users" style="font-size:3.5rem;color:var(--gold);"></i>
+      <h3>Referral Partner</h3>
 
-    <!-- Resources Tab -->
-    <section id="resources" role="tabpanel" aria-labelledby="tab-resources" style="display:none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Upload Materials</div>
-        </div>
-        <div style="text-align:center; padding: 60px 0;">
-          <input type="file" id="fileUpload" multiple style="display:none;" aria-label="Upload files"/>
-          <button
-            class="btn btn-success"
-            style="padding:18px 50px;font-size:1.2rem"
-            onclick="document.getElementById('fileUpload').click()"
-          >
-            Upload Videos, PDFs, Images, ZIPs
-          </button>
-          <div id="uploadStatus" style="margin-top:30px;font-size:1.1rem;font-weight:600;"></div>
-          <div id="uploadedFiles" style="margin-top:30px;"></div>
-        </div>
-      </div>
-    </section>
+      <div class="price">KSh 500</div>
 
-    <!-- Lessons Tab -->
-    <section id="lessons" role="tabpanel" aria-labelledby="tab-lessons" style="display:none;">
-      <div class="card">
-        <h2>Lessons</h2>
-        <p>Coming soon...</p>
-      </div>
-    </section>
+      <ul>
+        <li><i class="fas fa-check"></i>Earn KSh 300 Per Referral</li>
+        <li><i class="fas fa-check"></i>Full Referral Dashboard</li>
+        <li><i class="fas fa-check"></i>Weekly Friday Payouts</li>
+        <li><i class="fas fa-check"></i>No Trading Required</li>
+      </ul>
 
-    <!-- Sessions Tab -->
-    <section id="sessions" role="tabpanel" aria-labelledby="tab-sessions" style="display:none;">
-      <div class="card">
-        <h2>Sessions</h2>
-        <p>Coming soon...</p>
-      </div>
-    </section>
-  </main>
-</div>
+      <button class="program-btn" onclick="location.href='referral-register.html'">Join Referral Program</button>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // Initialize Supabase client (replace with your own keys)
-  const SUPABASE_URL = 'https://pzxkrtwxecqivlndqutg.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6eGtydHd4ZWNxaXZsbmRxdXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk0MDgwMDAsImV4cCI6MjA1NDk4NDAwMH0.L2iW8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8k8z8';
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </div>
+</section>
 
-  const mentorName = "Elite Mentor";
-
-  // Tab switching
-  const tabs = document.querySelectorAll('.nav button[data-tab]');
-  tabs.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabs.forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
-      });
-      btn.classList.add('active');
-      btn.setAttribute('aria-selected', 'true');
-
-      const tabName = btn.dataset.tab;
-      document.querySelectorAll('section[role="tabpanel"]').forEach(s => {
-        s.style.display = s.id === tabName ? 'block' : 'none';
-      });
-    });
-  });
-
-  // Load approved clients
-  async function loadClients() {
-    try {
-      const { data, error } = await supabase.from('clients').select('*').eq('status', 'approved');
-      if (error) throw error;
-
-      const count = data?.length || 0;
-      document.getElementById('clientsCount').textContent = count;
-
-      const tableBody = document.getElementById('clientsTable');
-      if (!data || data.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:60px;color:var(--muted)">No approved clients yet</td></tr>`;
-        return;
-      }
-      tableBody.innerHTML = data.map(c => `
-        <tr>
-          <td><strong>${escapeHTML(c.name)}</strong></td>
-          <td>${escapeHTML(c.email)}</td>
-          <td>${escapeHTML(c.phone || '—')}</td>
-          <td>${escapeHTML(c.program)}</td>
-          <td>${new Date(c.joined_at).toLocaleDateString()}</td>
-          <td><button onclick="viewClientDetails('${c.id}')" class="btn btn-info" style="padding:6px 14px; font-size:0.9rem;">View</button></td>
-        </tr>
-      `).join('');
-    } catch (e) {
-      alert('Error loading clients: ' + e.message);
-    }
-  }
-
-  function viewClientDetails(clientId) {
-    alert('View client details for ID: ' + clientId);
-    // Placeholder: You can build a modal or detailed view here.
-  }
-
-  // Upload files handling
-  document.getElementById('fileUpload').addEventListener('change', async function(e) {
-    const files = e.target.files;
-    if (!files.length) return;
-
-    const status = document.getElementById('uploadStatus');
-    const uploadedFiles = document.getElementById('uploadedFiles');
-    status.textContent = 'Uploading... Please wait.';
-    uploadedFiles.innerHTML = '';
-
-    try {
-      for (const file of files) {
-        // Upload each file to Supabase storage or wherever your system uploads
-        // This is a placeholder example. Adjust as per your backend.
-        // const { data, error } = await supabase.storage.from('mentor-files').upload(`uploads/${file.name}`, file);
-        // if (error) throw error;
-        // Simulate upload delay
-        await new Promise(r => setTimeout(r, 500));
-        uploadedFiles.innerHTML += `<div>${escapeHTML(file.name)} uploaded ✅</div>`;
-      }
-      status.textContent = 'All files uploaded successfully!';
-    } catch (error) {
-      status.textContent = 'Upload failed: ' + error.message;
-    }
-  });
-
-  // Chat toggle and message handling
-  function toggleChat() {
-    const chat = document.getElementById('chatBox');
-    chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
-    if (chat.style.display === 'flex') {
-      loadChatMessages();
-    }
-  }
-
-  async function loadChatMessages() {
-    const chatBody = document.getElementById('chatBody');
-    chatBody.innerHTML = '<div style="text-align:center;padding:60px;color:var(--muted);">Loading messages...</div>';
-
-    try {
-      const { data, error } = await supabase.from('chat_messages').select('*').order('created_at', { ascending: true }).limit(50);
-      if (error) throw error;
-
-      if (!data || data.length === 0) {
-        chatBody.innerHTML = '<div style="text-align:center;padding:60px;color:var(--muted);">No messages yet</div>';
-        return;
-      }
-
-      chatBody.innerHTML = data.map(msg => {
-        const isOwn = msg.sender === mentorName;
-        return `
-          <div class="message ${isOwn ? 'own' : 'other'}">
-            <strong>${escapeHTML(msg.sender)}</strong>
-            ${escapeHTML(msg.message)}
-            <time>${new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time>
-          </div>
-        `;
-      }).join('');
-      chatBody.scrollTop = chatBody.scrollHeight;
-    } catch (e) {
-      chatBody.innerHTML = '<div style="color:red; padding: 20px;">Failed to load messages</div>';
-    }
-  }
-
-  async function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const message = input.value.trim();
-    if (!message) return;
-
-    try {
-      const { error } = await supabase.from('chat_messages').insert([
-        { sender: mentorName, message }
-      ]);
-      if (error) throw error;
-
-      input.value = '';
-      loadChatMessages();
-    } catch (e) {
-      alert('Failed to send message: ' + e.message);
-    }
-  }
-
-  // Escape HTML to prevent XSS
-  function escapeHTML(text) {
-    if (!text) return '';
-    return text.replace(/[&<>"']/g, function(m) {
-      return {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-      }[m];
-    });
-  }
-
-  // Load initial data on page load
-  window.addEventListener('DOMContentLoaded', () => {
-    loadClients();
-  });
-
-  // Convenience function to reload all data (for example, refresh button)
-  function loadAll() {
-    loadClients();
-    // You can add other load functions here (lessons, sessions, resources)
-  }
-</script>
+<!-- FOOTER -->
+<footer>
+  © 2025 Crown Trade Academy — All Rights Reserved.
+</footer>
 
 </body>
 </html>
