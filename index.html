@@ -3,331 +3,217 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crown Trade Academy – Master Your Future</title>
+  <title>Crown Trade Academy – Master Your Financial Future</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
   <style>
     :root {
-      --gold:#c8a97e;
-      --gold-dark:#b89463;
-      --nude:#f9f6f2;
-      --charcoal:#3a3a3a;
+      --gold: #c8a97e;
+      --gold-dark: #b89463;
+      --nude: #f9f6f2;
+      --charcoal: #3a3a3a;
     }
 
     body {
-      margin:0;
-      background:var(--nude);
-      font-family:Montserrat, sans-serif;
-      color:var(--charcoal);
-      overflow-x:hidden;
+      margin: 0;
+      background: var(--nude);
+      font-family: Montserrat, sans-serif;
+      color: var(--charcoal);
     }
 
-    /* ---------------- HEADER ---------------- */
     header {
-      position:fixed;
-      top:0;
-      width:100%;
-      z-index:1000;
-      background:rgba(249,246,242,0.96);
-      border-bottom:1px solid rgba(200,169,126,0.3);
-      backdrop-filter:blur(8px);
-    }
-
-    .nav {
-      max-width:1250px;
-      margin:auto;
-      padding:1.4rem 2rem;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
+      background: rgba(249,246,242,0.98);
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(200,169,126,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .logo {
-      font-family:'Cormorant Garamond';
-      font-size:2rem;
-      font-weight:700;
-      color:var(--charcoal);
-      text-decoration:none;
+      font-family: 'Cormorant Garamond';
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      text-decoration: none;
     }
 
-    .nav-btn {
-      background:var(--gold);
-      color:white;
-      padding:0.9rem 1.9rem;
-      border-radius:50px;
-      text-decoration:none;
-      font-weight:600;
-      transition:.3s;
-    }
-
-    .nav-btn:hover {
-      background:var(--gold-dark);
-    }
-
-    /* ---------------- HERO ---------------- */
     .hero {
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:7rem 2rem 4rem;
+      text-align: center;
+      padding: 6rem 2rem 5rem;
+      max-width: 1000px;
+      margin: auto;
     }
 
     .hero h1 {
-      font-family:'Cormorant Garamond';
-      font-size:4rem;
-      color:var(--charcoal);
-      margin-bottom:1rem;
+      font-family: 'Cormorant Garamond';
+      font-size: 4rem;
+      margin-bottom: 1.2rem;
+      color: var(--charcoal);
     }
 
     .hero p {
-      max-width:700px;
-      margin:auto;
-      font-size:1.2rem;
-      color:#555;
-      line-height:1.7;
+      font-size: 1.3rem;
+      color: #666;
+      max-width: 700px;
+      margin: auto;
     }
 
-    .cta-btn {
-      margin-top:2.8rem;
-      background:var(--gold);
-      color:white;
-      padding:1.2rem 3rem;
-      border-radius:50px;
-      font-size:1.3rem;
-      font-weight:700;
-      text-decoration:none;
-      transition:0.3s;
-      display:inline-block;
+    .btn-primary {
+      display: inline-block;
+      margin-top: 2.5rem;
+      padding: 1.2rem 3rem;
+      border-radius: 50px;
+      background: var(--gold);
+      color: white;
+      font-weight: 600;
+      font-size: 1.2rem;
+      text-decoration: none;
+      transition: 0.3s;
     }
 
-    .cta-btn:hover {
-      background:var(--gold-dark);
+    .btn-primary:hover {
+      background: var(--gold-dark);
     }
 
-    /* ---------------- FEATURES ---------------- */
-    .features {
-      max-width:1200px;
-      margin:5rem auto;
-      padding:1rem 2rem;
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
-      gap:2.5rem;
+    .section-title {
+      font-family: 'Cormorant Garamond';
+      font-size: 3rem;
+      text-align: center;
+      margin-top: 5rem;
+      margin-bottom: 1rem;
     }
 
-    .feature-box {
-      background:white;
-      border-radius:20px;
-      padding:2.5rem 2rem;
-      text-align:center;
-      box-shadow:0 20px 50px rgba(0,0,0,0.07);
-      border:2px solid transparent;
-      transition:.3s;
+    .section-sub {
+      text-align: center;
+      color: #777;
+      font-size: 1.1rem;
+      margin-bottom: 3rem;
     }
 
-    .feature-box:hover {
-      border-color:var(--gold);
-      transform:translateY(-8px);
-    }
-
-    .feature-box i {
-      font-size:2.5rem;
-      color:var(--gold-dark);
-      margin-bottom:1rem;
-    }
-
-    .feature-box h3 {
-      font-family:'Cormorant Garamond';
-      font-size:1.8rem;
-      margin:.8rem 0;
-    }
-
-    .feature-box p {
-      color:#666;
-      font-size:1rem;
-      line-height:1.6;
-    }
-
-    /* ---------------- PROGRAM SECTION ---------------- */
     .programs {
-      max-width:1200px;
-      margin:5rem auto;
-      padding:1rem 2rem;
-      text-align:center;
-    }
-
-    .programs h2 {
-      font-family:'Cormorant Garamond';
-      font-size:3rem;
-      margin-bottom:3rem;
-    }
-
-    .program-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
-      gap:2.5rem;
+      max-width: 1200px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 2.5rem;
+      padding: 0 2rem 5rem;
     }
 
     .program-card {
-      background:white;
-      padding:3rem 2.5rem;
-      border-radius:20px;
-      box-shadow:0 20px 60px rgba(0,0,0,.08);
-      border:2px solid transparent;
-      transition:.3s;
+      background: white;
+      border-radius: 18px;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.09);
+      border: 2px solid transparent;
+      transition: 0.35s;
+      text-align: left;
     }
 
     .program-card:hover {
-      border-color:var(--gold);
-      transform:translateY(-10px);
+      transform: translateY(-10px);
+      border-color: var(--gold);
     }
 
     .program-card h3 {
-      font-family:'Cormorant Garamond';
-      font-size:2.2rem;
-      color:var(--gold-dark);
-      margin-bottom:1rem;
+      font-family: 'Cormorant Garamond';
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      color: var(--gold-dark);
     }
 
-    .program-card .price {
-      font-size:2.4rem;
-      font-weight:700;
-      color:var(--charcoal);
-      margin:1rem 0;
+    .price {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--gold-dark);
+      margin-bottom: 1.5rem;
     }
 
-    .program-card ul {
-      list-style:none;
-      padding:0;
-      margin:1.5rem 0;
-      text-align:left;
+    .features li {
+      margin: 0.7rem 0;
+      font-size: 1.05rem;
+      list-style: none;
     }
 
-    .program-card li {
-      margin:.7rem 0;
-      font-size:1rem;
+    .features i {
+      color: var(--gold);
+      margin-right: 10px;
     }
 
-    .program-card i {
-      color:var(--gold);
-      margin-right:8px;
-    }
-
-    .program-btn {
-      background:var(--gold);
-      color:white;
-      padding:1rem 2.5rem;
-      border:none;
-      border-radius:50px;
-      cursor:pointer;
-      font-size:1.1rem;
-      font-weight:600;
-      margin-top:1.5rem;
-      transition:.3s;
-    }
-
-    .program-btn:hover {
-      background:var(--gold-dark);
-    }
-
-    /* ---------------- FOOTER ---------------- */
     footer {
-      background:var(--charcoal);
-      color:#ccc;
-      text-align:center;
-      padding:2rem;
-      margin-top:4rem;
+      background: #3a3a3a;
+      color: #ccc;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 4rem;
     }
-
   </style>
 </head>
+
 <body>
 
-<!-- HEADER -->
 <header>
-  <div class="nav">
-    <a class="logo" href="index.html">Crown Trade Academy</a>
-    <a class="nav-btn" href="program-selection.html">Enroll Now</a>
-  </div>
+  <a href="#" class="logo">Crown Trade Academy</a>
+  <a href="client-login.html" style="color:var(--gold); font-weight:600;">Login</a>
 </header>
 
-<!-- HERO -->
 <section class="hero">
-  <div>
-    <h1>Master Trading. Own Your Future.</h1>
-    <p>Join East Africa’s most premium trading academy. Whether you want mentorship, trading mastery, or passive earnings through referrals — your journey begins here.</p>
-    <a href="program-selection.html" class="cta-btn">Enroll Now</a>
-  </div>
+  <h1>Master the Art of Trading & Build Real Wealth</h1>
+  <p>Transform your financial future with proven systems, elite mentorship, and a powerful referral opportunity — all under one academy.</p>
+
+  <!-- MAIN CTA -->
+  <a class="btn-primary" href="program-selection.html">Enroll Now</a>
 </section>
 
-<!-- FEATURES -->
-<section class="features">
-  <div class="feature-box">
-    <i class="fas fa-chalkboard-teacher"></i>
-    <h3>Expert Mentorship</h3>
-    <p>Learn from experienced traders with proven results and a powerful, structured blueprint.</p>
+<!-- PROGRAMS SECTION -->
+<h2 class="section-title">Our Programs</h2>
+<p class="section-sub">Choose the path that suits your goals — trading mastery or earning through referrals.</p>
+
+<div class="programs">
+
+  <!-- Mentorship Program -->
+  <div class="program-card">
+    <i class="fas fa-crown" style="font-size:3.5rem; color:var(--gold);"></i>
+    <h3>Elite Mentorship Program</h3>
+
+    <div class="price">KSh 3,500</div>
+
+    <ul class="features">
+      <li><i class="fas fa-check"></i> 1-on-1 mentorship sessions</li>
+      <li><i class="fas fa-check"></i> Full strategy blueprint</li>
+      <li><i class="fas fa-check"></i> Lifetime access to premium community</li>
+      <li><i class="fas fa-check"></i> Personalized trading improvement plan</li>
+      <li><i class="fas fa-check"></i> Weekly live analysis calls</li>
+      <li><i class="fas fa-check"></i> Private signals group</li>
+    </ul>
   </div>
 
-  <div class="feature-box">
-    <i class="fas fa-users"></i>
-    <h3>Powerful Referral System</h3>
-    <p>Earn big through a fully automated referral dashboard with weekly payouts.</p>
+  <!-- Referral Program -->
+  <div class="program-card">
+    <i class="fas fa-users" style="font-size:3.5rem; color:var(--gold);"></i>
+    <h3>Referral Partner Program</h3>
+
+    <div class="price">KSh 500</div>
+
+    <ul class="features">
+      <li><i class="fas fa-check"></i> Earn KSh 300 per referral</li>
+      <li><i class="fas fa-check"></i> Access to referral dashboard</li>
+      <li><i class="fas fa-check"></i> Unique referral links</li>
+      <li><i class="fas fa-check"></i> Weekly payouts every Friday</li>
+      <li><i class="fas fa-check"></i> No trading required</li>
+      <li><i class="fas fa-check"></i> Basic financial & trading education</li>
+    </ul>
   </div>
 
-  <div class="feature-box">
-    <i class="fas fa-book"></i>
-    <h3>Lifetime Access</h3>
-    <p>One-time payment. Lifetime updates. No hidden fees. No subscriptions.</p>
-  </div>
-</section>
+</div>
 
-<!-- PROGRAMS -->
-<section class="programs">
-  <h2>Our Programs</h2>
-
-  <div class="program-grid">
-
-    <div class="program-card">
-      <i class="fas fa-crown" style="font-size:3.5rem;color:var(--gold);"></i>
-      <h3>Elite Mentorship</h3>
-
-      <div class="price">KSh 3,500</div>
-
-      <ul>
-        <li><i class="fas fa-check"></i>1-on-1 Mentorship Calls</li>
-        <li><i class="fas fa-check"></i>Lifetime Strategy Blueprint</li>
-        <li><i class="fas fa-check"></i>Private Signals Group</li>
-        <li><i class="fas fa-check"></i>Direct Mentor Support</li>
-      </ul>
-
-      <button class="program-btn" onclick="location.href='mentorship-register.html'">Join Mentorship</button>
-    </div>
-
-    <div class="program-card">
-      <i class="fas fa-users" style="font-size:3.5rem;color:var(--gold);"></i>
-      <h3>Referral Partner</h3>
-
-      <div class="price">KSh 500</div>
-
-      <ul>
-        <li><i class="fas fa-check"></i>Earn KSh 300 Per Referral</li>
-        <li><i class="fas fa-check"></i>Full Referral Dashboard</li>
-        <li><i class="fas fa-check"></i>Weekly Friday Payouts</li>
-        <li><i class="fas fa-check"></i>No Trading Required</li>
-      </ul>
-
-      <button class="program-btn" onclick="location.href='referral-register.html'">Join Referral Program</button>
-    </div>
-
-  </div>
-</section>
-
-<!-- FOOTER -->
 <footer>
-  © 2025 Crown Trade Academy — All Rights Reserved.
+  © 2025 Crown Trade Academy. All rights reserved.
 </footer>
 
 </body>
