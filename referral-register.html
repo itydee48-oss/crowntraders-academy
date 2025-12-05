@@ -39,19 +39,34 @@
   const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
   const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
 
+  // Extract referral code from URL
+  const params = new URLSearchParams(window.location.search);
+  const referredBy = params.get("ref") || null;
+
+  // Function to generate a unique referral code
+  function generateReferralCode() {
+    const prefix = "CTA";
+    const random = Math.floor(100000 + Math.random() * 900000);
+    return `${prefix}${random}`;
+  }
+
   async function registerReferral() {
     const name = document.getElementById('fullName').value.trim();
     const email = document.getElementById('email').value.trim().toLowerCase();
     const phone = document.getElementById('phone').value.trim();
     const password = document.getElementById('password').value;
 
-    if (!name || !email || !phone || password.length < 6) return alert("Please fill all fields correctly");
+    if (!name || !email || !phone || password.length < 6)
+      return alert("Please fill all fields correctly");
 
     const btn = document.querySelector('.btn');
     btn.disabled = true;
     btn.textContent = "Creating Account...";
 
     try {
+      // --------------------------
+      // STEP 1: CREATE AUTH USER
+      // --------------------------
       const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
         method: 'POST',
         headers: { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
@@ -62,7 +77,11 @@
       if (!res.ok) throw new Error(data.msg || data.error_description || "Signup failed");
 
       const userId = data.id || data.user?.id;
+      const userReferralCode = generateReferralCode();
 
+      // -----------------------------------
+      // STEP 2: SAVE IN REGISTRATIONS TABLE
+      // -----------------------------------
       const regRes = await fetch(`${SUPABASE_URL}/rest/v1/registrations`, {
         method: 'POST',
         headers: {
@@ -76,7 +95,10 @@
           full_name: name,
           email: email,
           phone: phone,
-          client_type: 'referral'
+          client_type: 'referral',
+          referral_code: userReferralCode,    // your code
+          referred_by: referredBy,            // the person who referred them
+          payment_status: "pending"
         })
       });
 
