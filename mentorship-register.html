@@ -4,21 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Join Elite Mentorship - Crown Trade Academy</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap"
-    rel="stylesheet"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-  />
 
-  <!-- SUPABASE CLIENT - FIXED & WORKING -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+  <!-- Correct Supabase Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+
   <script>
-    const supabase = Supabase.createClient(
-      'https://eygjxxdgxzatchqgwvep.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyNzA4MDAsImV4cCI6MjA0NDg0NjgwMH0.0g8v3e9bfO3i2y9rW4nRj4bL5nO8v3e9bfO3i2y9rW4'
+    const supabase = window.supabase.createClient(
+      "https://eygjxxdgxzatchqgwvep.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5Z2p4eGRneHphdGNoUWd3dmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyNzA4MDAsImV4cCI6MjA0NDg0NjgwMH0.0g8v3e9bfO3i2y9rW4nRj4bL5nO8v3e9bfO3i2y9rW4"
     );
   </script>
 
@@ -55,28 +51,24 @@
       padding: 0.6rem 1.8rem;
       border-radius: 50px;
       font-weight: 700;
-      font-size: 0.95rem;
-      display: inline-block;
       margin-bottom: 1rem;
+      display: inline-block;
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
     h1 {
       font-family: "Cormorant Garamond";
       font-size: 2.8rem;
       color: var(--gold-dark);
-      margin: 1rem 0;
     }
     .price {
       font-size: 3.2rem;
       font-weight: 800;
       color: var(--gold-dark);
-      margin: 1.5rem 0;
+      margin: 1rem 0;
     }
     .price small {
       font-size: 1rem;
       color: #777;
-      font-weight: normal;
     }
     input {
       width: 100%;
@@ -84,13 +76,6 @@
       margin: 0.9rem 0;
       border: 1px solid #ddd;
       border-radius: 16px;
-      font-size: 1rem;
-      transition: 0.3s;
-    }
-    input:focus {
-      outline: none;
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(200, 169, 126, 0.2);
     }
     .btn {
       background: var(--gold);
@@ -103,73 +88,43 @@
       font-size: 1.2rem;
       cursor: pointer;
       margin-top: 1.5rem;
-      transition: 0.3s;
     }
-    .btn:hover {
-      background: var(--gold-dark);
-      transform: scale(1.02);
-    }
-    .btn:disabled {
-      background: #999;
-      cursor: not-allowed;
-    }
-    .footer-text {
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #777;
-    }
+    .btn:hover { background: var(--gold-dark); }
+    .btn:disabled { background: #999; }
   </style>
 </head>
+
 <body>
   <div class="card">
     <div class="badge">Elite Access</div>
-    <i
-      class="fas fa-crown"
-      style="font-size: 4.5rem; color: var(--gold); margin: 1rem 0"
-    ></i>
+    <i class="fas fa-crown" style="font-size: 4.5rem; color: var(--gold);"></i>
     <h1>Elite Mentorship Program</h1>
+
     <div class="price">
       KSh 3,500 <small>one-time</small>
     </div>
-    <p style="color: #555; margin: 1.5rem 0;">
-      Lifetime access • Direct mentor support • 90%+ win rate signals
-    </p>
 
-    <input type="text" id="fullName" placeholder="Full Name" required />
-    <input type="email" id="email" placeholder="Email Address" required />
-    <input type="tel" id="phone" placeholder="Phone (07xxxxxxxx)" required />
-    <input
-      type="password"
-      id="password"
-      placeholder="Create Strong Password (6+ chars)"
-      required
-    />
+    <input type="text" id="fullName" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    <input type="tel" id="phone" placeholder="Phone (07xxxxxxxx)" required>
+    <input type="password" id="password" placeholder="Password (6+ chars)" required>
 
-    <button class="btn" onclick="registerMentorship()">
-      Create Account & Proceed to Payment
-    </button>
-
-    <p class="footer-text">
-      Already enrolled?
-      <a href="client-login.html" style="color: var(--gold); font-weight: 600"
-        >Login here</a
-      >
-    </p>
+    <button class="btn" onclick="registerMentorship()">Create Account & Proceed to Payment</button>
   </div>
 
   <script>
     async function registerMentorship() {
-      const name = document.getElementById("fullName").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const password = document.getElementById("password").value;
+      const name = fullName.value.trim();
+      const email = email.value.trim();
+      const phone = phone.value.trim();
+      const password = password.value;
 
       if (!name || !email || !phone || password.length < 6) {
-        alert("Please fill all fields correctly. Password must be 6+ characters.");
+        alert("Please fill all fields correctly.");
         return;
       }
 
-      const btn = document.querySelector(".btn");
+      const btn = document.querySelector('.btn');
       btn.disabled = true;
       btn.textContent = "Creating Account...";
 
@@ -177,26 +132,26 @@
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { full_name: name, phone } },
+          options: { data: { full_name: name, phone } }
         });
 
         if (error) throw error;
 
-        const { error: profileError } = await supabase.from("profiles").insert({
+        const { error: insertErr } = await supabase.from('profiles').insert({
           id: data.user.id,
           full_name: name,
           email,
           phone,
-          client_type: "mentorship",
-          role: "client",
-          payment_status: "pending",
-          created_at: new Date().toISOString(),
+          client_type: 'mentorship',
+          role: 'client',
+          payment_status: 'pending'
         });
 
-        if (profileError) throw profileError;
+        if (insertErr) throw insertErr;
 
-        alert("Account created successfully! Check your email to confirm.");
-        location.href = "mentorship-payment.html";
+        alert("Account created! Check your email to confirm.");
+        location.href = 'mentorship-payment.html';
+
       } catch (err) {
         alert("Error: " + err.message);
         btn.disabled = false;
