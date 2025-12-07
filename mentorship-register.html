@@ -8,8 +8,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-  <!-- Supabase Latest CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.46.1/dist/umd/supabase.min.js"></script>
+  <!-- Supabase UMD (trusted CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <style>
     :root { --gold:#c8a97e; --gold-dark:#b89463; --nude:#f9f6f2; --charcoal:#3a3a3a; }
@@ -25,11 +25,10 @@
     .btn:hover { background:var(--gold-dark); transform:scale(1.02); }
     .btn:disabled { background:#999; cursor:not-allowed; }
     .footer-text { margin-top:2rem; font-size:0.9rem; color:#777; }
-    .small-note { font-size:0.9rem; color:#666; margin-top:0.5rem; text-align:left; width:100%; }
+    .small-note { font-size:0.9rem; color:#666; margin-top:0.5rem; }
   </style>
 </head>
 <body>
-
   <div class="card" role="main" aria-labelledby="pageTitle">
     <div class="badge">Elite Access</div>
     <i class="fas fa-crown" style="font-size:4.5rem; color:var(--gold); margin:1rem 0;"></i>
@@ -39,16 +38,16 @@
     <p style="color:#555; margin:1.5rem 0;">Lifetime access • Direct mentor support • 90%+ win rate signals</p>
 
     <label class="small-note" for="fullName">Full name</label>
-    <input id="fullName" type="text" placeholder="Full Name" />
+    <input id="fullName" type="text" placeholder="Full Name" autocomplete="name" />
 
     <label class="small-note" for="email">Email address</label>
-    <input id="email" type="email" placeholder="Email Address" />
+    <input id="email" type="email" placeholder="Email Address" autocomplete="email" />
 
     <label class="small-note" for="phone">Phone</label>
-    <input id="phone" type="tel" placeholder="Phone (07xxxxxxxx)" />
+    <input id="phone" type="tel" placeholder="Phone (07xxxxxxxx)" autocomplete="tel" />
 
     <label class="small-note" for="password">Password</label>
-    <input id="password" type="password" placeholder="Create Strong Password (6+ chars)" />
+    <input id="password" type="password" placeholder="Create Strong Password (6+ chars)" autocomplete="new-password" />
 
     <button id="submitBtn" class="btn" type="button">Create Account & Proceed to Payment</button>
 
@@ -56,88 +55,129 @@
   </div>
 
 <script>
-(async function () {
+(function () {
+  // ---------- CONFIG ----------
+  const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
 
-  const SUPABASE_URL = "https://omrsywvfdhzeokmfdrfh.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o";
+  // ---------- CREATE SUPABASE CLIENT (robust) ----------
+  let supabaseClient = null;
+  try {
+    // Try common globals (UMD builds differ)
+    if (window.Supabase && typeof window.Supabase.createClient === 'function') {
+      supabaseClient = window.Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } else if (window.supabase && typeof window.supabase.createClient === 'function') {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } else if (typeof createClient === 'function') {
+      // some builds export createClient directly
+      supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } else {
+      // Last resort: try Supabase (lowercase) factory name
+      if (window.Supabase) {
+        supabaseClient = window.Supabase; // improbable, but try
+      } else {
+        throw new Error('Supabase client not found on window. Confirm script include.');
+      }
+    }
+  } catch (err) {
+    console.error('Failed to initialize Supabase client:', err);
+    alert('Failed to initialize database client. Open console for details.');
+    return;
+  }
 
-  const supabase = supabasejs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // Expose for debugging if needed
+  window.supabase = supabaseClient;
 
+  // ---------- UI ----------
   const fullNameEl = document.getElementById('fullName');
   const emailEl = document.getElementById('email');
   const phoneEl = document.getElementById('phone');
   const passwordEl = document.getElementById('password');
   const submitBtn = document.getElementById('submitBtn');
 
-  function setBusy(b, t) {
-    submitBtn.disabled = b;
-    submitBtn.textContent = b ? t : "Create Account & Proceed to Payment";
+  function setButtonBusy(isBusy, text) {
+    submitBtn.disabled = isBusy;
+    submitBtn.textContent = isBusy ? (text || 'Working...') : 'Create Account & Proceed to Payment';
   }
 
-  function validPhone(p) {
-    const d = p.replace(/\D/g, "");
-    return d.length >= 9 && d.length <= 15;
+  // ---------- Helpers ----------
+  function validatePhone(p) {
+    // Simple validation: digits and length between 9-15
+    const digits = p.replace(/\D/g, '');
+    return digits.length >= 9 && digits.length <= 15;
   }
 
-  async function registerUser() {
-    const fullName = fullNameEl.value.trim();
-    const email = emailEl.value.trim().toLowerCase();
-    const phone = phoneEl.value.trim();
-    const password = passwordEl.value;
+  // ---------- Main handler ----------
+  async function registerMentorship() {
+    // Read values into local variables (avoids TDZ / name conflicts)
+    const fullNameVal = String(fullNameEl.value || '').trim();
+    const emailVal = String(emailEl.value || '').trim().toLowerCase();
+    const phoneVal = String(phoneEl.value || '').trim();
+    const passwordVal = String(passwordEl.value || '');
 
-    if (!fullName || !email || !phone || password.length < 6) {
-      alert("Fill all fields correctly.");
+    if (!fullNameVal || !emailVal || !phoneVal || passwordVal.length < 6) {
+      alert('Please fill all fields correctly. Password must be 6+ characters.');
       return;
     }
-    if (!validPhone(phone)) {
-      alert("Invalid phone number.");
+    if (!validatePhone(phoneVal)) {
+      alert('Please enter a valid phone number (digits only).');
       return;
     }
 
     try {
-      setBusy(true, "Creating Account...");
+      setButtonBusy(true, 'Creating account...');
 
-      // Create Auth user
+      // Create the auth user
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: fullName, phone: phone } }
+        email: emailVal,
+        password: passwordVal,
+        options: { data: { full_name: fullNameVal, phone: phoneVal } }
       });
 
       if (signUpError) throw signUpError;
-      const userId = signUpData?.user?.id;
-      if (!userId) throw new Error("No user ID returned.");
+      if (!signUpData || !signUpData.user || !signUpData.user.id) {
+        throw new Error('Signup failed — no user id returned.');
+      }
 
-      // Insert into clients table
+      const userId = signUpData.user.id;
+
+      // Insert profile into "profiles" (or "clients" if you prefer)
       const { error: insertError } = await supabase
-        .from("clients")
+        .from('profiles')
         .insert([{
           id: userId,
-          full_name: fullName,
-          email: email,
-          phone: phone,
-          client_type: "mentorship",
-          role: "client",
-          payment_status: "pending",
+          full_name: fullNameVal,
+          email: emailVal,
+          phone: phoneVal,
+          client_type: 'mentorship',
+          role: 'client',
+          payment_status: 'pending',
           created_at: new Date().toISOString()
         }]);
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        // If insertion fails, it's often due to RLS or missing table/columns
+        console.error('Profile insert error:', insertError);
+        throw insertError;
+      }
 
-      alert("Account created! Check your email to confirm.");
-      window.location.href = "mentorship-payment.html";
+      // Success
+      alert('Account created successfully! Please check your email to confirm. You will be redirected to payment.');
+      window.location.href = 'mentorship-payment.html';
 
     } catch (err) {
-      console.error("REGISTER ERROR:", err);
-      alert("Error: " + err.message);
-      setBusy(false);
+      console.error('registerMentorship error:', err);
+      // Show a readable message if possible
+      const message = (err && err.message) ? err.message : JSON.stringify(err);
+      alert('Error: ' + message);
+      setButtonBusy(false);
     }
   }
 
-  submitBtn.addEventListener("click", registerUser);
+  // Attach handler
+  submitBtn.addEventListener('click', registerMentorship);
 
 })();
 </script>
-
 </body>
 </html>
