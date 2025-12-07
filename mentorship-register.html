@@ -8,46 +8,43 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-  <!-- Supabase UMD (trusted CDN) -->
+  <!-- Supabase UMD -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <style>
     :root { --gold:#c8a97e; --gold-dark:#b89463; --nude:#f9f6f2; --charcoal:#3a3a3a; }
     body { margin:0; background:linear-gradient(135deg,#f9f6f2,#e8dfd6); font-family:Montserrat; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
-    .card { background:white; padding:3.5rem; border-radius:24px; box-shadow:0 30px 80px rgba(0,0,0,0.12); max-width:460px; width:100%; text-align:center; border:2px solid rgba(200,169,126,0.2); }
+    .card { background:white; padding:3.5rem; border-radius:24px; box-shadow:0 30px 80px rgba(0,0,0,0.12); max-width:520px; width:100%; text-align:center; border:2px solid rgba(200,169,126,0.2); }
     .badge { background:var(--gold); color:white; padding:0.6rem 1.8rem; border-radius:50px; font-weight:700; font-size:0.95rem; display:inline-block; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px; }
-    h1 { font-family:'Cormorant Garamond'; font-size:2.8rem; color:var(--gold-dark); margin:1rem 0; }
-    .price { font-size:3.2rem; font-weight:800; color:var(--gold-dark); margin:1.5rem 0; }
-    .price small { font-size:1rem; color:#777; font-weight:normal; }
-    input { width:100%; padding:1.1rem; margin:0.9rem 0; border:1px solid #ddd; border-radius:16px; font-size:1rem; transition:0.3s; }
-    input:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(200,169,126,0.2); }
-    .btn { background:var(--gold); color:white; padding:1.2rem; border:none; border-radius:50px; width:100%; font-weight:700; font-size:1.2rem; cursor:pointer; margin-top:1.5rem; transition:0.3s; }
-    .btn:hover { background:var(--gold-dark); transform:scale(1.02); }
-    .btn:disabled { background:#999; cursor:not-allowed; }
-    .footer-text { margin-top:2rem; font-size:0.9rem; color:#777; }
-    .small-note { font-size:0.9rem; color:#666; margin-top:0.5rem; }
+    h1 { font-family:'Cormorant Garamond'; font-size:2.6rem; color:var(--gold-dark); margin:1rem 0; }
+    .price { font-size:2.6rem; font-weight:800; color:var(--gold-dark); margin:1rem 0; }
+    label { display:block; text-align:left; font-size:.9rem; color:#666; margin-top:.5rem; }
+    input { width:100%; padding:1.05rem; margin:.6rem 0 1rem; border:1px solid #ddd; border-radius:12px; font-size:1rem; }
+    .btn { background:var(--gold); color:white; padding:1.15rem; border:none; border-radius:50px; width:100%; font-weight:700; font-size:1.05rem; cursor:pointer; margin-top:1rem; }
+    .btn:disabled { background:#aaa; cursor:not-allowed; }
+    .footer-text { margin-top:1.2rem; font-size:.9rem; color:#777; }
   </style>
 </head>
 <body>
   <div class="card" role="main" aria-labelledby="pageTitle">
     <div class="badge">Elite Access</div>
-    <i class="fas fa-crown" style="font-size:4.5rem; color:var(--gold); margin:1rem 0;"></i>
+    <i class="fas fa-crown" style="font-size:4.2rem;color:var(--gold);margin:1rem 0;"></i>
     <h1 id="pageTitle">Elite Mentorship Program</h1>
 
-    <div class="price">KSh 3,500 <small>one-time</small></div>
-    <p style="color:#555; margin:1.5rem 0;">Lifetime access • Direct mentor support • 90%+ win rate signals</p>
+    <div class="price">KSh 3,500 <small style="font-size:.9rem;color:#666;font-weight:600;">one-time</small></div>
+    <p style="color:#555;margin:1rem 0 1.4rem;">Lifetime access • Direct mentor support • Signals & mentorship</p>
 
-    <label class="small-note" for="fullName">Full name</label>
-    <input id="fullName" type="text" placeholder="Full Name" autocomplete="name" />
+    <label for="fullName">Full Name</label>
+    <input id="fullName" type="text" placeholder="Full Name" autocomplete="name">
 
-    <label class="small-note" for="email">Email address</label>
-    <input id="email" type="email" placeholder="Email Address" autocomplete="email" />
+    <label for="email">Email</label>
+    <input id="email" type="email" placeholder="Email Address" autocomplete="email">
 
-    <label class="small-note" for="phone">Phone</label>
-    <input id="phone" type="tel" placeholder="Phone (07xxxxxxxx)" autocomplete="tel" />
+    <label for="phone">Phone</label>
+    <input id="phone" type="tel" placeholder="Phone (07xxxxxxxx)" autocomplete="tel">
 
-    <label class="small-note" for="password">Password</label>
-    <input id="password" type="password" placeholder="Create Strong Password (6+ chars)" autocomplete="new-password" />
+    <label for="password">Password</label>
+    <input id="password" type="password" placeholder="Password (6+ chars)" autocomplete="new-password">
 
     <button id="submitBtn" class="btn" type="button">Create Account & Proceed to Payment</button>
 
@@ -55,129 +52,117 @@
   </div>
 
 <script>
-(function () {
-  // ---------- CONFIG ----------
-  const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
+/* ------------- CONFIG ------------- */
+const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
 
-  // ---------- CREATE SUPABASE CLIENT (robust) ----------
-  let supabaseClient = null;
-  try {
-    // Try common globals (UMD builds differ)
-    if (window.Supabase && typeof window.Supabase.createClient === 'function') {
-      supabaseClient = window.Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    } else if (window.supabase && typeof window.supabase.createClient === 'function') {
-      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    } else if (typeof createClient === 'function') {
-      // some builds export createClient directly
-      supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    } else {
-      // Last resort: try Supabase (lowercase) factory name
-      if (window.Supabase) {
-        supabaseClient = window.Supabase; // improbable, but try
-      } else {
-        throw new Error('Supabase client not found on window. Confirm script include.');
-      }
-    }
-  } catch (err) {
-    console.error('Failed to initialize Supabase client:', err);
-    alert('Failed to initialize database client. Open console for details.');
+/* robust init for different UMD builds */
+let supabase;
+if (window.supabase && typeof window.supabase.createClient === 'function') {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} else if (window.Supabase && typeof window.Supabase.createClient === 'function') {
+  supabase = window.Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} else if (typeof createClient === 'function') {
+  supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} else {
+  alert('Supabase client not found. Make sure the CDN script loaded.');
+  throw new Error('Supabase client not found');
+}
+window.supabase = supabase;
+
+/* ------------- URL context (preserve ref and program) ------------- */
+const urlParams = new URLSearchParams(window.location.search);
+const referredByParam = urlParams.get('ref') || null;
+const programParam = urlParams.get('prog') || 'mentorship';
+
+/* ------------- DOM ------------- */
+const fullNameEl = document.getElementById('fullName');
+const emailEl = document.getElementById('email');
+const phoneEl = document.getElementById('phone');
+const passwordEl = document.getElementById('password');
+const submitBtn = document.getElementById('submitBtn');
+
+function setBusy(b, text) {
+  submitBtn.disabled = b;
+  submitBtn.textContent = b ? (text || 'Working...') : 'Create Account & Proceed to Payment';
+}
+function validatePhone(p) {
+  return (p.replace(/\D/g,'').length >= 9 && p.replace(/\D/g,'').length <= 15);
+}
+function generateReferralCode(fullName) {
+  const initials = (fullName || 'CTA').split(' ').map(s => s[0]||'').join('').toUpperCase().slice(0,3) || 'CTA';
+  const rand = Math.floor(100000 + Math.random()*900000);
+  return `${initials}${rand}`;
+}
+
+/* ------------- main ------------- */
+async function register() {
+  const fullName = (fullNameEl.value || '').trim();
+  const email = (emailEl.value || '').trim().toLowerCase();
+  const phone = (phoneEl.value || '').trim();
+  const password = (passwordEl.value || '');
+
+  if (!fullName || !email || !phone || password.length < 6) {
+    alert('Please fill all fields correctly (password 6+ chars).');
+    return;
+  }
+  if (!validatePhone(phone)) {
+    alert('Please enter a valid phone number.');
     return;
   }
 
-  // Expose for debugging if needed
-  window.supabase = supabaseClient;
+  setBusy(true, 'Creating account...');
 
-  // ---------- UI ----------
-  const fullNameEl = document.getElementById('fullName');
-  const emailEl = document.getElementById('email');
-  const phoneEl = document.getElementById('phone');
-  const passwordEl = document.getElementById('password');
-  const submitBtn = document.getElementById('submitBtn');
-
-  function setButtonBusy(isBusy, text) {
-    submitBtn.disabled = isBusy;
-    submitBtn.textContent = isBusy ? (text || 'Working...') : 'Create Account & Proceed to Payment';
-  }
-
-  // ---------- Helpers ----------
-  function validatePhone(p) {
-    // Simple validation: digits and length between 9-15
-    const digits = p.replace(/\D/g, '');
-    return digits.length >= 9 && digits.length <= 15;
-  }
-
-  // ---------- Main handler ----------
-  async function registerMentorship() {
-    // Read values into local variables (avoids TDZ / name conflicts)
-    const fullNameVal = String(fullNameEl.value || '').trim();
-    const emailVal = String(emailEl.value || '').trim().toLowerCase();
-    const phoneVal = String(phoneEl.value || '').trim();
-    const passwordVal = String(passwordEl.value || '');
-
-    if (!fullNameVal || !emailVal || !phoneVal || passwordVal.length < 6) {
-      alert('Please fill all fields correctly. Password must be 6+ characters.');
-      return;
+  try {
+    // 1) create auth user
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: fullName, phone } }
+    });
+    if (signUpError) throw signUpError;
+    if (!signUpData || !signUpData.user || !signUpData.user.id) {
+      throw new Error('Signup failed: no user id returned.');
     }
-    if (!validatePhone(phoneVal)) {
-      alert('Please enter a valid phone number (digits only).');
-      return;
-    }
+    const auth_id = signUpData.user.id;
 
-    try {
-      setButtonBusy(true, 'Creating account...');
+    // 2) generate referral code and insert into registrations (mentorship)
+    const referral_code = generateReferralCode(fullName);
 
-      // Create the auth user
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: emailVal,
-        password: passwordVal,
-        options: { data: { full_name: fullNameVal, phone: phoneVal } }
-      });
+    const insertPayload = {
+      auth_id,
+      full_name: fullName,
+      email,
+      phone,
+      client_type: 'mentorship',
+      payment_status: 'pending',
+      created_at: new Date().toISOString(),
+      referral_code,
+      referred_by: referredByParam,
+      program_selected: programParam,
+      referral_earning: 0,
+      referral_approved: false
+    };
 
-      if (signUpError) throw signUpError;
-      if (!signUpData || !signUpData.user || !signUpData.user.id) {
-        throw new Error('Signup failed — no user id returned.');
-      }
+    const { data: inserted, error: insertError } = await supabase
+      .from('registrations')
+      .insert([insertPayload], { returning: 'representation' });
 
-      const userId = signUpData.user.id;
+    if (insertError) throw insertError;
 
-      // Insert profile into "profiles" (or "clients" if you prefer)
-      const { error: insertError } = await supabase
-        .from('profiles')
-        .insert([{
-          id: userId,
-          full_name: fullNameVal,
-          email: emailVal,
-          phone: phoneVal,
-          client_type: 'mentorship',
-          role: 'client',
-          payment_status: 'pending',
-          created_at: new Date().toISOString()
-        }]);
+    // store referral used locally for analytics
+    if (referredByParam) localStorage.setItem('referral_used', referredByParam);
 
-      if (insertError) {
-        // If insertion fails, it's often due to RLS or missing table/columns
-        console.error('Profile insert error:', insertError);
-        throw insertError;
-      }
-
-      // Success
-      alert('Account created successfully! Please check your email to confirm. You will be redirected to payment.');
-      window.location.href = 'mentorship-payment.html';
-
-    } catch (err) {
-      console.error('registerMentorship error:', err);
-      // Show a readable message if possible
-      const message = (err && err.message) ? err.message : JSON.stringify(err);
-      alert('Error: ' + message);
-      setButtonBusy(false);
-    }
+    alert('Account created. Check your email to confirm. Redirecting to payment...');
+    window.location.href = 'mentorship-payment.html';
+  } catch (err) {
+    console.error('register error', err);
+    alert('Error: ' + (err.message || JSON.stringify(err)));
+    setBusy(false);
   }
+}
 
-  // Attach handler
-  submitBtn.addEventListener('click', registerMentorship);
-
-})();
+submitBtn.addEventListener('click', register);
 </script>
 </body>
 </html>
