@@ -1,130 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Complete Payment - Elite Mentorship</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Confirm Payment - Crown Trade Academy</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    :root { --gold:#c8a97e; --dark:#b89463; }
-    body {margin:0;background:linear-gradient(135deg,#f9f6f2,#e8dfd6);font-family:Montserrat;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
-    .card {background:white;padding:3.5rem;border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.12);max-width:500px;width:100%;text-align:center;border:2px solid rgba(200,169,126,.2);}
-    .badge {background:var(--gold);color:white;padding:.6rem 1.8rem;border-radius:50px;font-weight:700;font-size:.95rem;display:inline-block;margin-bottom:1rem;}
-    h1 {font-family:'Cormorant Garamond';font-size:2.8rem;color:var(--dark);}
-    .price {font-size:3.5rem;font-weight:800;color:var(--dark);margin:1.5rem 0;}
-    .mpesa {background:#ecfdf5;padding:1.5rem;border-radius:16px;margin:2rem 0;border:2px dashed #10b981;}
-    .number {font-size:2rem;font-weight:900;color:#065f46;letter-spacing:2px;}
-    .name {font-weight:600;color:#065f46;margin:0.5rem 0;}
-    .upload-area {border:3px dashed var(--gold);border-radius:16px;padding:2rem;margin:2rem 0;cursor:pointer;background:#fdfaf7;}
-    .upload-area.dragover {background:#f0e6d2;border-color:var(--dark);}
-    .btn {background:var(--gold);color:white;padding:1.3rem;border:none;border-radius:50px;width:100%;font-weight:700;font-size:1.3rem;cursor:pointer;}
-    .btn:disabled {background:#999;cursor:not-allowed;}
-    .hidden {display:none;}
+    :root{--gold:#c8a97e;--gold-dark:#b89463;--nude:#f9f6f2;--charcoal:#3a3a3a}
+    body{margin:0;background:linear-gradient(135deg,#f9f6f2,#e8dfd6);font-family:Montserrat;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+    .card{background:white;padding:3rem;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.12);max-width:520px;width:100%;text-align:center;border:2px solid rgba(200,169,126,.2)}
+    h1{font-family:'Cormorant Garamond';font-size:2.3rem;color:var(--gold-dark);margin-bottom:1rem}
+    input, select{width:100%;padding:1.05rem;margin:.8rem 0;border:1px solid #ddd;border-radius:12px}
+    .btn{background:var(--gold);color:white;padding:1.05rem;border:none;border-radius:50px;width:100%;font-weight:700;cursor:pointer;margin-top:1rem}
+    .btn:disabled{background:#aaa;cursor:not-allowed}
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
-
-<div class="card">
-  <div class="badge">Final Step</div>
-  <i class="fas fa-crown" style="font-size:5rem;color:var(--gold);margin:1rem 0;"></i>
-  <h1>Elite Mentorship</h1>
-  <div class="price">KSh 9,997</div>
-
-  <div class="mpesa">
-    <p>Send exactly <strong>KSh 9,997</strong> via M-Pesa to:</p>
-    <div class="number">0769968847</div>
-    <div class="name">RACHEAL WAITHIRA</div>
-    <p style="margin-top:1rem;font-size:0.9rem;color:#666;">Use your phone number as reference</p>
+  <div class="card">
+    <h1>Confirm Your Payment</h1>
+    <p style="color:#555">Pay <strong>KSh 3,500</strong> via MPESA. Enter transaction code below.</p>
+    <input id="txnCode" type="text" placeholder="MPESA Transaction Code (e.g. QJ23H7K91)" />
+    <select id="paymentMethod" style="width:100%;padding:1rem;border-radius:12px;margin-top:.6rem">
+      <option value="mpesa">M-Pesa</option>
+      <option value="bank">Bank Transfer</option>
+      <option value="paypal">PayPal</option>
+    </select>
+    <button id="confirmBtn" class="btn">Complete Registration</button>
   </div>
-
-  <div class="upload-area" id="dropArea">
-    <i class="fas fa-cloud-upload-alt" style="font-size:3rem;color:var(--gold);margin-bottom:1rem;"></i>
-    <p><strong>Click or drag screenshot here</strong><br>Proof of payment (M-Pesa message)</p>
-    <input type="file" id="fileInput" accept="image/*" class="hidden">
-    <div id="preview" style="margin-top:1rem;"></div>
-  </div>
-
-  <button class="btn" id="submitBtn" disabled>I Have Paid — Submit Proof</button>
-  <p style="margin-top:1rem;font-size:0.9rem;color:#777;">You will be redirected after submission</p>
-</div>
 
 <script>
+(async function(){
   const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
-  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
-  const headers = { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}` };
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
 
-  let selectedFile = null;
-  const dropArea = document.getElementById('dropArea');
-  const fileInput = document.getElementById('fileInput');
-  const preview = document.getElementById('preview');
-  const submitBtn = document.getElementById('submitBtn');
+  // init client
+  let supabase;
+  if (window.supabase && typeof window.supabase.createClient === 'function') {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else if (window.Supabase && typeof window.Supabase.createClient === 'function') {
+    supabase = window.Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else if (typeof createClient === 'function') {
+    supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else {
+    alert('Supabase client not found.');
+    throw new Error('Supabase client not found');
+  }
+  window.supabase = supabase;
 
-  dropArea.onclick = () => fileInput.click();
-  fileInput.onchange = e => handleFile(e.target.files[0]);
-  dropArea.ondragover = e => { e.preventDefault(); dropArea.classList.add('dragover'); };
-  dropArea.ondragleave = () => dropArea.classList.remove('dragover');
-  dropArea.ondrop = e => { e.preventDefault(); dropArea.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); };
+  const txnEl = document.getElementById('txnCode');
+  const methodEl = document.getElementById('paymentMethod');
+  const btn = document.getElementById('confirmBtn');
 
-  function handleFile(file) {
-    if (!file || !file.type.startsWith('image/')) return alert("Please upload an image");
-    selectedFile = file;
+  function setBusy(b){ btn.disabled = b; btn.textContent = b ? 'Verifying...' : 'Complete Registration'; }
 
-    const reader = new FileReader();
-    reader.onload = e => {
-      preview.innerHTML = `<img src="${e.target.result}" style="max-width:100%;max-height:300px;border-radius:12px;">`;
-      submitBtn.disabled = false;
-    };
-    reader.readAsDataURL(file);
+  async function getCurrentUser() {
+    try {
+      const { data } = await supabase.auth.getUser();
+      return data?.user || null;
+    } catch(e) {
+      try {
+        const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }});
+        if (!res.ok) return null;
+        return await res.json();
+      } catch(_) { return null; }
+    }
   }
 
-  submitBtn.onclick = async () => {
-    if (!selectedFile) return;
+  async function confirmPayment(){
+    const txn = (txnEl.value || '').trim();
+    const method = methodEl.value;
+    if (!txn) return alert('Enter a valid transaction code');
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Uploading Proof...";
-
+    setBusy(true);
     try {
-      // 1. Upload to Storage
-      const fileExt = selectedFile.name.split('.').pop();
-      const fileName = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
-      const { error: uploadError } = await fetch(`${SUPABASE_URL}/storage/v1/object/payment-proofs/${fileName}`, {
-        method: 'POST',
-        headers: { ...headers, 'Content-Type': selectedFile.type },
-        body: selectedFile
-      }).then(r => r.json());
+      const user = await getCurrentUser();
+      if (!user || !user.id) throw new Error('User not found. Please login or create an account first.');
 
-      if (uploadError) throw uploadError;
+      const auth_id = user.id;
 
-      const screenshotUrl = `${SUPABASE_URL}/storage/v1/object/public/payment-proofs/${fileName}`;
-
-      // 2. Save payment request
-      const { data: user } = await (await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers })).json();
-      const authId = user?.id || localStorage.getItem('temp_auth_id') || 'unknown';
-
-      const { error } = await fetch(`${SUPABASE_URL}/rest/v1/registrations`, {
-        method: 'PATCH',
-        headers: { ...headers, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-        body: JSON.stringify({
-          payment_status: 'pending_approval',
-          payment_screenshot: screenshotUrl,
-          amount_paid: 9997,
-          updated_at: new Date().toISOString()
+      // update the user's registration row
+      const { data, error } = await supabase
+        .from('registrations')
+        .update({
+          payment_status: 'paid',
+          payment_method: method,
+          transaction_code: txn,
+          paid_at: new Date().toISOString()
         })
-      }).then(r => r.json());
+        .eq('auth_id', auth_id)
+        .select()
+        .single();
 
       if (error) throw error;
 
-      alert("Payment proof submitted! Redirecting...");
-      location.href = 'waiting-approval.html';
-
-    } catch (err) {
-      console.error(err);
-      alert("Error: " + (err.message || "Try again"));
-      submitBtn.disabled = false;
-      submitBtn.textContent = "I Have Paid — Submit Proof";
+      alert('Payment confirmed. Redirecting to your dashboard.');
+      window.location.href = 'mentorship-dashboard.html';
+    } catch(err) {
+      console.error('Payment error', err);
+      alert('Error: ' + (err.message || JSON.stringify(err)));
+      setBusy(false);
     }
   }
+
+  btn.addEventListener('click', confirmPayment);
+})();
 </script>
 </body>
 </html>
