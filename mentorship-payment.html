@@ -1,32 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Confirm Payment - Crown Trade Academy</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root{--gold:#c8a97e;--gold-dark:#b89463;--nude:#f9f6f2;--charcoal:#3a3a3a}
-    body{margin:0;background:linear-gradient(135deg,#f9f6f2,#e8dfd6);font-family:Montserrat;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
-    .card{background:white;padding:3rem;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.12);max-width:520px;width:100%;text-align:center;border:2px solid rgba(200,169,126,.2)}
-    h1{font-family:'Cormorant Garamond';font-size:2.3rem;color:var(--gold-dark);margin-bottom:1rem}
-    input, select{width:100%;padding:1.05rem;margin:.8rem 0;border:1px solid #ddd;border-radius:12px}
-    .btn{background:var(--gold);color:white;padding:1.05rem;border:none;border-radius:50px;width:100%;font-weight:700;cursor:pointer;margin-top:1rem}
-    .btn:disabled{background:#aaa;cursor:not-allowed}
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Confirm Payment - Crown Trade Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--gold:#c8a97e;--gold-dark:#b89463;--nude:#f9f6f2;--charcoal:#3a3a3a}
+  body{margin:0;background:linear-gradient(135deg,#f9f6f2,#e8dfd6);font-family:Montserrat;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+  .card{background:white;padding:3rem;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.12);max-width:520px;width:100%;text-align:center;border:2px solid rgba(200,169,126,.2)}
+  input, select{width:100%;padding:1.05rem;margin:.8rem 0;border:1px solid #ddd;border-radius:12px}
+  .btn{background:var(--gold);color:white;padding:1.05rem;border:none;border-radius:50px;width:100%;font-weight:700;cursor:pointer;margin-top:1rem}
+  .small{font-size:.95rem;color:#555;margin-top:.6rem}
+  .error{color:#b00020;margin-top:.6rem;font-weight:700;display:none}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
   <div class="card">
-    <h1>Confirm Your Payment</h1>
-    <p style="color:#555">Pay <strong>KSh 3,500</strong> via MPESA. Enter transaction code below.</p>
-    <input id="txnCode" type="text" placeholder="MPESA Transaction Code (e.g. QJ23H7K91)" />
-    <select id="paymentMethod" style="width:100%;padding:1rem;border-radius:12px;margin-top:.6rem">
-      <option value="mpesa">M-Pesa</option>
-      <option value="bank">Bank Transfer</option>
-      <option value="paypal">PayPal</option>
-    </select>
+    <h1 style="font-family:'Cormorant Garamond';color:var(--gold-dark)">Confirm Your Payment</h1>
+    <p class="small">Pay <strong>KSh 3,500</strong> via M-Pesa and enter transaction code.</p>
+    <input id="txnCode" type="text" placeholder="MPESA Transaction Code (e.g. QJ23H7K91)" autocomplete="off" />
+    <select id="paymentMethod"><option value="mpesa">M-Pesa</option><option value="bank">Bank Transfer</option><option value="paypal">PayPal</option></select>
     <button id="confirmBtn" class="btn">Complete Registration</button>
+    <div id="error" class="error"></div>
+    <div id="info" class="small" style="margin-top:.8rem"></div>
   </div>
 
 <script>
@@ -44,42 +42,45 @@
     supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   } else {
     alert('Supabase client not found.');
-    throw new Error('Supabase client not found');
+    return;
   }
   window.supabase = supabase;
 
   const txnEl = document.getElementById('txnCode');
   const methodEl = document.getElementById('paymentMethod');
   const btn = document.getElementById('confirmBtn');
+  const errorEl = document.getElementById('error');
+  const infoEl = document.getElementById('info');
 
   function setBusy(b){ btn.disabled = b; btn.textContent = b ? 'Verifying...' : 'Complete Registration'; }
+  function showError(t){ errorEl.style.display='block'; errorEl.textContent = t; }
+  function clearError(){ errorEl.style.display='none'; errorEl.textContent=''; }
 
-  async function getCurrentUser() {
-    try {
-      const { data } = await supabase.auth.getUser();
-      return data?.user || null;
-    } catch(e) {
-      try {
-        const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }});
-        if (!res.ok) return null;
-        return await res.json();
-      } catch(_) { return null; }
-    }
+  async function getSessionUser(){
+    const { data } = await supabase.auth.getSession();
+    const user = data?.session?.user || null;
+    return user;
   }
 
-  async function confirmPayment(){
-    const txn = (txnEl.value || '').trim();
-    const method = methodEl.value;
-    if (!txn) return alert('Enter a valid transaction code');
+  // show current user info (optional)
+  const currentUser = await getSessionUser();
+  if (!currentUser) {
+    infoEl.textContent = 'You are not logged in. Please login or return to registration page.';
+  } else {
+    infoEl.textContent = `Logged in as ${currentUser.email}`;
+  }
 
+  btn.addEventListener('click', async () => {
+    clearError();
+    const txn = (txnEl.value||'').trim();
+    const method = methodEl.value;
+    if (!txn) { showError('Enter a valid transaction code'); return; }
     setBusy(true);
     try {
-      const user = await getCurrentUser();
-      if (!user || !user.id) throw new Error('User not found. Please login or create an account first.');
+      const user = await getSessionUser();
+      if (!user) throw new Error('Not authenticated. Please login.');
 
-      const auth_id = user.id;
-
-      // update the user's registration row
+      // update registration row for auth_id = user.id
       const { data, error } = await supabase
         .from('registrations')
         .update({
@@ -88,22 +89,21 @@
           transaction_code: txn,
           paid_at: new Date().toISOString()
         })
-        .eq('auth_id', auth_id)
+        .eq('auth_id', user.id)
         .select()
         .single();
 
       if (error) throw error;
 
-      alert('Payment confirmed. Redirecting to your dashboard.');
+      alert('Payment confirmed. Redirecting to dashboard...');
       window.location.href = 'mentorship-dashboard.html';
-    } catch(err) {
+    } catch (err) {
       console.error('Payment error', err);
-      alert('Error: ' + (err.message || JSON.stringify(err)));
+      showError(err.message || JSON.stringify(err));
       setBusy(false);
     }
-  }
+  });
 
-  btn.addEventListener('click', confirmPayment);
 })();
 </script>
 </body>
