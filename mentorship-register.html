@@ -1,38 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Join Elite Mentorship - Crown Trade Academy</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
-  <!-- Supabase UMD -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
-  <style>
-    :root { --gold:#c8a97e; --gold-dark:#b89463; --nude:#f9f6f2; --charcoal:#3a3a3a; }
-    body { margin:0; background:linear-gradient(135deg,#f9f6f2,#e8dfd6); font-family:Montserrat; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
-    .card { background:white; padding:3.5rem; border-radius:24px; box-shadow:0 30px 80px rgba(0,0,0,0.12); max-width:520px; width:100%; text-align:center; border:2px solid rgba(200,169,126,0.2); }
-    .badge { background:var(--gold); color:white; padding:0.6rem 1.8rem; border-radius:50px; font-weight:700; font-size:0.95rem; display:inline-block; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px; }
-    h1 { font-family:'Cormorant Garamond'; font-size:2.6rem; color:var(--gold-dark); margin:1rem 0; }
-    .price { font-size:2.6rem; font-weight:800; color:var(--gold-dark); margin:1rem 0; }
-    label { display:block; text-align:left; font-size:.9rem; color:#666; margin-top:.5rem; }
-    input { width:100%; padding:1.05rem; margin:.6rem 0 1rem; border:1px solid #ddd; border-radius:12px; font-size:1rem; }
-    .btn { background:var(--gold); color:white; padding:1.15rem; border:none; border-radius:50px; width:100%; font-weight:700; font-size:1.05rem; cursor:pointer; margin-top:1rem; }
-    .btn:disabled { background:#aaa; cursor:not-allowed; }
-    .footer-text { margin-top:1.2rem; font-size:.9rem; color:#777; }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Join Elite Mentorship - Crown Trade Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+  :root{--gold:#c8a97e;--gold-dark:#b89463;--nude:#f9f6f2;--charcoal:#3a3a3a}
+  body{margin:0;background:linear-gradient(135deg,#f9f6f2,#e8dfd6);font-family:Montserrat;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+  .card{background:white;padding:3.5rem;border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,0.12);max-width:520px;width:100%;text-align:center;border:2px solid rgba(200,169,126,0.2)}
+  label{display:block;text-align:left;font-size:.9rem;color:#666;margin-top:.5rem}
+  input{width:100%;padding:1.05rem;margin:.6rem 0 1rem;border:1px solid #ddd;border-radius:12px;font-size:1rem}
+  .btn{background:var(--gold);color:white;padding:1.15rem;border:none;border-radius:50px;width:100%;font-weight:700;font-size:1.05rem;cursor:pointer;margin-top:1rem}
+  .small{font-size:.9rem;color:#555;margin-top:.8rem}
+  .error{color:#b00020;font-weight:700;margin-top:.6rem}
+</style>
 </head>
 <body>
-  <div class="card" role="main" aria-labelledby="pageTitle">
-    <div class="badge">Elite Access</div>
-    <i class="fas fa-crown" style="font-size:4.2rem;color:var(--gold);margin:1rem 0;"></i>
-    <h1 id="pageTitle">Elite Mentorship Program</h1>
-
-    <div class="price">KSh 3,500 <small style="font-size:.9rem;color:#666;font-weight:600;">one-time</small></div>
-    <p style="color:#555;margin:1rem 0 1.4rem;">Lifetime access • Direct mentor support • Signals & mentorship</p>
+  <div class="card" role="main">
+    <div style="font-weight:700;background:var(--gold);color:white;padding:.5rem 1rem;border-radius:999px;display:inline-block">Elite Access</div>
+    <h1 style="font-family:'Cormorant Garamond';color:var(--gold-dark);margin:1rem 0">Elite Mentorship Program</h1>
 
     <label for="fullName">Full Name</label>
     <input id="fullName" type="text" placeholder="Full Name" autocomplete="name">
@@ -46,90 +35,61 @@
     <label for="password">Password</label>
     <input id="password" type="password" placeholder="Password (6+ chars)" autocomplete="new-password">
 
-    <button id="submitBtn" class="btn" type="button">Create Account & Proceed to Payment</button>
+    <button id="submitBtn" class="btn">Create Account & Proceed to Payment</button>
 
-    <p class="footer-text">Already enrolled? <a href="client-login.html" style="color:var(--gold); font-weight:600;">Login here</a></p>
+    <div id="msg" class="small"></div>
+    <div id="err" class="error" style="display:none"></div>
   </div>
 
 <script>
-/* ------------- CONFIG ------------- */
-const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
+(async function(){
+  const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
 
-/* robust init for different UMD builds */
-let supabase;
-if (window.supabase && typeof window.supabase.createClient === 'function') {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} else if (window.Supabase && typeof window.Supabase.createClient === 'function') {
-  supabase = window.Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} else if (typeof createClient === 'function') {
-  supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} else {
-  alert('Supabase client not found. Make sure the CDN script loaded.');
-  throw new Error('Supabase client not found');
-}
-window.supabase = supabase;
-
-/* ------------- URL context (preserve ref and program) ------------- */
-const urlParams = new URLSearchParams(window.location.search);
-const referredByParam = urlParams.get('ref') || null;
-const programParam = urlParams.get('prog') || 'mentorship';
-
-/* ------------- DOM ------------- */
-const fullNameEl = document.getElementById('fullName');
-const emailEl = document.getElementById('email');
-const phoneEl = document.getElementById('phone');
-const passwordEl = document.getElementById('password');
-const submitBtn = document.getElementById('submitBtn');
-
-function setBusy(b, text) {
-  submitBtn.disabled = b;
-  submitBtn.textContent = b ? (text || 'Working...') : 'Create Account & Proceed to Payment';
-}
-function validatePhone(p) {
-  return (p.replace(/\D/g,'').length >= 9 && p.replace(/\D/g,'').length <= 15);
-}
-function generateReferralCode(fullName) {
-  const initials = (fullName || 'CTA').split(' ').map(s => s[0]||'').join('').toUpperCase().slice(0,3) || 'CTA';
-  const rand = Math.floor(100000 + Math.random()*900000);
-  return `${initials}${rand}`;
-}
-
-/* ------------- main ------------- */
-async function register() {
-  const fullName = (fullNameEl.value || '').trim();
-  const email = (emailEl.value || '').trim().toLowerCase();
-  const phone = (phoneEl.value || '').trim();
-  const password = (passwordEl.value || '');
-
-  if (!fullName || !email || !phone || password.length < 6) {
-    alert('Please fill all fields correctly (password 6+ chars).');
+  // init supabase client
+  let supabase;
+  if (window.supabase && typeof window.supabase.createClient === 'function') {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else if (window.Supabase && typeof window.Supabase.createClient === 'function') {
+    supabase = window.Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else if (typeof createClient === 'function') {
+    supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else {
+    alert('Supabase client failed to initialize.');
     return;
   }
-  if (!validatePhone(phone)) {
-    alert('Please enter a valid phone number.');
-    return;
+  window.supabase = supabase;
+
+  // get URL params (referral and program)
+  const urlParams = new URLSearchParams(window.location.search);
+  const referredByParam = urlParams.get('ref') || null;
+  const programParam = urlParams.get('prog') || 'mentorship';
+
+  // DOM
+  const fullNameEl = document.getElementById('fullName');
+  const emailEl = document.getElementById('email');
+  const phoneEl = document.getElementById('phone');
+  const passwordEl = document.getElementById('password');
+  const submitBtn = document.getElementById('submitBtn');
+  const msgEl = document.getElementById('msg');
+  const errEl = document.getElementById('err');
+
+  function setBusy(b, text) {
+    submitBtn.disabled = b;
+    submitBtn.textContent = b ? (text || 'Working...') : 'Create Account & Proceed to Payment';
+  }
+  function showError(t) { errEl.style.display='block'; errEl.textContent = t; }
+  function clearError(){ errEl.style.display='none'; errEl.textContent = ''; }
+
+  function generateReferralCode(fullName){
+    const initials = (fullName||'CTA').split(' ').map(s=>s[0]||'').join('').toUpperCase().slice(0,3) || 'CTA';
+    const rand = Math.floor(100000 + Math.random()*900000);
+    return `${initials}${rand}`;
   }
 
-  setBusy(true, 'Creating account...');
-
-  try {
-    // 1) create auth user
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { full_name: fullName, phone } }
-    });
-    if (signUpError) throw signUpError;
-    if (!signUpData || !signUpData.user || !signUpData.user.id) {
-      throw new Error('Signup failed: no user id returned.');
-    }
-    const auth_id = signUpData.user.id;
-
-    // 2) generate referral code and insert into registrations (mentorship)
-    const referral_code = generateReferralCode(fullName);
-
-    const insertPayload = {
+  async function insertRegistration(auth_id, fullName, email, phone, referral_code) {
+    // Insert only after authenticated
+    const payload = {
       auth_id,
       full_name: fullName,
       email,
@@ -143,26 +103,97 @@ async function register() {
       referral_earning: 0,
       referral_approved: false
     };
-
-    const { data: inserted, error: insertError } = await supabase
-      .from('registrations')
-      .insert([insertPayload], { returning: 'representation' });
-
-    if (insertError) throw insertError;
-
-    // store referral used locally for analytics
-    if (referredByParam) localStorage.setItem('referral_used', referredByParam);
-
-    alert('Account created. Check your email to confirm. Redirecting to payment...');
-    window.location.href = 'mentorship-payment.html';
-  } catch (err) {
-    console.error('register error', err);
-    alert('Error: ' + (err.message || JSON.stringify(err)));
-    setBusy(false);
+    console.log('Inserting registration payload', payload);
+    const { data, error } = await supabase.from('registrations').insert([payload], { returning: 'representation' });
+    if (error) throw error;
+    return data && data[0];
   }
-}
 
-submitBtn.addEventListener('click', register);
+  // Try to sign up -> then ensure session exists -> then insert registration
+  async function runSignupFlow(fullName, email, phone, password) {
+    setBusy(true, 'Creating account...');
+    clearError();
+    try {
+      // 1) signUp
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name: fullName, phone } }
+      });
+      if (signUpError) {
+        // If email already exists or other error, throw
+        throw signUpError;
+      }
+      console.log('signUpData', signUpData);
+
+      // signUpData may include a session depending on supabase settings.
+      // Try to get current session/user
+      let { data: sessionData } = await supabase.auth.getSession();
+      let user = sessionData?.session?.user || null;
+
+      // If not authenticated yet, try signInWithPassword (handles auto-confirm disabled cases)
+      if (!user) {
+        try {
+          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password
+          });
+          if (signInError) {
+            // signIn failed - e.g. email confirmation required
+            console.warn('signInWithPassword failed:', signInError);
+          } else {
+            user = signInData?.data?.user || null;
+          }
+        } catch (siErr) {
+          console.warn('signInWithPassword threw', siErr);
+        }
+      }
+
+      // Re-fetch session/user in case
+      const { data: sessionAgain } = await supabase.auth.getSession();
+      user = user || sessionAgain?.session?.user || null;
+
+      if (!user) {
+        // Can't insert because not authenticated. guide user.
+        setBusy(false);
+        msgEl.textContent = 'Please confirm your signup link sent to your email (check spam). After confirmation come back to this page and login to complete payment.';
+        return;
+      }
+
+      // Now user authenticated — insert registration
+      const referral_code = generateReferralCode(fullName);
+      const inserted = await insertRegistration(user.id, fullName, email, phone, referral_code);
+      console.log('Inserted registration', inserted);
+
+      // Save referral used for analytics
+      if (referredByParam) localStorage.setItem('referral_used', referredByParam);
+
+      // redirect to payment page
+      alert('Account created and registered. Redirecting to payment page...');
+      window.location.href = 'mentorship-payment.html';
+    } catch (err) {
+      console.error('register error', err);
+      showError(err.message || JSON.stringify(err));
+      setBusy(false);
+    }
+  }
+
+  submitBtn.addEventListener('click', async () => {
+    clearError();
+    const fullName = (fullNameEl.value || '').trim();
+    const email = (emailEl.value || '').trim().toLowerCase();
+    const phone = (phoneEl.value || '').trim();
+    const password = (passwordEl.value || '');
+
+    if (!fullName || !email || !phone || password.length < 6) {
+      showError('Please fill all fields correctly (password 6+ chars).');
+      return;
+    }
+    setBusy(true);
+    await runSignupFlow(fullName, email, phone, password);
+  });
+
+})();
 </script>
 </body>
 </html>
