@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Confirm Payment - Crown Trade Academy</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-
   <style>
     :root {
       --gold: #c8a97e;
@@ -138,72 +137,60 @@
   </div>
 
 <script>
-  // Initialize Supabase client properly
-  const client = supabase.createClient(
-    "https://omrsywvfdhzeokmfdrfh.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o"
-  );
-
-  // On load, verify user session or redirect
-  document.addEventListener("DOMContentLoaded", async () => {
-    const { data } = await client.auth.getSession();
-
-    if (!data.session) {
-      alert("You must be logged in to confirm payment.");
-      window.location.href = "mentorship-login.html";
-      return;
-    }
-  });
+  // Initialize Supabase client
+  const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
+  const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE'; // replace with your anon key
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // Copy payment details to clipboard
   function copyPayment() {
-    const text = document.getElementById("paymentDetails").innerText;
+    const text = document.getElementById('paymentDetails').innerText;
     navigator.clipboard.writeText(text)
-      .then(() => alert("Payment details copied!"))
-      .catch(() => alert("Failed to copy. Please copy manually."));
+      .then(() => alert('Payment details copied!'))
+      .catch(() => alert('Failed to copy. Please copy manually.'));
   }
 
-  // Handle payment submission
-  document.getElementById("submitPayment").addEventListener("click", async () => {
-    const mpesaCode = document.getElementById("mpesaCode").value.trim();
-
+  // Submit payment handler
+  document.getElementById('submitPayment').addEventListener('click', async () => {
+    const mpesaCode = document.getElementById('mpesaCode').value.trim();
     if (!mpesaCode) {
-      alert("Please enter your MPESA code.");
+      alert('Please enter your MPESA code.');
       return;
     }
 
-    // Get user session again
-    const { data } = await client.auth.getSession();
-    if (!data.session) {
-      alert("Session expired. Please log in again.");
-      window.location.href = "mentorship-login.html";
+    // Check user session
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) {
+      alert('Session expired or not found. Please log in again.');
+      window.location.href = 'mentorship-login.html';
       return;
     }
 
     try {
-      const userId = data.session.user.id;
+      const userId = session.user.id;
 
-      const { error } = await client
-        .from("payments")
+      const { error } = await supabase
+        .from('payments')
         .insert([
           {
             user_id: userId,
             mpesa_code: mpesaCode,
-            status: "pending",
+            status: 'pending',
+            amount: 3500,  // fixed amount
             created_at: new Date().toISOString()
           }
         ]);
 
       if (error) throw error;
 
-      alert("Payment submitted successfully! We will verify and update your status shortly.");
-      window.location.href = "wait-for-approval.html";
-
+      alert('Payment submitted successfully! We will verify and update your status shortly.');
+      // Redirect or other post-submission logic here
     } catch (err) {
-      alert("Error submitting payment: " + err.message);
       console.error(err);
+      alert('Error submitting payment: ' + err.message);
     }
   });
 </script>
+
 </body>
 </html>
