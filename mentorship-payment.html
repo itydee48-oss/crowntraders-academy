@@ -53,7 +53,6 @@
       font-weight: 600;
       font-size: 1.1rem;
       color: var(--charcoal);
-      user-select: text;
     }
     .copy-container button {
       background: var(--gold);
@@ -89,11 +88,6 @@
       display: block;
       transition: border-color 0.3s ease;
     }
-    input[type="text"]:focus {
-      outline: none;
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(200,169,126,0.2);
-    }
     .btn {
       background: var(--gold);
       color: white;
@@ -108,13 +102,6 @@
       transition: background 0.3s ease;
       margin: 0 auto;
       display: block;
-    }
-    .btn:hover:not(:disabled) {
-      background: var(--gold-dark);
-    }
-    .btn:disabled {
-      background: #aaa;
-      cursor: not-allowed;
     }
   </style>
 
@@ -134,73 +121,61 @@
     <label for="mpesaCode">Enter Your MPESA Code:</label>
     <input id="mpesaCode" type="text" placeholder="Example: QJ47HJK89R" />
 
-    <button id="submitPayment" class="btn">Submit Payment</button>
+    <button id="submitPayment" class="btn">I've Completed the Payment</button>
   </div>
 
 <script>
-  // Initialize Supabase client
   const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
+  const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
   const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // Check if user logged in, else redirect
   document.addEventListener("DOMContentLoaded", async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      alert('You must be logged in to confirm payment.');
-      window.location.href = 'mentorship-login.html';
+      window.location.href = "mentorship-login.html";
     }
   });
 
-  // Copy payment details to clipboard
   function copyPayment() {
-    const text = document.getElementById('paymentDetails').innerText;
-    navigator.clipboard.writeText(text)
-      .then(() => alert('Payment details copied!'))
-      .catch(() => alert('Failed to copy. Please copy manually.'));
+    navigator.clipboard.writeText(
+      "Paybill: 522522 | Account: 5173352003212540"
+    );
+    alert("Payment details copied!");
   }
 
-  // Submit payment
   document.getElementById('submitPayment').addEventListener('click', async () => {
-    const mpesaCode = document.getElementById('mpesaCode').value.trim();
+    const mpesaCode = document.getElementById("mpesaCode").value.trim();
 
-    if (!mpesaCode) {
-      alert('Please enter your MPESA code.');
+    if (!mpesaCode) return alert("Enter your MPESA code.");
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      window.location.href = "mentorship-login.html";
       return;
     }
 
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    if (sessionError || !session) {
-      alert('Session expired. Please log in again.');
-      window.location.href = 'mentorship-login.html';
+    const userId = session.user.id;
+
+    const { error } = await supabase
+      .from("payments")
+      .insert([
+        {
+          user_id: userId,
+          mpesa_code: mpesaCode,
+          status: "pending",
+          created_at: new Date().toISOString(),
+        },
+      ]);
+
+    if (error) {
+      alert(error.message);
       return;
     }
 
-    try {
-      const userId = session.user.id;
-
-      const { error } = await supabase
-        .from('payments')
-        .insert([
-          {
-            user_id: userId,
-            mpesa_code: mpesaCode,
-            status: 'pending',
-            created_at: new Date().toISOString()
-          }
-        ]);
-
-      if (error) throw error;
-
-      alert('Payment submitted successfully! We will verify and update your status shortly.');
-      // Optionally redirect after success:
-      // window.location.href = 'mentorship-dashboard.html';
-
-    } catch (err) {
-      console.error(err);
-      alert('Error submitting payment: ' + err.message);
-    }
+    alert("Payment submitted. We'll verify and approve you shortly.");
+    window.location.href = "mentorship-waiting-approval.html";
   });
 </script>
+
 </body>
 </html>
