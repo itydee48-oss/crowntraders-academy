@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Confirm Payment - Crown Trade Academy</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payment | CrownTrade Academy</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -14,198 +14,215 @@
       --nude: #f9f6f2;
       --charcoal: #3a3a3a;
     }
+
     body {
       margin: 0;
-      background: linear-gradient(135deg, var(--nude), #e8dfd6);
       font-family: Montserrat, sans-serif;
-      min-height: 100vh;
+      background: linear-gradient(135deg, var(--nude), #e8dfd6);
       display: flex;
       align-items: center;
       justify-content: center;
+      min-height: 100vh;
       padding: 2rem;
     }
+
     .card {
       background: white;
-      padding: 3rem;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-      max-width: 520px;
+      padding: 2.5rem;
+      border-radius: 18px;
       width: 100%;
+      max-width: 530px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+      border: 2px solid rgba(200,169,126,0.25);
       text-align: center;
-      border: 2px solid rgba(200,169,126,0.2);
     }
+
     h1 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 2.3rem;
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
       color: var(--gold-dark);
-      margin-bottom: 1rem;
     }
-    p {
-      color: #555;
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .copy-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1rem;
-      gap: 10px;
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: var(--charcoal);
-      user-select: text;
-    }
-    .copy-container button {
-      background: var(--gold);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 0.6rem 1rem;
-      cursor: pointer;
+
+    .section-title {
       font-weight: 700;
-      transition: background 0.3s ease;
-    }
-    .copy-container button:hover {
-      background: var(--gold-dark);
-    }
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1.05rem;
       color: var(--charcoal);
-      text-align: left;
-      max-width: 350px;
-      margin-left: auto;
-      margin-right: auto;
+      text-transform: uppercase;
     }
-    input[type="text"] {
-      width: 100%;
-      max-width: 350px;
+
+    .payment-box {
+      background: #faf6f1;
       padding: 1rem;
       border-radius: 12px;
-      border: 1px solid #ddd;
-      font-size: 1rem;
-      margin: 0 auto 1.5rem;
-      display: block;
-      transition: border-color 0.3s ease;
+      margin-bottom: 1.3rem;
+      border: 1px solid #e0d5c4;
     }
-    input[type="text"]:focus {
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0.5rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      border-bottom: 1px solid #e6e6e6;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .copy-btn {
+      padding: 0.3rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      background: var(--gold);
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--gold-dark);
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 1.5rem;
+      margin-bottom: 0.4rem;
+      text-align: left;
+      max-width: 330px;
+      margin-left: auto;
+      margin-right: auto;
+      color: var(--charcoal);
+    }
+
+    input {
+      width: 100%;
+      max-width: 330px;
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      margin-bottom: 1.4rem;
       outline: none;
+      transition: border 0.3s;
+    }
+
+    input:focus {
       border-color: var(--gold);
       box-shadow: 0 0 0 3px rgba(200,169,126,0.2);
     }
+
     .btn {
+      width: 100%;
+      max-width: 330px;
+      padding: 1rem;
       background: var(--gold);
       color: white;
-      padding: 1rem 2rem;
       border: none;
       border-radius: 50px;
+      font-size: 1.1rem;
       font-weight: 700;
-      font-size: 1.2rem;
       cursor: pointer;
-      width: 100%;
-      max-width: 350px;
-      transition: background 0.3s ease;
-      margin: 0 auto;
-      display: block;
+      transition: background 0.3s;
     }
-    .btn:hover:not(:disabled) {
+
+    .btn:hover {
       background: var(--gold-dark);
-    }
-    .btn:disabled {
-      background: #aaa;
-      cursor: not-allowed;
     }
   </style>
 
-  <!-- Supabase Client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
 
-  <div class="card">
-    <h1>Confirm Your Payment</h1>
-    <p>Make payment to:</p>
+<div class="card">
 
-    <div class="copy-container">
-      <span id="paymentDetails">Paybill: 522522 | Account: 5173352003212540</span>
-      <button onclick="copyPayment()">Copy</button>
+  <h1>Complete Your Payment</h1>
+
+  <div class="section-title">Payment Details</div>
+
+  <div class="payment-box">
+
+    <div class="detail-row">
+      <span>Paybill:</span>
+      <span>522522</span>
+      <button class="copy-btn" onclick="copyText('522522')">Copy</button>
     </div>
 
-    <label for="mpesaCode">Enter Your MPESA Code:</label>
-    <input id="mpesaCode" type="text" placeholder="Example: QJ47HJK89R" />
+    <div class="detail-row">
+      <span>Account No:</span>
+      <span>5173352003212540</span>
+      <button class="copy-btn" onclick="copyText('5173352003212540')">Copy</button>
+    </div>
 
-    <button id="submitPayment" class="btn">Submit Payment</button>
   </div>
 
+
+  <label>Enter Your M-Pesa Code:</label>
+  <input id="mpesaCode" placeholder="Example: QJ47HJK89R" />
+
+  <button class="btn" id="submitPayment">Submit Payment</button>
+
+</div>
+
 <script>
+  // Correct Supabase Initialization
+  const supabase = supabase.createClient(
+    "https://omrsywvfdhzeokmfdrfh.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o"
+  );
 
-  // Initialize Supabase client PROPERLY
-  const SUPABASE_URL = "https://omrsywvfdhzeokmfdrfh.supabase.co";
-  const SUPABASE_ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o";
-
-  const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // Redirect if not logged in
-  document.addEventListener("DOMContentLoaded", async () => {
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
-      alert("Login required");
-      window.location.href = "mentorship-login.html";
-    }
-  });
-
-  // Copy payment details
-  function copyPayment() {
-    const text = document.getElementById("paymentDetails").innerText;
+  // Copy function
+  function copyText(text) {
     navigator.clipboard.writeText(text)
-      .then(() => alert("Payment details copied!"))
+      .then(() => alert("Copied: " + text))
       .catch(() => alert("Failed to copy"));
   }
 
-  // Submit payment
+  // Payment submission
   document.getElementById("submitPayment").addEventListener("click", async () => {
+
     const mpesaCode = document.getElementById("mpesaCode").value.trim();
 
-    if (!mpesaCode) {
-      alert("Please enter your MPESA code.");
-      return;
-    }
+    if (!mpesaCode) return alert("Please enter your M-Pesa code.");
 
     const { data: sessionData } = await supabase.auth.getSession();
+
     if (!sessionData.session) {
-      alert("Session expired. Please log in again.");
+      alert("You must be logged in.");
       window.location.href = "mentorship-login.html";
       return;
     }
 
     const userId = sessionData.session.user.id;
 
-    // Payment amount (set your fee here)
-    const paymentAmount = 500; // change to your real fee
-
-    const { error } = await supabase.from("payments").insert([
-      {
-        user_id: userId,
-        mpesa_code: mpesaCode,
-        amount: paymentAmount,
-        status: "pending",
-        created_at: new Date().toISOString()
-      }
-    ]);
+    const { error } = await supabase.from("payments").insert([{
+      user_id: userId,
+      mpesa_code: mpesaCode,
+      amount: 500,
+      status: "pending"
+    }]);
 
     if (error) {
       alert("Error submitting payment: " + error.message);
-      console.error(error);
       return;
     }
 
-    alert("Payment submitted! We will verify soon.");
+    alert("Payment submitted! We will verify shortly.");
     window.location.href = "mentorship-waiting-approval.html";
   });
+
 </script>
+
 </body>
 </html>
