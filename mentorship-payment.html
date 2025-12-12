@@ -1,143 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mentorship Payment</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Confirm Payment - Crown Trade Academy</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background: #f8f8f8;
-        }
+  <style>
+    :root{--gold:#c8a97e;--gold-dark:#b89463;--nude:#f9f6f2;--charcoal:#3a3a3a}
+    body{margin:0;background:linear-gradient(135deg,var(--nude),#e8dfd6);font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:var(--charcoal);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+    .card{background:white;padding:2.6rem;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.12);max-width:600px;width:100%;border:2px solid rgba(200,169,126,.18)}
+    h1{font-family:'Cormorant Garamond',serif;font-size:2.2rem;margin:0 0 8px;color:var(--gold-dark)}
+    p.lead{color:#555;margin-top:6px;margin-bottom:18px}
+    .payment-grid{display:grid;grid-template-columns:1fr 120px;gap:10px;align-items:center;margin-bottom:14px}
+    .payment-box{background:#faf6f1;border-radius:12px;padding:12px;border:1px solid #eee}
+    .detail-label{font-size:0.95rem;color:#666}
+    .detail-value{font-weight:700;font-size:1.05rem;color:var(--charcoal);margin-top:6px}
+    .copy-btn{background:var(--gold);border:none;color:white;padding:8px 10px;border-radius:10px;cursor:pointer;font-weight:700}
+    .copy-btn:active{transform:translateY(1px)}
+    label{display:block;font-weight:600;margin-top:14px;margin-bottom:6px;text-align:left}
+    input[type="text"]{width:100%;padding:12px;border-radius:12px;border:1px solid #ddd;font-size:1rem;max-width:360px;display:block;margin-bottom:12px}
+    .btn{background:var(--gold);color:white;border:none;padding:12px;border-radius:50px;font-size:1.05rem;font-weight:800;cursor:pointer;width:100%;max-width:360px;margin-top:8px}
+    .btn:disabled{background:#bbb;cursor:not-allowed}
+    .small{font-size:0.9rem;color:#666;margin-top:8px}
+    @media (max-width:520px){ .payment-grid{grid-template-columns:1fr 100px} .card{padding:1.6rem} }
+  </style>
 
-        .container {
-            max-width: 450px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.15);
-        }
-
-        .copy-box {
-            background: #fafafa;
-            border: 1px solid #ddd;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .copy-btn {
-            background: black;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #0a84ff;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            margin-top: 15px;
-            cursor: pointer;
-            font-size: 17px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            margin-bottom: 15px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
-    </style>
+  <!-- Supabase UMD: using the v2 UMD package -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
-
 <body>
-    <div class="container">
-        <h2>Complete Your Payment</h2>
 
-        <p>Use the payment details below and submit your M-PESA confirmation code.</p>
+  <div class="card" id="card">
+    <h1>Complete Your Payment</h1>
+    <p class="lead">Send <strong>KSh 3,500</strong> via M-Pesa to the details below, then paste your MPESA transaction code and submit.</p>
 
-        <!-- PAYBILL -->
-        <div class="copy-box">
-            <span id="paybill">Paybill: <b>522522</b></span>
-            <button class="copy-btn" onclick="copyText('522522')">Copy</button>
-        </div>
+    <div class="payment-grid">
+      <div class="payment-box">
+        <div class="detail-label">Paybill</div>
+        <div class="detail-value" id="paybillValue">522522</div>
+      </div>
+      <div style="display:flex;justify-content:center;">
+        <button class="copy-btn" onclick="copyText(document.getElementById('paybillValue').innerText)">Copy</button>
+      </div>
 
-        <!-- ACCOUNT NUMBER -->
-        <div class="copy-box">
-            <span id="accno">Account Number: <b>5173352003212540</b></span>
-            <button class="copy-btn" onclick="copyText('5173352003212540')">Copy</button>
-        </div>
-
-        <!-- INPUT -->
-        <label>Enter your M-PESA Code:</label>
-        <input id="mpesaInput" placeholder="e.g. QJF67W2B9Z" />
-
-        <button onclick="submitPayment()">I Have Completed Payment</button>
+      <div class="payment-box" style="grid-column:1 / span 1;">
+        <div class="detail-label">Account Number</div>
+        <div class="detail-value" id="accountValue">5173352003212540</div>
+      </div>
+      <div style="display:flex;justify-content:center;">
+        <button class="copy-btn" onclick="copyText(document.getElementById('accountValue').innerText)">Copy</button>
+      </div>
     </div>
 
-    <script>
-        // 💡 Initialize Supabase FIRST BEFORE ANYTHING ELSE
-        const supabase = Supabase.createClient(
-            "https://omrsywvfdhzeokmfdrfh.supabase.co",
-            "YOUR_PUBLIC_ANON_KEY"
-        );
+    <label for="mpesaCode">Enter your M-Pesa code (e.g. QJ23H7K91)</label>
+    <input id="mpesaCode" type="text" inputmode="text" autocomplete="off" placeholder="MPESA code">
 
-        // COPY FUNCTION
-        function copyText(text) {
-            navigator.clipboard.writeText(text);
-            alert("Copied: " + text);
-        }
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <button id="submitPayment" class="btn">I've completed payment</button>
+      <div class="small">After submission you will be redirected to a waiting-for-approval page.</div>
+    </div>
+  </div>
 
-        // SUBMIT PAYMENT
-        async function submitPayment() {
-            const mpesa_code = document.getElementById("mpesaInput").value.trim();
+<script>
+/*
+  Robust Supabase initialization:
+  - Works whether the UMD exposes window.supabase or window.Supabase
+  - Ensures no "Supabase is not defined" or "cannot access before initialization"
+*/
+(function(){
+  const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
 
-            if (mpesa_code === "") {
-                alert("Please enter your M-PESA code.");
-                return;
-            }
+  // find a createClient function on possible globals
+  let createClientFn = null;
 
-            const { data: user } = await supabase.auth.getUser();
+  // window.Supabase (capital S) UMD exposes Supabase.createClient
+  if (window.Supabase && typeof window.Supabase.createClient === 'function') {
+    createClientFn = window.Supabase.createClient;
+  }
+  // older or alternative exposes window.supabase.createClient
+  else if (window.supabase && typeof window.supabase.createClient === 'function') {
+    createClientFn = window.supabase.createClient;
+  }
+  // sometimes the UMD exposed a global createClient (edge-case)
+  else if (typeof window.createClient === 'function') {
+    createClientFn = window.createClient;
+  }
 
-            if (!user || !user.user) {
-                alert("You must be logged in to continue.");
-                return;
-            }
+  if (!createClientFn) {
+    // missing lib - inform user and disable submit
+    alert('Supabase client library not found. Check your internet connection or the script tag.');
+    document.getElementById('submitPayment').disabled = true;
+    return;
+  }
 
-            const { data, error } = await supabase
-                .from("payments")
-                .insert({
-                    user_id: user.user.id,
-                    mpesa_code: mpesa_code,
-                    amount: 1500,          // <-- Add correct amount here
-                    status: "pending"
-                });
+  // create supabase client
+  const supabase = createClientFn.call(null, SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            if (error) {
-                console.error(error);
-                alert("Error submitting payment.");
-                return;
-            }
+  // Expose for debugging if needed (optional)
+  window._supabase_client = supabase;
 
-            window.location.href = "wait-for-approval.html";
-        }
-    </script>
+  // safe helper to get session
+  async function getSession() {
+    try {
+      const { data } = await supabase.auth.getSession();
+      return data?.session ?? null;
+    } catch(e) {
+      console.error('getSession error', e);
+      return null;
+    }
+  }
+
+  // Protect page: only allow access if user session exists.
+  // If your flow auto-logs in after registration this will pass.
+  document.addEventListener('DOMContentLoaded', async () => {
+    const session = await getSession();
+    if (!session) {
+      // Not logged in — redirect to login/register
+      // NOTE: if your registration auto-logs-in, this won't trigger.
+      // You can change redirect target if needed.
+      // We don't throw console errors: just redirect politely.
+      window.location.href = 'mentorship-login.html';
+      return;
+    }
+  });
+
+  // copy
+  window.copyText = function(text){
+    navigator.clipboard.writeText(text).then(() => {
+      // small non-blocking feedback (alert is okay but not ideal)
+      // Use a short inline message for less intrusiveness
+      const prev = document.getElementById('__copy_notice');
+      if (prev) prev.remove();
+      const notice = document.createElement('div');
+      notice.id = '__copy_notice';
+      notice.textContent = 'Copied: ' + text;
+      notice.style.position = 'fixed';
+      notice.style.right = '18px';
+      notice.style.bottom = '18px';
+      notice.style.background = 'rgba(0,0,0,0.8)';
+      notice.style.color = 'white';
+      notice.style.padding = '8px 12px';
+      notice.style.borderRadius = '8px';
+      notice.style.fontSize = '0.9rem';
+      document.body.appendChild(notice);
+      setTimeout(()=> notice.remove(), 1800);
+    }).catch(()=> alert('Copy failed — please copy manually.'));
+  };
+
+  // submission
+  document.getElementById('submitPayment').addEventListener('click', async function(){
+    const btn = this;
+    const codeEl = document.getElementById('mpesaCode');
+    const mpesa_code = (codeEl.value || '').trim();
+
+    if (!mpesa_code) {
+      alert('Please enter your MPESA code.');
+      codeEl.focus();
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    try {
+      const session = await getSession();
+      if (!session) {
+        alert('Session expired — please log in again.');
+        window.location.href = 'mentorship-login.html';
+        return;
+      }
+
+      const userId = session.user.id;
+
+      // fixed amount for mentorship; change if variable
+      const amount = 3500;
+
+      const { error } = await supabase
+        .from('payments')
+        .insert([{
+          user_id: userId,
+          mpesa_code: mpesa_code,
+          amount: amount,
+          status: 'pending',
+          created_at: new Date().toISOString()
+        }]);
+
+      if (error) {
+        console.error('Insert payment error', error);
+        alert('Error submitting payment: ' + (error.message || JSON.stringify(error)));
+        btn.disabled = false;
+        btn.textContent = "I've completed payment";
+        return;
+      }
+
+      // success
+      // show small success then redirect to waiting page
+      const successEl = document.createElement('div');
+      successEl.textContent = 'Payment submitted — awaiting verification';
+      successEl.style.position = 'fixed';
+      successEl.style.left = '50%';
+      successEl.style.transform = 'translateX(-50%)';
+      successEl.style.bottom = '18px';
+      successEl.style.background = 'rgba(40, 120, 40, .95)';
+      successEl.style.color = 'white';
+      successEl.style.padding = '8px 12px';
+      successEl.style.borderRadius = '8px';
+      document.body.appendChild(successEl);
+      setTimeout(()=> successEl.remove(), 1800);
+
+      // redirect to waiting page
+      setTimeout(()=> window.location.href = 'mentorship-waiting-approval.html', 900);
+
+    } catch (err) {
+      console.error(err);
+      alert('Unexpected error: ' + (err.message || err));
+      btn.disabled = false;
+      btn.textContent = "I've completed payment";
+    }
+  });
+
+})();
+</script>
 </body>
 </html>
