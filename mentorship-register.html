@@ -9,68 +9,50 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <style>
-    :root {
-      --gold: #c8a97e;
-      --gold-dark: #b89463;
-      --nude: #f9f6f2;
-      --charcoal: #3a3a3a;
-    }
-
     body {
-      margin: 0;
-      background: linear-gradient(135deg, var(--nude), #e8dfd6);
-      font-family: 'Montserrat', sans-serif;
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f9f6f2; /* Nude theme background */
+      color: #3a3a3a;      /* Charcoal text */
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 2rem;
-      color: var(--charcoal);
+      min-height: 100vh;
     }
 
     .card {
       background: white;
-      padding: 3rem;
+      padding: 30px;
       border-radius: 20px;
-      max-width: 420px;
       width: 100%;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-      border: 2px solid rgba(200,169,126,0.2);
-      text-align: center;
+      max-width: 420px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
     }
 
     h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.3rem;
-      color: var(--gold-dark);
-      margin-bottom: 2rem;
+      text-align: center;
+      margin-bottom: 20px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      color: #b89463; /* Gold-dark */
     }
 
     input, button {
       width: 100%;
-      padding: 1rem;
-      margin-bottom: 1.2rem;
+      padding: 12px;
+      margin-bottom: 14px;
       border-radius: 12px;
-      border: 1px solid #ddd;
+      border: 1px solid #ccc;
       font-size: 1rem;
       font-family: 'Montserrat', sans-serif;
     }
 
     input {
-      background: var(--nude);
-      color: var(--charcoal);
-      border: 1px solid rgba(200,169,126,0.5);
-      transition: border-color 0.3s ease;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(200,169,126,0.2);
+      background: #f9f6f2;
+      color: #3a3a3a;
     }
 
     button {
-      background: var(--gold);
+      background: #c8a97e; /* Gold */
       color: white;
       font-weight: 700;
       cursor: pointer;
@@ -78,13 +60,13 @@
       transition: background 0.3s ease;
     }
 
-    button:hover:not(:disabled) {
-      background: var(--gold-dark);
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
-    button:disabled {
-      background: #aaa;
-      cursor: not-allowed;
+    button:hover:not(:disabled) {
+      background: #b89463; /* Gold-dark */
     }
   </style>
 </head>
@@ -102,7 +84,6 @@
   </div>
 
   <script>
-    // 🔒 SUPABASE INIT (ONCE, TOP LEVEL)
     const SUPABASE_URL = "https://omrsywvfdhzeokmfdrfh.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o";
 
@@ -128,33 +109,31 @@
       }
 
       try {
-        // 1️⃣ TRY SIGN UP
+        // 1. Try to sign up user
         const { error: signUpError } = await supabase.auth.signUp({
           email,
           password
         });
 
-        // 2️⃣ IF USER EXISTS → SIGN IN
+        // 2. If user already exists, sign them in
         if (signUpError) {
           if (signUpError.message.includes("already registered")) {
-            const { error: signInError } =
-              await supabase.auth.signInWithPassword({
-                email,
-                password
-              });
-
+            const { error: signInError } = await supabase.auth.signInWithPassword({
+              email,
+              password
+            });
             if (signInError) throw signInError;
           } else {
             throw signUpError;
           }
         }
 
-        // 3️⃣ GET AUTH USER
+        // 3. Get authenticated user
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) throw new Error("Authentication failed");
 
-        // 4️⃣ INSERT REGISTRATION ROW (SAFE)
-        const { error: insertError } = await supabase
+        // 4. Insert registration record and get inserted row including its ID
+        const { data: registration, error: insertError } = await supabase
           .from("registrations")
           .insert({
             auth_id: user.id,
@@ -163,17 +142,29 @@
             phone: phone,
             client_type: "mentorship",
             payment_status: "unpaid"
-          });
+          })
+          .select()
+          .single();
 
-        if (
-          insertError &&
-          !insertError.message.includes("duplicate")
-        ) {
-          throw insertError;
+        if (insertError) {
+          // if error is not duplicate, throw
+          if (!insertError.message.includes("duplicate")) throw insertError;
+          // else, fetch existing registration for this user
+          const { data: existingReg, error: fetchError } = await supabase
+            .from("registrations")
+            .select()
+            .eq("auth_id", user.id)
+            .single();
+
+          if (fetchError) throw fetchError;
+
+          // redirect with existing reg id
+          window.location.href = `mentorship-payment.html?rid=${existingReg.id}`;
+          return;
         }
 
-        // 5️⃣ REDIRECT
-        window.location.href = "mentorship-payment.html";
+        // 5. Redirect to payment page with registration id in URL
+        window.location.href = `mentorship-payment.html?rid=${registration.id}`;
 
       } catch (err) {
         console.error(err);
