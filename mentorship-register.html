@@ -2,138 +2,157 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mentorship Registration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Supabase UMD (MUST be before your script) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <style>
     body {
-      margin: 0;
-      font-family: Montserrat, sans-serif;
-      background: #f9f6f2;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       min-height: 100vh;
     }
+
     .card {
-      background: #fff;
-      padding: 2.5rem;
-      border-radius: 18px;
+      background: #020617;
+      padding: 30px;
+      border-radius: 12px;
+      width: 100%;
       max-width: 420px;
-      width: 100%;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
     }
-    h1 {
+
+    h2 {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 20px;
     }
-    input {
+
+    input, button {
       width: 100%;
-      padding: 0.9rem;
-      margin-bottom: 1rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    button {
-      width: 100%;
-      padding: 1rem;
+      padding: 12px;
+      margin-bottom: 14px;
+      border-radius: 8px;
       border: none;
-      border-radius: 30px;
-      background: #c8a97e;
+    }
+
+    input {
+      background: #020617;
       color: white;
-      font-weight: 600;
+      border: 1px solid #334155;
+    }
+
+    button {
+      background: #22c55e;
+      color: black;
+      font-weight: bold;
       cursor: pointer;
     }
+
     button:disabled {
-      background: #aaa;
+      opacity: 0.6;
+      cursor: not-allowed;
     }
   </style>
 </head>
-
 <body>
 
-<div class="card">
-  <h1>Register</h1>
+  <div class="card">
+    <h2>Mentorship Registration</h2>
 
-  <input id="full_name" type="text" placeholder="Full name" required>
-  <input id="email" type="email" placeholder="Email" required>
-  <input id="phone" type="tel" placeholder="Phone (07XXXXXXXX)" required>
-  <input id="password" type="password" placeholder="Password" required>
+    <input id="full_name" type="text" placeholder="Full Name" required />
+    <input id="email" type="email" placeholder="Email" required />
+    <input id="phone" type="text" placeholder="Phone Number" required />
+    <input id="password" type="password" placeholder="Password" required />
 
-  <button id="registerBtn">Create Account</button>
-</div>
+    <button id="registerBtn">Continue</button>
+  </div>
 
-<!-- LOAD SUPABASE FIRST -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    // 🔒 SUPABASE INIT (ONCE, TOP LEVEL)
+    const SUPABASE_URL = "https://omrsywvfdhzeokmfdrfh.supabase.co";
+    const SUPABASE_ANON_KEY = "PASTE_YOUR_ANON_KEY_HERE";
 
-<script>
-/* ===============================
-   SUPABASE INIT (DO NOT TOUCH)
-================================ */
-const SUPABASE_URL = "https://omrsywvfdhzeokmfdrfh.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o";
+    const supabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
 
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+    const btn = document.getElementById("registerBtn");
 
-/* ===============================
-   REGISTRATION FLOW
-================================ */
-const btn = document.getElementById("registerBtn");
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
 
-btn.addEventListener("click", async () => {
-  btn.disabled = true;
+      const full_name = document.getElementById("full_name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const password = document.getElementById("password").value;
 
-  const full_name = document.getElementById("full_name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const password = document.getElementById("password").value.trim();
+      if (!full_name || !email || !phone || !password) {
+        alert("All fields are required");
+        btn.disabled = false;
+        return;
+      }
 
-  if (!full_name || !email || !phone || !password) {
-    alert("Please fill all fields.");
-    btn.disabled = false;
-    return;
-  }
+      try {
+        // 1️⃣ TRY SIGN UP
+        const { error: signUpError } = await supabase.auth.signUp({
+          email,
+          password
+        });
 
-  try {
-    // 1️⃣ AUTH SIGN UP
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password
+        // 2️⃣ IF USER EXISTS → SIGN IN
+        if (signUpError) {
+          if (signUpError.message.includes("already registered")) {
+            const { error: signInError } =
+              await supabase.auth.signInWithPassword({
+                email,
+                password
+              });
+
+            if (signInError) throw signInError;
+          } else {
+            throw signUpError;
+          }
+        }
+
+        // 3️⃣ GET AUTH USER
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("Authentication failed");
+
+        // 4️⃣ INSERT REGISTRATION ROW (SAFE)
+        const { error: insertError } = await supabase
+          .from("registrations")
+          .insert({
+            auth_id: user.id,
+            full_name: full_name,
+            email: email,
+            phone: phone,
+            client_type: "mentorship",
+            payment_status: "unpaid"
+          });
+
+        if (
+          insertError &&
+          !insertError.message.includes("duplicate")
+        ) {
+          throw insertError;
+        }
+
+        // 5️⃣ REDIRECT
+        window.location.href = "mentorship-payment.html";
+
+      } catch (err) {
+        console.error(err);
+        alert(err.message);
+        btn.disabled = false;
+      }
     });
-
-    if (error) throw error;
-
-    // 2️⃣ INSERT REGISTRATION ROW
-    const { error: regError } = await supabase
-      .from("registrations")
-      .insert({
-        auth_id: data.user.id,
-        full_name,
-        email,
-        phone,
-        client_type: "mentorship",
-        payment_status: "unpaid",
-        created_at: new Date().toISOString()
-      });
-
-    if (regError) throw regError;
-
-    // 3️⃣ REDIRECT TO PAYMENT
-    window.location.href = "mentorship-payment.html";
-
-  } catch (err) {
-    alert(err.message);
-    console.error(err);
-    btn.disabled = false;
-  }
-});
-</script>
+  </script>
 
 </body>
 </html>
