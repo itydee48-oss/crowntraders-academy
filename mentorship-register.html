@@ -58,19 +58,20 @@
 <div class="card">
   <h1>Register</h1>
 
-  <input id="full_name" type="text" placeholder="Full name">
-  <input id="email" type="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
+  <input id="full_name" type="text" placeholder="Full name" required>
+  <input id="email" type="email" placeholder="Email" required>
+  <input id="phone" type="tel" placeholder="Phone (07XXXXXXXX)" required>
+  <input id="password" type="password" placeholder="Password" required>
 
   <button id="registerBtn">Create Account</button>
 </div>
 
-<!-- ✅ LOAD SUPABASE FIRST -->
+<!-- LOAD SUPABASE FIRST -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <script>
-/* ================================
-   1️⃣ INITIALIZE SUPABASE — FIRST
+/* ===============================
+   SUPABASE INIT (DO NOT TOUCH)
 ================================ */
 const SUPABASE_URL = "https://omrsywvfdhzeokmfdrfh.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o";
@@ -80,8 +81,8 @@ const supabase = window.supabase.createClient(
   SUPABASE_ANON_KEY
 );
 
-/* ================================
-   2️⃣ REGISTRATION LOGIC
+/* ===============================
+   REGISTRATION FLOW
 ================================ */
 const btn = document.getElementById("registerBtn");
 
@@ -90,16 +91,17 @@ btn.addEventListener("click", async () => {
 
   const full_name = document.getElementById("full_name").value.trim();
   const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  if (!full_name || !email || !password) {
-    alert("Fill all fields");
+  if (!full_name || !email || !phone || !password) {
+    alert("Please fill all fields.");
     btn.disabled = false;
     return;
   }
 
   try {
-    // AUTH SIGNUP
+    // 1️⃣ AUTH SIGN UP
     const { data, error } = await supabase.auth.signUp({
       email,
       password
@@ -107,19 +109,22 @@ btn.addEventListener("click", async () => {
 
     if (error) throw error;
 
-    // INSERT REGISTRATION ROW
+    // 2️⃣ INSERT REGISTRATION ROW
     const { error: regError } = await supabase
       .from("registrations")
       .insert({
         auth_id: data.user.id,
         full_name,
         email,
-        payment_status: "unpaid"
+        phone,
+        client_type: "mentorship",
+        payment_status: "unpaid",
+        created_at: new Date().toISOString()
       });
 
     if (regError) throw regError;
 
-    // REDIRECT TO PAYMENT PAGE
+    // 3️⃣ REDIRECT TO PAYMENT
     window.location.href = "mentorship-payment.html";
 
   } catch (err) {
