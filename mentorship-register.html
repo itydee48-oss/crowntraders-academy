@@ -9,52 +9,81 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <style>
+    :root {
+      --gold: #c8a97e;
+      --gold-dark: #b89463;
+      --nude: #f9f6f2;
+      --charcoal: #3a3a3a;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
+      margin: 0;
+      background: linear-gradient(135deg, var(--nude), #e8dfd6);
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      padding: 2rem;
+      color: var(--charcoal);
     }
 
     .card {
-      background: #020617;
-      padding: 30px;
-      border-radius: 12px;
-      width: 100%;
+      background: white;
+      padding: 3rem;
+      border-radius: 20px;
       max-width: 420px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+      border: 2px solid rgba(200,169,126,0.2);
+      text-align: center;
     }
 
     h2 {
-      text-align: center;
-      margin-bottom: 20px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.3rem;
+      color: var(--gold-dark);
+      margin-bottom: 2rem;
     }
 
     input, button {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 14px;
-      border-radius: 8px;
-      border: none;
+      padding: 1rem;
+      margin-bottom: 1.2rem;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      font-family: 'Montserrat', sans-serif;
     }
 
     input {
-      background: #020617;
-      color: white;
-      border: 1px solid #334155;
+      background: var(--nude);
+      color: var(--charcoal);
+      border: 1px solid rgba(200,169,126,0.5);
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(200,169,126,0.2);
     }
 
     button {
-      background: #22c55e;
-      color: black;
-      font-weight: bold;
+      background: var(--gold);
+      color: white;
+      font-weight: 700;
       cursor: pointer;
+      border: none;
+      transition: background 0.3s ease;
+    }
+
+    button:hover:not(:disabled) {
+      background: var(--gold-dark);
     }
 
     button:disabled {
-      opacity: 0.6;
+      background: #aaa;
       cursor: not-allowed;
     }
   </style>
