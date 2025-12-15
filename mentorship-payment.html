@@ -10,12 +10,13 @@
 <style>
 body{
   margin:0;
-  font-family:Montserrat;
+  font-family: Montserrat, sans-serif;
   background:#f6f4f1;
   display:flex;
   justify-content:center;
   align-items:center;
   min-height:100vh;
+  color: #3a3a3a;
 }
 .card{
   background:white;
@@ -24,8 +25,19 @@ body{
   max-width:420px;
   border-radius:18px;
   box-shadow:0 15px 40px rgba(0,0,0,.12);
+  text-align: center;
 }
-h2{text-align:center;margin-bottom:1.5rem}
+h2{
+  margin-bottom: 0.5rem;
+  color: #b89463;
+  font-weight: 700;
+}
+.price {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #c8a97e;
+  margin-bottom: 2rem;
+}
 .box{
   background:#f9f6f2;
   padding:1rem;
@@ -34,6 +46,8 @@ h2{text-align:center;margin-bottom:1.5rem}
   display:flex;
   justify-content:space-between;
   align-items:center;
+  color: #3a3a3a;
+  font-weight: 600;
 }
 button.copy{
   border:none;
@@ -42,6 +56,11 @@ button.copy{
   padding:.4rem .7rem;
   border-radius:8px;
   cursor:pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+button.copy:hover {
+  background: #b89463;
 }
 input{
   width:100%;
@@ -49,6 +68,7 @@ input{
   border-radius:10px;
   border:1px solid #ccc;
   margin-top:1rem;
+  font-size: 1rem;
 }
 .main-btn{
   margin-top:1.5rem;
@@ -58,8 +78,13 @@ input{
   border-radius:40px;
   background:#c8a97e;
   color:white;
-  font-weight:600;
+  font-weight:700;
   cursor:pointer;
+  font-size: 1.1rem;
+  transition: background 0.3s ease;
+}
+.main-btn:hover {
+  background:#b89463;
 }
 </style>
 
@@ -70,6 +95,7 @@ input{
 
 <div class="card">
   <h2>Make Payment</h2>
+  <div class="price">Amount: <strong>KES 3,500</strong></div>
 
   <div class="box">
     <span>Paybill: <strong>522522</strong></span>
@@ -103,6 +129,11 @@ const registrationId = params.get('rid');
 async function submitPayment(){
   const mpesa = document.getElementById('mpesa').value.trim();
   if(!mpesa) return alert("Enter MPESA code");
+
+  if(!registrationId) {
+    alert("Registration ID missing.");
+    return;
+  }
 
   const { error } = await supabase
     .from('payments')
