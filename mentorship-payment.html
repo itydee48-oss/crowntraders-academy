@@ -1,141 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Confirm Payment</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Confirm Payment - Crown Trade Academy</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
-<style>
-body{
-  margin:0;
-  font-family:Montserrat, sans-serif;
-  background:#f6f4f1;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
-}
-.card{
-  background:white;
-  padding:2.5rem;
-  width:100%;
-  max-width:420px;
-  border-radius:18px;
-  box-shadow:0 15px 40px rgba(0,0,0,.12);
-}
-h2{text-align:center;margin-bottom:1.5rem;color:#b89463;}
-.box{
-  background:#f9f6f2;
-  padding:1rem;
-  border-radius:12px;
-  margin-bottom:1rem;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-button.copy{
-  border:none;
-  background:#c8a97e;
-  color:white;
-  padding:.4rem .7rem;
-  border-radius:8px;
-  cursor:pointer;
-}
-input{
-  width:100%;
-  padding:.9rem;
-  border-radius:10px;
-  border:1px solid #ccc;
-  margin-top:1rem;
-  font-family: Montserrat, sans-serif;
-}
-.main-btn{
-  margin-top:1.5rem;
-  width:100%;
-  padding:1rem;
-  border:none;
-  border-radius:40px;
-  background:#c8a97e;
-  color:white;
-  font-weight:600;
-  cursor:pointer;
-  font-family: Montserrat, sans-serif;
-}
-</style>
+  <style>
+    :root {
+      --gold: #c8a97e;
+      --gold-dark: #b89463;
+      --nude: #f9f6f2;
+      --charcoal: #3a3a3a;
+    }
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: var(--nude);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .card {
+      background: white;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 18px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 1.5rem;
+      color: var(--gold-dark);
+      font-weight: 600;
+    }
+    .box {
+      background: #f9f6f2;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+    button.copy {
+      border: none;
+      background: var(--gold);
+      color: white;
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.3s ease;
+    }
+    button.copy:hover {
+      background: var(--gold-dark);
+    }
+    input {
+      width: 100%;
+      padding: 0.9rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+    .main-btn {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 40px;
+      background: var(--gold);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background 0.3s ease;
+    }
+    .main-btn:hover {
+      background: var(--gold-dark);
+    }
+    .price {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--gold-dark);
+    }
+  </style>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 
 <body>
 
-<div class="card">
-  <h2>Make Payment</h2>
+  <div class="card">
+    <h2>Make Payment</h2>
 
-  <div class="box">
-    <span>Paybill: <strong>522522</strong></span>
-    <button class="copy" onclick="copyText('522522')">Copy</button>
+    <div class="price">Amount to Pay: <strong>KSh 3,500</strong></div>
+
+    <div class="box">
+      <span>Paybill:</span>
+      <span><strong>522522</strong></span>
+      <button class="copy" onclick="copyText('522522')">Copy</button>
+    </div>
+
+    <div class="box">
+      <span>Account:</span>
+      <span><strong>5173352003212540</strong></span>
+      <button class="copy" onclick="copyText('5173352003212540')">Copy</button>
+    </div>
+
+    <input id="mpesa" placeholder="Enter MPESA Code" />
+
+    <button class="main-btn" onclick="submitPayment()">I’ve Paid</button>
   </div>
-
-  <div class="box">
-    <span>Account: <strong>5173352003212540</strong></span>
-    <button class="copy" onclick="copyText('5173352003212540')">Copy</button>
-  </div>
-  
-  <div class="box" style="justify-content:center; font-weight:600; font-size:1.2rem; color:#b89463;">
-    Amount to pay: KES 3500
-  </div>
-
-  <input id="mpesa" placeholder="Enter MPESA Code" />
-
-  <button class="main-btn" onclick="submitPayment()">I’ve Paid</button>
-</div>
 
 <script>
-const supabase = window.supabase.createClient(
-  'https://omrsywvfdhzeokmfdrfh.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o'
-);
+  // Initialize Supabase client
+  const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o'; // Replace with your anon key
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-function copyText(text){
-  navigator.clipboard.writeText(text);
-  alert("Copied");
-}
-
-// Get registration ID from URL query parameter
-const params = new URLSearchParams(window.location.search);
-const registrationId = params.get('rid');
-
-if(!registrationId) {
-  alert("Registration ID missing. Please register first.");
-  window.location.href = "mentorship-register.html";
-}
-
-async function submitPayment(){
-  const mpesa = document.getElementById('mpesa').value.trim();
-  if(!mpesa) {
-    alert("Enter MPESA code");
-    return;
+  function copyText(text){
+    navigator.clipboard.writeText(text)
+      .then(() => alert("Copied!"))
+      .catch(() => alert("Failed to copy. Please copy manually."));
   }
 
-  const { error } = await supabase
-    .from('payments')
-    .insert({
-      registration_id: registrationId,
-      mpesa_code: mpesa,
-      amount: 3500
-    });
+  async function submitPayment(){
+    const mpesa = document.getElementById('mpesa').value.trim();
+    if(!mpesa) {
+      alert("Please enter your MPESA code.");
+      return;
+    }
 
-  if(error){
-    console.error(error);
-    alert("Error submitting payment");
-    return;
+    // Get auth session to find user_id
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if(sessionError || !session){
+      alert("Session expired or not found. Please login again.");
+      window.location.href = "mentorship-login.html";
+      return;
+    }
+
+    const userId = session.user.id;
+
+    // Get registration ID from URL query parameter
+    const params = new URLSearchParams(window.location.search);
+    const registrationId = params.get('rid');
+    if(!registrationId){
+      alert("Registration ID missing.");
+      return;
+    }
+
+    // Insert payment record
+    const { error } = await supabase
+      .from('payments')
+      .insert([{
+        registration_id: registrationId,
+        user_id: userId,
+        mpesa_code: mpesa,
+        amount: 3500,
+        status: 'pending',
+        created_at: new Date().toISOString()
+      }], { returning: 'representation' });
+
+    if(error){
+      console.error(error);
+      alert("Error submitting payment: " + error.message);
+      return;
+    }
+
+    alert("Payment submitted successfully. Please wait for approval.");
+    window.location.href = "wait-approval.html";
   }
-
-  alert("Payment submitted. Await approval.");
-  window.location.href = "wait-approval.html";
-}
 </script>
 
 </body>
