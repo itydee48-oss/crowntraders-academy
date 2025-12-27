@@ -5,7 +5,7 @@
   <title>Mentorship Registration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Supabase UMD (MUST be before your script) -->
+  <!-- Load Supabase only once -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <style>
@@ -84,13 +84,10 @@
   </div>
 
   <script>
+    // Initialize supabase client once
     const SUPABASE_URL = "https://omrsywvfdhzeokmfdrfh.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o";
-
-    const supabase = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const btn = document.getElementById("registerBtn");
 
@@ -109,62 +106,51 @@
       }
 
       try {
-        // 1. Try to sign up user
-        const { error: signUpError } = await supabase.auth.signUp({
+        // Attempt sign up
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email,
           password
         });
 
-        // 2. If user already exists, sign them in
+        // If user already registered, try sign in
+        let user;
         if (signUpError) {
           if (signUpError.message.includes("already registered")) {
-            const { error: signInError } = await supabase.auth.signInWithPassword({
+            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
               email,
               password
             });
             if (signInError) throw signInError;
+            user = signInData.user;
           } else {
             throw signUpError;
           }
+        } else {
+          user = signUpData.user;
         }
 
-        // 3. Get authenticated user
-        const { data: { user } } = await supabase.auth.getUser();
         if (!user) throw new Error("Authentication failed");
 
-        // 4. Insert registration record and get inserted row including its ID
-        const { data: registration, error: insertError } = await supabase
+        // Insert or upsert registration
+        // Using upsert avoids duplicate insert errors
+        const { data: registration, error: regError } = await supabase
           .from("registrations")
-          .insert({
+          .upsert({
             auth_id: user.id,
-            full_name: full_name,
-            email: email,
-            phone: phone,
+            full_name,
+            email,
+            phone,
             client_type: "mentorship",
             payment_status: "unpaid"
-          })
-          .select()
-          .single();
+          }, { onConflict: "auth_id", returning: "representation" });
 
-        if (insertError) {
-          // if error is not duplicate, throw
-          if (!insertError.message.includes("duplicate")) throw insertError;
-          // else, fetch existing registration for this user
-          const { data: existingReg, error: fetchError } = await supabase
-            .from("registrations")
-            .select()
-            .eq("auth_id", user.id)
-            .single();
+        if (regError) throw regError;
 
-          if (fetchError) throw fetchError;
+        // registration is an array of rows, take first
+        const regId = registration[0].id;
 
-          // redirect with existing reg id
-          window.location.href = `mentorship-payment.html?rid=${existingReg.id}`;
-          return;
-        }
-
-        // 5. Redirect to payment page with registration id in URL
-        window.location.href = `mentorship-payment.html?rid=${registration.id}`;
+        // Redirect with registration id
+        window.location.href = `mentorship-payment.html?rid=${regId}`;
 
       } catch (err) {
         console.error(err);
@@ -176,3 +162,4 @@
 
 </body>
 </html>
+
