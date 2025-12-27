@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Confirm Payment - Crown Trade Academy</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Supabase UMD -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <style>
     :root {
@@ -17,7 +20,7 @@
 
     body {
       margin: 0;
-      font-family: 'Montserrat', sans-serif;
+      font-family: Montserrat, sans-serif;
       background: var(--nude);
       display: flex;
       justify-content: center;
@@ -32,21 +35,20 @@
       width: 100%;
       max-width: 420px;
       border-radius: 18px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+      box-shadow: 0 15px 40px rgba(0,0,0,.12);
       text-align: center;
     }
 
     h2 {
-      margin-bottom: 1.2rem;
       color: var(--gold-dark);
-      font-weight: 600;
+      margin-bottom: 1rem;
     }
 
     .price {
       font-size: 1.3rem;
       font-weight: 700;
-      margin-bottom: 1.5rem;
       color: var(--gold-dark);
+      margin-bottom: 1.5rem;
     }
 
     .box {
@@ -61,11 +63,11 @@
       color: var(--charcoal);
     }
 
-    button.copy {
-      border: none;
+    .copy {
       background: var(--gold);
+      border: none;
       color: white;
-      padding: 0.4rem 0.7rem;
+      padding: 0.4rem 0.8rem;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
@@ -89,84 +91,106 @@
       background: var(--gold);
       color: white;
       font-weight: 600;
+      font-size: 1.05rem;
       cursor: pointer;
-      font-size: 1.1rem;
+    }
+
+    .main-btn:hover {
+      background: var(--gold-dark);
     }
   </style>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 
 <body>
 
-<div class="card">
-  <h2>Make Payment</h2>
+  <div class="card">
+    <h2>Make Payment</h2>
 
-  <div class="price">Amount: KSh 3,500</div>
+    <div class="price">Amount: KES 3,500</div>
 
-  <div class="box">
-    <span>Paybill</span>
-    <strong>522522</strong>
-    <button class="copy" onclick="copyText('522522')">Copy</button>
+    <div class="box">
+      <span>Paybill</span>
+      <span>522522</span>
+      <button class="copy" data-copy="522522">Copy</button>
+    </div>
+
+    <div class="box">
+      <span>Account</span>
+      <span>5173352003212540</span>
+      <button class="copy" data-copy="5173352003212540">Copy</button>
+    </div>
+
+    <input id="mpesa" placeholder="Enter MPESA Code" />
+    <button class="main-btn" id="payBtn">I’ve Paid</button>
   </div>
-
-  <div class="box">
-    <span>Account</span>
-    <strong>5173352003212540</strong>
-    <button class="copy" onclick="copyText('5173352003212540')">Copy</button>
-  </div>
-
-  <input id="mpesa" placeholder="Enter MPESA Code" />
-  <button class="main-btn" onclick="submitPayment()">I’ve Paid</button>
-</div>
 
 <script>
-  const SUPABASE_URL = "https://omrsywvfdhzeokmfdrfh.supabase.co";
-  const SUPABASE_ANON_KEY = "YOUR_ANON_KEY_HERE";
+/* ===============================
+   SUPABASE INITIALIZATION (ONCE)
+================================ */
+const SUPABASE_URL = "https://omrsywvfdhzeokmfdrfh.supabase.co";
+const SUPABASE_ANON_KEY = "REPLACE_WITH_YOUR_ANON_KEY";
 
-  const supabaseClient = supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
-  function copyText(text) {
-    navigator.clipboard.writeText(text);
+/* ===============================
+   COPY BUTTONS
+================================ */
+document.querySelectorAll(".copy").forEach(btn => {
+  btn.addEventListener("click", () => {
+    navigator.clipboard.writeText(btn.dataset.copy);
     alert("Copied");
+  });
+});
+
+/* ===============================
+   SUBMIT PAYMENT
+================================ */
+document.getElementById("payBtn").addEventListener("click", submitPayment);
+
+async function submitPayment() {
+  const mpesa = document.getElementById("mpesa").value.trim();
+  if (!mpesa) {
+    alert("Enter MPESA code");
+    return;
   }
 
-  async function submitPayment() {
-    const mpesa = document.getElementById("mpesa").value.trim();
-    if (!mpesa) {
-      alert("Please enter MPESA code");
-      return;
-    }
+  // Get registration ID from URL
+  const params = new URLSearchParams(window.location.search);
+  const registrationId = params.get("rid");
 
-    const params = new URLSearchParams(window.location.search);
-    const registrationId = params.get("rid");
-
-    if (!registrationId) {
-      alert("Registration ID missing");
-      return;
-    }
-
-    const result = await supabaseClient
-      .from("payments")
-      .insert({
-        registration_id: registrationId,
-        mpesa_code: mpesa,
-        amount: 3500,
-        status: "pending"
-      });
-
-    if (result.error) {
-      console.error(result.error);
-      alert(result.error.message);
-      return;
-    }
-
-    alert("Payment submitted successfully. Await approval.");
-    window.location.href = "wait-approval.html";
+  if (!registrationId) {
+    alert("Registration ID missing.");
+    return;
   }
+
+  // Get session (optional but safe)
+  const { data: { session } } = await supabaseClient.auth.getSession();
+
+  const userId = session?.user?.id || null;
+
+  const { error } = await supabaseClient
+    .from("payments")
+    .insert({
+      registration_id: registrationId,
+      user_id: userId,
+      mpesa_code: mpesa,
+      amount: 3500,
+      status: "pending"
+    });
+
+  if (error) {
+    console.error(error);
+    alert("Payment submission failed");
+    return;
+  }
+
+  alert("Payment submitted. Await approval.");
+  window.location.href = "wait-approval.html";
+}
 </script>
 
 </body>
