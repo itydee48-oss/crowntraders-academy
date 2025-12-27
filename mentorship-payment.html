@@ -1,196 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Confirm Payment - Crown Trade Academy</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-
-  <!-- Supabase UMD -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
+  <meta charset="UTF-8" />
+  <title>Mentorship Payment</title>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <style>
-    :root {
-      --gold: #c8a97e;
-      --gold-dark: #b89463;
-      --nude: #f9f6f2;
-      --charcoal: #3a3a3a;
-    }
-
     body {
-      margin: 0;
-      font-family: Montserrat, sans-serif;
-      background: var(--nude);
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
       display: flex;
+      align-items: center;
       justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 2rem;
+      height: 100vh;
     }
-
     .card {
-      background: white;
-      padding: 2.5rem;
-      width: 100%;
-      max-width: 420px;
-      border-radius: 18px;
-      box-shadow: 0 15px 40px rgba(0,0,0,.12);
-      text-align: center;
-    }
-
-    h2 {
-      color: var(--gold-dark);
-      margin-bottom: 1rem;
-    }
-
-    .price {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--gold-dark);
-      margin-bottom: 1.5rem;
-    }
-
-    .box {
-      background: var(--nude);
-      padding: 1rem;
-      border-radius: 12px;
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
-      color: var(--charcoal);
-    }
-
-    .copy {
-      background: var(--gold);
-      border: none;
-      color: white;
-      padding: 0.4rem 0.8rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    input {
-      width: 100%;
-      padding: 0.9rem;
+      background: #020617;
+      padding: 24px;
       border-radius: 10px;
-      border: 1px solid #ccc;
-      margin-top: 1rem;
-      font-size: 1rem;
+      width: 360px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,.5);
     }
-
-    .main-btn {
-      margin-top: 1.5rem;
+    button {
+      margin-top: 16px;
       width: 100%;
-      padding: 1rem;
+      padding: 12px;
+      background: #22c55e;
       border: none;
-      border-radius: 40px;
-      background: var(--gold);
-      color: white;
-      font-weight: 600;
-      font-size: 1.05rem;
+      border-radius: 6px;
+      font-weight: bold;
       cursor: pointer;
     }
-
-    .main-btn:hover {
-      background: var(--gold-dark);
+    .error {
+      color: #f87171;
+      margin-top: 12px;
     }
   </style>
 </head>
-
 <body>
 
-  <div class="card">
-    <h2>Make Payment</h2>
-
-    <div class="price">Amount: KES 3,500</div>
-
-    <div class="box">
-      <span>Paybill</span>
-      <span>522522</span>
-      <button class="copy" data-copy="522522">Copy</button>
-    </div>
-
-    <div class="box">
-      <span>Account</span>
-      <span>5173352003212540</span>
-      <button class="copy" data-copy="5173352003212540">Copy</button>
-    </div>
-
-    <input id="mpesa" placeholder="Enter MPESA Code" />
-    <button class="main-btn" id="payBtn">I’ve Paid</button>
-  </div>
+<div class="card">
+  <h2>Mentorship Payment</h2>
+  <p id="status">Checking registration…</p>
+  <button id="payBtn" disabled>Proceed to Pay</button>
+  <p class="error" id="error"></p>
+</div>
 
 <script>
-/* ===============================
-   SUPABASE INITIALIZATION (ONCE)
-================================ */
-const SUPABASE_URL = "https://omrsywvfdhzeokmfdrfh.supabase.co";
-const SUPABASE_ANON_KEY = "REPLACE_WITH_YOUR_ANON_KEY";
+  const supabase = window.supabase.createClient(
+    "YOUR_SUPABASE_URL",
+    "YOUR_SUPABASE_ANON_KEY"
+  );
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+  const registrationId = sessionStorage.getItem("registration_id");
 
-/* ===============================
-   COPY BUTTONS
-================================ */
-document.querySelectorAll(".copy").forEach(btn => {
-  btn.addEventListener("click", () => {
-    navigator.clipboard.writeText(btn.dataset.copy);
-    alert("Copied");
-  });
-});
+  const statusEl = document.getElementById("status");
+  const errorEl = document.getElementById("error");
+  const payBtn = document.getElementById("payBtn");
 
-/* ===============================
-   SUBMIT PAYMENT
-================================ */
-document.getElementById("payBtn").addEventListener("click", submitPayment);
+  async function init() {
+    // 🚨 HARD BLOCK — payment page should NEVER load without this
+    if (!registrationId) {
+      window.location.replace("mentorship-login.html");
+      return;
+    }
 
-async function submitPayment() {
-  const mpesa = document.getElementById("mpesa").value.trim();
-  if (!mpesa) {
-    alert("Enter MPESA code");
-    return;
+    const { data, error } = await supabase
+      .from("registrations")
+      .select("id, status")
+      .eq("id", registrationId)
+      .single();
+
+    if (error || !data) {
+      sessionStorage.removeItem("registration_id");
+      window.location.replace("mentorship-login.html");
+      return;
+    }
+
+    statusEl.textContent = "Registration verified";
+    payBtn.disabled = false;
+
+    payBtn.onclick = async () => {
+      payBtn.disabled = true;
+      statusEl.textContent = "Processing…";
+
+      const { error: updateError } = await supabase
+        .from("registrations")
+        .update({ payment_status: "initiated" })
+        .eq("id", registrationId);
+
+      if (updateError) {
+        errorEl.textContent = "Payment initialization failed";
+        payBtn.disabled = false;
+        return;
+      }
+
+      // 👉 Replace with real payment gateway redirect
+      alert("Redirect to payment gateway here");
+    };
   }
 
-  // Get registration ID from URL
-  const params = new URLSearchParams(window.location.search);
-  const registrationId = params.get("rid");
-
-  if (!registrationId) {
-    alert("Registration ID missing.");
-    return;
-  }
-
-  // Get session (optional but safe)
-  const { data: { session } } = await supabaseClient.auth.getSession();
-
-  const userId = session?.user?.id || null;
-
-  const { error } = await supabaseClient
-    .from("payments")
-    .insert({
-      registration_id: registrationId,
-      user_id: userId,
-      mpesa_code: mpesa,
-      amount: 3500,
-      status: "pending"
-    });
-
-  if (error) {
-    console.error(error);
-    alert("Payment submission failed");
-    return;
-  }
-
-  alert("Payment submitted. Await approval.");
-  window.location.href = "wait-approval.html";
-}
+  init();
 </script>
 
 </body>
