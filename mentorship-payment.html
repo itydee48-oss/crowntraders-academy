@@ -144,17 +144,15 @@
       return;
     }
 
-    // ✅ Get session
-    const { data: { session }, error: sessionError } =
-      await supabaseClient.auth.getSession();
+    const { error } = await supabaseClient
+  .from('payments')
+  .insert({
+    registration_id: registrationId,
+    mpesa_code: mpesa,
+    amount: 3500,
+    status: 'pending'
+  });
 
-    if (sessionError || !session) {
-      alert("Session expired. Please login again.");
-      window.location.href = "mentorship-login.html";
-      return;
-    }
-
-    const userId = session.user.id;
 
     // ✅ Get registration ID from URL
     const params = new URLSearchParams(window.location.search);
