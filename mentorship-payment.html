@@ -122,64 +122,69 @@
   </div>
 
 <script>
-  // Initialize Supabase client
+  // ✅ Supabase init (SAFE)
   const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o'; // Replace with your anon key
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE';
 
-  function copyText(text){
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+  function copyText(text) {
     navigator.clipboard.writeText(text)
       .then(() => alert("Copied!"))
-      .catch(() => alert("Failed to copy. Please copy manually."));
+      .catch(() => alert("Copy failed"));
   }
 
-  async function submitPayment(){
+  async function submitPayment() {
     const mpesa = document.getElementById('mpesa').value.trim();
-    if(!mpesa) {
-      alert("Please enter your MPESA code.");
+    if (!mpesa) {
+      alert("Please enter MPESA code");
       return;
     }
 
-    // Get auth session to find user_id
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    if(sessionError || !session){
-      alert("Session expired or not found. Please login again.");
+    // ✅ Get session
+    const { data: { session }, error: sessionError } =
+      await supabaseClient.auth.getSession();
+
+    if (sessionError || !session) {
+      alert("Session expired. Please login again.");
       window.location.href = "mentorship-login.html";
       return;
     }
 
     const userId = session.user.id;
 
-    // Get registration ID from URL query parameter
+    // ✅ Get registration ID from URL
     const params = new URLSearchParams(window.location.search);
     const registrationId = params.get('rid');
-    if(!registrationId){
+
+    if (!registrationId) {
       alert("Registration ID missing.");
       return;
     }
 
-    // Insert payment record
-    const { error } = await supabase
+    // ✅ Insert payment
+    const { error } = await supabaseClient
       .from('payments')
-      .insert([{
+      .insert({
         registration_id: registrationId,
         user_id: userId,
         mpesa_code: mpesa,
         amount: 3500,
-        status: 'pending',
-        created_at: new Date().toISOString()
-      }], { returning: 'representation' });
+        status: 'pending'
+      });
 
-    if(error){
+    if (error) {
       console.error(error);
-      alert("Error submitting payment: " + error.message);
+      alert("Payment error: " + error.message);
       return;
     }
 
-    alert("Payment submitted successfully. Please wait for approval.");
+    alert("Payment submitted. Await approval.");
     window.location.href = "wait-approval.html";
   }
 </script>
-
 </body>
 </html>
