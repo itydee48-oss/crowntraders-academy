@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Information - Crown Trade Academy</title>
+  <title>Payment Instructions - Crown Trade Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -19,7 +19,6 @@
       --charcoal: #3A3A3A;
       --text-light: #7A7A7A;
       --success: #4CAF50;
-      --success-light: #E8F5E9;
       --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
@@ -196,7 +195,6 @@
     .process-step.active .step-icon {
       border-color: var(--gold);
       color: var(--gold);
-      background: var(--nude-light);
       box-shadow: 0 0 0 4px rgba(200, 169, 126, 0.1);
     }
 
@@ -216,10 +214,6 @@
 
     .process-step.active .step-label {
       color: var(--gold);
-    }
-
-    .process-step.completed .step-label {
-      color: var(--success);
     }
 
     /* Payment Details Section */
@@ -415,214 +409,6 @@
       color: var(--nude-light);
     }
 
-    /* Waiting for Approval Page */
-    .approval-page {
-      padding: 10rem 2rem 6rem;
-      min-height: 100vh;
-      background: linear-gradient(135deg, rgba(249, 246, 242, 0.9) 0%, rgba(232, 223, 214, 0.8) 100%);
-    }
-
-    .approval-container {
-      max-width: 800px;
-      margin: 0 auto;
-      background: var(--nude-light);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-      border: 1px solid var(--nude-medium);
-      padding: 4rem;
-      text-align: center;
-      position: relative;
-    }
-
-    .approval-icon {
-      font-size: 5rem;
-      color: var(--gold);
-      margin-bottom: 2rem;
-    }
-
-    .approval-title {
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .approval-message {
-      color: var(--text-light);
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .approval-timer {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      color: var(--gold);
-      margin-bottom: 2rem;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      background: var(--nude-medium);
-      margin: 2rem 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 0%;
-      background: var(--gold);
-      animation: progress 3s ease-in-out forwards;
-    }
-
-    @keyframes progress {
-      0% { width: 0%; }
-      100% { width: 100%; }
-    }
-
-    .approval-footer {
-      margin-top: 3rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--nude-medium);
-    }
-
-    .reference-number {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      color: var(--charcoal);
-    }
-
-    .reference-number span {
-      color: var(--gold);
-      font-weight: 700;
-      letter-spacing: 2px;
-    }
-
-    /* Mentorship Dashboard */
-    .dashboard-page {
-      padding: 10rem 2rem 6rem;
-      min-height: 100vh;
-      background: linear-gradient(135deg, rgba(249, 246, 242, 0.9) 0%, rgba(232, 223, 214, 0.8) 100%);
-    }
-
-    .dashboard-container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 3rem;
-    }
-
-    .welcome-message {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem;
-    }
-
-    .welcome-message span {
-      color: var(--gold);
-    }
-
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-    }
-
-    .dashboard-card {
-      background: var(--nude-light);
-      border: 1px solid var(--nude-medium);
-      padding: 2rem;
-      transition: var(--transition);
-    }
-
-    .dashboard-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.08);
-      border-color: var(--gold);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .card-header i {
-      font-size: 1.8rem;
-      color: var(--gold);
-    }
-
-    .card-header h3 {
-      font-size: 1.3rem;
-    }
-
-    .mentorship-progress {
-      margin-top: 2rem;
-    }
-
-    .progress-item {
-      margin-bottom: 1rem;
-    }
-
-    .progress-item-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
-    }
-
-    .progress-bar-bg {
-      width: 100%;
-      height: 4px;
-      background: var(--nude-medium);
-      border-radius: 2px;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: var(--gold);
-      border-radius: 2px;
-      width: 0%;
-    }
-
-    .session-list {
-      list-style: none;
-    }
-
-    .session-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.8rem 0;
-      border-bottom: 1px solid var(--nude-medium);
-    }
-
-    .session-item:last-child {
-      border-bottom: none;
-    }
-
-    .session-date {
-      font-size: 0.9rem;
-      color: var(--text-light);
-    }
-
-    .session-tag {
-      background: var(--gold);
-      color: var(--nude-light);
-      padding: 0.2rem 0.8rem;
-      font-size: 0.8rem;
-      border-radius: 0;
-    }
-
     /* Animations */
     @keyframes fadeInUp {
       from {
@@ -651,8 +437,7 @@
         gap: 1.5rem;
       }
       
-      .payment-container,
-      .approval-container {
+      .payment-container {
         padding: 2rem 1.5rem;
       }
       
@@ -683,12 +468,6 @@
         flex-direction: column;
         gap: 2rem;
       }
-      
-      .dashboard-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 1rem;
-      }
     }
   </style>
 </head>
@@ -708,7 +487,7 @@
   </header>
 
   <!-- Payment Information Page -->
-  <div id="payment-page" class="payment-page">
+  <div class="payment-page">
     <div class="payment-container fade-in">
       
       <!-- Process Flow Indicator -->
@@ -833,155 +612,8 @@
     </div>
   </div>
 
-  <!-- Waiting for Approval Page (Initially Hidden) -->
-  <div id="approval-page" class="approval-page" style="display: none;">
-    <div class="approval-container fade-in">
-      <i class="fas fa-clock approval-icon"></i>
-      <h2 class="approval-title">Payment Received</h2>
-      <p class="approval-message">
-        Thank you for your payment. Your proof of payment has been submitted successfully and is now pending approval.
-      </p>
-      
-      <div class="approval-timer">
-        <i class="fas fa-circle-notch fa-spin" style="margin-right: 0.5rem;"></i>
-        Estimated approval time: <strong>5-10 minutes</strong>
-      </div>
-
-      <div class="progress-bar">
-        <div class="progress-fill"></div>
-      </div>
-
-      <div class="reference-number">
-        Reference: <span>CTA-2502-9876</span>
-      </div>
-
-      <div class="approval-footer">
-        <p style="color: var(--text-light); margin-bottom: 1rem;">
-          You will receive an email confirmation once your payment is approved.
-        </p>
-        <p style="font-size: 0.9rem;">
-          <i class="fas fa-envelope" style="color: var(--gold); margin-right: 0.5rem;"></i>
-          Check your email for updates
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mentorship Dashboard (Initially Hidden) -->
-  <div id="dashboard-page" class="dashboard-page" style="display: none;">
-    <div class="dashboard-container">
-      <div class="dashboard-header">
-        <h2 class="welcome-message">Welcome back, <span>Michael</span> 👋</h2>
-        <div style="display: flex; gap: 1rem;">
-          <span style="background: var(--success); color: white; padding: 0.5rem 1.5rem;">Active Member</span>
-        </div>
-      </div>
-
-      <div class="dashboard-grid">
-        <!-- Progress Card -->
-        <div class="dashboard-card">
-          <div class="card-header">
-            <i class="fas fa-chart-line"></i>
-            <h3>Your Progress</h3>
-          </div>
-          <div class="mentorship-progress">
-            <div class="progress-item">
-              <div class="progress-item-header">
-                <span>Mentorship Program</span>
-                <span>45%</span>
-              </div>
-              <div class="progress-bar-bg">
-                <div class="progress-bar-fill" style="width: 45%;"></div>
-              </div>
-            </div>
-            <div class="progress-item">
-              <div class="progress-item-header">
-                <span>Module 1: Foundations</span>
-                <span>100%</span>
-              </div>
-              <div class="progress-bar-bg">
-                <div class="progress-bar-fill" style="width: 100%;"></div>
-              </div>
-            </div>
-            <div class="progress-item">
-              <div class="progress-item-header">
-                <span>Module 2: Technical Analysis</span>
-                <span>60%</span>
-              </div>
-              <div class="progress-bar-bg">
-                <div class="progress-bar-fill" style="width: 60%;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Upcoming Sessions -->
-        <div class="dashboard-card">
-          <div class="card-header">
-            <i class="fas fa-calendar-alt"></i>
-            <h3>Upcoming Sessions</h3>
-          </div>
-          <ul class="session-list">
-            <li class="session-item">
-              <div>
-                <div style="font-weight: 600;">Live Market Analysis</div>
-                <div class="session-date">Today, 3:00 PM EAT</div>
-              </div>
-              <span class="session-tag">Join</span>
-            </li>
-            <li class="session-item">
-              <div>
-                <div style="font-weight: 600;">Advanced Strategies</div>
-                <div class="session-date">Tomorrow, 10:00 AM EAT</div>
-              </div>
-              <span class="session-tag">Upcoming</span>
-            </li>
-            <li class="session-item">
-              <div>
-                <div style="font-weight: 600;">One-on-One Mentorship</div>
-                <div class="session-date">Feb 15, 2:00 PM EAT</div>
-              </div>
-              <span class="session-tag">Scheduled</span>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Resources Card -->
-        <div class="dashboard-card">
-          <div class="card-header">
-            <i class="fas fa-book-open"></i>
-            <h3>Learning Resources</h3>
-          </div>
-          <div style="margin-bottom: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--nude-medium);">
-              <div>
-                <i class="fas fa-file-pdf" style="color: var(--gold); margin-right: 0.8rem;"></i>
-                Trading Psychology Guide
-              </div>
-              <i class="fas fa-download" style="color: var(--text-light); cursor: pointer;"></i>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--nude-medium);">
-              <div>
-                <i class="fas fa-video" style="color: var(--gold); margin-right: 0.8rem;"></i>
-                Technical Analysis Masterclass
-              </div>
-              <i class="fas fa-play" style="color: var(--text-light); cursor: pointer;"></i>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0;">
-              <div>
-                <i class="fas fa-chart-bar" style="color: var(--gold); margin-right: 0.8rem;"></i>
-                Market Indicators Cheat Sheet
-              </div>
-              <i class="fas fa-download" style="color: var(--text-light); cursor: pointer;"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Footer -->
-  <footer style="margin-top: 0;">
+  <footer>
     <div class="footer-content">
       <div class="footer-logo">Crown Trade Academy</div>
       <ul class="footer-links">
@@ -1015,9 +647,6 @@
     const fileInfo = document.getElementById('fileInfo');
     const fileName = document.getElementById('fileName');
     const submitBtn = document.getElementById('submitPayment');
-    const paymentPage = document.getElementById('payment-page');
-    const approvalPage = document.getElementById('approval-page');
-    const dashboardPage = document.getElementById('dashboard-page');
 
     // Click on upload area
     uploadArea.addEventListener('click', () => {
@@ -1078,32 +707,11 @@
       document.querySelectorAll('.process-step')[1].classList.add('active');
     }
 
-    // Submit payment proof
+    // Submit payment proof - Redirect to approval page
     submitBtn.addEventListener('click', () => {
-      // Hide payment page, show approval page
-      paymentPage.style.display = 'none';
-      approvalPage.style.display = 'block';
-      
-      // Scroll to top
-      window.scrollTo(0, 0);
-
-      // Simulate approval and redirect to dashboard after 5 seconds
-      setTimeout(() => {
-        approvalPage.style.display = 'none';
-        dashboardPage.style.display = 'block';
-        
-        // Update process steps to completed
-        const steps = document.querySelectorAll('.process-step');
-        steps.forEach(step => {
-          step.classList.remove('active');
-          step.classList.add('completed');
-        });
-      }, 5000);
+      // Redirect to the waiting for approval page
+      window.location.href = 'waiting-approval.html';
     });
-
-    // Initialize process steps
-    const steps = document.querySelectorAll('.process-step');
-    steps[0].classList.add('active');
   </script>
 </body>
 </html>
