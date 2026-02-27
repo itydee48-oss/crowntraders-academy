@@ -1,654 +1,1022 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Crown Trade — Mentor Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --nude: #F9F6F2;
-    --gold: #C8A97E;
-    --gold-dark: #B89463;
-    --charcoal: #2e2e2e;
-    --muted: #777;
-    --success: #10B981;
-    --danger: #EF4444;
-    --info: #3B82F6;
-    --light: #ffffff;
-  }
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background: var(--nude);
-    color: var(--charcoal);
-    min-height: 100vh;
-  }
-  .app {
-    display: flex;
-    flex-direction: row;
-    min-height: 100vh;
-  }
-  .sidebar {
-    width: 280px;
-    background: var(--light);
-    border-right: 1px solid rgba(200, 169, 126, 0.3);
-    padding: 32px 24px;
-    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-  }
-  .brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.8rem;
-    color: var(--gold-dark);
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .tagline {
-    font-size: 0.95rem;
-    color: var(--muted);
-    margin-bottom: 30px;
-  }
-  .nav button {
-    width: 100%;
-    padding: 16px 20px;
-    margin: 8px 0;
-    border-radius: 12px;
-    background: transparent;
-    color: var(--charcoal);
-    border: none;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .nav button:hover,
-  .nav button.active {
-    background: var(--gold);
-    color: white;
-  }
-  .btn {
-    background: var(--gold);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: 0.3s;
-    margin-top: auto;
-  }
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(200, 169, 126, 0.3);
-  }
-  .btn-success {
-    background: var(--success);
-  }
-  .btn-info {
-    background: var(--info);
-  }
-  .main {
-    flex: 1;
-    background: var(--light);
-    padding: 40px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-  }
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.4rem;
-    color: var(--gold-dark);
-    flex: 1;
-  }
-  .user-info {
-    text-align: right;
-    min-width: 150px;
-  }
-  .user-info div {
-    font-weight: 700;
-    font-size: 1.3rem;
-  }
-  .user-info small {
-    color: var(--muted);
-  }
-  .card {
-    background: white;
-    padding: 28px;
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
-    border: 1px solid #eee;
-    margin-bottom: 24px;
-  }
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  .card-title {
-    font-size: 1.5rem;
-    color: var(--gold-dark);
-    font-weight: 600;
-  }
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .table th,
-  .table td {
-    padding: 16px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
-  .table th {
-    background: var(--nude);
-    font-weight: 600;
-  }
-  .floating-btn {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 70px;
-    height: 70px;
-    background: var(--gold-dark);
-    color: white;
-    border-radius: 50%;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.2rem;
-    cursor: pointer;
-    z-index: 1000;
-  }
-  .chat-container {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 420px;
-    height: 600px;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
-    display: none;
-    flex-direction: column;
-    z-index: 9999;
-    border: 1px solid rgba(200, 169, 126, 0.4);
-    overflow: hidden;
-  }
-  .chat-header {
-    background: var(--gold-dark);
-    color: white;
-    padding: 20px;
-    font-weight: 600;
-    font-size: 1.2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .chat-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    background: #f8f7f5;
-  }
-  .message {
-    margin: 12px 0;
-    max-width: 80%;
-    padding: 14px 18px;
-    border-radius: 20px;
-    position: relative;
-    word-wrap: break-word;
-  }
-  .message.own {
-    background: var(--gold);
-    color: white;
-    align-self: flex-end;
-    margin-left: auto;
-    border-bottom-right-radius: 6px;
-  }
-  .message.other {
-    background: #f0f0f0;
-    color: var(--charcoal);
-    align-self: flex-start;
-    border-bottom-left-radius: 6px;
-  }
-  .message strong {
-    display: block;
-    margin-bottom: 4px;
-  }
-  .message time {
-    font-size: 0.75rem;
-    opacity: 0.8;
-    position: absolute;
-    bottom: 6px;
-    right: 12px;
-  }
-  .chat-input-area {
-    padding: 16px;
-    background: white;
-    border-top: 1px solid #eee;
-    display: flex;
-    gap: 12px;
-  }
-  .chat-input {
-    flex: 1;
-    padding: 14px 18px;
-    border-radius: 30px;
-    border: 1px solid #ddd;
-    font-size: 1rem;
-  }
-  .chat-input:focus {
-    outline: none;
-    border-color: var(--gold);
-  }
-  .send-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--gold-dark);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.4rem;
-  }
-  .notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 16px 32px;
-    border-radius: 12px;
-    color: white;
-    font-weight: 600;
-    z-index: 10000;
-    animation: slide 0.4s;
-  }
-  .notification.success {
-    background: var(--success);
-  }
-  .notification.danger {
-    background: var(--danger);
-  }
-  @keyframes slide {
-    from {
-      transform: translateY(-100px);
-      opacity: 0;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mentor Dashboard - Crown Trade Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --nude-light: #F9F6F2;
+      --nude-medium: #E8DFD6;
+      --nude-dark: #D4C8BC;
+      --nude-accent: #C4B5A3;
+      --gold: #C8A97E;
+      --gold-dark: #B89463;
+      --charcoal: #3A3A3A;
+      --charcoal-light: #5A5A5A;
+      --text-light: #7A7A7A;
+      --success: #4CAF50;
+      --success-light: #E8F5E9;
+      --warning: #FFC107;
+      --warning-light: #FFF8E1;
+      --danger: #F44336;
+      --danger-light: #FFEBEE;
+      --neutral: #9E9E9E;
+      --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
-    to {
-      transform: translateY(0);
-      opacity: 1;
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-  }
-  
-  /* Responsive */
-  @media (max-width: 900px) {
-    .app {
-      flex-direction: column;
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--nude-light);
+      color: var(--charcoal);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
-    .sidebar {
+
+    h1, h2, h3, h4, h5 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* Header */
+    .premium-header {
+      background-color: rgba(249, 246, 242, 0.95);
+      backdrop-filter: blur(10px);
+      position: fixed;
       width: 100%;
-      padding: 20px;
-      flex-direction: row;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(212, 200, 188, 0.3);
+      transition: var(--transition);
+    }
+
+    .premium-nav {
+      display: flex;
       justify-content: space-between;
       align-items: center;
-      overflow-x: auto;
-      box-shadow: none;
-      border-bottom: 1px solid rgba(200, 169, 126, 0.3);
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.2rem 2rem;
     }
-    .nav button {
-      flex: 1;
-      margin: 0 8px;
-      padding: 12px 10px;
-      font-size: 0.9rem;
-      border-radius: 8px;
-    }
-    .main {
-      padding: 20px;
-    }
-    .header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .user-info {
-      text-align: left;
-      width: 100%;
-      margin-top: 10px;
-    }
-    .chat-container {
-      width: 100%;
-      height: 400px;
-      bottom: 0;
-      right: 0;
-      border-radius: 0;
-    }
-    .floating-btn {
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
       font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      text-decoration: none;
+      letter-spacing: 1px;
+      position: relative;
     }
-  }
-</style>
+
+    .logo::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 30px;
+      height: 2px;
+      background-color: var(--gold);
+      transition: var(--transition);
+    }
+
+    .logo:hover::after {
+      width: 100%;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2.5rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--charcoal);
+      font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: var(--gold);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--nude-light);
+    }
+
+    /* Dashboard Container */
+    .dashboard-page {
+      padding: 8rem 2rem 4rem;
+      min-height: 100vh;
+      background: linear-gradient(135deg, rgba(249, 246, 242, 0.95) 0%, rgba(232, 223, 214, 0.9) 100%);
+    }
+
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ===== 1️⃣ IDENTITY LAYER ===== */
+    .identity-layer {
+      background: var(--nude-light);
+      border: 1px solid var(--nude-medium);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    }
+
+    .identity-layer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+    }
+
+    .identity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .identity-item {
+      position: relative;
+    }
+
+    .identity-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .identity-value {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .current-level {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+
+    .level-badge {
+      background: var(--gold);
+      color: var(--nude-light);
+      padding: 0.3rem 1rem;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    .discipline-score {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .score-bar {
+      width: 100px;
+      height: 4px;
+      background: var(--nude-medium);
+      margin-top: 0.5rem;
+    }
+
+    .score-fill {
+      height: 100%;
+      width: 78%;
+      background: var(--gold);
+    }
+
+    .growth-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .growth-up {
+      color: var(--success);
+    }
+
+    .growth-down {
+      color: var(--danger);
+    }
+
+    .growth-flat {
+      color: var(--neutral);
+    }
+
+    .mentor-status {
+      display: inline-block;
+      padding: 0.3rem 1rem;
+      background: var(--nude-medium);
+      color: var(--charcoal);
+      font-size: 0.9rem;
+    }
+
+    /* ===== 2️⃣ MISSION CONTROL ===== */
+    .mission-control {
+      background: var(--nude-light);
+      border: 1px solid var(--nude-medium);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      position: relative;
+      padding-bottom: 0.8rem;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background-color: var(--gold);
+    }
+
+    .critical-task {
+      background: linear-gradient(135deg, var(--nude-medium) 0%, var(--nude-dark) 100%);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--gold);
+    }
+
+    .critical-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .critical-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .critical-title {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    .critical-deadline {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .tasks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .task-card {
+      padding: 1.5rem;
+      border: 1px solid var(--nude-medium);
+      transition: var(--transition);
+    }
+
+    .task-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--gold);
+    }
+
+    .task-icon {
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .task-name {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .task-detail {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .task-deadline {
+      font-size: 0.8rem;
+      color: var(--gold);
+    }
+
+    .journal-prompt {
+      background: rgba(200, 169, 126, 0.05);
+      padding: 1.5rem;
+      margin-top: 2rem;
+      font-style: italic;
+      border-left: 2px solid var(--gold);
+    }
+
+    /* ===== 3️⃣ ACCOUNTABILITY PRESSURE LAYER ===== */
+    .accountability-layer {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .streak-card {
+      background: var(--nude-light);
+      border: 1px solid var(--nude-medium);
+      padding: 2rem;
+    }
+
+    .streak-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .streak-number {
+      font-size: 3rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .streak-label {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .missed-log {
+      background: var(--nude-light);
+      border: 1px solid var(--nude-medium);
+      padding: 2rem;
+    }
+
+    .missed-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid var(--nude-medium);
+    }
+
+    .missed-item:last-child {
+      border-bottom: none;
+    }
+
+    .alert-neutral {
+      background: var(--nude-medium);
+      padding: 1rem;
+      margin-top: 1rem;
+      color: var(--charcoal);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .alert-neutral i {
+      color: var(--neutral);
+    }
+
+    .mentor-review-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--success);
+    }
+
+    .performance-trend {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    /* ===== 4️⃣ MEASURABLE GROWTH PANEL ===== */
+    .growth-panel {
+      background: var(--nude-light);
+      border: 1px solid var(--nude-medium);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .growth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .skill-item {
+      text-align: center;
+    }
+
+    .skill-name {
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .skill-radar {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto;
+    }
+
+    .radar-circle {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: conic-gradient(var(--gold) 0deg 234deg, var(--nude-medium) 234deg 360deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radar-inner {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--nude-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: var(--gold);
+    }
+
+    .benchmark-comparison {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--nude-medium);
+    }
+
+    .percentile {
+      font-size: 2rem;
+      color: var(--gold);
+    }
+
+    /* ===== 5️⃣ FUTURE PROJECTION LAYER ===== */
+    .projection-layer {
+      background: var(--nude-light);
+      border: 1px solid var(--nude-medium);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .projection-layer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(200, 169, 126, 0.05));
+    }
+
+    .projection-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      margin-top: 2rem;
+    }
+
+    .projection-card {
+      text-align: center;
+      padding: 1.5rem;
+      border: 1px solid var(--nude-medium);
+      transition: var(--transition);
+    }
+
+    .projection-card:hover {
+      border-color: var(--gold);
+    }
+
+    .projection-days {
+      font-size: 0.9rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .projection-level {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      color: var(--charcoal);
+      margin-bottom: 0.5rem;
+    }
+
+    .projection-date {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .trajectory-forecast {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(200, 169, 126, 0.03);
+      border-left: 4px solid var(--gold);
+    }
+
+    /* Friction Elements */
+    .friction-lock {
+      background: var(--nude-medium);
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .silent-surveillance {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .layer-animate {
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .accountability-layer {
+        grid-template-columns: 1fr;
+      }
+      
+      .projection-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .premium-nav {
+        flex-direction: column;
+        padding: 1rem;
+      }
+      
+      .nav-links {
+        margin-top: 1rem;
+        gap: 1rem;
+      }
+      
+      .identity-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .critical-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .tasks-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .growth-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="floating-btn" onclick="toggleChat()">💬</div>
-
-<div class="chat-container" id="chatBox" aria-hidden="true">
-  <div class="chat-header">
-    <div>Crown Trade Community</div>
-    <button aria-label="Close chat" style="background:none;border:none;color:white;font-size:1.8rem;cursor:pointer;" onclick="toggleChat()">×</button>
-  </div>
-  <div class="chat-body" id="chatBody">
-    <div style="text-align:center;padding:60px;color:var(--muted);">Loading messages...</div>
-  </div>
-  <div class="chat-input-area">
-    <input
-      type="text"
-      class="chat-input"
-      id="chatInput"
-      placeholder="Send a message..."
-      onkeydown="if(event.key==='Enter') sendMessage()"
-      aria-label="Type a message"
-    />
-    <div class="send-btn" role="button" tabindex="0" aria-label="Send message" onclick="sendMessage()">➤</div>
-  </div>
-</div>
-
-<div class="app">
-  <aside class="sidebar" role="navigation" aria-label="Main navigation">
-    <div class="brand">Crown Trade</div>
-    <div class="tagline">Elite Mentorship Portal</div>
-    <nav class="nav" role="tablist" aria-label="Main Navigation">
-      <button data-tab="clients" class="active" role="tab" aria-selected="true">All Clients</button>
-      <button data-tab="resources" role="tab" aria-selected="false">Resources</button>
-      <button data-tab="lessons" role="tab" aria-selected="false">Lessons</button>
-      <button data-tab="sessions" role="tab" aria-selected="false">Sessions</button>
-      <button type="button" onclick="toggleChat()" style="margin-top:20px;">Community Chat</button>
+  <!-- Header -->
+  <header class="premium-header">
+    <nav class="premium-nav">
+      <a href="index.html" class="logo">Crown Trade Academy</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="mentorship-form.html">Mentorship</a></li>
+        <li><a href="referral-register.html">Referral Program</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+      <div class="user-badge">
+        <span>Michael Chen</span>
+        <div class="user-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+      </div>
     </nav>
-    <button class="btn btn-info" onclick="loadAll()">Refresh All</button>
-  </aside>
+  </header>
 
-  <main class="main" role="main">
-    <div class="header">
-      <div class="title">Mentor Command Center</div>
-      <div class="user-info">
-        <div>Elite Mentor</div>
-        <small>Active clients: <strong id="clientsCount">0</strong></small>
+  <!-- Dashboard Main -->
+  <div class="dashboard-page">
+    <div class="dashboard-container">
+
+      <!-- 1️⃣ IDENTITY LAYER -->
+      <div class="identity-layer layer-animate">
+        <div class="identity-grid">
+          <!-- Current Level -->
+          <div class="identity-item">
+            <div class="identity-label">Current Level</div>
+            <div class="identity-value">
+              <span class="current-level">Strategist</span>
+              <span class="level-badge">ELITE TRACK</span>
+            </div>
+            <div class="silent-surveillance">
+              <i class="fas fa-eye" style="color: var(--gold);"></i>
+              Mentor has reviewed your progression
+            </div>
+          </div>
+
+          <!-- Discipline Score -->
+          <div class="identity-item">
+            <div class="identity-label">Discipline Score</div>
+            <div class="identity-value">
+              <span class="discipline-score">78</span>
+              <div class="score-bar">
+                <div class="score-fill"></div>
+              </div>
+            </div>
+            <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">
+              <i class="fas fa-arrow-up" style="color: var(--success);"></i> +12% this month
+            </div>
+          </div>
+
+          <!-- Growth Velocity -->
+          <div class="identity-item">
+            <div class="identity-label">Growth Velocity</div>
+            <div class="growth-indicator">
+              <i class="fas fa-arrow-up growth-up"></i>
+              <span style="font-size: 1.5rem;">+23%</span>
+            </div>
+            <div class="silent-surveillance" style="margin-top: 0.5rem;">
+              <i class="fas fa-chart-line"></i>
+              Above cohort average by 8%
+            </div>
+          </div>
+
+          <!-- Mentor Status -->
+          <div class="identity-item">
+            <div class="identity-label">Mentor Assigned</div>
+            <div>
+              <span class="mentor-status">Jonathan Reeves</span>
+            </div>
+            <div class="mentor-review-status" style="margin-top: 0.5rem;">
+              <i class="fas fa-check-circle"></i>
+              Last review: 2 hours ago
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- 2️⃣ MISSION CONTROL -->
+      <div class="mission-control layer-animate" style="animation-delay: 0.1s;">
+        <div class="section-header">
+          <h2 class="section-title">Mission Control</h2>
+          <div class="friction-lock">
+            <i class="fas fa-lock"></i> Advanced modules locked (3 tasks remaining)
+          </div>
+        </div>
+
+        <!-- Critical Task (Highlighted) -->
+        <div class="critical-task">
+          <div class="critical-label">⚡ CRITICAL TASK</div>
+          <div class="critical-content">
+            <div>
+              <h3 class="critical-title">Advanced Technical Analysis Review</h3>
+              <div class="critical-deadline">Deadline: Today, 11:59 PM EAT</div>
+            </div>
+            <div style="background: var(--gold); color: var(--nude-light); padding: 0.5rem 1.5rem;">
+              Priority
+            </div>
+          </div>
+        </div>
+
+        <!-- Tasks Grid -->
+        <div class="tasks-grid">
+          <div class="task-card">
+            <div class="task-icon"><i class="fas fa-chart-bar"></i></div>
+            <div class="task-name">Practice Drill: Fibonacci Retracement</div>
+            <div class="task-detail">Complete 5 exercises with 80% accuracy</div>
+            <div class="task-deadline"><i class="far fa-clock"></i> 4 hours remaining</div>
+          </div>
+          <div class="task-card">
+            <div class="task-icon"><i class="fas fa-book-open"></i></div>
+            <div class="task-name">Reflection Journal</div>
+            <div class="task-detail">Document today's trading psychology insights</div>
+            <div class="task-deadline"><i class="far fa-clock"></i> Required before next module</div>
+          </div>
+          <div class="task-card">
+            <div class="task-icon"><i class="fas fa-video"></i></div>
+            <div class="task-name">Mentor Session Preparation</div>
+            <div class="task-detail">Review case studies for tomorrow's session</div>
+            <div class="task-deadline"><i class="far fa-clock"></i> Tomorrow, 10:00 AM</div>
+          </div>
+        </div>
+
+        <!-- Journal Prompt -->
+        <div class="journal-prompt">
+          <i class="fas fa-quote-left" style="color: var(--gold); margin-right: 0.5rem;"></i>
+          Reflection prompt: What pattern did you identify today that you previously overlooked?
+        </div>
+      </div>
+
+      <!-- 3️⃣ ACCOUNTABILITY PRESSURE LAYER -->
+      <div class="accountability-layer layer-animate" style="animation-delay: 0.2s;">
+        <!-- Streak Tracker -->
+        <div class="streak-card">
+          <div class="streak-header">
+            <span class="streak-label">Consistency Streak</span>
+            <span class="streak-number">23</span>
+          </div>
+          <div style="display: flex; gap: 0.2rem; margin-bottom: 2rem;">
+            <div style="width: 20px; height: 8px; background: var(--gold);"></div>
+            <div style="width: 20px; height: 8px; background: var(--gold);"></div>
+            <div style="width: 20px; height: 8px; background: var(--gold);"></div>
+            <div style="width: 20px; height: 8px; background: var(--gold);"></div>
+            <div style="width: 20px; height: 8px; background: var(--gold);"></div>
+            <div style="width: 20px; height: 8px; background: var(--gold);"></div>
+            <div style="width: 20px; height: 8px; background: var(--nude-dark);"></div>
+          </div>
+
+          <!-- Missed Task Log -->
+          <div class="missed-log" style="margin-top: 1rem;">
+            <h4 style="margin-bottom: 1rem;">Missed Tasks (Last 7 Days)</h4>
+            <div class="missed-item">
+              <span>Advanced Pattern Recognition</span>
+              <span style="color: var(--danger);">Mar 2</span>
+            </div>
+            <div class="missed-item">
+              <span>Risk Management Quiz</span>
+              <span style="color: var(--danger);">Feb 28</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance & Alerts -->
+        <div class="streak-card">
+          <!-- Mentor Review Status -->
+          <div style="margin-bottom: 2rem;">
+            <div class="mentor-review-status" style="margin-bottom: 1rem;">
+              <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+              <div>
+                <div style="font-weight: 600;">Last submission reviewed</div>
+                <div style="font-size: 0.8rem; color: var(--text-light);">Mentor feedback available</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Performance Alert (Neutral, not shaming) -->
+          <div class="performance-trend">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>
+              <strong>Recalibration needed</strong>
+              <div style="font-size: 0.8rem;">Your consistency dropped 12% this week</div>
+            </div>
+          </div>
+
+          <!-- Silent Surveillance Effect -->
+          <div class="alert-neutral">
+            <i class="fas fa-chart-line"></i>
+            <div>
+              <strong>Performance drift detected</strong>
+              <div style="font-size: 0.8rem;">Your growth rate is 5% below cohort average</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4️⃣ MEASURABLE GROWTH PANEL -->
+      <div class="growth-panel layer-animate" style="animation-delay: 0.3s;">
+        <div class="section-header">
+          <h2 class="section-title">Measurable Growth</h2>
+          <div class="silent-surveillance">
+            <i class="fas fa-users"></i> Top 15% of your cohort
+          </div>
+        </div>
+
+        <div class="growth-grid">
+          <!-- Technical Analysis Radar -->
+          <div class="skill-item">
+            <div class="skill-name">Technical Analysis</div>
+            <div class="skill-radar">
+              <div class="radar-circle">
+                <div class="radar-inner">78</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Risk Management -->
+          <div class="skill-item">
+            <div class="skill-name">Risk Management</div>
+            <div class="skill-radar">
+              <div class="radar-circle" style="background: conic-gradient(var(--gold) 0deg 205deg, var(--nude-medium) 205deg 360deg);">
+                <div class="radar-inner">68</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Psychology -->
+          <div class="skill-item">
+            <div class="skill-name">Trading Psychology</div>
+            <div class="skill-radar">
+              <div class="radar-circle" style="background: conic-gradient(var(--gold) 0deg 270deg, var(--nude-medium) 270deg 360deg);">
+                <div class="radar-inner">90</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Execution -->
+          <div class="skill-item">
+            <div class="skill-name">Execution</div>
+            <div class="skill-radar">
+              <div class="radar-circle" style="background: conic-gradient(var(--gold) 0deg 220deg, var(--nude-medium) 220deg 360deg);">
+                <div class="radar-inner">73</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Benchmarks -->
+        <div class="benchmark-comparison">
+          <div>
+            <div style="color: var(--text-light);">Peer Percentile</div>
+            <div class="percentile">85th</div>
+          </div>
+          <div>
+            <div style="color: var(--text-light);">Skill Evolution</div>
+            <div style="display: flex; gap: 1rem;">
+              <span><i class="fas fa-arrow-up" style="color: var(--success);"></i> +18%</span>
+              <span>Last 30 days</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5️⃣ FUTURE PROJECTION LAYER -->
+      <div class="projection-layer layer-animate" style="animation-delay: 0.4s;">
+        <div class="section-header">
+          <h2 class="section-title">Trajectory Forecast</h2>
+          <div style="color: var(--gold);">Based on current growth rate</div>
+        </div>
+
+        <div class="projection-grid">
+          <div class="projection-card">
+            <div class="projection-days">30 DAYS</div>
+            <div class="projection-level">Operator</div>
+            <div class="projection-date">Expected: April 15, 2025</div>
+          </div>
+          <div class="projection-card">
+            <div class="projection-days">60 DAYS</div>
+            <div class="projection-level">Strategist</div>
+            <div class="projection-date">Expected: May 15, 2025</div>
+          </div>
+          <div class="projection-card">
+            <div class="projection-days">90 DAYS</div>
+            <div class="projection-level">Elite</div>
+            <div class="projection-date">Expected: June 15, 2025</div>
+          </div>
+        </div>
+
+        <div class="trajectory-forecast">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong style="font-size: 1.2rem;">Current Growth Rate: 23% per month</strong>
+              <div style="color: var(--text-light); margin-top: 0.5rem;">
+                On track to reach Elite status 2 weeks ahead of schedule
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-family: 'Cormorant Garamond'; font-size: 2rem; color: var(--gold);">+67%</div>
+              <div style="font-size: 0.8rem;">Projected improvement</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
+  </div>
 
-    <!-- Clients Tab -->
-    <section id="clients" role="tabpanel" tabindex="0">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Approved Clients</div>
-          <button class="btn btn-info" onclick="loadClients()">Refresh</button>
-        </div>
-        <table class="table" aria-describedby="Approved clients list">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Program</th>
-              <th>Joined</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="clientsTable">
-            <tr style="text-align:center;color:var(--muted)">
-              <td colspan="6" style="padding:60px 0;">Loading...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">Crown Trade Academy</div>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="mentorship-form.html">Mentorship</a></li>
+        <li><a href="referral-register.html">Referral Program</a></li>
+        <li><a href="login.html">Client Login</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+      <p class="copyright">&copy; 2025 Crown Trade Academy. All rights reserved.</p>
+    </div>
+  </footer>
 
-    <!-- Resources Tab -->
-    <section id="resources" role="tabpanel" tabindex="0" style="display:none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Upload Materials</div>
-        </div>
-        <div style="text-align:center; padding: 60px 0;">
-          <input type="file" id="fileUpload" multiple style="display:none;" aria-label="Upload files" />
-          <button
-            class="btn btn-success"
-            style="padding:18px 50px;font-size:1.2rem"
-            onclick="document.getElementById('fileUpload').click()"
-          >
-            Upload Videos, PDFs, Images, ZIPs
-          </button>
-          <div id="uploadStatus" style="margin-top:30px;font-size:1.1rem;font-weight:600;"></div>
-          <div id="uploadedFiles" style="margin-top:30px;"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Lessons Tab -->
-    <section id="lessons" role="tabpanel" tabindex="0" style="display:none;">
-      <div class="card">
-        <h2>Lessons</h2>
-        <p>Coming soon...</p>
-      </div>
-    </section>
-
-    <!-- Sessions Tab -->
-    <section id="sessions" role="tabpanel" tabindex="0" style="display:none;">
-      <div class="card">
-        <h2>Sessions</h2>
-        <p>Coming soon...</p>
-      </div>
-    </section>
-  </main>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // Initialize Supabase client (replace keys accordingly)
-  const SUPABASE_URL = 'https://omrsywvfdhzeokmfdrfh.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcnN5d3ZmZGh6ZW9rbWZkcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNjAxOTUsImV4cCI6MjA3OTkzNjE5NX0.MaIrC_r3kfgtsNEeGmRCRV7q2_k14sIR7z87OLVSN0o';
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const mentorName = "Elite Mentor";
-
-  // Handle tab switching
-  const tabs = document.querySelectorAll('.nav button[data-tab]');
-  tabs.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabs.forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
-      });
-      btn.classList.add('active');
-      btn.setAttribute('aria-selected', 'true');
-
-      const tabName = btn.dataset.tab;
-      document.querySelectorAll('section[role="tabpanel"]').forEach(s => {
-        s.style.display = s.id === tabName ? 'block' : 'none';
-      });
-    });
-  });
-
-  // Load approved clients
-  async function loadClients() {
-    const { data, error } = await supabaseClient.from('clients').select('*').eq('status', 'approved');
-    if (error) {
-      showNotification('Error loading clients', 'danger');
-      console.error(error);
-      return;
-    }
-    const count = data?.length || 0;
-    document.getElementById('clientsCount').textContent = count;
-
-    const tableBody = document.getElementById('clientsTable');
-    if (!data || data.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:60px;color:var(--muted)">No approved clients yet</td></tr>`;
-      return;
-    }
-    tableBody.innerHTML = data.map(c => `
-      <tr>
-        <td><strong>${escapeHTML(c.name)}</strong></td>
-        <td>${escapeHTML(c.email)}</td>
-        <td>${escapeHTML(c.phone || '—')}</td>
-        <td>${escapeHTML(c.program)}</td>
-        <td>${new Date(c.join_date).toLocaleDateString()}</td>
-        <td>
-          <button onclick="viewClientDetails('${c.id}')" class="btn btn-info" aria-label="View details for ${escapeHTML(c.name)}">View</button>
-        </td>
-      </tr>
-    `).join('');
-  }
-
-  // Utility: escape HTML to prevent injection
-  function escapeHTML(text) {
-    if (!text) return '';
-    return text.replace(/[&<>"']/g, m => {
-      switch(m) {
-        case '&': return '&amp;';
-        case '<': return '&lt;';
-        case '>': return '&gt;';
-        case '"': return '&quot;';
-        case "'": return '&#39;';
+  <script>
+    // Header scroll effect
+    window.addEventListener('scroll', function() {
+      const header = document.querySelector('.premium-header');
+      if (window.scrollY > 50) {
+        header.style.backgroundColor = 'rgba(249, 246, 242, 0.98)';
+        header.style.boxShadow = '0 5px 20px rgba(0,0,0,0.05)';
+      } else {
+        header.style.backgroundColor = 'rgba(249, 246, 242, 0.95)';
+        header.style.boxShadow = 'none';
       }
     });
-  }
 
-  // Placeholder for viewClientDetails
-  function viewClientDetails(clientId) {
-    alert(`Details for client ID: ${clientId} - To be implemented`);
-  }
-
-  // Show notification messages
-  function showNotification(msg, type = 'success') {
-    const notif = document.createElement('div');
-    notif.className = `notification ${type}`;
-    notif.textContent = msg;
-    document.body.appendChild(notif);
-    setTimeout(() => notif.remove(), 3500);
-  }
-
-  // Load all initial data
-  function loadAll() {
-    loadClients();
-    // Can add loadResources(), loadLessons(), etc. when implemented
-  }
-
-  // Upload files to Supabase Storage
-  const fileUploadInput = document.getElementById('fileUpload');
-  const uploadStatus = document.getElementById('uploadStatus');
-  const uploadedFiles = document.getElementById('uploadedFiles');
-
-  fileUploadInput.addEventListener('change', async (e) => {
-    const files = e.target.files;
-    if (!files.length) return;
-    uploadStatus.textContent = `Uploading ${files.length} file(s)...`;
-    try {
-      for (const file of files) {
-        const filePath = `resources/${Date.now()}_${file.name}`;
-        let { error: uploadError } = await supabaseClient.storage
-          .from('crowntrade-mentor-files')
-          .upload(filePath, file);
-
-        if (uploadError) {
-          showNotification(`Failed to upload ${file.name}`, 'danger');
-          console.error(uploadError);
-          continue;
-        }
-
-        // Display uploaded files with public URL
-        const { data: publicUrlData } = supabaseClient.storage
-          .from('crowntrade-mentor-files')
-          .getPublicUrl(filePath);
-
-        const url = publicUrlData.publicUrl;
-        const el = document.createElement('div');
-        el.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHTML(file.name)}</a>`;
-        uploadedFiles.appendChild(el);
-      }
-      uploadStatus.textContent = `Upload complete!`;
-    } catch (err) {
-      showNotification('Upload error occurred', 'danger');
-      console.error(err);
-      uploadStatus.textContent = '';
+    // Simulate dynamic data updates
+    function updateDashboardData() {
+      // This would normally fetch from an API
+      console.log('Dashboard data synced');
     }
-  });
 
-  // Chat toggle and chat message logic
-  const chatBox = document.getElementById('chatBox');
-  const chatBody = document.getElementById('chatBody');
-  const chatInput = document.getElementById('chatInput');
-  let chatOpen = false;
-
-  function toggleChat() {
-    chatOpen = !chatOpen;
-    chatBox.style.display = chatOpen ? 'flex' : 'none';
-    chatBox.setAttribute('aria-hidden', !chatOpen);
-    if (chatOpen) {
-      loadChatMessages();
-      chatInput.focus();
+    // Check for locked modules (friction)
+    const pendingTasks = 3;
+    const lockElements = document.querySelectorAll('.friction-lock');
+    if (pendingTasks > 0) {
+      lockElements.forEach(el => {
+        el.innerHTML = `<i class="fas fa-lock"></i> Advanced modules locked (${pendingTasks} tasks remaining)`;
+      });
     }
-  }
 
-  // Placeholder chat message load
-  async function loadChatMessages() {
-    chatBody.innerHTML = '<div style="text-align:center;color:var(--muted);padding:40px;">Loading messages...</div>';
-    // Simulate chat loading
-    setTimeout(() => {
-      chatBody.innerHTML = `
-        <div class="message other"><strong>System:</strong> Welcome to Crown Trade Community!</div>
-      `;
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }, 800);
-  }
-
-  // Send chat message placeholder
-  async function sendMessage() {
-    const message = chatInput.value.trim();
-    if (!message) return;
-    // Append message locally
-    const msgDiv = document.createElement('div');
-    msgDiv.className = 'message own';
-    msgDiv.textContent = message;
-    chatBody.appendChild(msgDiv);
-    chatBody.scrollTop = chatBody.scrollHeight;
-    chatInput.value = '';
-
-    // TODO: Send message to backend / Supabase or chat server
-    // For now simulate reply
-    setTimeout(() => {
-      const replyDiv = document.createElement('div');
-      replyDiv.className = 'message other';
-      replyDiv.innerHTML = `<strong>Mentor Bot:</strong> Got your message: "${escapeHTML(message)}"`;
-      chatBody.appendChild(replyDiv);
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }, 1000);
-  }
-
-  // Initial load
-  loadAll();
-</script>
+    // Silent surveillance effect - subtle awareness
+    const surveillanceMessages = [
+      "Mentor has reviewed your last 3 submissions",
+      "Your consistency dropped 12% this week",
+      "Your growth rate is 5% below cohort average"
+    ];
+  </script>
 </body>
 </html>
